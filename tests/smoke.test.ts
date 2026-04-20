@@ -9,4 +9,10 @@ describe('smoke', () => {
     const { TILE_SIZE } = await import('@/config/constants');
     expect(TILE_SIZE).toBe(32);
   });
+
+  it('balance config is importable and frozen at type level', async () => {
+    const { BALANCE } = await import('@/config/balance');
+    expect(BALANCE.dayCycle.dayDurationSec).toBe(540);
+    expect(BALANCE.vision.dayRadiusTiles).toBe(10);
+  });
 });
