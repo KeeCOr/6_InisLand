@@ -1,52 +1,160 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-<meta charset="UTF-8">
-<title>6_IL Phase 0 — 프로젝트 기반 플랜</title>
-<style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; max-width: 960px; margin: 2em auto; padding: 0 1.2em; line-height: 1.65; color: #222; }
-  h1 { border-bottom: 2px solid #333; padding-bottom: 0.3em; }
-  h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.25em; margin-top: 2em; }
-  h3 { margin-top: 1.6em; color: #2a4e8e; }
-  code { background: #f3f3f3; padding: 2px 6px; border-radius: 3px; font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 0.92em; }
-  pre { background: #1e1e1e; color: #eaeaea; padding: 1em 1.2em; border-radius: 6px; overflow-x: auto; line-height: 1.4; }
-  pre code { background: none; padding: 0; color: inherit; font-size: 0.88em; }
-  .task { background: #fafafa; padding: 1em 1.4em; border-left: 4px solid #4a90e2; margin: 1.6em 0; border-radius: 0 6px 6px 0; }
-  .task h3 { margin-top: 0.2em; color: #2a4e8e; }
-  .files { background: #fff8e1; padding: 0.6em 1em; border-radius: 4px; margin: 0.8em 0; font-size: 0.93em; }
-  .files strong { color: #7a5a00; }
-  .step { margin: 1em 0; }
-  .step > strong { display: inline-block; padding: 2px 8px; background: #eaf1fb; color: #2a4e8e; border-radius: 3px; font-weight: 600; }
-  .expect { background: #e8f5e9; padding: 0.5em 1em; border-left: 3px solid #43a047; border-radius: 0 4px 4px 0; margin: 0.4em 0; }
-  .note { background: #fff3e0; padding: 0.6em 1em; border-left: 3px solid #fb8c00; border-radius: 0 4px 4px 0; margin: 0.8em 0; }
-  table { border-collapse: collapse; width: 100%; margin: 1em 0; }
-  th, td { border: 1px solid #ddd; padding: 0.5em 0.7em; text-align: left; }
-  th { background: #f4f4f4; }
-  .checkbox { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; color: #888; }
-  .cmd { color: #a0e0ff; }
-</style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>6_IL Phase 0 — 프로젝트 기반 플랜</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        max-width: 960px;
+        margin: 2em auto;
+        padding: 0 1.2em;
+        line-height: 1.65;
+        color: #222;
+      }
+      h1 {
+        border-bottom: 2px solid #333;
+        padding-bottom: 0.3em;
+      }
+      h2 {
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 0.25em;
+        margin-top: 2em;
+      }
+      h3 {
+        margin-top: 1.6em;
+        color: #2a4e8e;
+      }
+      code {
+        background: #f3f3f3;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+        font-size: 0.92em;
+      }
+      pre {
+        background: #1e1e1e;
+        color: #eaeaea;
+        padding: 1em 1.2em;
+        border-radius: 6px;
+        overflow-x: auto;
+        line-height: 1.4;
+      }
+      pre code {
+        background: none;
+        padding: 0;
+        color: inherit;
+        font-size: 0.88em;
+      }
+      .task {
+        background: #fafafa;
+        padding: 1em 1.4em;
+        border-left: 4px solid #4a90e2;
+        margin: 1.6em 0;
+        border-radius: 0 6px 6px 0;
+      }
+      .task h3 {
+        margin-top: 0.2em;
+        color: #2a4e8e;
+      }
+      .files {
+        background: #fff8e1;
+        padding: 0.6em 1em;
+        border-radius: 4px;
+        margin: 0.8em 0;
+        font-size: 0.93em;
+      }
+      .files strong {
+        color: #7a5a00;
+      }
+      .step {
+        margin: 1em 0;
+      }
+      .step > strong {
+        display: inline-block;
+        padding: 2px 8px;
+        background: #eaf1fb;
+        color: #2a4e8e;
+        border-radius: 3px;
+        font-weight: 600;
+      }
+      .expect {
+        background: #e8f5e9;
+        padding: 0.5em 1em;
+        border-left: 3px solid #43a047;
+        border-radius: 0 4px 4px 0;
+        margin: 0.4em 0;
+      }
+      .note {
+        background: #fff3e0;
+        padding: 0.6em 1em;
+        border-left: 3px solid #fb8c00;
+        border-radius: 0 4px 4px 0;
+        margin: 0.8em 0;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1em 0;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 0.5em 0.7em;
+        text-align: left;
+      }
+      th {
+        background: #f4f4f4;
+      }
+      .checkbox {
+        font-family: ui-monospace, Menlo, Consolas, monospace;
+        font-weight: 700;
+        color: #888;
+      }
+      .cmd {
+        color: #a0e0ff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>6_IL — Phase 0: 프로젝트 기반 구현 플랜</h1>
 
-<h1>6_IL — Phase 0: 프로젝트 기반 구현 플랜</h1>
+    <blockquote>
+      <strong>에이전트 작업자 주의:</strong> 필수 서브스킬 —
+      <code>superpowers:subagent-driven-development</code>(권장) 또는
+      <code>superpowers:executing-plans</code>를 사용해 태스크 단위로 실행하세요. 체크박스는
+      <code>[ ]</code> → <code>[x]</code>로 갱신.
+    </blockquote>
 
-<blockquote>
-<strong>에이전트 작업자 주의:</strong> 필수 서브스킬 — <code>superpowers:subagent-driven-development</code>(권장) 또는 <code>superpowers:executing-plans</code>를 사용해 태스크 단위로 실행하세요. 체크박스는 <code>[ ]</code> → <code>[x]</code>로 갱신.
-</blockquote>
+    <p>
+      <strong>Goal:</strong> Vite + Phaser 3 + TypeScript + Vitest 기반의 프로젝트 스캐폴딩을
+      세우고, 이벤트 버스·ECS·RNG 등 핵심 유틸을 구축해 Phase 1 게임플레이 구현을 시작할 수 있는
+      상태를 만든다.
+    </p>
 
-<p><strong>Goal:</strong> Vite + Phaser 3 + TypeScript + Vitest 기반의 프로젝트 스캐폴딩을 세우고, 이벤트 버스·ECS·RNG 등 핵심 유틸을 구축해 Phase 1 게임플레이 구현을 시작할 수 있는 상태를 만든다.</p>
+    <p>
+      <strong>Architecture:</strong> Vite가 개발 서버와 프로덕션 번들을 담당, Phaser 3이 게임 엔진
+      역할. TypeScript strict 모드로 타입 안전 확보. 커스텀 경량 ECS(<code>bitecs</code>)로 수천
+      엔티티 처리 준비. 모든 로직 모듈은 Vitest 단위 테스트. GitHub Actions CI가
+      lint·typecheck·test·build를 자동 검증.
+    </p>
 
-<p><strong>Architecture:</strong> Vite가 개발 서버와 프로덕션 번들을 담당, Phaser 3이 게임 엔진 역할. TypeScript strict 모드로 타입 안전 확보. 커스텀 경량 ECS(<code>bitecs</code>)로 수천 엔티티 처리 준비. 모든 로직 모듈은 Vitest 단위 테스트. GitHub Actions CI가 lint·typecheck·test·build를 자동 검증.</p>
+    <p>
+      <strong>Tech Stack:</strong> Node 20+, npm, Vite 5, Phaser 3.80+, TypeScript 5 (strict),
+      Vitest 1, ESLint 9 flat config, Prettier 3, bitecs 0.3+, GitHub Actions.
+    </p>
 
-<p><strong>Tech Stack:</strong> Node 20+, npm, Vite 5, Phaser 3.80+, TypeScript 5 (strict), Vitest 1, ESLint 9 flat config, Prettier 3, bitecs 0.3+, GitHub Actions.</p>
+    <p>
+      <strong>스코프 범위:</strong> Phase 0만 다룸. 실제 게임플레이(플레이어 이동·전투·설원·밤
+      웨이브 등)는 별도 Phase 1 플랜에서.
+    </p>
 
-<p><strong>스코프 범위:</strong> Phase 0만 다룸. 실제 게임플레이(플레이어 이동·전투·설원·밤 웨이브 등)는 별도 Phase 1 플랜에서.</p>
+    <hr />
 
-<hr>
+    <h2>File Structure (Phase 0 완료 시점)</h2>
 
-<h2>File Structure (Phase 0 완료 시점)</h2>
-
-<pre><code>6_IL/
+    <pre><code>6_IL/
 ├── .github/workflows/ci.yml
 ├── .gitignore                          # 이미 존재 — 업데이트
 ├── .prettierrc.json
@@ -77,28 +185,38 @@
     └── util/rng.test.ts
 </code></pre>
 
-<p>각 파일은 하나의 책임에 집중. 게임플레이 코드는 Phase 1부터 <code>src/gameplay/</code>에 누적됨.</p>
+    <p>
+      각 파일은 하나의 책임에 집중. 게임플레이 코드는 Phase 1부터 <code>src/gameplay/</code>에
+      누적됨.
+    </p>
 
-<hr>
+    <hr />
 
-<h2>태스크 목록</h2>
+    <h2>태스크 목록</h2>
 
-<!-- ========================================================= -->
-<div class="task">
-<h3>Task 1: Node·npm 준비 및 package.json 초기화</h3>
+    <!-- ========================================================= -->
+    <div class="task">
+      <h3>Task 1: Node·npm 준비 및 package.json 초기화</h3>
 
-<div class="files">
-<strong>Create:</strong> <code>package.json</code><br>
-<strong>Create:</strong> <code>README.md</code>
-</div>
+      <div class="files">
+        <strong>Create:</strong> <code>package.json</code><br />
+        <strong>Create:</strong> <code>README.md</code>
+      </div>
 
-<div class="step"><strong>Step 1</strong> <span class="checkbox">[ ]</span> Node 버전 확인 (20 이상 필요)</div>
-<pre><code class="cmd">node --version</code></pre>
-<div class="expect"><strong>Expected:</strong> <code>v20.x.x</code> 이상. 미달이면 Node 20 LTS 설치 후 진행.</div>
+      <div class="step">
+        <strong>Step 1</strong> <span class="checkbox">[ ]</span> Node 버전 확인 (20 이상 필요)
+      </div>
+      <pre><code class="cmd">node --version</code></pre>
+      <div class="expect">
+        <strong>Expected:</strong> <code>v20.x.x</code> 이상. 미달이면 Node 20 LTS 설치 후 진행.
+      </div>
 
-<div class="step"><strong>Step 2</strong> <span class="checkbox">[ ]</span> 프로젝트 루트에서 <code>package.json</code> 생성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/package.json</code></p>
-<pre><code>{
+      <div class="step">
+        <strong>Step 2</strong> <span class="checkbox">[ ]</span> 프로젝트 루트에서
+        <code>package.json</code> 생성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/package.json</code></p>
+      <pre><code>{
   "name": "6il",
   "version": "0.1.0",
   "private": true,
@@ -117,9 +235,11 @@
 }
 </code></pre>
 
-<div class="step"><strong>Step 3</strong> <span class="checkbox">[ ]</span> 간단한 README.md 작성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/README.md</code></p>
-<pre><code># 6_IL
+      <div class="step">
+        <strong>Step 3</strong> <span class="checkbox">[ ]</span> 간단한 README.md 작성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/README.md</code></p>
+      <pre><code># 6_IL
 
 판타지 중세 설원에서 마을을 개척하는 뱀서바이벌류 게임.
 
@@ -142,9 +262,14 @@
 - 구현 플랜: `docs/superpowers/plans/`
 </code></pre>
 
-<div class="step"><strong>Step 4</strong> <span class="checkbox">[ ]</span> .gitignore 업데이트 (node_modules·dist·vite 캐시 추가)</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/.gitignore</code> (기존 <code>.superpowers/</code> 유지)</p>
-<pre><code>.superpowers/
+      <div class="step">
+        <strong>Step 4</strong> <span class="checkbox">[ ]</span> .gitignore 업데이트
+        (node_modules·dist·vite 캐시 추가)
+      </div>
+      <p>
+        파일 경로: <code>C:/Users/bada/6_IL/.gitignore</code> (기존 <code>.superpowers/</code> 유지)
+      </p>
+      <pre><code>.superpowers/
 node_modules/
 dist/
 .vite/
@@ -153,26 +278,31 @@ dist/
 coverage/
 </code></pre>
 
-<div class="step"><strong>Step 5</strong> <span class="checkbox">[ ]</span> 커밋</div>
-<pre><code class="cmd">git add package.json README.md .gitignore
+      <div class="step"><strong>Step 5</strong> <span class="checkbox">[ ]</span> 커밋</div>
+      <pre><code class="cmd">git add package.json README.md .gitignore
 git commit -m "chore: initialize package.json and README"</code></pre>
-</div>
+    </div>
 
-<!-- ========================================================= -->
-<div class="task">
-<h3>Task 2: TypeScript 설정 (strict)</h3>
+    <!-- ========================================================= -->
+    <div class="task">
+      <h3>Task 2: TypeScript 설정 (strict)</h3>
 
-<div class="files">
-<strong>Create:</strong> <code>tsconfig.json</code>
-</div>
+      <div class="files"><strong>Create:</strong> <code>tsconfig.json</code></div>
 
-<div class="step"><strong>Step 1</strong> <span class="checkbox">[ ]</span> TypeScript 설치</div>
-<pre><code class="cmd">npm install -D typescript@^5.4</code></pre>
-<div class="expect"><strong>Expected:</strong> <code>devDependencies</code>에 typescript 추가, <code>node_modules</code> 생성.</div>
+      <div class="step">
+        <strong>Step 1</strong> <span class="checkbox">[ ]</span> TypeScript 설치
+      </div>
+      <pre><code class="cmd">npm install -D typescript@^5.4</code></pre>
+      <div class="expect">
+        <strong>Expected:</strong> <code>devDependencies</code>에 typescript 추가,
+        <code>node_modules</code> 생성.
+      </div>
 
-<div class="step"><strong>Step 2</strong> <span class="checkbox">[ ]</span> <code>tsconfig.json</code> 작성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/tsconfig.json</code></p>
-<pre><code>{
+      <div class="step">
+        <strong>Step 2</strong> <span class="checkbox">[ ]</span> <code>tsconfig.json</code> 작성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/tsconfig.json</code></p>
+      <pre><code>{
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
@@ -201,31 +331,43 @@ git commit -m "chore: initialize package.json and README"</code></pre>
 }
 </code></pre>
 
-<div class="step"><strong>Step 3</strong> <span class="checkbox">[ ]</span> 타입체크 실행 (아직 소스가 없으므로 빈 패스)</div>
-<pre><code class="cmd">npx tsc --noEmit</code></pre>
-<div class="expect"><strong>Expected:</strong> 에러 없이 종료 (빈 프로젝트).</div>
+      <div class="step">
+        <strong>Step 3</strong> <span class="checkbox">[ ]</span> 타입체크 실행 (아직 소스가
+        없으므로 빈 패스)
+      </div>
+      <pre><code class="cmd">npx tsc --noEmit</code></pre>
+      <div class="expect"><strong>Expected:</strong> 에러 없이 종료 (빈 프로젝트).</div>
 
-<div class="step"><strong>Step 4</strong> <span class="checkbox">[ ]</span> 커밋</div>
-<pre><code class="cmd">git add tsconfig.json package.json package-lock.json
+      <div class="step"><strong>Step 4</strong> <span class="checkbox">[ ]</span> 커밋</div>
+      <pre><code class="cmd">git add tsconfig.json package.json package-lock.json
 git commit -m "chore: add typescript strict config"</code></pre>
-</div>
+    </div>
 
-<!-- ========================================================= -->
-<div class="task">
-<h3>Task 3: Vite 개발 서버 + 빈 Phaser 캔버스</h3>
+    <!-- ========================================================= -->
+    <div class="task">
+      <h3>Task 3: Vite 개발 서버 + 빈 Phaser 캔버스</h3>
 
-<div class="files">
-<strong>Create:</strong> <code>vite.config.ts</code>, <code>index.html</code>, <code>src/main.ts</code>, <code>src/scenes/boot.ts</code>, <code>src/config/constants.ts</code>
-</div>
+      <div class="files">
+        <strong>Create:</strong> <code>vite.config.ts</code>, <code>index.html</code>,
+        <code>src/main.ts</code>, <code>src/scenes/boot.ts</code>,
+        <code>src/config/constants.ts</code>
+      </div>
 
-<div class="step"><strong>Step 1</strong> <span class="checkbox">[ ]</span> Vite + Phaser 설치</div>
-<pre><code class="cmd">npm install -D vite@^5
+      <div class="step">
+        <strong>Step 1</strong> <span class="checkbox">[ ]</span> Vite + Phaser 설치
+      </div>
+      <pre><code class="cmd">npm install -D vite@^5
 npm install phaser@^3.80</code></pre>
-<div class="expect"><strong>Expected:</strong> <code>dependencies</code>에 phaser, <code>devDependencies</code>에 vite.</div>
+      <div class="expect">
+        <strong>Expected:</strong> <code>dependencies</code>에 phaser,
+        <code>devDependencies</code>에 vite.
+      </div>
 
-<div class="step"><strong>Step 2</strong> <span class="checkbox">[ ]</span> <code>vite.config.ts</code> 작성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/vite.config.ts</code></p>
-<pre><code>import { defineConfig } from 'vite';
+      <div class="step">
+        <strong>Step 2</strong> <span class="checkbox">[ ]</span> <code>vite.config.ts</code> 작성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/vite.config.ts</code></p>
+      <pre><code>import { defineConfig } from 'vite';
 import path from 'node:path';
 
 export default defineConfig({
@@ -250,9 +392,11 @@ export default defineConfig({
 });
 </code></pre>
 
-<div class="step"><strong>Step 3</strong> <span class="checkbox">[ ]</span> <code>index.html</code> 작성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/index.html</code></p>
-<pre><code>&lt;!DOCTYPE html&gt;
+      <div class="step">
+        <strong>Step 3</strong> <span class="checkbox">[ ]</span> <code>index.html</code> 작성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/index.html</code></p>
+      <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html lang="ko"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8" /&gt;
@@ -271,18 +415,24 @@ export default defineConfig({
 &lt;/html&gt;
 </code></pre>
 
-<div class="step"><strong>Step 4</strong> <span class="checkbox">[ ]</span> <code>src/config/constants.ts</code> 작성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/src/config/constants.ts</code></p>
-<pre><code>export const GAME_WIDTH = 960;
+      <div class="step">
+        <strong>Step 4</strong> <span class="checkbox">[ ]</span>
+        <code>src/config/constants.ts</code> 작성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/src/config/constants.ts</code></p>
+      <pre><code>export const GAME_WIDTH = 960;
 export const GAME_HEIGHT = 540;
 export const TILE_SIZE = 32;
 export const VILLAGE_GRID_SIZE = 24;
 export const SIM_TICK_HZ = 30;
 </code></pre>
 
-<div class="step"><strong>Step 5</strong> <span class="checkbox">[ ]</span> <code>src/scenes/boot.ts</code> 작성 (빈 Phaser 신)</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/src/scenes/boot.ts</code></p>
-<pre><code>import Phaser from 'phaser';
+      <div class="step">
+        <strong>Step 5</strong> <span class="checkbox">[ ]</span>
+        <code>src/scenes/boot.ts</code> 작성 (빈 Phaser 신)
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/src/scenes/boot.ts</code></p>
+      <pre><code>import Phaser from 'phaser';
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -304,9 +454,12 @@ export class BootScene extends Phaser.Scene {
 }
 </code></pre>
 
-<div class="step"><strong>Step 6</strong> <span class="checkbox">[ ]</span> <code>src/main.ts</code> 작성 (Phaser 게임 부트스트랩)</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/src/main.ts</code></p>
-<pre><code>import Phaser from 'phaser';
+      <div class="step">
+        <strong>Step 6</strong> <span class="checkbox">[ ]</span> <code>src/main.ts</code> 작성
+        (Phaser 게임 부트스트랩)
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/src/main.ts</code></p>
+      <pre><code>import Phaser from 'phaser';
 import { GAME_WIDTH, GAME_HEIGHT } from '@/config/constants';
 import { BootScene } from '@/scenes/boot';
 
@@ -327,33 +480,50 @@ const config: Phaser.Types.Core.GameConfig = {
 new Phaser.Game(config);
 </code></pre>
 
-<div class="step"><strong>Step 7</strong> <span class="checkbox">[ ]</span> 개발 서버 기동 확인</div>
-<pre><code class="cmd">npm run dev</code></pre>
-<div class="expect"><strong>Expected:</strong> Vite가 <code>http://localhost:5173</code>에 기동. 브라우저에서 열면 어두운 배경 + 중앙에 "6_IL — boot" 텍스트가 보임. 콘솔에 에러 없음. 확인 후 Ctrl+C로 종료.</div>
+      <div class="step">
+        <strong>Step 7</strong> <span class="checkbox">[ ]</span> 개발 서버 기동 확인
+      </div>
+      <pre><code class="cmd">npm run dev</code></pre>
+      <div class="expect">
+        <strong>Expected:</strong> Vite가 <code>http://localhost:5173</code>에 기동. 브라우저에서
+        열면 어두운 배경 + 중앙에 "6_IL — boot" 텍스트가 보임. 콘솔에 에러 없음. 확인 후 Ctrl+C로
+        종료.
+      </div>
 
-<div class="step"><strong>Step 8</strong> <span class="checkbox">[ ]</span> 프로덕션 빌드 확인</div>
-<pre><code class="cmd">npm run build</code></pre>
-<div class="expect"><strong>Expected:</strong> <code>dist/</code> 디렉토리 생성, 에러 없음. 번들 크기는 ~1.5MB 내외 (Phaser 포함).</div>
+      <div class="step">
+        <strong>Step 8</strong> <span class="checkbox">[ ]</span> 프로덕션 빌드 확인
+      </div>
+      <pre><code class="cmd">npm run build</code></pre>
+      <div class="expect">
+        <strong>Expected:</strong> <code>dist/</code> 디렉토리 생성, 에러 없음. 번들 크기는 ~1.5MB
+        내외 (Phaser 포함).
+      </div>
 
-<div class="step"><strong>Step 9</strong> <span class="checkbox">[ ]</span> 커밋</div>
-<pre><code class="cmd">git add vite.config.ts index.html src/main.ts src/scenes/boot.ts src/config/constants.ts package.json package-lock.json
+      <div class="step"><strong>Step 9</strong> <span class="checkbox">[ ]</span> 커밋</div>
+      <pre><code class="cmd">git add vite.config.ts index.html src/main.ts src/scenes/boot.ts src/config/constants.ts package.json package-lock.json
 git commit -m "feat: bootstrap vite + phaser with empty boot scene"</code></pre>
-</div>
+    </div>
 
-<!-- ========================================================= -->
-<div class="task">
-<h3>Task 4: ESLint + Prettier 설정</h3>
+    <!-- ========================================================= -->
+    <div class="task">
+      <h3>Task 4: ESLint + Prettier 설정</h3>
 
-<div class="files">
-<strong>Create:</strong> <code>eslint.config.js</code>, <code>.prettierrc.json</code>, <code>.prettierignore</code>
-</div>
+      <div class="files">
+        <strong>Create:</strong> <code>eslint.config.js</code>, <code>.prettierrc.json</code>,
+        <code>.prettierignore</code>
+      </div>
 
-<div class="step"><strong>Step 1</strong> <span class="checkbox">[ ]</span> ESLint·Prettier·플러그인 설치</div>
-<pre><code class="cmd">npm install -D eslint@^9 @eslint/js typescript-eslint prettier@^3 eslint-config-prettier</code></pre>
+      <div class="step">
+        <strong>Step 1</strong> <span class="checkbox">[ ]</span> ESLint·Prettier·플러그인 설치
+      </div>
+      <pre><code class="cmd">npm install -D eslint@^9 @eslint/js typescript-eslint prettier@^3 eslint-config-prettier</code></pre>
 
-<div class="step"><strong>Step 2</strong> <span class="checkbox">[ ]</span> <code>eslint.config.js</code> 작성 (Flat Config)</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/eslint.config.js</code></p>
-<pre><code>import js from '@eslint/js';
+      <div class="step">
+        <strong>Step 2</strong> <span class="checkbox">[ ]</span> <code>eslint.config.js</code> 작성
+        (Flat Config)
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/eslint.config.js</code></p>
+      <pre><code>import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 
@@ -395,9 +565,11 @@ export default [
 ];
 </code></pre>
 
-<div class="step"><strong>Step 3</strong> <span class="checkbox">[ ]</span> <code>.prettierrc.json</code> 작성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/.prettierrc.json</code></p>
-<pre><code>{
+      <div class="step">
+        <strong>Step 3</strong> <span class="checkbox">[ ]</span> <code>.prettierrc.json</code> 작성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/.prettierrc.json</code></p>
+      <pre><code>{
   "semi": true,
   "singleQuote": true,
   "trailingComma": "all",
@@ -408,39 +580,49 @@ export default [
 }
 </code></pre>
 
-<div class="step"><strong>Step 4</strong> <span class="checkbox">[ ]</span> <code>.prettierignore</code> 작성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/.prettierignore</code></p>
-<pre><code>dist/
+      <div class="step">
+        <strong>Step 4</strong> <span class="checkbox">[ ]</span> <code>.prettierignore</code> 작성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/.prettierignore</code></p>
+      <pre><code>dist/
 node_modules/
 .vite/
 coverage/
 package-lock.json
 </code></pre>
 
-<div class="step"><strong>Step 5</strong> <span class="checkbox">[ ]</span> lint + format 실행</div>
-<pre><code class="cmd">npm run lint
+      <div class="step">
+        <strong>Step 5</strong> <span class="checkbox">[ ]</span> lint + format 실행
+      </div>
+      <pre><code class="cmd">npm run lint
 npm run format</code></pre>
-<div class="expect"><strong>Expected:</strong> 에러 0개, warning 0~소수. Prettier가 포매팅 적용.</div>
+      <div class="expect">
+        <strong>Expected:</strong> 에러 0개, warning 0~소수. Prettier가 포매팅 적용.
+      </div>
 
-<div class="step"><strong>Step 6</strong> <span class="checkbox">[ ]</span> 커밋</div>
-<pre><code class="cmd">git add eslint.config.js .prettierrc.json .prettierignore package.json package-lock.json src/
+      <div class="step"><strong>Step 6</strong> <span class="checkbox">[ ]</span> 커밋</div>
+      <pre><code class="cmd">git add eslint.config.js .prettierrc.json .prettierignore package.json package-lock.json src/
 git commit -m "chore: add eslint flat config and prettier"</code></pre>
-</div>
+    </div>
 
-<!-- ========================================================= -->
-<div class="task">
-<h3>Task 5: Vitest 설정 + 첫 스모크 테스트</h3>
+    <!-- ========================================================= -->
+    <div class="task">
+      <h3>Task 5: Vitest 설정 + 첫 스모크 테스트</h3>
 
-<div class="files">
-<strong>Create:</strong> <code>vitest.config.ts</code>, <code>tests/smoke.test.ts</code>
-</div>
+      <div class="files">
+        <strong>Create:</strong> <code>vitest.config.ts</code>, <code>tests/smoke.test.ts</code>
+      </div>
 
-<div class="step"><strong>Step 1</strong> <span class="checkbox">[ ]</span> Vitest·jsdom 설치</div>
-<pre><code class="cmd">npm install -D vitest@^1</code></pre>
+      <div class="step">
+        <strong>Step 1</strong> <span class="checkbox">[ ]</span> Vitest·jsdom 설치
+      </div>
+      <pre><code class="cmd">npm install -D vitest@^1</code></pre>
 
-<div class="step"><strong>Step 2</strong> <span class="checkbox">[ ]</span> <code>vitest.config.ts</code> 작성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/vitest.config.ts</code></p>
-<pre><code>import { defineConfig } from 'vitest/config';
+      <div class="step">
+        <strong>Step 2</strong> <span class="checkbox">[ ]</span> <code>vitest.config.ts</code> 작성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/vitest.config.ts</code></p>
+      <pre><code>import { defineConfig } from 'vitest/config';
 import path from 'node:path';
 
 export default defineConfig({
@@ -462,9 +644,11 @@ export default defineConfig({
 });
 </code></pre>
 
-<div class="step"><strong>Step 3</strong> <span class="checkbox">[ ]</span> 실패 테스트 작성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/tests/smoke.test.ts</code></p>
-<pre><code>import { describe, expect, it } from 'vitest';
+      <div class="step">
+        <strong>Step 3</strong> <span class="checkbox">[ ]</span> 실패 테스트 작성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/tests/smoke.test.ts</code></p>
+      <pre><code>import { describe, expect, it } from 'vitest';
 
 describe('smoke', () =&gt; {
   it('vitest is wired up', () =&gt; {
@@ -478,28 +662,36 @@ describe('smoke', () =&gt; {
 });
 </code></pre>
 
-<div class="step"><strong>Step 4</strong> <span class="checkbox">[ ]</span> 테스트 실행</div>
-<pre><code class="cmd">npm test</code></pre>
-<div class="expect"><strong>Expected:</strong> 2 tests passed. 경로 alias(<code>@/</code>)가 동작.</div>
+      <div class="step"><strong>Step 4</strong> <span class="checkbox">[ ]</span> 테스트 실행</div>
+      <pre><code class="cmd">npm test</code></pre>
+      <div class="expect">
+        <strong>Expected:</strong> 2 tests passed. 경로 alias(<code>@/</code>)가 동작.
+      </div>
 
-<div class="step"><strong>Step 5</strong> <span class="checkbox">[ ]</span> 커밋</div>
-<pre><code class="cmd">git add vitest.config.ts tests/smoke.test.ts package.json package-lock.json
+      <div class="step"><strong>Step 5</strong> <span class="checkbox">[ ]</span> 커밋</div>
+      <pre><code class="cmd">git add vitest.config.ts tests/smoke.test.ts package.json package-lock.json
 git commit -m "test: add vitest setup and smoke test"</code></pre>
-</div>
+    </div>
 
-<!-- ========================================================= -->
-<div class="task">
-<h3>Task 6: 이벤트 버스 (타입 안전)</h3>
+    <!-- ========================================================= -->
+    <div class="task">
+      <h3>Task 6: 이벤트 버스 (타입 안전)</h3>
 
-<p>게임 내 시스템 간 소통을 위한 타입 안전 pub/sub. 예: "zombie:died", "day:ended", "player:levelup".</p>
+      <p>
+        게임 내 시스템 간 소통을 위한 타입 안전 pub/sub. 예: "zombie:died", "day:ended",
+        "player:levelup".
+      </p>
 
-<div class="files">
-<strong>Create:</strong> <code>src/events/types.ts</code>, <code>src/events/event-bus.ts</code>, <code>tests/events/event-bus.test.ts</code>
-</div>
+      <div class="files">
+        <strong>Create:</strong> <code>src/events/types.ts</code>,
+        <code>src/events/event-bus.ts</code>, <code>tests/events/event-bus.test.ts</code>
+      </div>
 
-<div class="step"><strong>Step 1</strong> <span class="checkbox">[ ]</span> 실패 테스트 먼저 작성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/tests/events/event-bus.test.ts</code></p>
-<pre><code>import { describe, expect, it, vi } from 'vitest';
+      <div class="step">
+        <strong>Step 1</strong> <span class="checkbox">[ ]</span> 실패 테스트 먼저 작성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/tests/events/event-bus.test.ts</code></p>
+      <pre><code>import { describe, expect, it, vi } from 'vitest';
 import { EventBus } from '@/events/event-bus';
 import type { GameEvents } from '@/events/types';
 
@@ -566,13 +758,20 @@ describe('EventBus', () =&gt; {
 });
 </code></pre>
 
-<div class="step"><strong>Step 2</strong> <span class="checkbox">[ ]</span> 테스트 실행해 실패 확인</div>
-<pre><code class="cmd">npm test</code></pre>
-<div class="expect"><strong>Expected:</strong> FAIL — <code>Cannot find module '@/events/event-bus'</code>.</div>
+      <div class="step">
+        <strong>Step 2</strong> <span class="checkbox">[ ]</span> 테스트 실행해 실패 확인
+      </div>
+      <pre><code class="cmd">npm test</code></pre>
+      <div class="expect">
+        <strong>Expected:</strong> FAIL — <code>Cannot find module '@/events/event-bus'</code>.
+      </div>
 
-<div class="step"><strong>Step 3</strong> <span class="checkbox">[ ]</span> <code>src/events/types.ts</code> 작성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/src/events/types.ts</code></p>
-<pre><code>/**
+      <div class="step">
+        <strong>Step 3</strong> <span class="checkbox">[ ]</span>
+        <code>src/events/types.ts</code> 작성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/src/events/types.ts</code></p>
+      <pre><code>/**
  * 게임에서 발생하는 모든 도메인 이벤트. 새 이벤트를 추가할 때는 반드시 여기에 타입을 정의한다.
  */
 export type GameEvents = {
@@ -587,9 +786,12 @@ export type GameEvents = {
 };
 </code></pre>
 
-<div class="step"><strong>Step 4</strong> <span class="checkbox">[ ]</span> <code>src/events/event-bus.ts</code> 구현</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/src/events/event-bus.ts</code></p>
-<pre><code>type Handler&lt;T&gt; = (payload: T) =&gt; void;
+      <div class="step">
+        <strong>Step 4</strong> <span class="checkbox">[ ]</span>
+        <code>src/events/event-bus.ts</code> 구현
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/src/events/event-bus.ts</code></p>
+      <pre><code>type Handler&lt;T&gt; = (payload: T) =&gt; void;
 
 export class EventBus&lt;EventMap extends Record&lt;string, unknown&gt;&gt; {
   private readonly listeners = new Map&lt;keyof EventMap, Set&lt;Handler&lt;EventMap[keyof EventMap]&gt;&gt;&gt;();
@@ -625,33 +827,39 @@ export class EventBus&lt;EventMap extends Record&lt;string, unknown&gt;&gt; {
 }
 </code></pre>
 
-<div class="step"><strong>Step 5</strong> <span class="checkbox">[ ]</span> 테스트 재실행해 통과 확인</div>
-<pre><code class="cmd">npm test</code></pre>
-<div class="expect"><strong>Expected:</strong> 5 tests passed (EventBus).</div>
+      <div class="step">
+        <strong>Step 5</strong> <span class="checkbox">[ ]</span> 테스트 재실행해 통과 확인
+      </div>
+      <pre><code class="cmd">npm test</code></pre>
+      <div class="expect"><strong>Expected:</strong> 5 tests passed (EventBus).</div>
 
-<div class="step"><strong>Step 6</strong> <span class="checkbox">[ ]</span> typecheck·lint 실행</div>
-<pre><code class="cmd">npm run typecheck
+      <div class="step">
+        <strong>Step 6</strong> <span class="checkbox">[ ]</span> typecheck·lint 실행
+      </div>
+      <pre><code class="cmd">npm run typecheck
 npm run lint</code></pre>
-<div class="expect"><strong>Expected:</strong> 둘 다 에러 없음.</div>
+      <div class="expect"><strong>Expected:</strong> 둘 다 에러 없음.</div>
 
-<div class="step"><strong>Step 7</strong> <span class="checkbox">[ ]</span> 커밋</div>
-<pre><code class="cmd">git add src/events/ tests/events/
+      <div class="step"><strong>Step 7</strong> <span class="checkbox">[ ]</span> 커밋</div>
+      <pre><code class="cmd">git add src/events/ tests/events/
 git commit -m "feat(events): add type-safe event bus"</code></pre>
-</div>
+    </div>
 
-<!-- ========================================================= -->
-<div class="task">
-<h3>Task 7: 시드 기반 RNG 유틸</h3>
+    <!-- ========================================================= -->
+    <div class="task">
+      <h3>Task 7: 시드 기반 RNG 유틸</h3>
 
-<p>결정성 확보용. 대미지 계산·날씨·웨이브 구성 전부 이 RNG에서 유도.</p>
+      <p>결정성 확보용. 대미지 계산·날씨·웨이브 구성 전부 이 RNG에서 유도.</p>
 
-<div class="files">
-<strong>Create:</strong> <code>src/util/rng.ts</code>, <code>tests/util/rng.test.ts</code>
-</div>
+      <div class="files">
+        <strong>Create:</strong> <code>src/util/rng.ts</code>, <code>tests/util/rng.test.ts</code>
+      </div>
 
-<div class="step"><strong>Step 1</strong> <span class="checkbox">[ ]</span> 실패 테스트 작성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/tests/util/rng.test.ts</code></p>
-<pre><code>import { describe, expect, it } from 'vitest';
+      <div class="step">
+        <strong>Step 1</strong> <span class="checkbox">[ ]</span> 실패 테스트 작성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/tests/util/rng.test.ts</code></p>
+      <pre><code>import { describe, expect, it } from 'vitest';
 import { createRng } from '@/util/rng';
 
 describe('createRng', () =&gt; {
@@ -711,13 +919,18 @@ describe('createRng', () =&gt; {
 });
 </code></pre>
 
-<div class="step"><strong>Step 2</strong> <span class="checkbox">[ ]</span> 테스트 실행해 실패 확인</div>
-<pre><code class="cmd">npm test -- util/rng</code></pre>
-<div class="expect"><strong>Expected:</strong> FAIL (모듈 없음).</div>
+      <div class="step">
+        <strong>Step 2</strong> <span class="checkbox">[ ]</span> 테스트 실행해 실패 확인
+      </div>
+      <pre><code class="cmd">npm test -- util/rng</code></pre>
+      <div class="expect"><strong>Expected:</strong> FAIL (모듈 없음).</div>
 
-<div class="step"><strong>Step 3</strong> <span class="checkbox">[ ]</span> <code>src/util/rng.ts</code> 구현 (mulberry32 기반, 가볍고 충분한 품질)</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/src/util/rng.ts</code></p>
-<pre><code>/**
+      <div class="step">
+        <strong>Step 3</strong> <span class="checkbox">[ ]</span> <code>src/util/rng.ts</code> 구현
+        (mulberry32 기반, 가볍고 충분한 품질)
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/src/util/rng.ts</code></p>
+      <pre><code>/**
  * mulberry32 — 32bit 시드 기반 결정적 PRNG.
  * 도메인 로직(대미지, 날씨, 스폰)에서 Math.random 대신 반드시 이 RNG를 사용.
  */
@@ -763,31 +976,41 @@ export function createRng(seed: number): Rng {
 }
 </code></pre>
 
-<div class="step"><strong>Step 4</strong> <span class="checkbox">[ ]</span> 테스트 재실행해 통과 확인</div>
-<pre><code class="cmd">npm test</code></pre>
-<div class="expect"><strong>Expected:</strong> RNG 6 tests passed, EventBus 5 tests still passing, smoke 2 tests still passing.</div>
+      <div class="step">
+        <strong>Step 4</strong> <span class="checkbox">[ ]</span> 테스트 재실행해 통과 확인
+      </div>
+      <pre><code class="cmd">npm test</code></pre>
+      <div class="expect">
+        <strong>Expected:</strong> RNG 6 tests passed, EventBus 5 tests still passing, smoke 2 tests
+        still passing.
+      </div>
 
-<div class="step"><strong>Step 5</strong> <span class="checkbox">[ ]</span> 커밋</div>
-<pre><code class="cmd">git add src/util/rng.ts tests/util/rng.test.ts
+      <div class="step"><strong>Step 5</strong> <span class="checkbox">[ ]</span> 커밋</div>
+      <pre><code class="cmd">git add src/util/rng.ts tests/util/rng.test.ts
 git commit -m "feat(util): add seeded mulberry32 rng"</code></pre>
-</div>
+    </div>
 
-<!-- ========================================================= -->
-<div class="task">
-<h3>Task 8: ECS 월드 래퍼 (bitecs)</h3>
+    <!-- ========================================================= -->
+    <div class="task">
+      <h3>Task 8: ECS 월드 래퍼 (bitecs)</h3>
 
-<p><code>bitecs</code>를 얇게 감싸 게임 도메인에서 쓰기 편한 API로 제공. Phase 1부터 Position/Velocity/Health 등 컴포넌트가 여기 붙음.</p>
+      <p>
+        <code>bitecs</code>를 얇게 감싸 게임 도메인에서 쓰기 편한 API로 제공. Phase 1부터
+        Position/Velocity/Health 등 컴포넌트가 여기 붙음.
+      </p>
 
-<div class="files">
-<strong>Create:</strong> <code>src/ecs/world.ts</code>, <code>tests/ecs/world.test.ts</code>
-</div>
+      <div class="files">
+        <strong>Create:</strong> <code>src/ecs/world.ts</code>, <code>tests/ecs/world.test.ts</code>
+      </div>
 
-<div class="step"><strong>Step 1</strong> <span class="checkbox">[ ]</span> bitecs 설치</div>
-<pre><code class="cmd">npm install bitecs@^0.3</code></pre>
+      <div class="step"><strong>Step 1</strong> <span class="checkbox">[ ]</span> bitecs 설치</div>
+      <pre><code class="cmd">npm install bitecs@^0.3</code></pre>
 
-<div class="step"><strong>Step 2</strong> <span class="checkbox">[ ]</span> 실패 테스트 작성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/tests/ecs/world.test.ts</code></p>
-<pre><code>import { describe, expect, it } from 'vitest';
+      <div class="step">
+        <strong>Step 2</strong> <span class="checkbox">[ ]</span> 실패 테스트 작성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/tests/ecs/world.test.ts</code></p>
+      <pre><code>import { describe, expect, it } from 'vitest';
 import { defineComponent, Types } from 'bitecs';
 import { createGameWorld, addEntity, addComponent, removeEntity, hasComponent } from '@/ecs/world';
 
@@ -826,13 +1049,17 @@ describe('ecs world', () =&gt; {
 });
 </code></pre>
 
-<div class="step"><strong>Step 3</strong> <span class="checkbox">[ ]</span> 테스트 실행해 실패 확인</div>
-<pre><code class="cmd">npm test -- ecs/world</code></pre>
-<div class="expect"><strong>Expected:</strong> FAIL — 모듈 없음.</div>
+      <div class="step">
+        <strong>Step 3</strong> <span class="checkbox">[ ]</span> 테스트 실행해 실패 확인
+      </div>
+      <pre><code class="cmd">npm test -- ecs/world</code></pre>
+      <div class="expect"><strong>Expected:</strong> FAIL — 모듈 없음.</div>
 
-<div class="step"><strong>Step 4</strong> <span class="checkbox">[ ]</span> <code>src/ecs/world.ts</code> 구현</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/src/ecs/world.ts</code></p>
-<pre><code>import {
+      <div class="step">
+        <strong>Step 4</strong> <span class="checkbox">[ ]</span> <code>src/ecs/world.ts</code> 구현
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/src/ecs/world.ts</code></p>
+      <pre><code>import {
   addComponent as bitAddComponent,
   addEntity as bitAddEntity,
   createWorld as bitCreateWorld,
@@ -879,28 +1106,36 @@ export function hasComponent(world: GameWorld, component: Component, eid: number
 }
 </code></pre>
 
-<div class="step"><strong>Step 5</strong> <span class="checkbox">[ ]</span> 테스트 재실행</div>
-<pre><code class="cmd">npm test</code></pre>
-<div class="expect"><strong>Expected:</strong> world 4 tests passed, 기존 테스트들 여전히 통과.</div>
+      <div class="step">
+        <strong>Step 5</strong> <span class="checkbox">[ ]</span> 테스트 재실행
+      </div>
+      <pre><code class="cmd">npm test</code></pre>
+      <div class="expect">
+        <strong>Expected:</strong> world 4 tests passed, 기존 테스트들 여전히 통과.
+      </div>
 
-<div class="step"><strong>Step 6</strong> <span class="checkbox">[ ]</span> 커밋</div>
-<pre><code class="cmd">git add src/ecs/ tests/ecs/ package.json package-lock.json
+      <div class="step"><strong>Step 6</strong> <span class="checkbox">[ ]</span> 커밋</div>
+      <pre><code class="cmd">git add src/ecs/ tests/ecs/ package.json package-lock.json
 git commit -m "feat(ecs): add bitecs world wrapper"</code></pre>
-</div>
+    </div>
 
-<!-- ========================================================= -->
-<div class="task">
-<h3>Task 9: 밸런스 데이터 파일 placeholder</h3>
+    <!-- ========================================================= -->
+    <div class="task">
+      <h3>Task 9: 밸런스 데이터 파일 placeholder</h3>
 
-<p>Phase 1부터 본격 채워질 데이터의 자리. 지금은 타입만 정의하고 빈 객체로 시작해서, 나중 태스크에서 import 깨짐 없이 확장.</p>
+      <p>
+        Phase 1부터 본격 채워질 데이터의 자리. 지금은 타입만 정의하고 빈 객체로 시작해서, 나중
+        태스크에서 import 깨짐 없이 확장.
+      </p>
 
-<div class="files">
-<strong>Create:</strong> <code>src/config/balance.ts</code>
-</div>
+      <div class="files"><strong>Create:</strong> <code>src/config/balance.ts</code></div>
 
-<div class="step"><strong>Step 1</strong> <span class="checkbox">[ ]</span> <code>src/config/balance.ts</code> 작성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/src/config/balance.ts</code></p>
-<pre><code>/**
+      <div class="step">
+        <strong>Step 1</strong> <span class="checkbox">[ ]</span>
+        <code>src/config/balance.ts</code> 작성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/src/config/balance.ts</code></p>
+      <pre><code>/**
  * 게임 밸런스 단일 소스. 런타임 변경 시 여기만 수정.
  * Phase 1에서 실제 값들(무기 대미지, 자원 양, 웨이브 크기 등)이 채워짐.
  */
@@ -940,9 +1175,12 @@ export const BALANCE: BalanceConfig = {
 };
 </code></pre>
 
-<div class="step"><strong>Step 2</strong> <span class="checkbox">[ ]</span> import 경로 확인 테스트 (smoke에 한 줄 추가)</div>
-<p>기존 파일 수정: <code>C:/Users/bada/6_IL/tests/smoke.test.ts</code></p>
-<pre><code>import { describe, expect, it } from 'vitest';
+      <div class="step">
+        <strong>Step 2</strong> <span class="checkbox">[ ]</span> import 경로 확인 테스트 (smoke에
+        한 줄 추가)
+      </div>
+      <p>기존 파일 수정: <code>C:/Users/bada/6_IL/tests/smoke.test.ts</code></p>
+      <pre><code>import { describe, expect, it } from 'vitest';
 
 describe('smoke', () =&gt; {
   it('vitest is wired up', () =&gt; {
@@ -962,32 +1200,37 @@ describe('smoke', () =&gt; {
 });
 </code></pre>
 
-<div class="step"><strong>Step 3</strong> <span class="checkbox">[ ]</span> 테스트·타입체크 실행</div>
-<pre><code class="cmd">npm test
+      <div class="step">
+        <strong>Step 3</strong> <span class="checkbox">[ ]</span> 테스트·타입체크 실행
+      </div>
+      <pre><code class="cmd">npm test
 npm run typecheck</code></pre>
-<div class="expect"><strong>Expected:</strong> 3 smoke tests passed, 타입 에러 없음.</div>
+      <div class="expect"><strong>Expected:</strong> 3 smoke tests passed, 타입 에러 없음.</div>
 
-<div class="step"><strong>Step 4</strong> <span class="checkbox">[ ]</span> 커밋</div>
-<pre><code class="cmd">git add src/config/balance.ts tests/smoke.test.ts
+      <div class="step"><strong>Step 4</strong> <span class="checkbox">[ ]</span> 커밋</div>
+      <pre><code class="cmd">git add src/config/balance.ts tests/smoke.test.ts
 git commit -m "feat(config): add balance config module"</code></pre>
-</div>
+    </div>
 
-<!-- ========================================================= -->
-<div class="task">
-<h3>Task 10: GitHub Actions CI</h3>
+    <!-- ========================================================= -->
+    <div class="task">
+      <h3>Task 10: GitHub Actions CI</h3>
 
-<p>push/PR 때마다 lint → typecheck → test → build 순서로 검증. 실패 시 머지 차단 가능.</p>
+      <p>push/PR 때마다 lint → typecheck → test → build 순서로 검증. 실패 시 머지 차단 가능.</p>
 
-<div class="files">
-<strong>Create:</strong> <code>.github/workflows/ci.yml</code>
-</div>
+      <div class="files"><strong>Create:</strong> <code>.github/workflows/ci.yml</code></div>
 
-<div class="step"><strong>Step 1</strong> <span class="checkbox">[ ]</span> 워크플로 디렉토리 생성 확인</div>
-<pre><code class="cmd">mkdir -p .github/workflows</code></pre>
+      <div class="step">
+        <strong>Step 1</strong> <span class="checkbox">[ ]</span> 워크플로 디렉토리 생성 확인
+      </div>
+      <pre><code class="cmd">mkdir -p .github/workflows</code></pre>
 
-<div class="step"><strong>Step 2</strong> <span class="checkbox">[ ]</span> <code>.github/workflows/ci.yml</code> 작성</div>
-<p>파일 경로: <code>C:/Users/bada/6_IL/.github/workflows/ci.yml</code></p>
-<pre><code>name: CI
+      <div class="step">
+        <strong>Step 2</strong> <span class="checkbox">[ ]</span>
+        <code>.github/workflows/ci.yml</code> 작성
+      </div>
+      <p>파일 경로: <code>C:/Users/bada/6_IL/.github/workflows/ci.yml</code></p>
+      <pre><code>name: CI
 
 on:
   push:
@@ -1026,82 +1269,114 @@ jobs:
         run: npm run build
 </code></pre>
 
-<div class="step"><strong>Step 3</strong> <span class="checkbox">[ ]</span> 로컬에서 CI와 동일 순서 실행해 통과 확인</div>
-<pre><code class="cmd">npm ci
+      <div class="step">
+        <strong>Step 3</strong> <span class="checkbox">[ ]</span> 로컬에서 CI와 동일 순서 실행해
+        통과 확인
+      </div>
+      <pre><code class="cmd">npm ci
 npm run lint
 npm run typecheck
 npm test
 npm run build</code></pre>
-<div class="expect"><strong>Expected:</strong> 모두 성공. 에러 0개, 테스트 전원 통과, <code>dist/</code> 생성.</div>
+      <div class="expect">
+        <strong>Expected:</strong> 모두 성공. 에러 0개, 테스트 전원 통과, <code>dist/</code> 생성.
+      </div>
 
-<div class="step"><strong>Step 4</strong> <span class="checkbox">[ ]</span> 커밋 후 원격 푸시</div>
-<pre><code class="cmd">git add .github/workflows/ci.yml
+      <div class="step">
+        <strong>Step 4</strong> <span class="checkbox">[ ]</span> 커밋 후 원격 푸시
+      </div>
+      <pre><code class="cmd">git add .github/workflows/ci.yml
 git commit -m "ci: add github actions workflow"
 git push -u origin main</code></pre>
 
-<div class="step"><strong>Step 5</strong> <span class="checkbox">[ ]</span> GitHub에서 CI 결과 확인</div>
-<div class="expect"><strong>Expected:</strong> <code>https://github.com/KeeCOr/6_IL/actions</code>에서 첫 워크플로가 녹색으로 통과. 실패 시 에러 메시지 확인 후 원인 수정 → 재커밋.</div>
-</div>
+      <div class="step">
+        <strong>Step 5</strong> <span class="checkbox">[ ]</span> GitHub에서 CI 결과 확인
+      </div>
+      <div class="expect">
+        <strong>Expected:</strong> <code>https://github.com/KeeCOr/6_IL/actions</code>에서 첫
+        워크플로가 녹색으로 통과. 실패 시 에러 메시지 확인 후 원인 수정 → 재커밋.
+      </div>
+    </div>
 
-<!-- ========================================================= -->
-<div class="task">
-<h3>Task 11: Phase 0 완료 검증</h3>
+    <!-- ========================================================= -->
+    <div class="task">
+      <h3>Task 11: Phase 0 완료 검증</h3>
 
-<p>모든 기반 구성요소가 함께 동작하는지 최종 확인.</p>
+      <p>모든 기반 구성요소가 함께 동작하는지 최종 확인.</p>
 
-<div class="files">
-<strong>Verify only</strong> — 코드 수정 없음
-</div>
+      <div class="files"><strong>Verify only</strong> — 코드 수정 없음</div>
 
-<div class="step"><strong>Step 1</strong> <span class="checkbox">[ ]</span> 클린 체크아웃 시뮬레이션</div>
-<pre><code class="cmd">rm -rf node_modules dist
+      <div class="step">
+        <strong>Step 1</strong> <span class="checkbox">[ ]</span> 클린 체크아웃 시뮬레이션
+      </div>
+      <pre><code class="cmd">rm -rf node_modules dist
 npm ci</code></pre>
-<div class="expect"><strong>Expected:</strong> 에러 없이 설치 완료.</div>
+      <div class="expect"><strong>Expected:</strong> 에러 없이 설치 완료.</div>
 
-<div class="step"><strong>Step 2</strong> <span class="checkbox">[ ]</span> 전체 검증 파이프라인 로컬 실행</div>
-<pre><code class="cmd">npm run lint &amp;&amp; npm run typecheck &amp;&amp; npm test &amp;&amp; npm run build</code></pre>
-<div class="expect"><strong>Expected:</strong> 모두 통과. 테스트 수: smoke 3 + event-bus 5 + rng 6 + ecs/world 4 = 18개.</div>
+      <div class="step">
+        <strong>Step 2</strong> <span class="checkbox">[ ]</span> 전체 검증 파이프라인 로컬 실행
+      </div>
+      <pre><code class="cmd">npm run lint &amp;&amp; npm run typecheck &amp;&amp; npm test &amp;&amp; npm run build</code></pre>
+      <div class="expect">
+        <strong>Expected:</strong> 모두 통과. 테스트 수: smoke 3 + event-bus 5 + rng 6 + ecs/world 4
+        = 18개.
+      </div>
 
-<div class="step"><strong>Step 3</strong> <span class="checkbox">[ ]</span> 개발 서버 기동 + 브라우저 확인</div>
-<pre><code class="cmd">npm run dev</code></pre>
-<div class="expect"><strong>Expected:</strong> <code>http://localhost:5173</code>에서 어두운 배경 + "6_IL — boot" 텍스트가 보임. 콘솔 에러 0개.</div>
+      <div class="step">
+        <strong>Step 3</strong> <span class="checkbox">[ ]</span> 개발 서버 기동 + 브라우저 확인
+      </div>
+      <pre><code class="cmd">npm run dev</code></pre>
+      <div class="expect">
+        <strong>Expected:</strong> <code>http://localhost:5173</code>에서 어두운 배경 + "6_IL —
+        boot" 텍스트가 보임. 콘솔 에러 0개.
+      </div>
 
-<div class="step"><strong>Step 4</strong> <span class="checkbox">[ ]</span> Phase 0 완료 체크리스트 확인</div>
-<ul>
-  <li>[ ] <code>package.json</code> 스크립트: dev, build, preview, typecheck, lint, format, test 모두 동작</li>
-  <li>[ ] TypeScript strict 설정 + 경로 alias <code>@/</code> 동작</li>
-  <li>[ ] Vite 개발 서버가 뜨고 Phaser 캔버스가 렌더링됨</li>
-  <li>[ ] ESLint · Prettier가 소스 전체에 에러 없음</li>
-  <li>[ ] Vitest로 18개 테스트 전원 통과</li>
-  <li>[ ] EventBus · RNG · ECS World 유틸이 import 가능하고 테스트됨</li>
-  <li>[ ] Balance / Constants 설정 파일이 자리잡음</li>
-  <li>[ ] GitHub Actions CI가 녹색으로 통과</li>
-  <li>[ ] <code>npm run build</code>가 <code>dist/</code>에 프로덕션 번들 생성</li>
-</ul>
+      <div class="step">
+        <strong>Step 4</strong> <span class="checkbox">[ ]</span> Phase 0 완료 체크리스트 확인
+      </div>
+      <ul>
+        <li>
+          [ ] <code>package.json</code> 스크립트: dev, build, preview, typecheck, lint, format, test
+          모두 동작
+        </li>
+        <li>[ ] TypeScript strict 설정 + 경로 alias <code>@/</code> 동작</li>
+        <li>[ ] Vite 개발 서버가 뜨고 Phaser 캔버스가 렌더링됨</li>
+        <li>[ ] ESLint · Prettier가 소스 전체에 에러 없음</li>
+        <li>[ ] Vitest로 18개 테스트 전원 통과</li>
+        <li>[ ] EventBus · RNG · ECS World 유틸이 import 가능하고 테스트됨</li>
+        <li>[ ] Balance / Constants 설정 파일이 자리잡음</li>
+        <li>[ ] GitHub Actions CI가 녹색으로 통과</li>
+        <li>[ ] <code>npm run build</code>가 <code>dist/</code>에 프로덕션 번들 생성</li>
+      </ul>
 
-<div class="step"><strong>Step 5</strong> <span class="checkbox">[ ]</span> Phase 0 완료 태그</div>
-<pre><code class="cmd">git tag -a phase-0-complete -m "Phase 0: project foundation complete"
+      <div class="step">
+        <strong>Step 5</strong> <span class="checkbox">[ ]</span> Phase 0 완료 태그
+      </div>
+      <pre><code class="cmd">git tag -a phase-0-complete -m "Phase 0: project foundation complete"
 git push origin phase-0-complete</code></pre>
-</div>
+    </div>
 
-<hr>
+    <hr />
 
-<h2>Phase 0 이후</h2>
+    <h2>Phase 0 이후</h2>
 
-<p>Phase 0이 끝나면 Phase 1(수직 슬라이스)의 별도 플랜 문서를 작성합니다 — 파일명 예시: <code>docs/superpowers/plans/YYYY-MM-DD-6il-phase1-vertical-slice.html</code>. Phase 1 내용 미리보기:</p>
-<ul>
-  <li>플레이어 이동·카메라·입력 추상화</li>
-  <li>기본 무기(롱소드) + 자동 공격 + 투사체 풀</li>
-  <li>설원 신(근교) + 나무/바위/사슴</li>
-  <li>벌목·채광·사냥 액션</li>
-  <li>마을 그리드 + 모닥불 + 나무 바리게이트</li>
-  <li>낮 → 저녁 → 밤 전환 사이클</li>
-  <li>1종 좀비 웨이브</li>
-  <li>기본 시야 마스크 (단순 반경)</li>
-  <li>기본 세이브/로드</li>
-</ul>
+    <p>
+      Phase 0이 끝나면 Phase 1(수직 슬라이스)의 별도 플랜 문서를 작성합니다 — 파일명 예시:
+      <code>docs/superpowers/plans/YYYY-MM-DD-6il-phase1-vertical-slice.html</code>. Phase 1 내용
+      미리보기:
+    </p>
+    <ul>
+      <li>플레이어 이동·카메라·입력 추상화</li>
+      <li>기본 무기(롱소드) + 자동 공격 + 투사체 풀</li>
+      <li>설원 신(근교) + 나무/바위/사슴</li>
+      <li>벌목·채광·사냥 액션</li>
+      <li>마을 그리드 + 모닥불 + 나무 바리게이트</li>
+      <li>낮 → 저녁 → 밤 전환 사이클</li>
+      <li>1종 좀비 웨이브</li>
+      <li>기본 시야 마스크 (단순 반경)</li>
+      <li>기본 세이브/로드</li>
+    </ul>
 
-<p>기준: Phase 1 종료 시점에 "1일 플레이 가능한 최소 게임"이 완성.</p>
-
-</body>
+    <p>기준: Phase 1 종료 시점에 "1일 플레이 가능한 최소 게임"이 완성.</p>
+  </body>
 </html>
