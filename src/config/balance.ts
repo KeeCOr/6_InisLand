@@ -3,10 +3,10 @@
  */
 
 export const DAY_CYCLE = {
-  dayDurationSec: 540,
-  nightDurationSec: 360,
-  eveningTransitionSec: 30,
-  dawnTransitionSec: 30,
+  dayDurationSec: 45, // MVP test value (full game: 540)
+  nightDurationSec: 30, // MVP test value (full game: 360)
+  eveningTransitionSec: 5,
+  dawnTransitionSec: 5,
 } as const;
 
 export const VISION = {
