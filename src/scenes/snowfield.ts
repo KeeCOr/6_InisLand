@@ -19,7 +19,9 @@ import {
 } from '@/gameplay/cycle/day-night-controller';
 import { EventBus } from '@/events/event-bus';
 import type { GameEvents } from '@/events/types';
-import { DAY_CYCLE } from '@/config/balance';
+import { DAY_CYCLE, VISION } from '@/config/balance';
+import { GAME_WIDTH, GAME_HEIGHT, TILE_SIZE } from '@/config/constants';
+import { VisionMask } from '@/gameplay/vision/vision-mask';
 import { SpriteRef } from '@/ecs/components/sprite-ref';
 import { Position } from '@/ecs/components/position';
 import { PlayerTag, TreeTag, StoneTag, DeerTag } from '@/ecs/components/tags';
@@ -37,6 +39,7 @@ export class SnowfieldScene extends Phaser.Scene {
   private gather!: GatherController;
   private bus!: EventBus<GameEvents>;
   private cycle!: DayNightController;
+  private vision!: VisionMask;
 
   constructor() {
     super({ key: 'Snowfield' });
@@ -122,6 +125,8 @@ export class SnowfieldScene extends Phaser.Scene {
       world: this.world,
     });
 
+    this.vision = new VisionMask(this, GAME_WIDTH, GAME_HEIGHT, VISION.dayRadiusTiles * TILE_SIZE);
+
     // 저녁 시작 시 Village 신으로 전환
     this.bus.on('evening:started', () => {
       this.scene.start('Village', {
@@ -162,5 +167,7 @@ export class SnowfieldScene extends Phaser.Scene {
     spriteSyncSystem(this.world, this.spriteMap);
 
     this.cycle.update(dt);
+
+    this.vision.update(Position.x[this.playerEid] ?? 0, Position.y[this.playerEid] ?? 0);
   }
 }

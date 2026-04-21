@@ -8,7 +8,9 @@ import type { DayNightController } from '@/gameplay/cycle/day-night-controller';
 import type { EventBus } from '@/events/event-bus';
 import type { GameEvents } from '@/events/types';
 import { InputAdapter } from '@/gameplay/player/input-adapter';
-import { VILLAGE_GRID_SIZE, TILE_SIZE } from '@/config/constants';
+import { VILLAGE_GRID_SIZE, TILE_SIZE, GAME_WIDTH, GAME_HEIGHT } from '@/config/constants';
+import { VISION } from '@/config/balance';
+import { VisionMask } from '@/gameplay/vision/vision-mask';
 import { Position } from '@/ecs/components/position';
 import { SpriteRef } from '@/ecs/components/sprite-ref';
 import { PlayerTag } from '@/ecs/components/tags';
@@ -35,6 +37,7 @@ export class VillageScene extends Phaser.Scene {
   private input2!: InputAdapter;
   private playerEid?: number;
   private rng: Rng = createRng(2026);
+  private vision!: VisionMask;
 
   constructor() {
     super({ key: 'Village' });
@@ -92,6 +95,17 @@ export class VillageScene extends Phaser.Scene {
 
     this.input.keyboard?.on('keydown-ONE', () => this.placement.start('barricade'));
     this.input.keyboard?.on('keydown-TWO', () => this.placement.start('campfire'));
+
+    const isNight = this.cycle.phase === 'night' || this.cycle.phase === 'evening';
+    const r = (isNight ? VISION.nightRadiusTiles : VISION.dayRadiusTiles) * TILE_SIZE;
+    this.vision = new VisionMask(this, GAME_WIDTH, GAME_HEIGHT, r);
+
+    this.bus.on('night:started', () => {
+      this.vision.setRadius(VISION.nightRadiusTiles * TILE_SIZE);
+    });
+    this.bus.on('dawn:started', () => {
+      this.vision.setRadius(VISION.dayRadiusTiles * TILE_SIZE);
+    });
 
     // 밤 시작 시 좀비 웨이브 스폰
     this.bus.on('night:started', ({ day }) => {
@@ -156,5 +170,9 @@ export class VillageScene extends Phaser.Scene {
     this.cycle.update(dt);
 
     if (this.input2.justPressed('cancel')) this.placement.cancel();
+
+    if (this.playerEid !== undefined) {
+      this.vision.update(Position.x[this.playerEid] ?? 0, Position.y[this.playerEid] ?? 0);
+    }
   }
 }
