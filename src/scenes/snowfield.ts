@@ -95,20 +95,25 @@ export class SnowfieldScene extends Phaser.Scene {
 
     // 플레이어가 이미 존재하면(씬 재진입) 엔티티 재사용, 스프라이트만 새로 등록
     const existingPlayerEid = playerQuery(this.world)[0];
+    let playerSprite: Phaser.GameObjects.Image;
     if (existingPlayerEid !== undefined) {
       this.playerEid = existingPlayerEid;
-      const sprite = this.add.image(
+      playerSprite = this.add.image(
         Position.x[existingPlayerEid] ?? 0,
         Position.y[existingPlayerEid] ?? 0,
         'player',
       );
       const gid = this.nextGid();
-      this.spriteMap.set(gid, sprite);
+      this.spriteMap.set(gid, playerSprite);
       SpriteRef.gid[existingPlayerEid] = gid;
     } else {
-      const { eid } = spawnPlayer(this.world, this, this.spriteMap, this.nextGid, 480, 270);
+      const { eid, sprite } = spawnPlayer(this.world, this, this.spriteMap, this.nextGid, 480, 270);
       this.playerEid = eid;
+      playerSprite = sprite;
     }
+
+    // 카메라가 플레이어 추종
+    this.cameras.main.startFollow(playerSprite, true, 0.15, 0.15);
 
     // 씬 재진입 시 자원/동물 초기화
     this.clearSnowfieldContent();
