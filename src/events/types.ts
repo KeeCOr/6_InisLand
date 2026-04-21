@@ -6,8 +6,13 @@ export type GameEvents = {
   'day:ended': { day: number };
   'night:started': { day: number };
   'night:ended': { day: number };
+  'evening:started': { day: number };
+  'dawn:started': { day: number };
   'player:damaged': { amount: number; remaining: number };
   'player:died': { day: number };
   'zombie:died': { id: number; position: { x: number; y: number } };
   'resource:changed': { kind: string; delta: number; total: number };
+  'building:destroyed': { eid: number; kind: string };
+  'wave:started': { day: number; waveIndex: number; enemyCount: number };
+  'wave:cleared': { day: number; waveIndex: number };
 };
