@@ -18,7 +18,8 @@ import { zombieAiSystem } from '@/gameplay/enemies/zombie-ai';
 import { movementSystem } from '@/ecs/systems/movement';
 import { spriteSyncSystem } from '@/ecs/systems/sprite-sync';
 import { cleanupSystem } from '@/ecs/systems/cleanup';
-import { createRng } from '@/util/rng';
+import { createRng, type Rng } from '@/util/rng';
+import { playerAttackSystem } from '@/gameplay/combat/attack-controller';
 
 const playerQuery = defineQuery([PlayerTag]);
 
@@ -33,6 +34,7 @@ export class VillageScene extends Phaser.Scene {
   private placement!: PlacementController;
   private input2!: InputAdapter;
   private playerEid?: number;
+  private rng: Rng = createRng(2026);
 
   constructor() {
     super({ key: 'Village' });
@@ -134,6 +136,9 @@ export class VillageScene extends Phaser.Scene {
     const dt = dtMs / 1000;
     this.world.deltaTime = dt;
 
+    if (this.playerEid !== undefined) {
+      playerAttackSystem(this.world, this.playerEid, this.rng);
+    }
     zombieAiSystem(this.world);
     movementSystem(this.world);
 
