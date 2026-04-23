@@ -19,3 +19,17 @@
 
 - 게임 설계서: `docs/superpowers/specs/2026-04-21-6il-game-design.md`
 - 구현 플랜: `docs/superpowers/plans/`
+
+## Credits
+
+### Art Assets
+
+- **LPC (Liberated Pixel Cup)** — characters, props, tiles
+  - Licensed under CC-BY-SA 3.0 and GPL 3.0
+  - Contributor list: https://opengameart.org/content/lpc-collection
+- **Kenney — UI Pack RPG Expansion** — HUD panels and icons (CC0)
+  - https://kenney.nl/assets/ui-pack-rpg-expansion
+- **Kenney — Particle Pack** — VFX sprites (CC0)
+  - https://kenney.nl/assets/particle-pack
+- **m3x6 font** by Daniel Linssen (OFL)
+  - https://managore.itch.io/m3x6
