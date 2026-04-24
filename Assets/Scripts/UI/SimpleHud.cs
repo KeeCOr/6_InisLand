@@ -71,6 +71,41 @@ namespace IL6
                 }
             }
             GUI.enabled = true;
+            y += 34;
+
+            // 채굴 버튼: 근처 나무가 있고 동료가 있을 때만 활성화
+            if (Player != null)
+            {
+                var nearTree = FindNearestTreeInRange(Player.transform.position, 3.5f);
+                var companions = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
+                int workers = companions != null ? companions.Length : 0;
+                GUI.enabled = nearTree != null && workers > 0;
+                string label = nearTree != null
+                    ? $"Chop Tree (send {workers} companions)"
+                    : "Chop Tree (no tree in range)";
+                if (GUI.Button(new Rect(20, y, 220, 30), label))
+                {
+                    foreach (var c in companions)
+                    {
+                        if (c != null) c.AssignGather(nearTree);
+                    }
+                }
+                GUI.enabled = true;
+            }
+        }
+
+        private static Gatherable FindNearestTreeInRange(Vector3 center, float range)
+        {
+            var all = Object.FindObjectsByType<Gatherable>(FindObjectsSortMode.None);
+            Gatherable best = null;
+            float bestDist = range;
+            foreach (var g in all)
+            {
+                if (g == null || g.YieldKind != ResourceKind.Wood) continue;
+                float d = Vector2.Distance(center, g.transform.position);
+                if (d < bestDist) { best = g; bestDist = d; }
+            }
+            return best;
         }
 
         private void DrawRightPanel()
