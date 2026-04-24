@@ -13,6 +13,10 @@ namespace IL6
         public GameObject TreePrefab;
         public GameObject DeerPrefab;
 
+        [Header("Tilemap")]
+        public UnityEngine.Tilemaps.Tilemap GroundTilemap;
+        public UnityEngine.Tilemaps.TileBase GroundTile;
+
         public int ChunkSize = 320;
         public int LoadRadius = 2;
         public int UnloadRadius = 4;
@@ -99,7 +103,27 @@ namespace IL6
                     data.Spawned.Add(Instantiate(DeerPrefab, new Vector3(x, y, 0), Quaternion.identity));
             }
 
+            FillGroundTiles(cx, cy);
+
             _loaded[(cx, cy)] = data;
+        }
+
+        private void FillGroundTiles(int cx, int cy)
+        {
+            if (GroundTilemap == null || GroundTile == null) return;
+            int baseX = cx * ChunkSize;
+            int baseY = cy * ChunkSize;
+            // ChunkSize 는 월드 유닛 기준 (예: 320). Tilemap 셀은 1 유닛 = 1 타일.
+            for (int y = 0; y < ChunkSize; y++)
+            {
+                for (int x = 0; x < ChunkSize; x++)
+                {
+                    GroundTilemap.SetTile(
+                        new Vector3Int(baseX + x, baseY + y, 0),
+                        GroundTile
+                    );
+                }
+            }
         }
     }
 }
