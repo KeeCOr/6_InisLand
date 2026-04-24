@@ -23,6 +23,8 @@ namespace IL6
             EnsureStyles();
             DrawLeftPanel();
             DrawRightPanel();
+            DrawWorldChopButton();
+            DrawRecruitDialog();
         }
 
         private void DrawLeftPanel()
@@ -83,36 +85,84 @@ namespace IL6
                 }
             }
             GUI.enabled = true;
-            y += 34;
+        }
 
-            // 영입 힌트: 가까운 Recruitable NPC 표시
-            var nearest = FindNearestRecruitable(Player != null ? Player.transform.position : Vector3.zero, 2f);
-            if (nearest != null)
-            {
-                GUI.Label(new Rect(20, y, 260, 24),
-                    $"Press F to recruit: {nearest.DisplayNamePublic}", _weaponStyle);
-                y += 24;
-            }
+        // 나무 위에 떠 있는 "Chop Tree" 월드 스페이스 버튼.
+        private void DrawWorldChopButton()
+        {
+            if (Player == null) return;
+            var tree = FindNearestTreeInRange(Player.transform.position, 3.5f);
+            if (tree == null) return;
+            var cam = Camera.main;
+            if (cam == null) return;
 
-            // 채굴 버튼: 근처 나무가 있고 동료가 있을 때만 활성화
-            if (Player != null)
+            var worldAnchor = tree.transform.position + new Vector3(0f, 0.8f, 0f);
+            Vector3 sp = cam.WorldToScreenPoint(worldAnchor);
+            if (sp.z < 0) return;
+            float guiY = Screen.height - sp.y;
+
+            var companions = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
+            int workers = companions.Length;
+            string label = workers > 0 ? $"Chop Tree ({workers})" : "Chop (no crew)";
+
+            var rect = new Rect(sp.x - 70, guiY - 16, 140, 30);
+            GUI.enabled = workers > 0;
+            if (GUI.Button(rect, label))
             {
-                var nearTree = FindNearestTreeInRange(Player.transform.position, 3.5f);
-                var companions = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
-                int workers = companions != null ? companions.Length : 0;
-                GUI.enabled = nearTree != null && workers > 0;
-                string label = nearTree != null
-                    ? $"Chop Tree (send {workers} companions)"
-                    : "Chop Tree (no tree in range)";
-                if (GUI.Button(new Rect(20, y, 220, 30), label))
-                {
-                    foreach (var c in companions)
-                    {
-                        if (c != null) c.AssignGather(nearTree);
-                    }
-                }
-                GUI.enabled = true;
+                foreach (var c in companions) if (c != null) c.AssignGather(tree);
             }
+            GUI.enabled = true;
+        }
+
+        // 하단 중앙 영입 다이얼로그: 초상 + 이름 + 대사 + 스탯 + Accept/Reject
+        private void DrawRecruitDialog()
+        {
+            if (Player == null) return;
+            var npc = FindNearestRecruitable(Player.transform.position, 2.2f);
+            if (npc == null) return;
+
+            const int W = 520;
+            const int H = 150;
+            int x = Screen.width / 2 - W / 2;
+            int y = Screen.height - H - 20;
+
+            GUI.Box(new Rect(x, y, W, H), "");
+
+            var sr = npc.GetComponent<SpriteRenderer>();
+            var col = sr != null ? sr.color : Color.white;
+            var portrait = new Rect(x + 12, y + 12, 126, 126);
+            var oldC = GUI.color;
+            GUI.color = col;
+            GUI.DrawTexture(portrait, Texture2D.whiteTexture);
+            GUI.color = Color.black;
+            GUI.DrawTexture(new Rect(portrait.x, portrait.y, portrait.width, 2), Texture2D.whiteTexture);
+            GUI.DrawTexture(new Rect(portrait.x, portrait.yMax - 2, portrait.width, 2), Texture2D.whiteTexture);
+            GUI.DrawTexture(new Rect(portrait.x, portrait.y, 2, portrait.height), Texture2D.whiteTexture);
+            GUI.DrawTexture(new Rect(portrait.xMax - 2, portrait.y, 2, portrait.height), Texture2D.whiteTexture);
+            GUI.color = oldC;
+
+            int tx = x + 152;
+            int tw = W - 164;
+
+            GUI.Label(new Rect(tx, y + 12, tw, 24), $"{npc.DisplayNamePublic} ({npc.Role})", _titleStyle);
+            GUI.Label(new Rect(tx, y + 40, tw, 44), $"\"{npc.DialogText}\"", _labelStyle);
+            GUI.Label(new Rect(tx, y + 84, tw, 20), $"전투 {Stars(npc.CombatRating)}", _labelStyle);
+            GUI.Label(new Rect(tx, y + 104, tw, 20), $"농사 {Stars(npc.FarmRating)}", _labelStyle);
+
+            if (GUI.Button(new Rect(tx, y + H - 34, 110, 26), "영입 (F)"))
+            {
+                npc.Recruit();
+            }
+            if (GUI.Button(new Rect(tx + 120, y + H - 34, 110, 26), "거절"))
+            {
+                // 대화 닫기는 범위 벗어나면 자동
+            }
+        }
+
+        private static string Stars(int n)
+        {
+            n = Mathf.Clamp(n, 0, 5);
+            return new string('★', n) + new string('☆', 5 - n);
         }
 
         private static Gatherable FindNearestTreeInRange(Vector3 center, float range)

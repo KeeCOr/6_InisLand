@@ -3570,8 +3570,15 @@ MonoBehaviour:
   RecruitRange: 1.6
   RecruitKey: 102
   DisplayName: Youth
-  FollowStopDistance: 1.4
+  Role: Hunter
+  DialogText: 젊고 튼튼합니다. 함께 싸우게 해주세요.
+  CombatRating: 5
+  FarmRating: 3
+  FollowStopDistance: 0.25
   MoveSpeed: 5
+  AttackRange: 5.5
+  AttackDamage: 8
+  AttackCooldown: 1.3
 --- !u!114 &120000004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3692,8 +3699,15 @@ MonoBehaviour:
   RecruitRange: 1.6
   RecruitKey: 102
   DisplayName: Man
-  FollowStopDistance: 1.4
+  Role: Warrior
+  DialogText: 평생 나무를 벤 아저씨입니다. 도움이 될겁니다.
+  CombatRating: 4
+  FarmRating: 4
+  FollowStopDistance: 0.25
   MoveSpeed: 4.2
+  AttackRange: 4.5
+  AttackDamage: 7
+  AttackCooldown: 1.6
 --- !u!114 &130000004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3814,8 +3828,15 @@ MonoBehaviour:
   RecruitRange: 1.6
   RecruitKey: 102
   DisplayName: Woman
-  FollowStopDistance: 1.4
+  Role: Archer
+  DialogText: 활을 잘 쏩니다. 원거리는 맡겨주세요.
+  CombatRating: 3
+  FarmRating: 4
+  FollowStopDistance: 0.25
   MoveSpeed: 4
+  AttackRange: 7
+  AttackDamage: 5
+  AttackCooldown: 1.2
 --- !u!114 &140000004
 MonoBehaviour:
   m_ObjectHideFlags: 0

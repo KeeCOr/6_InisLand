@@ -3,20 +3,28 @@ using UnityEngine;
 namespace IL6
 {
     /// <summary>
-    /// 영입 가능한 NPC. 플레이어가 RecruitRange 안으로 들어와 F 키를 누르면
-    /// 자신에게 Companion 컴포넌트를 추가하고 자신은 제거되어 동료가 됨.
-    /// 가까이 있을 때 살짝 펄스 애니메이션으로 영입 가능 상태 표시.
+    /// 영입 가능한 NPC. SimpleHud 가 근처 NPC 를 감지해 하단 대화 패널을 띄우고,
+    /// 플레이어가 "영입" 버튼 (또는 F 키) 을 누르면 Recruit() 으로 Companion 전환.
     /// </summary>
     public sealed class RecruitableNpc : MonoBehaviour
     {
         public Transform Player;
-        public float RecruitRange = 1.6f;
+        public float RecruitRange = 1.8f;
         public KeyCode RecruitKey = KeyCode.F;
+
+        [Header("Profile")]
         public string DisplayName = "Stranger";
+        public string Role = "Hunter";
+        [TextArea(1, 3)] public string DialogText = "함께 가고 싶습니다.";
+        [Range(0, 5)] public int CombatRating = 3;
+        [Range(0, 5)] public int FarmRating = 3;
 
         [Header("Recruited Companion config")]
-        public float FollowStopDistance = 1.4f;
+        public float FollowStopDistance = 0.25f;
         public float MoveSpeed = 4.5f;
+        public float AttackRange = 5f;
+        public int AttackDamage = 6;
+        public float AttackCooldown = 1.6f;
 
         public bool IsPlayerInRange { get; private set; }
         public string DisplayNamePublic => DisplayName;
@@ -51,13 +59,15 @@ namespace IL6
             }
         }
 
-        private void Recruit()
+        public void Recruit()
         {
             var comp = gameObject.AddComponent<Companion>();
             comp.Player = Player;
-            comp.FollowDistance = 1.8f;
             comp.FollowStopDistance = FollowStopDistance;
             comp.MoveSpeed = MoveSpeed;
+            comp.AttackRange = AttackRange;
+            comp.Damage = AttackDamage;
+            comp.AttackCooldown = AttackCooldown;
             comp.GatherReach = 0.7f;
 
             var sr = GetComponent<SpriteRenderer>();
