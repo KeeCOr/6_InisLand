@@ -3,9 +3,10 @@ using UnityEngine;
 namespace IL6
 {
     /// <summary>
-    /// 부하. 평소엔 Player 주변 원형 대형 슬롯에 머무르며 겹치지 않게 서로 밀어냄.
-    /// AssignGather 시 해당 Gatherable 로 이동해 채집 후 복귀.
-    /// 전투: 사거리 내 가장 가까운 좀비에게 주기적으로 투사체 발사 (연두색).
+    /// 부하. Rigidbody2D 기반 이동으로 나무·바위·바리게이트·다른 유닛과 물리 충돌.
+    /// - 평소엔 Player 주변 원형 대형 슬롯 유지 + 다른 동료와 분리
+    /// - AssignGather: 지정 Gatherable 로 이동해 채집 후 복귀
+    /// - 자동 공격: 사거리 내 가장 가까운 좀비에게 주기적으로 투사체 발사
     /// </summary>
     public sealed class Companion : MonoBehaviour
     {
@@ -28,11 +29,29 @@ namespace IL6
         public Gatherable Target { get; private set; }
 
         private float _attackCd;
+        private Rigidbody2D _rb;
 
         public void AssignGather(Gatherable target)
         {
             Target = target;
             CurrentMode = target != null ? Mode.Working : Mode.Follow;
+        }
+
+        private void Awake()
+        {
+            _rb = GetComponent<Rigidbody2D>();
+            if (_rb == null) _rb = gameObject.AddComponent<Rigidbody2D>();
+            _rb.gravityScale = 0f;
+            _rb.freezeRotation = true;
+            _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+            _rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
+
+            var col = GetComponent<CircleCollider2D>();
+            if (col == null)
+            {
+                col = gameObject.AddComponent<CircleCollider2D>();
+                col.radius = 0.35f;
+            }
         }
 
         private void Start()
@@ -47,15 +66,20 @@ namespace IL6
         private void Update()
         {
             _attackCd -= Time.deltaTime;
-            if (CurrentMode == Mode.Working) { HandleWorking(); }
-            else { HandleFollow(); }
             TryAttack();
         }
 
-        private void HandleFollow()
+        private void FixedUpdate()
         {
-            if (Player == null) return;
+            Vector2 desired = Vector2.zero;
+            if (CurrentMode == Mode.Working) desired = ComputeWorkingVelocity();
+            else desired = ComputeFollowVelocity();
+            _rb.velocity = desired;
+        }
 
+        private Vector2 ComputeFollowVelocity()
+        {
+            if (Player == null) return Vector2.zero;
             Vector2 slot = GetFormationSlot();
             Vector2 toSlot = slot - (Vector2)transform.position;
             float d = toSlot.magnitude;
@@ -67,22 +91,19 @@ namespace IL6
                 float speedFactor = Mathf.Clamp01(d / FollowDistance);
                 moveDir *= speedFactor;
             }
-
-            // 다른 동료와 겹치지 않게 분리 벡터 가산
             moveDir += SeparationFromOthers();
 
-            if (moveDir.sqrMagnitude > 0.0001f)
-            {
-                transform.position += (Vector3)(moveDir.normalized * MoveSpeed * Time.deltaTime * Mathf.Clamp01(moveDir.magnitude));
-            }
+            if (moveDir.sqrMagnitude < 0.0001f) return Vector2.zero;
+            float mag = Mathf.Clamp01(moveDir.magnitude);
+            return moveDir.normalized * MoveSpeed * mag;
         }
 
-        private void HandleWorking()
+        private Vector2 ComputeWorkingVelocity()
         {
             if (Target == null)
             {
                 CurrentMode = Mode.Follow;
-                return;
+                return Vector2.zero;
             }
             Vector2 toTarget = (Vector2)Target.transform.position - (Vector2)transform.position;
             float dist = toTarget.magnitude;
@@ -92,10 +113,10 @@ namespace IL6
                 if (session != null) Target.OnGathered(session.Resources);
                 Target = null;
                 CurrentMode = Mode.Follow;
-                return;
+                return Vector2.zero;
             }
             var dir = toTarget.normalized + SeparationFromOthers() * 0.5f;
-            transform.position += (Vector3)(dir.normalized * MoveSpeed * Time.deltaTime);
+            return dir.normalized * MoveSpeed;
         }
 
         private Vector2 GetFormationSlot()

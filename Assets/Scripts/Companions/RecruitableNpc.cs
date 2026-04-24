@@ -31,6 +31,22 @@ namespace IL6
 
         private Vector3 _baseScale;
 
+        private void Awake()
+        {
+            var rb = GetComponent<Rigidbody2D>();
+            if (rb == null) rb = gameObject.AddComponent<Rigidbody2D>();
+            rb.gravityScale = 0f;
+            rb.freezeRotation = true;
+            rb.bodyType = RigidbodyType2D.Dynamic;
+
+            var col = GetComponent<CircleCollider2D>();
+            if (col == null)
+            {
+                col = gameObject.AddComponent<CircleCollider2D>();
+                col.radius = 0.35f;
+            }
+        }
+
         private void Start()
         {
             _baseScale = transform.localScale;

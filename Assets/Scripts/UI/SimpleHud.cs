@@ -279,6 +279,9 @@ namespace IL6
             cf.OutlineWidth = 2;
             cf.OutlineColor = new Color(0.3f, 0.1f, 0f, 1f);
 
+            var col = go.AddComponent<CircleCollider2D>();
+            col.radius = 0.45f;
+
             var aura = go.AddComponent<CampfireAura>();
             aura.Radius = 2.5f;
             aura.DamagePerSecond = 6f;
