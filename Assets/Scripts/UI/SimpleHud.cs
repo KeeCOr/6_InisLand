@@ -3,7 +3,7 @@ using UnityEngine;
 namespace IL6
 {
     /// <summary>
-    /// IMGUI 기반 HUD: 자원/HP/위치/채집/무기/쿨다운 + 모닥불 빌드 버튼.
+    /// IMGUI 기반 HUD. 좌측: 플레이어 상태/무기/빌드. 우측 상단: 자원/사이클.
     /// Canvas/TMP 셋업 없이 즉시 작동.
     /// </summary>
     public sealed class SimpleHud : MonoBehaviour
@@ -15,27 +15,20 @@ namespace IL6
         private GUIStyle _labelStyle;
         private GUIStyle _titleStyle;
         private GUIStyle _weaponStyle;
+        private GUIStyle _resStyle;
 
         private void OnGUI()
         {
             EnsureStyles();
+            DrawLeftPanel();
+            DrawRightPanel();
+        }
 
-            GUI.Box(new Rect(10, 10, 280, 320), "");
+        private void DrawLeftPanel()
+        {
+            GUI.Box(new Rect(10, 10, 280, 260), "");
             int y = 18;
-            GUI.Label(new Rect(20, y, 260, 24), "=== IL6 Snowfield ===", _titleStyle); y += 26;
-
-            var session = GameSession.Instance;
-            if (session != null)
-            {
-                GUI.Label(new Rect(20, y, 260, 22), $"Wood:  {session.Resources.Get(ResourceKind.Wood)}", _labelStyle); y += 20;
-                GUI.Label(new Rect(20, y, 260, 22), $"Meat:  {session.Resources.Get(ResourceKind.Meat)}", _labelStyle); y += 20;
-                GUI.Label(new Rect(20, y, 260, 22), $"Food:  {session.Resources.Get(ResourceKind.Food)}", _labelStyle); y += 20;
-                GUI.Label(new Rect(20, y, 260, 22), $"Day {session.Cycle.Day}  Phase: {session.Cycle.Phase}", _labelStyle); y += 22;
-            }
-            else
-            {
-                GUI.Label(new Rect(20, y, 260, 22), "GameSession: NOT FOUND", _labelStyle); y += 22;
-            }
+            GUI.Label(new Rect(20, y, 260, 24), "=== Player ===", _titleStyle); y += 26;
 
             if (Player != null)
             {
@@ -53,18 +46,14 @@ namespace IL6
                 GUI.Label(new Rect(20, y, 260, 22), $"Gathering: {(Gather.Progress * 100):F0}%", _labelStyle); y += 22;
             }
 
-            // 장착 무기
             if (Attacker != null && Attacker.Weapon != null)
             {
                 var w = Attacker.Weapon;
                 GUI.Label(new Rect(20, y, 260, 22), $"[Weapon] {w.DisplayName}", _weaponStyle); y += 22;
                 GUI.Label(new Rect(20, y, 260, 22), $"DMG {w.BaseDamage}  RNG {w.Range:F1}u  CD {w.CooldownSec:F2}s", _labelStyle); y += 20;
-
                 float cd = Attacker.CurrentCooldown;
                 float ready = 1f - Mathf.Clamp01(cd / Mathf.Max(0.01f, w.CooldownSec));
-                // Bar 시각화
-                var barBg = new Rect(20, y, 200, 14);
-                GUI.Box(barBg, "");
+                var barBg = new Rect(20, y, 200, 14); GUI.Box(barBg, "");
                 var fill = new Rect(22, y + 2, 196 * ready, 10);
                 GUI.DrawTexture(fill, Texture2D.whiteTexture);
                 GUI.Label(new Rect(230, y - 4, 50, 22), ready >= 1f ? "READY" : $"{(cd):F1}s", _labelStyle);
@@ -72,6 +61,7 @@ namespace IL6
             }
 
             y += 6;
+            var session = GameSession.Instance;
             GUI.enabled = session != null && Player != null && session.Resources.Get(ResourceKind.Wood) >= 5;
             if (GUI.Button(new Rect(20, y, 220, 30), "Build Campfire (5 Wood)"))
             {
@@ -83,12 +73,37 @@ namespace IL6
             GUI.enabled = true;
         }
 
+        private void DrawRightPanel()
+        {
+            const int W = 220;
+            int rx = Screen.width - W - 10;
+            GUI.Box(new Rect(rx, 10, W, 180), "");
+            int y = 18;
+            GUI.Label(new Rect(rx + 10, y, W - 20, 24), "=== Resources ===", _titleStyle); y += 26;
+
+            var session = GameSession.Instance;
+            if (session != null)
+            {
+                GUI.Label(new Rect(rx + 10, y, W - 20, 22), $"Wood       {session.Resources.Get(ResourceKind.Wood)}", _resStyle); y += 20;
+                GUI.Label(new Rect(rx + 10, y, W - 20, 22), $"Stone      {session.Resources.Get(ResourceKind.Stone)}", _resStyle); y += 20;
+                GUI.Label(new Rect(rx + 10, y, W - 20, 22), $"Meat       {session.Resources.Get(ResourceKind.Meat)}", _resStyle); y += 20;
+                GUI.Label(new Rect(rx + 10, y, W - 20, 22), $"Food       {session.Resources.Get(ResourceKind.Food)}", _resStyle); y += 20;
+                GUI.Label(new Rect(rx + 10, y, W - 20, 22), $"Frostbloom {session.Resources.Get(ResourceKind.Frostbloom)}", _resStyle); y += 22;
+                GUI.Label(new Rect(rx + 10, y, W - 20, 22), $"Day {session.Cycle.Day}  {session.Cycle.Phase}", _labelStyle); y += 22;
+            }
+            else
+            {
+                GUI.Label(new Rect(rx + 10, y, W - 20, 22), "GameSession: NOT FOUND", _labelStyle);
+            }
+        }
+
         private void EnsureStyles()
         {
             if (_labelStyle != null) return;
             _labelStyle = new GUIStyle(GUI.skin.label) { fontSize = 15, normal = { textColor = Color.white } };
             _titleStyle = new GUIStyle(GUI.skin.label) { fontSize = 18, fontStyle = FontStyle.Bold, normal = { textColor = Color.yellow } };
             _weaponStyle = new GUIStyle(GUI.skin.label) { fontSize = 16, fontStyle = FontStyle.Bold, normal = { textColor = new Color(0.7f, 0.95f, 1f) } };
+            _resStyle = new GUIStyle(GUI.skin.label) { fontSize = 16, normal = { textColor = new Color(0.95f, 0.95f, 0.85f) } };
         }
 
         private void SpawnCampfire(Vector3 playerPos)
@@ -97,7 +112,6 @@ namespace IL6
             go.transform.position = playerPos + new Vector3(1.2f, 0f, 0f);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
-
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(1f, 0.5f, 0.1f);
             cf.Shape = FallbackShape.Rounded;

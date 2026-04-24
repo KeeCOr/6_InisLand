@@ -5,7 +5,7 @@ using IL6.Events;
 
 namespace IL6
 {
-    public enum ResourceKind { Wood, Meat, Food, Frostbloom }
+    public enum ResourceKind { Wood, Meat, Food, Frostbloom, Stone }
 
     [Serializable]
     public class ResourceSnapshot
@@ -14,6 +14,7 @@ namespace IL6
         public int meat;
         public int food;
         public int frostbloom;
+        public int stone;
 
         public int Get(ResourceKind k) => k switch
         {
@@ -21,6 +22,7 @@ namespace IL6
             ResourceKind.Meat => meat,
             ResourceKind.Food => food,
             ResourceKind.Frostbloom => frostbloom,
+            ResourceKind.Stone => stone,
             _ => 0,
         };
 
@@ -32,6 +34,7 @@ namespace IL6
                 case ResourceKind.Meat: meat = v; break;
                 case ResourceKind.Food: food = v; break;
                 case ResourceKind.Frostbloom: frostbloom = v; break;
+                case ResourceKind.Stone: stone = v; break;
             }
         }
     }
@@ -73,6 +76,7 @@ namespace IL6
                 meat = _totals.meat,
                 food = _totals.food,
                 frostbloom = _totals.frostbloom,
+                stone = _totals.stone,
             };
         }
 
@@ -83,6 +87,7 @@ namespace IL6
             _totals.meat = snap.meat;
             _totals.food = snap.food;
             _totals.frostbloom = snap.frostbloom;
+            _totals.stone = snap.stone;
         }
     }
 }
