@@ -745,15 +745,14 @@ namespace IL6
             GlobalLight.intensity = t.intensity;
             GlobalLight.color = t.color;
 
-            EventBus.Instance.Subscribe<EveningStartedPayload>(_ => BeginTransition(Phase.Day, Phase.Evening));
-            EventBus.Instance.Subscribe<NightStartedPayload>(_ => BeginTransition(Phase.Evening, Phase.Night));
-            EventBus.Instance.Subscribe<DawnStartedPayload>(_ => BeginTransition(Phase.Night, Phase.Dawn));
-            EventBus.Instance.Subscribe<DayStartedPayload>(_ => BeginTransition(Phase.Dawn, Phase.Day));
+            EventBus.Instance.Subscribe<EveningStartedPayload>(_ => BeginTransition(Phase.Evening));
+            EventBus.Instance.Subscribe<NightStartedPayload>(_ => BeginTransition(Phase.Night));
+            EventBus.Instance.Subscribe<DawnStartedPayload>(_ => BeginTransition(Phase.Dawn));
+            EventBus.Instance.Subscribe<DayStartedPayload>(_ => BeginTransition(Phase.Day));
         }
 
-        private void BeginTransition(Phase from, Phase to)
+        private void BeginTransition(Phase to)
         {
-            _currentPhase = from;
             _targetPhase = to;
             _elapsed = 0f;
         }
