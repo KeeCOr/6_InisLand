@@ -190,10 +190,14 @@ namespace IL6
                     GUI.Label(new Rect(rx + 10, y, W - 20, 22), $"Zombies: {Night.ActiveZombies}  Pending: {Night.WavePending}", _labelStyle); y += 22;
                 }
 
-                // Phase skip debug button
-                if (GUI.Button(new Rect(rx + 10, y, W - 20, 26), "▶ Skip Phase (debug)"))
+                // Phase skip debug
+                if (GUI.Button(new Rect(rx + 10, y, (W - 30) / 2, 26), "▶ Skip"))
                 {
                     session.Cycle.Update(session.Cycle.PhaseDurationSec + 0.1f);
+                }
+                if (GUI.Button(new Rect(rx + 10 + (W - 30) / 2 + 10, y, (W - 30) / 2, 26), "Force Night"))
+                {
+                    if (Night != null) Night.StartNight(session.Cycle.Day);
                 }
             }
             else
