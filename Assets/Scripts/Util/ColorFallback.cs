@@ -20,7 +20,9 @@ namespace IL6
         public int OutlineWidth = 2;
         public Color OutlineColor = new Color(0.1f, 0.1f, 0.15f, 1f);
 
-        private void Awake()
+        // Start (not Awake) so that fields set between AddComponent<>() and
+        // end of initialization are applied before sprite generation.
+        private void Start()
         {
             var sr = GetComponent<SpriteRenderer>();
             if (sr.sprite != null) return;

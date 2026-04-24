@@ -3,8 +3,9 @@ using UnityEngine;
 namespace IL6
 {
     /// <summary>
-    /// 사거리 내 가장 가까운 좀비를 찾아 자동 공격. ProjectileSpeed > 0 이면 투사체 스폰.
-    /// Weapon 이 null 이면 런타임 기본값(Unity 유닛 스케일) 생성.
+    /// 사거리 내 가장 가까운 공격 대상(좀비/사슴)을 자동 공격.
+    /// Weapon.ProjectileSpeed > 0 이면 투사체 발사, 아니면 즉시 대미지.
+    /// Weapon 미할당 시 기본 Magic Bolt 런타임 생성.
     /// </summary>
     public sealed class PlayerAttackController : MonoBehaviour
     {
@@ -40,16 +41,7 @@ namespace IL6
             _cooldown -= Time.deltaTime;
             if (_cooldown > 0f) return;
 
-            var hits = Physics2D.OverlapCircleAll(_self.position, Weapon.Range);
-            Zombie nearest = null;
-            float nearestDist = float.MaxValue;
-            foreach (var h in hits)
-            {
-                var z = h.GetComponent<Zombie>();
-                if (z == null || z.IsDead) continue;
-                float d = Vector2.Distance(_self.position, z.transform.position);
-                if (d < nearestDist) { nearest = z; nearestDist = d; }
-            }
+            MonoBehaviour nearest = FindNearestTarget(Weapon.Range);
             if (nearest == null) return;
 
             int dmg = DamageCalc.Compute(new DamageCalc.Input
@@ -67,12 +59,37 @@ namespace IL6
             }
             else
             {
-                nearest.TakeDamage(dmg);
+                DealImmediate(nearest, dmg);
             }
             _cooldown = Weapon.CooldownSec;
         }
 
-        private void SpawnProjectile(Zombie target, int dmg)
+        private MonoBehaviour FindNearestTarget(float range)
+        {
+            var hits = Physics2D.OverlapCircleAll(_self.position, range);
+            MonoBehaviour best = null;
+            float bestDist = float.MaxValue;
+            foreach (var h in hits)
+            {
+                MonoBehaviour candidate = null;
+                var z = h.GetComponent<Zombie>();
+                if (z != null && !z.IsDead)
+                {
+                    candidate = z;
+                }
+                else
+                {
+                    var d = h.GetComponent<DeerAi>();
+                    if (d != null) candidate = d;
+                }
+                if (candidate == null) continue;
+                float dist = Vector2.Distance(_self.position, candidate.transform.position);
+                if (dist < bestDist) { best = candidate; bestDist = dist; }
+            }
+            return best;
+        }
+
+        private void SpawnProjectile(MonoBehaviour target, int dmg)
         {
             var go = new GameObject("Projectile");
             go.transform.position = _self.position;
@@ -80,7 +97,6 @@ namespace IL6
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 9;
-            sr.color = new Color(1f, 0.92f, 0.3f);
 
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(1f, 0.92f, 0.3f);
@@ -94,7 +110,17 @@ namespace IL6
             proj.Speed = Weapon.ProjectileSpeed;
             proj.Damage = dmg;
             proj.HitRadius = 0.4f;
-            proj.AimAt(target);
+            proj.Aim(target, _self.position);
+        }
+
+        private void DealImmediate(MonoBehaviour target, int dmg)
+        {
+            if (target is Zombie z && !z.IsDead) z.TakeDamage(dmg);
+            else if (target is DeerAi deer)
+            {
+                var g = deer.GetComponent<Gatherable>();
+                if (g != null && GameSession.Instance != null) g.OnGathered(GameSession.Instance.Resources);
+            }
         }
 
         public float CurrentCooldown => Mathf.Max(0f, _cooldown);

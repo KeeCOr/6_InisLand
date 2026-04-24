@@ -169,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   Player: {fileID: 30000006}
   Gather: {fileID: 30000007}
+  Attacker: {fileID: 30000010}
 --- !u!1 &10000000
 GameObject:
   m_ObjectHideFlags: 0
