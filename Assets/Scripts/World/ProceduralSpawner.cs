@@ -21,6 +21,7 @@ namespace IL6
         [Range(0, 1)] public float TreeChance = 0.5f;
         [Range(0, 1)] public float RockChance = 0.15f;
         [Range(0, 1)] public float DeerChance = 0.08f;
+        [Range(0, 1)] public float NpcChance = 0.04f;
         public int SlotsPerChunk = 6;
 
         [Header("Starter zone to skip (centered at chunk (Cx, Cy))")]
@@ -102,9 +103,11 @@ namespace IL6
                 float cumTree = TreeChance;
                 float cumRock = cumTree + RockChance;
                 float cumDeer = cumRock + DeerChance;
+                float cumNpc = cumDeer + NpcChance;
                 if (roll < cumTree) data.Spawned.Add(CreateTree(x, y));
                 else if (roll < cumRock) data.Spawned.Add(CreateRock(x, y));
                 else if (roll < cumDeer) data.Spawned.Add(CreateDeer(x, y));
+                else if (roll < cumNpc) data.Spawned.Add(CreateNpc(x, y, rng));
             }
         }
 
@@ -201,6 +204,108 @@ namespace IL6
             cf.PixelSize = 64;
             cf.OutlineWidth = 2;
             cf.OutlineColor = new Color(0.2f, 0.12f, 0.05f, 1f);
+            return go;
+        }
+
+        private static readonly string[] _npcNames =
+        {
+            "려화", "도윤", "서원", "은규", "혜인", "지운", "한결", "무영", "선유", "여린"
+        };
+
+        private struct NpcArchetype
+        {
+            public string Role;
+            public string Dialog;
+            public bool IsCombat;
+            public int CombatRating;
+            public int FarmRating;
+            public float MoveSpeed;
+            public float AttackRange;
+            public int AttackDamage;
+            public float AttackCooldown;
+            public Color Tint;
+            public FallbackShape Shape;
+        }
+
+        private static readonly NpcArchetype[] _npcArchetypes =
+        {
+            new NpcArchetype
+            {
+                Role = "사냥꾼",
+                Dialog = "활을 들고 합류하지요. 멀리서 돕겠습니다.",
+                IsCombat = true,
+                CombatRating = 4, FarmRating = 2,
+                MoveSpeed = 4.6f, AttackRange = 6.5f, AttackDamage = 5, AttackCooldown = 1.4f,
+                Tint = new Color(0.55f, 0.7f, 0.45f), Shape = FallbackShape.Triangle,
+            },
+            new NpcArchetype
+            {
+                Role = "전사",
+                Dialog = "검 한 자루로 살아남아 왔습니다. 데려가 주십시오.",
+                IsCombat = true,
+                CombatRating = 5, FarmRating = 1,
+                MoveSpeed = 4.2f, AttackRange = 1.6f, AttackDamage = 9, AttackCooldown = 1.1f,
+                Tint = new Color(0.7f, 0.45f, 0.4f), Shape = FallbackShape.Rounded,
+            },
+            new NpcArchetype
+            {
+                Role = "치유사",
+                Dialog = "약초를 다룹니다. 부상자를 돌볼 수 있습니다.",
+                IsCombat = true,
+                CombatRating = 2, FarmRating = 4,
+                MoveSpeed = 4.4f, AttackRange = 4.5f, AttackDamage = 3, AttackCooldown = 1.8f,
+                Tint = new Color(0.85f, 0.85f, 0.95f), Shape = FallbackShape.Circle,
+            },
+            new NpcArchetype
+            {
+                Role = "농부",
+                Dialog = "씨를 뿌리고 거두는 일이라면 자신 있어요.",
+                IsCombat = false,
+                CombatRating = 1, FarmRating = 5,
+                MoveSpeed = 4.0f, AttackRange = 1.5f, AttackDamage = 2, AttackCooldown = 2.0f,
+                Tint = new Color(0.9f, 0.75f, 0.4f), Shape = FallbackShape.Rounded,
+            },
+            new NpcArchetype
+            {
+                Role = "방랑객",
+                Dialog = "갈 곳이 없습니다. 같이 있어도 될까요.",
+                IsCombat = true,
+                CombatRating = 3, FarmRating = 3,
+                MoveSpeed = 4.5f, AttackRange = 2.0f, AttackDamage = 5, AttackCooldown = 1.5f,
+                Tint = new Color(0.6f, 0.55f, 0.7f), Shape = FallbackShape.Circle,
+            },
+        };
+
+        private static GameObject CreateNpc(float x, float y, SeededRng rng)
+        {
+            var arch = _npcArchetypes[rng.IntRange(0, _npcArchetypes.Length - 1)];
+            string nm = _npcNames[rng.IntRange(0, _npcNames.Length - 1)];
+
+            var go = new GameObject($"Npc_{arch.Role}_{nm}");
+            go.transform.position = new Vector3(x, y, 0);
+
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 7;
+
+            var npc = go.AddComponent<RecruitableNpc>();
+            npc.DisplayName = nm;
+            npc.Role = arch.Role;
+            npc.DialogText = arch.Dialog;
+            npc.CombatRating = arch.CombatRating;
+            npc.FarmRating = arch.FarmRating;
+            npc.IsCombat = arch.IsCombat;
+            npc.MoveSpeed = arch.MoveSpeed;
+            npc.AttackRange = arch.AttackRange;
+            npc.AttackDamage = arch.AttackDamage;
+            npc.AttackCooldown = arch.AttackCooldown;
+
+            var cf = go.AddComponent<ColorFallback>();
+            cf.Tint = arch.Tint;
+            cf.Shape = arch.Shape;
+            cf.Circle = arch.Shape == FallbackShape.Circle;
+            cf.PixelSize = 64;
+            cf.OutlineWidth = 2;
+            cf.OutlineColor = new Color(0.1f, 0.1f, 0.15f, 1f);
             return go;
         }
     }
