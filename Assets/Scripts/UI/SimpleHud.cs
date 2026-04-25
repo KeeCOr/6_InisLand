@@ -31,6 +31,7 @@ namespace IL6
             DrawBossWarning();
             DrawAutoSaveToast();
             DrawAchievementToast();
+            DrawHomeCompass();
             DrawControlsHint();
             DrawDeathOverlay();
             DrawDamageFlash();
@@ -120,6 +121,55 @@ namespace IL6
             GUI.contentColor = new Color(1f, 0.86f, 0.45f, a);
             GUI.Label(new Rect(0, 108, Screen.width, 44), _phaseBanner, _bannerStyle);
             GUI.contentColor = oldC;
+        }
+
+        private GUIStyle _compassDist;
+
+        private void DrawHomeCompass()
+        {
+            if (Player == null) return;
+            // 가장 가까운 모닥불·창고·바리게이트 방향 표시. 없으면 (0,0).
+            Vector2 home = Vector2.zero;
+            float bestDist = float.MaxValue;
+            var buildings = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
+            foreach (var b in buildings)
+            {
+                if (b == null) continue;
+                float d = Vector2.Distance(Player.transform.position, b.transform.position);
+                if (d < bestDist) { bestDist = d; home = b.transform.position; }
+            }
+            float dist = bestDist == float.MaxValue
+                ? Vector2.Distance(Player.transform.position, Vector2.zero)
+                : bestDist;
+            if (dist < 12f) return; // 가까우면 안 그림
+
+            Vector2 dir = (home - (Vector2)Player.transform.position).normalized;
+            float angDeg = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+            int W = 110, H = 36;
+            var r = new Rect(Screen.width - W - 290, 14, W, H);
+            UiTheme.Rect(r, new Color(0.07f, 0.09f, 0.14f, 0.85f));
+            UiTheme.Rect(new Rect(r.x, r.y, r.width, 1), new Color(0.78f, 0.62f, 0.30f, 0.7f));
+            UiTheme.Rect(new Rect(r.x, r.yMax - 1, r.width, 1), new Color(0.78f, 0.62f, 0.30f, 0.7f));
+
+            // 화살표는 IMGUI 회전으로
+            var arrowCenter = new Vector2(r.x + 18, r.y + H * 0.5f);
+            var pivot = arrowCenter;
+            var matrix = GUI.matrix;
+            // 화면좌표는 y가 아래로 + 인 점을 보정 (월드 angDeg 의 -y 반전)
+            GUIUtility.RotateAroundPivot(-angDeg, pivot);
+            UiTheme.Rect(new Rect(arrowCenter.x - 12, arrowCenter.y - 2, 18, 4), UiTheme.TextGold);
+            UiTheme.Rect(new Rect(arrowCenter.x + 4, arrowCenter.y - 6, 4, 12), UiTheme.TextGold);
+            UiTheme.Rect(new Rect(arrowCenter.x + 6, arrowCenter.y - 4, 4, 8), UiTheme.TextGold);
+            UiTheme.Rect(new Rect(arrowCenter.x + 8, arrowCenter.y - 2, 4, 4), UiTheme.TextGold);
+            GUI.matrix = matrix;
+
+            if (_compassDist == null)
+            {
+                _compassDist = new GUIStyle(GUI.skin.label) { fontSize = 13, fontStyle = FontStyle.Bold,
+                    alignment = TextAnchor.MiddleCenter, normal = { textColor = UiTheme.TextCream } };
+            }
+            GUI.Label(new Rect(r.x + 36, r.y, r.width - 36, H), $"{dist:F0}u  →  집", _compassDist);
         }
 
         private void DrawControlsHint()
