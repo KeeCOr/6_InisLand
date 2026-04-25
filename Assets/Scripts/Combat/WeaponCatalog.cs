@@ -30,12 +30,8 @@ namespace IL6
         {
             return idx switch
             {
-                0 => new Color(0.95f, 0.95f, 1f),    // Longsword: white
-                1 => new Color(0.7f, 0.7f, 0.5f),    // Spear: tan
-                2 => new Color(0.6f, 0.85f, 0.4f),   // Bow: green
-                3 => new Color(0.5f, 0.85f, 1f),     // FrostStaff: cyan
-                4 => new Color(1f, 0.5f, 0.2f),      // Warhammer: orange
-                5 => new Color(0.95f, 0.4f, 0.85f),  // DualDaggers: pink
+                0 => new Color(0.95f, 0.95f, 1f),    // Longsword: 흰 칼날 (근접: 투사체 없음)
+                1 => new Color(0.6f, 0.85f, 0.4f),   // Bow: 녹색 화살
                 _ => Color.yellow,
             };
         }
@@ -44,12 +40,10 @@ namespace IL6
         {
             return new List<WeaponDefinition>
             {
-                Make("longsword", "Longsword", dmg: 14, range: 2.0f, cd: 0.7f, projSpd: 12f, crit: 0.1f),
-                Make("spear", "Spear", dmg: 12, range: 3.0f, cd: 0.9f, projSpd: 10f, crit: 0.08f),
-                Make("bow", "Bow", dmg: 10, range: 7.0f, cd: 1.1f, projSpd: 9f, crit: 0.12f),
-                Make("frost-staff", "Frost Staff", dmg: 8, range: 5.0f, cd: 1.5f, projSpd: 6f, crit: 0.05f),
-                Make("warhammer", "Warhammer", dmg: 22, range: 2.0f, cd: 1.6f, projSpd: 11f, crit: 0.06f),
-                Make("dual-daggers", "Dual Daggers", dmg: 6, range: 1.5f, cd: 0.35f, projSpd: 14f, crit: 0.18f),
+                // 근접: 투사체 없음 (ProjectileSpeed=0 → 즉시 대미지). 사거리 짧고 강타.
+                Make("longsword", "Longsword", dmg: 16, range: 1.8f, cd: 0.7f, projSpd: 0f, crit: 0.10f),
+                // 원거리: 사거리 길고 투사체 발사.
+                Make("bow", "Bow", dmg: 10, range: 7.0f, cd: 1.1f, projSpd: 10f, crit: 0.12f),
             };
         }
 
