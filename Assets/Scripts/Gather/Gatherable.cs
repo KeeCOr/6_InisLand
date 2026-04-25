@@ -15,10 +15,18 @@ namespace IL6
 
         public void OnGathered(ResourceStore store)
         {
-            store.Add(YieldKind, YieldAmount);
             Color tint = ResourceTint(YieldKind);
-            GameFeel.FloatText(transform.position, $"+{YieldAmount} {YieldKind}", tint);
-            Sfx.Pickup();
+            if (YieldAmount > 0)
+            {
+                store.Add(YieldKind, YieldAmount);
+                GameFeel.FloatText(transform.position, $"+{YieldAmount} {YieldKind}", tint);
+                Sfx.Pickup();
+            }
+            else
+            {
+                // 드랍 실패 (예: 늑대 75%) — 가벼운 피드백만
+                GameFeel.FloatText(transform.position, "—", new Color(0.7f, 0.7f, 0.75f));
+            }
 
             // 보너스 자원 (예: 눈토끼는 Frostbloom 도 같이)
             var bonus = GetComponent<BonusYieldOnGather>();

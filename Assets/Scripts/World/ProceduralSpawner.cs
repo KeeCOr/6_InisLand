@@ -174,7 +174,8 @@ namespace IL6
         private struct AnimalArchetype
         {
             public string Name;
-            public int MeatYield;
+            public int MeatMin, MeatMax;  // 고기 yield 범위 (rng 으로 결정)
+            public float MeatDropChance;  // 0~1: 고기 드랍 확률 (0 이면 드랍 X)
             public float DurationSec;
             public int Hp;
             public float FleeRadius;
@@ -196,7 +197,8 @@ namespace IL6
         {
             // 토끼 (가장 흔함)
             new AnimalArchetype {
-                Name = "Rabbit_proc", MeatYield = 1, DurationSec = 1.5f, Hp = 1,
+                Name = "Rabbit_proc", MeatMin = 1, MeatMax = 1, MeatDropChance = 1f,
+                DurationSec = 1.5f, Hp = 1,
                 FleeRadius = 5.5f, FleeSpeed = 5.5f,
                 Scale = 0.5f, ColliderRadius = 0.25f,
                 Tint = new Color(0.92f, 0.88f, 0.82f),
@@ -206,7 +208,8 @@ namespace IL6
             },
             // 여우
             new AnimalArchetype {
-                Name = "Fox_proc", MeatYield = 2, DurationSec = 2.5f, Hp = 2,
+                Name = "Fox_proc", MeatMin = 2, MeatMax = 2, MeatDropChance = 1f,
+                DurationSec = 2.5f, Hp = 2,
                 FleeRadius = 4.5f, FleeSpeed = 4.5f,
                 Scale = 0.7f, ColliderRadius = 0.3f,
                 Tint = new Color(0.85f, 0.45f, 0.18f),
@@ -216,7 +219,8 @@ namespace IL6
             },
             // 멧돼지
             new AnimalArchetype {
-                Name = "Boar_proc", MeatYield = 4, DurationSec = 4.5f, Hp = 8,
+                Name = "Boar_proc", MeatMin = 3, MeatMax = 5, MeatDropChance = 1f,
+                DurationSec = 4.5f, Hp = 8,
                 FleeRadius = 2.5f, FleeSpeed = 2.2f,
                 Scale = 1.25f, ColliderRadius = 0.5f,
                 Tint = new Color(0.35f, 0.25f, 0.18f),
@@ -224,9 +228,10 @@ namespace IL6
                 Outline = new Color(0.1f, 0.05f, 0.02f, 1f),
                 Weight = 0.13f, PackMin = 1, PackMax = 1,
             },
-            // 늑대 (포식자, 무리)
+            // 늑대 (포식자, 무리, 25%만 고기)
             new AnimalArchetype {
-                Name = "Wolf_proc", MeatYield = 1, DurationSec = 1.5f, Hp = 5,
+                Name = "Wolf_proc", MeatMin = 1, MeatMax = 1, MeatDropChance = 0.25f,
+                DurationSec = 1.5f, Hp = 5,
                 FleeRadius = 0f, FleeSpeed = 0f, // 안 도망감
                 Scale = 0.85f, ColliderRadius = 0.35f,
                 Tint = new Color(0.45f, 0.45f, 0.5f),
@@ -237,7 +242,8 @@ namespace IL6
             },
             // 사슴 (낮춘 빈도)
             new AnimalArchetype {
-                Name = "Deer_proc", MeatYield = 2, DurationSec = 3f, Hp = 3,
+                Name = "Deer_proc", MeatMin = 2, MeatMax = 2, MeatDropChance = 1f,
+                DurationSec = 3f, Hp = 3,
                 FleeRadius = 3.5f, FleeSpeed = 3f,
                 Scale = 1f, ColliderRadius = 0.4f,
                 Tint = new Color(0.55f, 0.4f, 0.25f),
@@ -247,7 +253,8 @@ namespace IL6
             },
             // 흰토끼 (희귀, Frostbloom 보너스)
             new AnimalArchetype {
-                Name = "SnowHare_proc", MeatYield = 1, DurationSec = 1.8f, Hp = 1,
+                Name = "SnowHare_proc", MeatMin = 1, MeatMax = 1, MeatDropChance = 1f,
+                DurationSec = 1.8f, Hp = 1,
                 FleeRadius = 6f, FleeSpeed = 6.5f,
                 Scale = 0.45f, ColliderRadius = 0.25f,
                 Tint = new Color(0.95f, 0.97f, 1f),
@@ -255,9 +262,10 @@ namespace IL6
                 Outline = new Color(0.45f, 0.6f, 0.85f, 1f),
                 Weight = 0.06f, PackMin = 1, PackMax = 1, DropsFrostbloom = true,
             },
-            // 맘모스 (희귀, 매우 단단함, 고기 많음)
+            // 맘모스 (희귀, 매우 단단함 200 HP, 고기 30~50)
             new AnimalArchetype {
-                Name = "Mammoth_proc", MeatYield = 12, DurationSec = 8f, Hp = 30,
+                Name = "Mammoth_proc", MeatMin = 30, MeatMax = 50, MeatDropChance = 1f,
+                DurationSec = 12f, Hp = 200,
                 FleeRadius = 1.5f, FleeSpeed = 1.0f,
                 Scale = 2.2f, ColliderRadius = 0.85f,
                 Tint = new Color(0.45f, 0.32f, 0.22f),
@@ -286,11 +294,14 @@ namespace IL6
             {
                 float ox = p == 0 ? 0f : (rng.Next() - 0.5f) * 2f;
                 float oy = p == 0 ? 0f : (rng.Next() - 0.5f) * 2f;
-                sink.Add(CreateOneAnimal(a, x + ox, y + oy));
+                // 개체별로 yield + drop 결정 (각 개체 독립)
+                int yield = a.MeatMin == a.MeatMax ? a.MeatMin : rng.IntRange(a.MeatMin, a.MeatMax);
+                if (a.MeatDropChance < 1f && rng.Next() > a.MeatDropChance) yield = 0;
+                sink.Add(CreateOneAnimal(a, x + ox, y + oy, yield));
             }
         }
 
-        private static GameObject CreateOneAnimal(AnimalArchetype a, float x, float y)
+        private static GameObject CreateOneAnimal(AnimalArchetype a, float x, float y, int yieldOverride)
         {
             var go = new GameObject(a.Name);
             go.transform.position = new Vector3(x, y, 0);
@@ -310,7 +321,7 @@ namespace IL6
 
             var gat = go.AddComponent<Gatherable>();
             gat.YieldKind = ResourceKind.Meat;
-            gat.YieldAmount = a.MeatYield;
+            gat.YieldAmount = yieldOverride;
             gat.DurationSec = a.DurationSec;
             gat.DestroyOnGather = true;
 

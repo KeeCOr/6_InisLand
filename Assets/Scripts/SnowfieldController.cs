@@ -1,4 +1,5 @@
 using UnityEngine;
+using IL6.Events;
 
 namespace IL6
 {
