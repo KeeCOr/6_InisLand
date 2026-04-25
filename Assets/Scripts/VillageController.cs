@@ -38,6 +38,15 @@ namespace IL6
             if (Player != null)
                 Player.transform.position = new Vector3(GameConstants.VillageCenterX, GameConstants.VillageCenterY, 0);
 
+            var cam = MainCamera != null ? MainCamera : Camera.main;
+            if (cam != null && Player != null && cam.GetComponent<CameraFollow>() == null)
+            {
+                var f = cam.gameObject.AddComponent<CameraFollow>();
+                f.Target = Player.transform;
+            }
+            if (cam != null && cam.GetComponent<SnowEmitter>() == null)
+                cam.gameObject.AddComponent<SnowEmitter>();
+
             _unsubNight = EventBus.Instance.Subscribe<NightStartedPayload>(p => SpawnWave(p.Day));
             _unsubDawn = EventBus.Instance.Subscribe<DawnStartedPayload>(_ =>
             {
