@@ -349,6 +349,14 @@ namespace IL6
                 $"{phaseIcon}  Day {session.Cycle.Day}  ·  {session.Cycle.Phase}", _section);
             y += 22;
 
+            // 페이즈 진행 바
+            float dur = session.Cycle.PhaseDurationSec;
+            float rem = Mathf.Max(0f, dur - session.Cycle.ElapsedInPhase);
+            float progress = dur > 0 ? 1f - (rem / dur) : 0f;
+            UiTheme.Bar(new Rect(innerX, y, innerW - 50, 8), progress, UiTheme.TextGold);
+            GUI.Label(new Rect(innerX + innerW - 46, y - 5, 46, 18), $"{rem:F0}s", _labelSubtle);
+            y += 16;
+
             if (session.LastFoodShortage > 0)
             {
                 var oldC = GUI.contentColor;

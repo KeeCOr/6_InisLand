@@ -196,6 +196,17 @@ namespace IL6
             SpawnOne();
         }
 
+        private enum Variant { Normal, Fast, Tank }
+
+        private Variant PickVariant()
+        {
+            int day = GameSession.Instance != null ? GameSession.Instance.Cycle.Day : 1;
+            float r = _rng.Next();
+            if (day >= 7 && r < 0.18f) return Variant.Tank;
+            if (day >= 3 && r < 0.30f) return Variant.Fast;
+            return Variant.Normal;
+        }
+
         private void SpawnOne()
         {
             float angle = _rng.Next() * Mathf.PI * 2f;
@@ -219,8 +230,32 @@ namespace IL6
             var zombie = go.AddComponent<Zombie>();
             _tracked.Add(zombie);
 
+            var variant = PickVariant();
+            Color tint;
+            float scale = 1f;
+            switch (variant)
+            {
+                case Variant.Fast:
+                    tint = new Color(0.85f, 0.5f, 0.25f);  // 주황
+                    scale = 0.8f;
+                    zombie.MoveSpeedMul = 1.6f;
+                    zombie.InitHp(Mathf.RoundToInt(zombie.MaxHp * 0.6f));
+                    break;
+                case Variant.Tank:
+                    tint = new Color(0.35f, 0.18f, 0.4f);  // 짙은 보라
+                    scale = 1.35f;
+                    zombie.MoveSpeedMul = 0.6f;
+                    zombie.InitHp(Mathf.RoundToInt(zombie.MaxHp * 2.2f));
+                    zombie.VariantDamageBonus = 4;
+                    break;
+                default:
+                    tint = new Color(0.6f, 0.2f, 0.22f);
+                    break;
+            }
+            go.transform.localScale = Vector3.one * scale;
+
             var cf = go.AddComponent<ColorFallback>();
-            cf.Tint = new Color(0.6f, 0.2f, 0.22f);
+            cf.Tint = tint;
             cf.Shape = FallbackShape.Circle;
             cf.Circle = true;
             cf.PixelSize = 64;

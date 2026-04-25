@@ -45,6 +45,9 @@ namespace IL6
             CurrentHp = hp;
         }
 
+        public float MoveSpeedMul = 1f;
+        public int VariantDamageBonus = 0;
+
         public void ApplyPoison(float duration, int dps)
         {
             PoisonRemainingSec = Mathf.Max(PoisonRemainingSec, duration);
@@ -103,7 +106,7 @@ namespace IL6
                 _attackCooldown -= Time.fixedDeltaTime;
                 if (_attackCooldown <= 0f)
                 {
-                    int dmg = _balance.ZombieAttackDamage;
+                    int dmg = _balance.ZombieAttackDamage + VariantDamageBonus;
                     var pc = target.GetComponent<PlayerController>();
                     if (pc != null) pc.TakeDamage(dmg);
                     var c = target.GetComponent<Companion>();
@@ -116,7 +119,7 @@ namespace IL6
             else
             {
                 Vector2 dir = ((Vector2)target.position - (Vector2)transform.position).normalized;
-                _rb.velocity = dir * _balance.ZombieMoveSpeed * slowMul;
+                _rb.velocity = dir * _balance.ZombieMoveSpeed * slowMul * MoveSpeedMul;
                 if (_attackCooldown > 0f) _attackCooldown -= Time.fixedDeltaTime;
             }
         }
