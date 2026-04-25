@@ -29,6 +29,7 @@ namespace IL6
             DrawWorldChopButton();
             DrawRecruitDialog();
             DrawRuneModal();
+            DrawDeathOverlay();
         }
 
         private void DrawLeftPanel()
@@ -178,6 +179,40 @@ namespace IL6
             return new string('★', n) + new string('☆', 5 - n);
         }
 
+        private GUIStyle _bigStyle;
+        // 사망 시 풀스크린 검은 오버레이 + Restart 버튼
+        private void DrawDeathOverlay()
+        {
+            if (Player == null || !Player.IsDead) return;
+            Time.timeScale = 0f;
+
+            var dim = new Rect(0, 0, Screen.width, Screen.height);
+            var oldC = GUI.color;
+            GUI.color = new Color(0f, 0f, 0f, 0.85f);
+            GUI.DrawTexture(dim, Texture2D.whiteTexture);
+            GUI.color = oldC;
+
+            if (_bigStyle == null)
+            {
+                _bigStyle = new GUIStyle(GUI.skin.label)
+                {
+                    fontSize = 64,
+                    fontStyle = FontStyle.Bold,
+                    alignment = TextAnchor.MiddleCenter,
+                    normal = { textColor = new Color(0.95f, 0.25f, 0.25f) },
+                };
+            }
+            GUI.Label(new Rect(0, Screen.height / 2 - 80, Screen.width, 100), "YOU DIED", _bigStyle);
+
+            int bx = Screen.width / 2 - 80;
+            int by = Screen.height / 2 + 40;
+            if (GUI.Button(new Rect(bx, by, 160, 44), "Restart"))
+            {
+                Time.timeScale = 1f;
+                if (GameSession.Instance != null) GameSession.Instance.HardReset();
+            }
+        }
+
         // 레벨업 시 화면 가운데 모달: 3개 룬 중 선택
         private void DrawRuneModal()
         {
@@ -279,6 +314,13 @@ namespace IL6
 
             var b = go.AddComponent<Building>();
             b.Kind = BuildingKind.Barricade;
+
+            var hp = go.AddComponent<HpBarUi>();
+            hp.Building = b;
+            hp.Offset = new Vector2(0f, 0.6f);
+            hp.Size = new Vector2(1.0f, 0.1f);
+            hp.BgColor = new Color(0.05f, 0.05f, 0.08f, 0.9f);
+            hp.FillColor = new Color(0.6f, 0.4f, 0.2f);
         }
 
         private void DrawRightPanel()
@@ -350,6 +392,16 @@ namespace IL6
             aura.Radius = 2.5f;
             aura.DamagePerSecond = 6f;
             aura.TickInterval = 0.5f;
+
+            var b = go.AddComponent<Building>();
+            b.Kind = BuildingKind.Campfire;
+
+            var hp = go.AddComponent<HpBarUi>();
+            hp.Building = b;
+            hp.Offset = new Vector2(0f, 0.7f);
+            hp.Size = new Vector2(1.0f, 0.12f);
+            hp.BgColor = new Color(0.05f, 0.05f, 0.08f, 0.9f);
+            hp.FillColor = new Color(1f, 0.55f, 0.2f);
         }
     }
 }

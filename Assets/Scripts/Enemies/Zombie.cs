@@ -27,6 +27,13 @@ namespace IL6
             CurrentHp = MaxHp;
         }
 
+        /// <summary>외부 스포너가 보스/특수 좀비 HP 를 즉시 덮어씌울 때 사용.</summary>
+        public void InitHp(int hp)
+        {
+            MaxHp = hp;
+            CurrentHp = hp;
+        }
+
         private void Start()
         {
             var p = GameObject.FindWithTag("Player");

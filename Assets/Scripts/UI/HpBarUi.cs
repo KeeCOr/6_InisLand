@@ -10,6 +10,7 @@ namespace IL6
     {
         public PlayerController Player;
         public Zombie Zombie;
+        public Building Building;
         public Vector2 Offset = new Vector2(0f, 0.7f);
         public Vector2 Size = new Vector2(0.9f, 0.12f);
         public Color BgColor = new Color(0.05f, 0.05f, 0.08f, 0.9f);
@@ -69,6 +70,7 @@ namespace IL6
         {
             if (Player != null) return (float)Player.CurrentHp / Mathf.Max(1, Player.MaxHp);
             if (Zombie != null) return (float)Zombie.CurrentHp / Mathf.Max(1, Zombie.MaxHp);
+            if (Building != null) return (float)Building.CurrentHp / Mathf.Max(1, Building.MaxHp);
             return 1f;
         }
     }

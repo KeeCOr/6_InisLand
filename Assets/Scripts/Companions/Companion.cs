@@ -157,7 +157,18 @@ namespace IL6
             var z = FindNearestZombie(AttackRange);
             if (z == null) return;
             SpawnProjectile(z);
-            _attackCd = AttackCooldown;
+            _attackCd = AttackCooldown * GetCampfireFireRateMul();
+        }
+
+        private float GetCampfireFireRateMul()
+        {
+            var auras = Object.FindObjectsByType<CampfireAura>(FindObjectsSortMode.None);
+            foreach (var a in auras)
+            {
+                if (a == null) continue;
+                if (Vector2.Distance(transform.position, a.transform.position) < a.Radius) return 0.7f;
+            }
+            return 1f;
         }
 
         private Zombie FindNearestZombie(float range)

@@ -51,20 +51,21 @@ namespace IL6
             {
                 SceneManager.LoadScene(VillageSceneName);
             });
-            _unsubPlayerDied = EventBus.Instance.Subscribe<PlayerDiedPayload>(_ =>
-            {
-                if (_session != null) _session.HardReset();
-            });
+            // PlayerDied 이벤트는 SimpleHud 의 Death overlay 가 처리.
+            // 자동 HardReset 제거 (즉시 씬 리로드되면 사망 화면을 못 봄).
         }
+
+        private bool _diedEmitted;
 
         private void Update()
         {
             if (_session == null) return;
             _session.Cycle.Update(Time.deltaTime);
 
-            if (Player != null && Player.IsDead)
+            if (Player != null && Player.IsDead && !_diedEmitted)
             {
                 EventBus.Instance.Emit(new PlayerDiedPayload(_session.Cycle.Day));
+                _diedEmitted = true;
             }
         }
 

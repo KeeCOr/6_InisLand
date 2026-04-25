@@ -66,6 +66,49 @@ namespace IL6
             CurrentPhase = Phase.Night;
             _pendingSpawns = BaseWaveCount + (day - 1) * PerDayIncrement;
             _spawnTimer = 0f;
+            if (day > 0 && day % 5 == 0) SpawnBoss(day);
+        }
+
+        private void SpawnBoss(int day)
+        {
+            if (Player == null) return;
+            float angle = Random.Range(0f, Mathf.PI * 2f);
+            float dist = SpawnDistance + 1f;
+            float x = Player.position.x + Mathf.Cos(angle) * dist;
+            float y = Player.position.y + Mathf.Sin(angle) * dist;
+
+            var go = new GameObject($"Boss_d{day}");
+            go.transform.position = new Vector3(x, y, 0);
+            go.transform.localScale = Vector3.one * 1.7f;
+
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 8;
+
+            var rb = go.AddComponent<Rigidbody2D>();
+            rb.gravityScale = 0f;
+            rb.freezeRotation = true;
+
+            var col = go.AddComponent<CircleCollider2D>();
+            col.radius = 0.45f;
+
+            var zombie = go.AddComponent<Zombie>();
+            zombie.InitHp(60 + day * 8);
+            _tracked.Add(zombie);
+
+            var cf = go.AddComponent<ColorFallback>();
+            cf.Tint = new Color(0.4f, 0.1f, 0.5f);
+            cf.Shape = FallbackShape.Circle;
+            cf.Circle = true;
+            cf.PixelSize = 64;
+            cf.OutlineWidth = 3;
+            cf.OutlineColor = new Color(0.1f, 0.0f, 0.15f, 1f);
+
+            var hp = go.AddComponent<HpBarUi>();
+            hp.Zombie = zombie;
+            hp.Offset = new Vector2(0f, 0.7f);
+            hp.Size = new Vector2(1.1f, 0.14f);
+            hp.BgColor = new Color(0.05f, 0.05f, 0.08f, 0.95f);
+            hp.FillColor = new Color(0.95f, 0.2f, 0.55f);
         }
 
         public void EndNight()
