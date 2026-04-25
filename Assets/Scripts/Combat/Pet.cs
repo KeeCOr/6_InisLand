@@ -110,11 +110,13 @@ namespace IL6
             {
                 var go = new GameObject("HawkProj");
                 go.transform.position = transform.position;
-                go.transform.localScale = Vector3.one * 0.4f;
+                go.transform.localScale = Vector3.one * 0.65f;
                 var sr = go.AddComponent<SpriteRenderer>();
-                sr.sortingOrder = 12;
+                sr.sortingOrder = 50;
+                Color tint = new Color(1f, 0.95f, 0.5f);
+                sr.color = tint;
                 var cf = go.AddComponent<ColorFallback>();
-                cf.Tint = new Color(1f, 0.95f, 0.5f);
+                cf.Tint = tint;
                 cf.Shape = FallbackShape.Triangle;
                 cf.Circle = false;
                 cf.PixelSize = 32;

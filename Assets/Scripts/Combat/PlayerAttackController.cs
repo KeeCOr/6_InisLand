@@ -138,25 +138,27 @@ namespace IL6
         {
             var go = new GameObject("Projectile");
             go.transform.position = _self.position;
-            go.transform.localScale = Vector3.one * 0.55f;
+            go.transform.localScale = Vector3.one * 0.9f;
 
             var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 12;
+            sr.sortingOrder = 50;
+            // ColorFallback.Start 가 늦게 돌 때 대비해 sr.color 도 명시적으로 박음
+            Color tint = Color.Lerp(CurrentProjectileColor, Color.white, 0.35f);
+            sr.color = tint;
 
             var cf = go.AddComponent<ColorFallback>();
-            // 무기 색을 살짝 밝게 — 눈밭 위에서 잘 보이게
-            cf.Tint = Color.Lerp(CurrentProjectileColor, Color.white, 0.2f);
+            cf.Tint = tint;
             cf.Shape = FallbackShape.Circle;
             cf.Circle = true;
-            cf.PixelSize = 32;
-            cf.OutlineWidth = 3;
+            cf.PixelSize = 48;
+            cf.OutlineWidth = 4;
             cf.OutlineColor = new Color(0.05f, 0.05f, 0.1f, 1f);
 
             float speedMul = Progression != null ? Progression.ProjectileSpeedMultiplier : 1f;
             var proj = go.AddComponent<Projectile>();
             proj.Speed = Weapon.ProjectileSpeed * speedMul;
             proj.Damage = dmg;
-            proj.HitRadius = 0.45f;
+            proj.HitRadius = 0.5f;
             proj.OwnerProgression = Progression;
             proj.Aim(target, _self.position);
             return proj;

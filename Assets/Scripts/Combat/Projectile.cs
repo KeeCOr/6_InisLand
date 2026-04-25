@@ -22,25 +22,28 @@ namespace IL6
 
         private void Start()
         {
-            // 본체 뒤에 1.6x 크기의 반투명 글로우 자식 — 같은 색상 그라데이션처럼 보이게.
+            // 본체 뒤에 큰 반투명 글로우 자식.
             var sr = GetComponent<SpriteRenderer>();
-            if (sr != null)
-            {
-                _glow = new GameObject("__glow");
-                _glow.transform.SetParent(transform, false);
-                _glow.transform.localScale = Vector3.one * 1.7f;
-                var gs = _glow.AddComponent<SpriteRenderer>();
-                gs.sortingOrder = sr.sortingOrder - 1;
-                var cf = _glow.AddComponent<ColorFallback>();
-                Color c = sr.color;
-                c.a = 0.35f;
-                cf.Tint = c;
-                cf.Shape = FallbackShape.Circle;
-                cf.Circle = true;
-                cf.PixelSize = 32;
-                cf.OutlineWidth = 0;
-                cf.OutlineColor = new Color(0, 0, 0, 0);
-            }
+            if (sr == null) return;
+
+            _glow = new GameObject("__glow");
+            _glow.transform.SetParent(transform, false);
+            _glow.transform.localScale = Vector3.one * 2.2f;
+            var gs = _glow.AddComponent<SpriteRenderer>();
+            gs.sortingOrder = sr.sortingOrder - 1;
+            // ColorFallback.Start 가 sr.color 를 늦게 세팅할 수 있어 안전하게 fallback
+            Color c = sr.color;
+            if (c == Color.white || c.a < 0.05f) c = new Color(1f, 0.95f, 0.4f, 1f);
+            c.a = 0.55f;
+            gs.color = c;
+
+            var cf = _glow.AddComponent<ColorFallback>();
+            cf.Tint = c;
+            cf.Shape = FallbackShape.Circle;
+            cf.Circle = true;
+            cf.PixelSize = 32;
+            cf.OutlineWidth = 0;
+            cf.OutlineColor = new Color(0, 0, 0, 0);
         }
 
         public void Aim(MonoBehaviour target, Vector3 spawnPos)
@@ -71,11 +74,11 @@ namespace IL6
             }
             transform.position += (Vector3)(_direction * Speed * Time.deltaTime);
 
-            // 트레일: 0.04초 간격으로 fading 복제본 1개
+            // 트레일: 0.025초 간격으로 fading 복제본 1개
             _trailTimer -= Time.deltaTime;
             if (_trailTimer <= 0f)
             {
-                _trailTimer = 0.04f;
+                _trailTimer = 0.025f;
                 SpawnTrailGhost();
             }
 
@@ -96,19 +99,21 @@ namespace IL6
             if (sr == null) return;
             var go = new GameObject("__pjtrail");
             go.transform.position = transform.position;
-            go.transform.localScale = transform.lossyScale * 0.7f;
+            go.transform.localScale = transform.lossyScale * 0.85f;
             var ts = go.AddComponent<SpriteRenderer>();
             ts.sortingOrder = sr.sortingOrder - 2;
-            var cf = go.AddComponent<ColorFallback>();
             Color c = sr.color;
-            c.a = 0.5f;
+            if (c == Color.white || c.a < 0.05f) c = new Color(1f, 0.95f, 0.4f, 1f);
+            c.a = 0.7f;
+            ts.color = c;
+            var cf = go.AddComponent<ColorFallback>();
             cf.Tint = c;
             cf.Shape = FallbackShape.Circle;
             cf.Circle = true;
-            cf.PixelSize = 16;
+            cf.PixelSize = 24;
             cf.OutlineWidth = 0;
             cf.OutlineColor = new Color(0, 0, 0, 0);
-            Destroy(go, 0.22f);
+            Destroy(go, 0.35f);
         }
 
         private static bool IsTargetAlive(MonoBehaviour target)

@@ -38,13 +38,15 @@ namespace IL6
         {
             var go = new GameObject("WatchtowerArrow");
             go.transform.position = transform.position + Vector3.up * 0.3f;
-            go.transform.localScale = Vector3.one * 0.45f;
+            go.transform.localScale = Vector3.one * 0.7f;
 
             var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 12;
+            sr.sortingOrder = 50;
+            Color tint = new Color(1f, 0.95f, 0.55f);
+            sr.color = tint;
 
             var cf = go.AddComponent<ColorFallback>();
-            cf.Tint = new Color(1f, 0.95f, 0.55f);
+            cf.Tint = tint;
             cf.Shape = FallbackShape.Triangle;
             cf.Circle = false;
             cf.PixelSize = 32;
@@ -54,7 +56,7 @@ namespace IL6
             var p = go.AddComponent<Projectile>();
             p.Speed = 14f;
             p.Damage = Damage;
-            p.HitRadius = 0.45f;
+            p.HitRadius = 0.5f;
             p.Aim(z, transform.position);
         }
 
