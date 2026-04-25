@@ -8,8 +8,11 @@ namespace IL6
     /// </summary>
     public static class VillageStarter
     {
-        /// <summary>중심점 주변에 모닥불 + 8개 울타리 링 스폰. 이미 근처에 모닥불 있으면 스킵.</summary>
-        public static void SpawnStarterVillage(Vector3 center, float fenceRadius = 4.5f, int fenceCount = 12)
+        /// <summary>
+        /// 중심점 주변에 모닥불 + 사각 울타리 + 남쪽 문(플레이어만 통과) 스폰.
+        /// 이미 근처에 모닥불 있으면 스킵.
+        /// </summary>
+        public static void SpawnStarterVillage(Vector3 center, float halfSize = 5f, float spacing = 1.0f)
         {
             // 이미 모닥불이 가까이 있으면 (씬 재진입 등) 추가 스폰 안 함
             var existing = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
@@ -22,14 +25,78 @@ namespace IL6
 
             SpawnCampfire(center);
 
-            // 울타리 링
-            for (int i = 0; i < fenceCount; i++)
+            // 사각형 울타리 — 4 면. 각 면의 중앙 슬롯은 비워서 (남쪽만) 문으로 대체.
+            int slotsPerSide = Mathf.Max(3, Mathf.RoundToInt((halfSize * 2f) / spacing) + 1);
+            int gateSlot = slotsPerSide / 2; // 가운데
+            float startOffset = -halfSize;
+
+            // 남쪽 변 (y = center.y - halfSize) — 가운데 한 칸은 문
+            for (int i = 0; i < slotsPerSide; i++)
             {
-                float a = (i / (float)fenceCount) * Mathf.PI * 2f;
-                Vector3 pos = center + new Vector3(Mathf.Cos(a) * fenceRadius, Mathf.Sin(a) * fenceRadius, 0f);
-                float rotDeg = a * Mathf.Rad2Deg + 90f; // 링에 접하도록
-                SpawnFence(pos, rotDeg);
+                float lx = startOffset + i * spacing;
+                Vector3 pos = center + new Vector3(lx, -halfSize, 0f);
+                if (i == gateSlot) SpawnGate(pos);
+                else SpawnFence(pos, 0f);
             }
+            // 북쪽 변
+            for (int i = 0; i < slotsPerSide; i++)
+            {
+                float lx = startOffset + i * spacing;
+                Vector3 pos = center + new Vector3(lx, halfSize, 0f);
+                SpawnFence(pos, 0f);
+            }
+            // 서쪽/동쪽 — 코너 포함 전 구간. 모서리에서 가로 펜스와 시각적으로 겹치지만 빈틈 없음.
+            for (int i = 0; i < slotsPerSide; i++)
+            {
+                float ly = startOffset + i * spacing;
+                Vector3 wpos = center + new Vector3(-halfSize, ly, 0f);
+                Vector3 epos = center + new Vector3(halfSize, ly, 0f);
+                SpawnFence(wpos, 90f);
+                SpawnFence(epos, 90f);
+            }
+        }
+
+        public static GameObject SpawnGate(Vector3 pos)
+        {
+            // 문 — 좌우 기둥 + 빈 가운데. 콜라이더는 좁은 박스로, 플레이어는 통과.
+            var go = new GameObject("Gate");
+            go.transform.position = pos;
+            go.transform.localScale = new Vector3(0.95f, 0.18f, 1f);
+
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 4;
+
+            var col = go.AddComponent<BoxCollider2D>();
+            col.size = Vector2.one;
+
+            var cf = go.AddComponent<ColorFallback>();
+            cf.Tint = new Color(0.78f, 0.62f, 0.30f); // 골드 — 입구임을 표시
+            cf.Shape = FallbackShape.Square;
+            cf.Circle = false;
+            cf.PixelSize = 32;
+            cf.OutlineWidth = 2;
+            cf.OutlineColor = new Color(0.35f, 0.25f, 0.1f, 1f);
+
+            go.AddComponent<Door>();
+
+            // 좌우 기둥 (시각용 스프라이트)
+            for (int s = -1; s <= 1; s += 2)
+            {
+                var post = new GameObject("GatePost");
+                post.transform.SetParent(go.transform, false);
+                post.transform.localPosition = new Vector3(s * 0.5f, 0.7f, 0f);
+                post.transform.localScale = new Vector3(0.18f, 4.5f, 1f); // 부모 스케일 0.95×0.18 보정
+                var psr = post.AddComponent<SpriteRenderer>();
+                psr.sortingOrder = 4;
+                var pcf = post.AddComponent<ColorFallback>();
+                pcf.Tint = new Color(0.55f, 0.4f, 0.22f);
+                pcf.Shape = FallbackShape.Square;
+                pcf.Circle = false;
+                pcf.PixelSize = 16;
+                pcf.OutlineWidth = 1;
+                pcf.OutlineColor = new Color(0.2f, 0.13f, 0.05f, 1f);
+            }
+            return go;
         }
 
         public static GameObject SpawnFence(Vector3 pos, float rotDeg)
