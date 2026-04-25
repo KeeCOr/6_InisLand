@@ -25,6 +25,9 @@ namespace IL6
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
+            if (GetComponent<AchievementManager>() == null)
+                gameObject.AddComponent<AchievementManager>();
+
             Resources = new ResourceStore();
             Cycle = new DayNightController(BalanceConfig.Instance);
 

@@ -30,9 +30,49 @@ namespace IL6
             DrawPhaseBanner();
             DrawBossWarning();
             DrawAutoSaveToast();
+            DrawAchievementToast();
             DrawControlsHint();
             DrawDeathOverlay();
             DrawDamageFlash();
+        }
+
+        private AchievementManager.Entry? _achToast;
+        private float _achToastLeft;
+        private GUIStyle _achTitle, _achDetail;
+
+        private void DrawAchievementToast()
+        {
+            var am = AchievementManager.Instance;
+            if (am == null) return;
+            if (_achToastLeft <= 0f && am.NewlyUnlocked.Count > 0)
+            {
+                _achToast = am.NewlyUnlocked.Dequeue();
+                _achToastLeft = 4.0f;
+            }
+            if (_achToastLeft <= 0f || _achToast == null) return;
+            _achToastLeft -= Time.unscaledDeltaTime;
+
+            if (_achTitle == null)
+            {
+                _achTitle = new GUIStyle(GUI.skin.label) { fontSize = 16, fontStyle = FontStyle.Bold,
+                    normal = { textColor = UiTheme.TextGold } };
+                _achDetail = new GUIStyle(GUI.skin.label) { fontSize = 12,
+                    normal = { textColor = UiTheme.TextCream }, wordWrap = true };
+            }
+
+            float a = Mathf.Clamp01(_achToastLeft) > 0.6f ? 1f : Mathf.Clamp01(_achToastLeft / 0.6f);
+            int W = 320, H = 60;
+            var r = new Rect(Screen.width - W - 20, Screen.height - H - 60, W, H);
+            UiTheme.Rect(r, new Color(0.07f, 0.09f, 0.14f, 0.92f * a));
+            UiTheme.Rect(new Rect(r.x, r.y, r.width, 2), new Color(0.95f, 0.78f, 0.35f, a));
+            UiTheme.Rect(new Rect(r.x, r.yMax - 2, r.width, 2), new Color(0.95f, 0.78f, 0.35f, a));
+
+            var oldC = GUI.contentColor;
+            GUI.contentColor = new Color(1f, 0.86f, 0.45f, a);
+            GUI.Label(new Rect(r.x + 12, r.y + 6, r.width - 16, 20), $"🏆  {_achToast.Value.Title}", _achTitle);
+            GUI.contentColor = new Color(1f, 1f, 0.92f, a);
+            GUI.Label(new Rect(r.x + 12, r.y + 28, r.width - 16, 28), _achToast.Value.Detail, _achDetail);
+            GUI.contentColor = oldC;
         }
 
         private string _phaseBanner = "";
