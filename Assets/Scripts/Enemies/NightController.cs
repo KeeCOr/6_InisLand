@@ -67,6 +67,9 @@ namespace IL6
             _unsubDay?.Invoke();
         }
 
+        public float BossWarningRemaining { get; private set; }
+        public bool IsBossNight { get; private set; }
+
         public void StartNight(int day)
         {
             CurrentPhase = Phase.Night;
@@ -74,7 +77,20 @@ namespace IL6
             int basePending = BaseWaveCount + (day - 1) * PerDayIncrement;
             _pendingSpawns = IsBlizzard ? basePending * 2 : basePending;
             _spawnTimer = 0f;
-            if (day > 0 && day % 5 == 0) SpawnBoss(day);
+            IsBossNight = day > 0 && day % 5 == 0;
+            if (IsBossNight) StartCoroutine(BossWarningThenSpawn(day));
+        }
+
+        private System.Collections.IEnumerator BossWarningThenSpawn(int day)
+        {
+            BossWarningRemaining = 3f;
+            while (BossWarningRemaining > 0f)
+            {
+                BossWarningRemaining -= Time.deltaTime;
+                yield return null;
+            }
+            BossWarningRemaining = 0f;
+            SpawnBoss(day);
         }
 
         private void SpawnBoss(int day)

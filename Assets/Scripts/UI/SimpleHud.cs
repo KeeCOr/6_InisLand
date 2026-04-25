@@ -27,8 +27,48 @@ namespace IL6
             DrawWorldFarmButtons();
             DrawRecruitDialog();
             DrawRuneModal();
+            DrawBossWarning();
+            DrawAutoSaveToast();
             DrawDeathOverlay();
             DrawDamageFlash();
+        }
+
+        private GUIStyle _bossWarnStyle;
+        private void DrawBossWarning()
+        {
+            if (Night == null || Night.BossWarningRemaining <= 0f) return;
+            if (_bossWarnStyle == null)
+            {
+                _bossWarnStyle = new GUIStyle(GUI.skin.label)
+                {
+                    fontSize = 38, fontStyle = FontStyle.Bold,
+                    alignment = TextAnchor.MiddleCenter,
+                    normal = { textColor = new Color(0.95f, 0.3f, 0.6f) },
+                };
+            }
+            float pulse = 0.5f + 0.5f * Mathf.Abs(Mathf.Sin(Time.time * 6f));
+            UiTheme.Rect(new Rect(0, Screen.height / 2 - 60, Screen.width, 120),
+                new Color(0.5f, 0.05f, 0.15f, 0.35f * pulse));
+            GUI.Label(new Rect(0, Screen.height / 2 - 50, Screen.width, 60),
+                $"⚠ 보스 출현  {Mathf.CeilToInt(Night.BossWarningRemaining)}", _bossWarnStyle);
+        }
+
+        private void DrawAutoSaveToast()
+        {
+            var s = GameSession.Instance;
+            if (s == null) return;
+            float elapsed = Time.time - s.LastAutoSaveAt;
+            if (elapsed > 2.5f) return;
+            float a = Mathf.Clamp01(1f - elapsed / 2.5f);
+            int W = 140, H = 28;
+            var r = new Rect(Screen.width / 2 - W / 2, 14, W, H);
+            UiTheme.Rect(r, new Color(0.07f, 0.09f, 0.14f, 0.85f * a));
+            UiTheme.Rect(new Rect(r.x, r.y, r.width, 1), new Color(0.78f, 0.62f, 0.30f, a));
+            UiTheme.Rect(new Rect(r.x, r.yMax - 1, r.width, 1), new Color(0.78f, 0.62f, 0.30f, a));
+            var oldC = GUI.contentColor;
+            GUI.contentColor = new Color(1f, 0.86f, 0.45f, a);
+            GUI.Label(r, "💾 자동 저장됨", _section);
+            GUI.contentColor = oldC;
         }
 
         private int _lastPlayerHp = -1;

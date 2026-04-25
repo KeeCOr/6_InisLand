@@ -118,7 +118,13 @@ namespace IL6
                     if (c != null) c.Heal(c.MaxHp);
                 }
             }
+
+            // 자동 저장 (영속: 자원 + 일자)
+            SaveNow();
+            LastAutoSaveAt = Time.time;
         }
+
+        public float LastAutoSaveAt { get; private set; } = -10f;
 
         public void SaveNow()
         {
