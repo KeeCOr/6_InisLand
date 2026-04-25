@@ -1,11 +1,11 @@
 using UnityEngine;
+using IL6.Events;
 
 namespace IL6
 {
     /// <summary>
     /// 단순 원형 시야 마스크. SpriteMask + 검정 오버레이를 카메라에 부착.
-    /// MVP: 검은 풀스크린 + 플레이어 위치 원형 구멍 (스프라이트 마스크).
-    /// 더 정교한 셰이더 기반 시야는 추후.
+    /// 낮/저녁/새벽에는 비활성 (시야 무제한), 밤에만 활성.
     /// </summary>
     public sealed class VisionMask : MonoBehaviour
     {
@@ -16,11 +16,35 @@ namespace IL6
         private SpriteRenderer _overlay;
         private SpriteMask _mask;
 
+        private System.Action _unsubE, _unsubN, _unsubD, _unsubA;
+
         private void Awake()
         {
             if (Cam == null) Cam = Camera.main;
             BuildOverlay();
             BuildMask();
+        }
+
+        private void Start()
+        {
+            _unsubE = EventBus.Instance.Subscribe<EveningStartedPayload>(_ => SetActive(false));
+            _unsubN = EventBus.Instance.Subscribe<NightStartedPayload>(_ => SetActive(true));
+            _unsubD = EventBus.Instance.Subscribe<DawnStartedPayload>(_ => SetActive(false));
+            _unsubA = EventBus.Instance.Subscribe<DayStartedPayload>(_ => SetActive(false));
+            // 초기 상태 — 현재 페이즈에 맞춤 (보통 게임 시작 = Day → 비활성)
+            var s = GameSession.Instance;
+            SetActive(s != null && s.Cycle != null && s.Cycle.Phase == Phase.Night);
+        }
+
+        private void OnDestroy()
+        {
+            _unsubE?.Invoke(); _unsubN?.Invoke(); _unsubD?.Invoke(); _unsubA?.Invoke();
+        }
+
+        private void SetActive(bool on)
+        {
+            if (_overlay != null) _overlay.enabled = on;
+            if (_mask != null) _mask.enabled = on;
         }
 
         private void BuildOverlay()
