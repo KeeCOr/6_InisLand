@@ -84,10 +84,10 @@ namespace IL6
 
         private void OnEnable()
         {
-            _unsubE = EventBus.Instance.Subscribe<IL6.Events.EveningStartedPayload>(p => ShowBanner($"Day {p.Day}  🌅  저녁"));
-            _unsubN = EventBus.Instance.Subscribe<IL6.Events.NightStartedPayload>(p => ShowBanner($"Day {p.Day}  🌙  밤이 찾아옵니다"));
-            _unsubD = EventBus.Instance.Subscribe<IL6.Events.DawnStartedPayload>(p => ShowBanner($"Day {p.Day}  🌄  새벽"));
-            _unsubA = EventBus.Instance.Subscribe<IL6.Events.DayStartedPayload>(p => ShowBanner($"Day {p.Day}  ☀  새 날"));
+            _unsubE = EventBus.Instance.Subscribe<EveningStartedPayload>(p => ShowBanner($"Day {p.Day}  🌅  저녁"));
+            _unsubN = EventBus.Instance.Subscribe<NightStartedPayload>(p => ShowBanner($"Day {p.Day}  🌙  밤이 찾아옵니다"));
+            _unsubD = EventBus.Instance.Subscribe<DawnStartedPayload>(p => ShowBanner($"Day {p.Day}  🌄  새벽"));
+            _unsubA = EventBus.Instance.Subscribe<DayStartedPayload>(p => ShowBanner($"Day {p.Day}  ☀  새 날"));
         }
 
         private void OnDisable()
