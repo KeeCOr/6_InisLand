@@ -32,6 +32,7 @@ namespace IL6
             DrawAutoSaveToast();
             DrawAchievementToast();
             DrawHomeCompass();
+            DrawPhaseClock();
             DrawControlsHint();
             DrawTutorialOverlay();
             DrawPauseMenu();
@@ -95,6 +96,26 @@ namespace IL6
             _unsubE?.Invoke(); _unsubN?.Invoke(); _unsubD?.Invoke(); _unsubA?.Invoke();
         }
 
+        private bool _initialBannerShown;
+
+        private void Start()
+        {
+            // 게임 시작 시 (또는 씬 재진입 시) 현재 페이즈에 맞춰 배너 1회 표시 — 낮부터 시작 흐름.
+            if (_initialBannerShown) return;
+            _initialBannerShown = true;
+            var s = GameSession.Instance;
+            if (s == null || s.Cycle == null) return;
+            string txt = s.Cycle.Phase switch
+            {
+                Phase.Day => $"Day {s.Cycle.Day}  ☀  새 날",
+                Phase.Evening => $"Day {s.Cycle.Day}  🌅  저녁",
+                Phase.Night => $"Day {s.Cycle.Day}  🌙  밤",
+                Phase.Dawn => $"Day {s.Cycle.Day}  🌄  새벽",
+                _ => "",
+            };
+            ShowBanner(txt);
+        }
+
         private void ShowBanner(string text)
         {
             _phaseBanner = text;
@@ -123,6 +144,76 @@ namespace IL6
             GUI.contentColor = new Color(1f, 0.86f, 0.45f, a);
             GUI.Label(new Rect(0, 108, Screen.width, 44), _phaseBanner, _bannerStyle);
             GUI.contentColor = oldC;
+        }
+
+        private GUIStyle _clockBig, _clockSmall;
+
+        private void DrawPhaseClock()
+        {
+            var s = GameSession.Instance;
+            if (s == null || s.Cycle == null) return;
+
+            if (_clockBig == null)
+            {
+                _clockBig = new GUIStyle(GUI.skin.label) {
+                    fontSize = 30, fontStyle = FontStyle.Bold,
+                    alignment = TextAnchor.MiddleCenter,
+                    normal = { textColor = UiTheme.TextGold } };
+                _clockSmall = new GUIStyle(GUI.skin.label) {
+                    fontSize = 14, fontStyle = FontStyle.Bold,
+                    alignment = TextAnchor.MiddleCenter,
+                    normal = { textColor = UiTheme.TextCream } };
+            }
+
+            string phaseName = s.Cycle.Phase switch
+            {
+                Phase.Day => "낮",
+                Phase.Evening => "저녁",
+                Phase.Night => "밤",
+                Phase.Dawn => "새벽",
+                _ => "",
+            };
+            string phaseIcon = s.Cycle.Phase switch
+            {
+                Phase.Day => "☀",
+                Phase.Evening => "🌅",
+                Phase.Night => "🌙",
+                Phase.Dawn => "🌄",
+                _ => "·",
+            };
+            float dur = s.Cycle.PhaseDurationSec;
+            float rem = Mathf.Max(0f, dur - s.Cycle.ElapsedInPhase);
+            int mm = Mathf.FloorToInt(rem / 60f);
+            int ss = Mathf.FloorToInt(rem % 60f);
+            string clock = $"{mm:00}:{ss:00}";
+
+            int W = 300, H = 64;
+            var r = new Rect(Screen.width / 2 - W / 2, 12, W, H);
+
+            // 배경 패널 (페이즈 색조)
+            Color tint = s.Cycle.Phase switch
+            {
+                Phase.Day     => new Color(0.65f, 0.78f, 0.95f, 0.95f),
+                Phase.Evening => new Color(0.85f, 0.55f, 0.45f, 0.95f),
+                Phase.Night   => new Color(0.18f, 0.22f, 0.45f, 0.97f),
+                Phase.Dawn    => new Color(0.95f, 0.78f, 0.55f, 0.95f),
+                _ => new Color(0.1f, 0.1f, 0.15f, 0.95f),
+            };
+            // 외곽 골드
+            UiTheme.Rect(new Rect(r.x - 2, r.y - 2, r.width + 4, r.height + 4), UiTheme.PanelBorder);
+            // 어두운 베이스
+            UiTheme.Rect(r, new Color(0.05f, 0.07f, 0.12f, 0.95f));
+            // 페이즈 색조 띠 (좌우 4px)
+            UiTheme.Rect(new Rect(r.x, r.y, 4, r.height), tint);
+            UiTheme.Rect(new Rect(r.xMax - 4, r.y, 4, r.height), tint);
+            // 진행 바 (하단)
+            float progress = dur > 0 ? Mathf.Clamp01(1f - rem / dur) : 0f;
+            UiTheme.Rect(new Rect(r.x, r.yMax - 4, r.width * progress, 4), tint);
+
+            // 큰 시계 텍스트 + 아이콘
+            GUI.Label(new Rect(r.x, r.y + 4, r.width, 36), $"{phaseIcon}  {clock}  남음", _clockBig);
+            // Day + 페이즈명
+            GUI.Label(new Rect(r.x, r.y + 40, r.width, 22), $"Day {s.Cycle.Day}  ·  {phaseName}", _clockSmall);
         }
 
         private GUIStyle _compassDist;
