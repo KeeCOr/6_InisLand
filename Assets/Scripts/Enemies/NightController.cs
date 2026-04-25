@@ -147,6 +147,10 @@ namespace IL6
             }
             _tracked.Clear();
             _activeZombies = 0;
+
+            // 안전망: 추적되지 않은 좀비도 모두 정리 (낮에는 절대 좀비 없음)
+            var stragglers = Object.FindObjectsByType<Zombie>(FindObjectsSortMode.None);
+            foreach (var z in stragglers) if (z != null) Destroy(z.gameObject);
         }
 
         private float _blizzardDmgAccum;
