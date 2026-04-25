@@ -76,18 +76,44 @@ namespace IL6
         }
     }
 
-    /// <summary>카메라 부드러운 추종.</summary>
+    /// <summary>카메라 부드러운 추종 + 흔들림(Trauma).
+    /// CameraFollow.Shake(amount, duration) 으로 외부에서 트리거.</summary>
     public sealed class CameraFollow : MonoBehaviour
     {
         public Transform Target;
         public float Smooth = 0.15f;
         private Vector3 _vel;
 
+        private static CameraFollow _instance;
+        private float _trauma;
+        private float _traumaDecay = 1.6f;
+        private float _maxOffset = 0.6f;
+
+        public static void Shake(float amount, float duration = 0.3f)
+        {
+            if (_instance == null) return;
+            _instance._trauma = Mathf.Min(1f, _instance._trauma + amount);
+            // duration 은 decay 속도에 반영 (긴 흔들림 = 느린 감쇠)
+            _instance._traumaDecay = 1f / Mathf.Max(0.05f, duration);
+        }
+
+        private void OnEnable() { _instance = this; }
+        private void OnDisable() { if (_instance == this) _instance = null; }
+
         private void LateUpdate()
         {
             if (Target == null) return;
             var goal = new Vector3(Target.position.x, Target.position.y, transform.position.z);
             transform.position = Vector3.SmoothDamp(transform.position, goal, ref _vel, Smooth);
+
+            if (_trauma > 0f)
+            {
+                float t2 = _trauma * _trauma;
+                float ox = (Mathf.PerlinNoise(Time.time * 25f, 0f) - 0.5f) * 2f * _maxOffset * t2;
+                float oy = (Mathf.PerlinNoise(0f, Time.time * 25f) - 0.5f) * 2f * _maxOffset * t2;
+                transform.position += new Vector3(ox, oy, 0f);
+                _trauma = Mathf.Max(0f, _trauma - _traumaDecay * Time.deltaTime);
+            }
         }
     }
 }

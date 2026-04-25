@@ -79,7 +79,8 @@ namespace IL6
             _spawnTimer = 0f;
             IsBossNight = day > 0 && day % 5 == 0;
             Sfx.NightHowl();
-            if (IsBossNight) { Sfx.Boss(); StartCoroutine(BossWarningThenSpawn(day)); }
+            CameraFollow.Shake(0.35f, 0.6f);
+            if (IsBossNight) { Sfx.Boss(); CameraFollow.Shake(0.7f, 1.2f); StartCoroutine(BossWarningThenSpawn(day)); }
         }
 
         private System.Collections.IEnumerator BossWarningThenSpawn(int day)
