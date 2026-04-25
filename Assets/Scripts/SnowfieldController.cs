@@ -17,9 +17,7 @@ namespace IL6
         public ChunkManager Chunks;
         public VisionMask Vision;
         public Camera MainCamera;
-        public string VillageSceneName = "VillageScene";
 
-        private System.Action _unsubEvening;
         private System.Action _unsubPlayerDied;
         private GameSession _session;
 
@@ -32,7 +30,8 @@ namespace IL6
                 return;
             }
 
-            if (Player != null) Player.transform.position = new Vector3(GameConstants.VillageCenterX, GameConstants.VillageCenterY, 0);
+            Vector3 villageCenter = new Vector3(GameConstants.VillageCenterX, GameConstants.VillageCenterY, 0);
+            if (Player != null) Player.transform.position = villageCenter;
             if (Gather != null)
             {
                 Gather.Player = Player;
@@ -49,12 +48,9 @@ namespace IL6
                     MainCamera.gameObject.AddComponent<SnowEmitter>();
             }
 
-            _unsubEvening = EventBus.Instance.Subscribe<EveningStartedPayload>(_ =>
-            {
-                SceneManager.LoadScene(VillageSceneName);
-            });
+            // 마을 자리에 모닥불 + 울타리 링 자동 스폰 (이미 있으면 스킵)
+            VillageStarter.SpawnStarterVillage(villageCenter);
             // PlayerDied 이벤트는 SimpleHud 의 Death overlay 가 처리.
-            // 자동 HardReset 제거 (즉시 씬 리로드되면 사망 화면을 못 봄).
         }
 
         private bool _diedEmitted;
@@ -73,7 +69,6 @@ namespace IL6
 
         private void OnDestroy()
         {
-            _unsubEvening?.Invoke();
             _unsubPlayerDied?.Invoke();
         }
     }

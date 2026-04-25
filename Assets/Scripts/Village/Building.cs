@@ -4,7 +4,7 @@ using IL6.Events;
 
 namespace IL6
 {
-    public enum BuildingKind { Campfire, Barricade }
+    public enum BuildingKind { Campfire, Barricade, Fence }
 
     /// <summary>
     /// 모든 건물 공통. HP, 파괴 처리, 안에 숨은 비전투 동료 노출.
@@ -24,7 +24,13 @@ namespace IL6
         private void Awake()
         {
             var b = BalanceConfig.Instance;
-            MaxHp = Kind == BuildingKind.Campfire ? b.CampfireHp : b.BarricadeHp;
+            MaxHp = Kind switch
+            {
+                BuildingKind.Campfire => b.CampfireHp,
+                BuildingKind.Barricade => b.BarricadeHp,
+                BuildingKind.Fence => b.FenceHp,
+                _ => b.BarricadeHp,
+            };
             CurrentHp = MaxHp;
         }
 

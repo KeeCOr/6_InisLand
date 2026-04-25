@@ -403,7 +403,7 @@ namespace IL6
         // ====================================================================
         private void DrawLeftPanel()
         {
-            var panel = new Rect(12, 90, 290, 580);
+            var panel = new Rect(12, 90, 290, 612);
             UiTheme.Panel(panel);
             UiTheme.TitleBar(panel, "  플레이어  ", _title);
 
@@ -485,6 +485,9 @@ namespace IL6
             y += 32;
             DrawBuildButton(new Rect(innerX, y, innerW, 28), "🪵 바리게이트", 5, wood, ResourceKind.Wood,
                 () => SpawnBarricade(Player.transform.position));
+            y += 32;
+            DrawBuildButton(new Rect(innerX, y, innerW, 28), "🥕 울타리 (약함)", 1, wood, ResourceKind.Wood,
+                () => VillageStarter.SpawnFence(Player.transform.position + new Vector3(0f, 1.0f, 0f), 0f));
             y += 32;
             DrawBuildButton(new Rect(innerX, y, innerW, 28), "📦 창고 (+50 cap)", 8, wood, ResourceKind.Wood,
                 () => { SpawnStorage(Player.transform.position); session.Resources.IncreaseCap(50); });

@@ -183,7 +183,8 @@ namespace IL6
             float bestDist = float.MaxValue;
             foreach (var b in buildings)
             {
-                if (b == null || b.Kind == BuildingKind.Barricade) continue;
+                if (b == null) continue;
+                if (b.Kind == BuildingKind.Barricade || b.Kind == BuildingKind.Fence) continue;
                 float d = Vector2.Distance(transform.position, b.transform.position);
                 if (d < bestDist) { best = b; bestDist = d; }
             }
