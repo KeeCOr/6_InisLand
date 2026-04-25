@@ -27,9 +27,9 @@ namespace IL6
         public int StartingFrostbloom = 0;
 
         [Header("Gather (seconds + yield)")]
-        public float TreeDurationSec = 4f;
-        public float DeerDurationSec = 2f;
-        public int TreeWoodYield = 3;
+        public float TreeDurationSec = 9f;
+        public float DeerDurationSec = 3f;
+        public int TreeWoodYield = 4;
         public int DeerMeatYield = 2;
 
         [Header("Player")]

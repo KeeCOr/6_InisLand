@@ -124,8 +124,8 @@ namespace IL6
 
             var gat = go.AddComponent<Gatherable>();
             gat.YieldKind = ResourceKind.Stone;
-            gat.YieldAmount = 2;
-            gat.DurationSec = 5f;
+            gat.YieldAmount = 3;
+            gat.DurationSec = 12f;
             gat.DestroyOnGather = true;
 
             var cf = go.AddComponent<ColorFallback>();
@@ -157,8 +157,8 @@ namespace IL6
 
             var gat = go.AddComponent<Gatherable>();
             gat.YieldKind = ResourceKind.Wood;
-            gat.YieldAmount = 3;
-            gat.DurationSec = 4f;
+            gat.YieldAmount = 4;
+            gat.DurationSec = 9f;
             gat.DestroyOnGather = true;
 
             var cf = go.AddComponent<ColorFallback>();

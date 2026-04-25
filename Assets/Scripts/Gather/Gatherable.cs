@@ -8,8 +8,8 @@ namespace IL6
     public sealed class Gatherable : MonoBehaviour
     {
         public ResourceKind YieldKind = ResourceKind.Wood;
-        public int YieldAmount = 3;
-        public float DurationSec = 4f;
+        public int YieldAmount = 4;
+        public float DurationSec = 9f;
         [Tooltip("채집 완료 시 GameObject 파괴 여부")]
         public bool DestroyOnGather = true;
 
