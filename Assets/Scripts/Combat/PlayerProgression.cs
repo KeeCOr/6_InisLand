@@ -6,22 +6,23 @@ namespace IL6
 {
     public enum RuneKind
     {
-        DamageUp,           // +25% 대미지
-        FireRateUp,         // -15% 쿨다운
-        HpUp,               // +25 최대 HP (즉시 회복)
-        RangeUp,            // +1u 사거리
-        MoveSpeedUp,        // +15% 이동속도
-        // 특수 효과 룬
-        PoisonBlade,        // 처치/타격 시 독 DoT 누적 (스택당 +5 DPS, 3초)
-        IceArrow,           // 타격 시 적 이속 50% 슬로우 (스택당 +1초)
-        MultiShot,          // 투사체 +1 / 멜리 다중 타격 +1
-        Detonator,          // 처치 시 주변 폭발 (스택당 +8 대미지, 1.6u)
+        DamageUp,
+        FireRateUp,
+        HpUp,
+        RangeUp,
+        MoveSpeedUp,
+        PoisonBlade,
+        IceArrow,
+        MultiShot,
+        Detonator,
+        LightningStrike, // 신규: 적중 시 인근 적에게 체인
+        SummonDog,       // 신규: 근접 펫 소환
+        SummonHawk,      // 신규: 원거리 펫 소환
     }
 
     /// <summary>
-    /// 플레이어 XP/레벨링. 좀비 처치 시 GrantXp 호출. 레벨업되면 LevelUpPending=true 로
-    /// UI 가 룬 선택 모달 띄우고 ApplyRune 호출. 적용된 룬은 PlayerAttackController /
-    /// PlayerController / DebugMove 에서 읽어서 계산 수정.
+    /// XP/레벨링 + 룬 스택 (각 룬 최대 3 — 1=기본, 2=소폭, 3=마스터).
+    /// 동일 계열(독/얼음/번개) 중 2개 이상 마스터하면 시너지 +50% 효과.
     /// </summary>
     public sealed class PlayerProgression : MonoBehaviour
     {
@@ -30,6 +31,27 @@ namespace IL6
         public int XpToNext { get; private set; } = 5;
         public bool LevelUpPending { get; private set; }
 
+        public const int MaxStacks = 3;
+        private readonly Dictionary<RuneKind, int> _stacks = new();
+
+        public int GetStacks(RuneKind k) => _stacks.TryGetValue(k, out var v) ? v : 0;
+        public bool IsMastered(RuneKind k) => GetStacks(k) >= MaxStacks;
+
+        public bool ElementalMasterSynergy
+        {
+            get
+            {
+                int n = 0;
+                if (IsMastered(RuneKind.PoisonBlade)) n++;
+                if (IsMastered(RuneKind.IceArrow)) n++;
+                if (IsMastered(RuneKind.LightningStrike)) n++;
+                return n >= 2;
+            }
+        }
+
+        public float SynergyMul => ElementalMasterSynergy ? 1.5f : 1f;
+
+        // 파생 modifiers (Recompute 가 _stacks 기반으로 계산)
         public float DamageMultiplier { get; private set; } = 1f;
         public float CooldownMultiplier { get; private set; } = 1f;
         public int BonusMaxHp { get; private set; }
@@ -37,13 +59,31 @@ namespace IL6
         public float BonusRange { get; private set; }
         public float MoveSpeedMultiplier { get; private set; } = 1f;
 
-        public int PoisonStacks { get; private set; }
-        public int IceStacks { get; private set; }
-        public int MultiShotStacks { get; private set; }
-        public int DetonatorStacks { get; private set; }
+        // 특수 룬 효과 값 (스택별)
+        public int PoisonDpsCalc => Scaled(RuneKind.PoisonBlade, 5, 7, 18);
+        public float PoisonDurationCalc => GetStacks(RuneKind.PoisonBlade) switch { 0 => 0f, 1 => 3f, 2 => 4f, 3 => 6f, _ => 0f };
+        public float IceSlowDurationCalc => GetStacks(RuneKind.IceArrow) switch { 0 => 0f, 1 => 2f, 2 => 3f, 3 => 5f, _ => 0f };
+        public float IceSlowFactorCalc => GetStacks(RuneKind.IceArrow) >= 3 ? 0.2f : 0.5f; // 마스터 = 80% 슬로우
+        public int MultiShotExtra => GetStacks(RuneKind.MultiShot) switch { 0 => 0, 1 => 1, 2 => 2, 3 => 4, _ => 0 };
+        public int DetonateDmg => Scaled(RuneKind.Detonator, 8, 12, 25);
+        public float DetonateRadius => GetStacks(RuneKind.Detonator) switch { 0 => 0f, 1 => 1.6f, 2 => 1.8f, 3 => 2.5f, _ => 0f };
+        public int LightningJumps => GetStacks(RuneKind.LightningStrike);
+        public float LightningChance => GetStacks(RuneKind.LightningStrike) switch { 0 => 0f, 1 => 0.5f, 2 => 0.7f, 3 => 1f, _ => 0f };
+        public int LightningDmg => Scaled(RuneKind.LightningStrike, 6, 9, 20);
+
+        private int Scaled(RuneKind kind, int s1, int s2, int s3)
+        {
+            int s = GetStacks(kind);
+            int v = s switch { 0 => 0, 1 => s1, 2 => s2, 3 => s3, _ => 0 };
+            // 시너지 보너스 (요소 룬 한정)
+            if (s > 0 && SynergyMul > 1f && IsElemental(kind)) v = Mathf.RoundToInt(v * SynergyMul);
+            return v;
+        }
+
+        private static bool IsElemental(RuneKind k) =>
+            k == RuneKind.PoisonBlade || k == RuneKind.IceArrow || k == RuneKind.LightningStrike;
 
         public readonly List<RuneKind> Applied = new();
-
         public event Action<RuneKind> OnRuneApplied;
 
         public void GrantXp(int amount)
@@ -61,40 +101,63 @@ namespace IL6
 
         public void ApplyRune(RuneKind kind)
         {
+            if (GetStacks(kind) >= MaxStacks) return;
+            _stacks[kind] = GetStacks(kind) + 1;
             Applied.Add(kind);
-            switch (kind)
+
+            // 즉시 효과 (펫/HP 회복)
+            if (kind == RuneKind.SummonDog || kind == RuneKind.SummonHawk)
             {
-                case RuneKind.DamageUp: DamageMultiplier *= 1.25f; break;
-                case RuneKind.FireRateUp: CooldownMultiplier *= 0.85f; break;
-                case RuneKind.HpUp: BonusMaxHp += 25; break;
-                case RuneKind.RangeUp: BonusRange += 1f; break;
-                case RuneKind.MoveSpeedUp: MoveSpeedMultiplier *= 1.15f; break;
-                case RuneKind.PoisonBlade: PoisonStacks++; break;
-                case RuneKind.IceArrow: IceStacks++; break;
-                case RuneKind.MultiShot: MultiShotStacks++; break;
-                case RuneKind.Detonator: DetonatorStacks++; break;
+                var player = GameObject.FindWithTag("Player");
+                if (player != null)
+                {
+                    int level = GetStacks(kind);
+                    var petKind = kind == RuneKind.SummonDog ? Pet.Kind.Dog : Pet.Kind.Hawk;
+                    Pet.Spawn(petKind, player.transform, level);
+                }
             }
+
+            Recompute();
             LevelUpPending = false;
             OnRuneApplied?.Invoke(kind);
+        }
+
+        private void Recompute()
+        {
+            DamageMultiplier = GetStacks(RuneKind.DamageUp) switch { 0 => 1f, 1 => 1.25f, 2 => 1.5f, 3 => 2.2f, _ => 1f };
+            CooldownMultiplier = GetStacks(RuneKind.FireRateUp) switch { 0 => 1f, 1 => 0.85f, 2 => 0.7f, 3 => 0.5f, _ => 1f };
+            BonusMaxHp = GetStacks(RuneKind.HpUp) switch { 0 => 0, 1 => 25, 2 => 50, 3 => 120, _ => 0 };
+            BonusRange = GetStacks(RuneKind.RangeUp) switch { 0 => 0f, 1 => 1f, 2 => 2f, 3 => 5f, _ => 0f };
+            MoveSpeedMultiplier = GetStacks(RuneKind.MoveSpeedUp) switch { 0 => 1f, 1 => 1.15f, 2 => 1.25f, 3 => 1.6f, _ => 1f };
         }
 
         public List<RuneKind> PickThreeOffer(uint seed)
         {
             var rng = new SeededRng(seed ^ (uint)Level);
-            // 가중치: 특수 룬이 일반 스탯 룬보다 자주 등장
-            var pool = new List<RuneKind>
+            // 풀 (마스터 안 된 것만), 특수 룬 가중 ×2
+            var pool = new List<RuneKind>();
+            void AddIfRoom(RuneKind k, int weight)
             {
-                RuneKind.PoisonBlade, RuneKind.PoisonBlade,
-                RuneKind.IceArrow, RuneKind.IceArrow,
-                RuneKind.MultiShot, RuneKind.MultiShot,
-                RuneKind.Detonator, RuneKind.Detonator,
-                RuneKind.DamageUp, RuneKind.FireRateUp, RuneKind.HpUp,
-                RuneKind.RangeUp, RuneKind.MoveSpeedUp,
-            };
+                if (GetStacks(k) < MaxStacks)
+                    for (int i = 0; i < weight; i++) pool.Add(k);
+            }
+            AddIfRoom(RuneKind.PoisonBlade, 2);
+            AddIfRoom(RuneKind.IceArrow, 2);
+            AddIfRoom(RuneKind.LightningStrike, 2);
+            AddIfRoom(RuneKind.MultiShot, 2);
+            AddIfRoom(RuneKind.Detonator, 2);
+            AddIfRoom(RuneKind.SummonDog, 2);
+            AddIfRoom(RuneKind.SummonHawk, 2);
+            AddIfRoom(RuneKind.DamageUp, 1);
+            AddIfRoom(RuneKind.FireRateUp, 1);
+            AddIfRoom(RuneKind.HpUp, 1);
+            AddIfRoom(RuneKind.RangeUp, 1);
+            AddIfRoom(RuneKind.MoveSpeedUp, 1);
+
             var pick = new List<RuneKind>();
             var used = new HashSet<RuneKind>();
             int tries = 0;
-            while (pick.Count < 3 && pool.Count > 0 && tries < 50)
+            while (pick.Count < 3 && pool.Count > 0 && tries < 80)
             {
                 tries++;
                 int idx = rng.IntRange(0, pool.Count - 1);
@@ -109,28 +172,93 @@ namespace IL6
         {
             RuneKind.PoisonBlade => "☠ 독 무기",
             RuneKind.IceArrow => "❄ 얼음 화살",
+            RuneKind.LightningStrike => "⚡ 번개 강타",
             RuneKind.MultiShot => "✦ 다중 사격",
             RuneKind.Detonator => "💥 폭발 처치",
-            RuneKind.DamageUp => "⚔ 대미지 강화",
+            RuneKind.SummonDog => "🐕 사냥개 소환",
+            RuneKind.SummonHawk => "🦅 매 소환",
+            RuneKind.DamageUp => "⚔ 대미지",
             RuneKind.FireRateUp => "⚡ 공격속도",
-            RuneKind.HpUp => "❤ 최대 체력",
+            RuneKind.HpUp => "❤ 체력",
             RuneKind.RangeUp => "↔ 사거리",
             RuneKind.MoveSpeedUp => "👣 이동속도",
             _ => k.ToString(),
         };
 
-        public static string Describe(RuneKind k) => k switch
+        // 다음 단계 효과 미리보기 (현재 stacks 기준)
+        public string DescribeNext(RuneKind k)
         {
-            RuneKind.DamageUp => "대미지 +25%",
-            RuneKind.FireRateUp => "쿨다운 -15% (공속↑)",
-            RuneKind.HpUp => "최대 HP +25 / 즉시 회복 25",
-            RuneKind.RangeUp => "사거리 +1u",
-            RuneKind.MoveSpeedUp => "이동속도 +15%",
-            RuneKind.PoisonBlade => "공격이 적중하면 독 누적\n3초간 +5 DPS (스택)",
-            RuneKind.IceArrow => "공격이 적중하면 적 이속 -50%\n2초간 (스택당 +1초)",
-            RuneKind.MultiShot => "투사체 +1발 / 멜리 +1대상\n(스택)",
-            RuneKind.Detonator => "처치 시 주변 폭발\n반경 1.6u, +8 대미지 (스택)",
-            _ => k.ToString(),
-        };
+            int next = GetStacks(k) + 1;
+            string suffix = next == 3 ? "  ★ MASTER" : (next == 2 ? "  (강화)" : "");
+            return DescribeAt(k, next) + suffix;
+        }
+
+        public static string DescribeAt(RuneKind k, int level)
+        {
+            switch (k)
+            {
+                case RuneKind.DamageUp:
+                    return level switch { 1 => "대미지 +25%", 2 => "대미지 +50%", 3 => "대미지 +120%", _ => "" };
+                case RuneKind.FireRateUp:
+                    return level switch { 1 => "공속 +18%", 2 => "공속 +43%", 3 => "공속 +100%", _ => "" };
+                case RuneKind.HpUp:
+                    return level switch { 1 => "최대HP +25", 2 => "최대HP +50", 3 => "최대HP +120", _ => "" };
+                case RuneKind.RangeUp:
+                    return level switch { 1 => "사거리 +1u", 2 => "사거리 +2u", 3 => "사거리 +5u", _ => "" };
+                case RuneKind.MoveSpeedUp:
+                    return level switch { 1 => "이속 +15%", 2 => "이속 +25%", 3 => "이속 +60%", _ => "" };
+                case RuneKind.PoisonBlade:
+                    return level switch
+                    {
+                        1 => "적중 시 독 (3초, 5 DPS)",
+                        2 => "독 강화 (4초, 7 DPS)",
+                        3 => "맹독 (6초, 18 DPS)",
+                        _ => ""
+                    };
+                case RuneKind.IceArrow:
+                    return level switch
+                    {
+                        1 => "적중 시 50% 슬로우 2초",
+                        2 => "슬로우 3초",
+                        3 => "빙결 80% 5초",
+                        _ => ""
+                    };
+                case RuneKind.LightningStrike:
+                    return level switch
+                    {
+                        1 => "50% 확률 1회 체인 (6 dmg)",
+                        2 => "70% 확률 2회 체인 (9 dmg)",
+                        3 => "100% 확률 3회 체인 (20 dmg)",
+                        _ => ""
+                    };
+                case RuneKind.MultiShot:
+                    return level switch { 1 => "투사체 +1발", 2 => "투사체 +2발", 3 => "투사체 +4발 부채꼴", _ => "" };
+                case RuneKind.Detonator:
+                    return level switch
+                    {
+                        1 => "처치 시 1.6u 폭발 8 dmg",
+                        2 => "1.8u 폭발 12 dmg",
+                        3 => "거대 2.5u 폭발 25 dmg",
+                        _ => ""
+                    };
+                case RuneKind.SummonDog:
+                    return level switch
+                    {
+                        1 => "사냥개 1마리 (근접 5 dmg)",
+                        2 => "사냥개 2마리 (각 8 dmg)",
+                        3 => "사냥개 3마리 정예 (각 11 dmg)",
+                        _ => ""
+                    };
+                case RuneKind.SummonHawk:
+                    return level switch
+                    {
+                        1 => "매 1마리 (원거리 4 dmg)",
+                        2 => "매 2마리 (각 7 dmg)",
+                        3 => "매 3마리 정예 (각 10 dmg)",
+                        _ => ""
+                    };
+            }
+            return "";
+        }
     }
 }

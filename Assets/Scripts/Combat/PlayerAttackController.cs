@@ -68,13 +68,13 @@ namespace IL6
 
             if (Weapon.ProjectileSpeed > 0f)
             {
-                int extra = Progression != null ? Progression.MultiShotStacks : 0;
+                int extra = Progression != null ? Progression.MultiShotExtra : 0;
                 SpawnProjectileSpread(nearest, dmg, 1 + extra);
             }
             else
             {
                 DealImmediate(nearest, dmg);
-                int extraHits = Progression != null ? Progression.MultiShotStacks : 0;
+                int extraHits = Progression != null ? Progression.MultiShotExtra : 0;
                 if (extraHits > 0) HitExtraNearby(nearest, dmg, extraHits, effectiveRange);
             }
             float cdMul = Progression != null ? Progression.CooldownMultiplier : 1f;
@@ -168,10 +168,15 @@ namespace IL6
                 z.TakeDamage(dmg);
                 if (Progression != null)
                 {
-                    if (Progression.PoisonStacks > 0) z.ApplyPoison(3f, Progression.PoisonStacks * 5);
-                    if (Progression.IceStacks > 0) z.ApplySlow(2f + Progression.IceStacks);
-                    if (z.IsDead && Progression.DetonatorStacks > 0)
-                        Projectile.Detonate(z.transform.position, Progression.DetonatorStacks * 8);
+                    if (Progression.GetStacks(RuneKind.PoisonBlade) > 0) z.ApplyPoison(Progression.PoisonDurationCalc, Progression.PoisonDpsCalc);
+                    if (Progression.GetStacks(RuneKind.IceArrow) > 0) z.ApplySlow(Progression.IceSlowDurationCalc);
+                    if (Progression.GetStacks(RuneKind.LightningStrike) > 0)
+                    {
+                        if (Random.value < Progression.LightningChance)
+                            Projectile.ChainLightning(z.transform.position, z, Progression.LightningJumps, Progression.LightningDmg);
+                    }
+                    if (z.IsDead && Progression.GetStacks(RuneKind.Detonator) > 0)
+                        Projectile.Detonate(z.transform.position, Progression.DetonateDmg, Progression.DetonateRadius);
                 }
             }
             else if (target is DeerAi deer)

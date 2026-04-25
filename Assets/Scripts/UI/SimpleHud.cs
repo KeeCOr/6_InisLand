@@ -401,9 +401,15 @@ namespace IL6
                     _runeOffer = null;
                     return;
                 }
-                GUI.Label(new Rect(rect.x + 10, rect.y + 14, rect.width - 20, 24), PlayerProgression.Title(rune), _weapon);
-                UiTheme.Separator(new Rect(rect.x + 10, rect.y + 42, rect.width - 20, 1));
-                GUI.Label(new Rect(rect.x + 10, rect.y + 50, rect.width - 20, 100), PlayerProgression.Describe(rune), _label);
+                int curStacks = Progression.GetStacks(rune);
+                int next = curStacks + 1;
+                bool willMaster = next == PlayerProgression.MaxStacks;
+                string title = PlayerProgression.Title(rune) + (willMaster ? "  ★ MASTER" : (next == 2 ? "  +" : ""));
+                GUI.Label(new Rect(rect.x + 10, rect.y + 14, rect.width - 20, 24), title, _weapon);
+                GUI.Label(new Rect(rect.x + 10, rect.y + 36, rect.width - 20, 16),
+                    $"진행 {curStacks}/{PlayerProgression.MaxStacks} → {next}/{PlayerProgression.MaxStacks}", _labelSubtle);
+                UiTheme.Separator(new Rect(rect.x + 10, rect.y + 56, rect.width - 20, 1));
+                GUI.Label(new Rect(rect.x + 10, rect.y + 64, rect.width - 20, 90), PlayerProgression.DescribeAt(rune, next), _label);
             }
         }
 

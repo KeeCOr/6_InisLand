@@ -1,10 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace IL6
 {
     /// <summary>
-    /// 직선/호밍 투사체. 타겟 살아있으면 호밍, 죽거나 사라지면 마지막 방향 직진.
-    /// 히트 시 Zombie/DeerAi 처리 + Owner 의 PlayerProgression 효과 (독/슬로우/폭발) 적용.
+    /// 직선/호밍 투사체. 히트 시 OwnerProgression 의 누적 효과 (독/슬로우/번개체인/폭발) 적용.
     /// </summary>
     public sealed class Projectile : MonoBehaviour
     {
@@ -85,32 +85,33 @@ namespace IL6
         public void ApplyEffectsTo(Zombie z)
         {
             if (OwnerProgression == null || z == null) return;
-            if (OwnerProgression.PoisonStacks > 0)
+            if (OwnerProgression.GetStacks(RuneKind.PoisonBlade) > 0)
+                z.ApplyPoison(OwnerProgression.PoisonDurationCalc, OwnerProgression.PoisonDpsCalc);
+            if (OwnerProgression.GetStacks(RuneKind.IceArrow) > 0)
+                z.ApplySlow(OwnerProgression.IceSlowDurationCalc);
+            if (OwnerProgression.GetStacks(RuneKind.LightningStrike) > 0)
             {
-                z.ApplyPoison(3f, OwnerProgression.PoisonStacks * 5);
+                if (Random.value < OwnerProgression.LightningChance)
+                    ChainLightning(z.transform.position, z, OwnerProgression.LightningJumps, OwnerProgression.LightningDmg);
             }
-            if (OwnerProgression.IceStacks > 0)
+            if (z.IsDead && OwnerProgression.GetStacks(RuneKind.Detonator) > 0)
             {
-                z.ApplySlow(2f + OwnerProgression.IceStacks);
-            }
-            if (z.IsDead && OwnerProgression.DetonatorStacks > 0)
-            {
-                Detonate(z.transform.position, OwnerProgression.DetonatorStacks * 8);
+                Detonate(z.transform.position, OwnerProgression.DetonateDmg, OwnerProgression.DetonateRadius);
             }
         }
 
-        public static void Detonate(Vector3 pos, int dmg)
+        public static void Detonate(Vector3 pos, int dmg, float radius)
         {
-            var hits = Physics2D.OverlapCircleAll(pos, 1.6f);
+            if (radius <= 0f) return;
+            var hits = Physics2D.OverlapCircleAll(pos, radius);
             foreach (var h in hits)
             {
                 var zz = h.GetComponent<Zombie>();
                 if (zz != null && !zz.IsDead) zz.TakeDamage(dmg);
             }
-            // 시각: 짧은 주황 원 펄스 (1초 후 소멸)
             var fx = new GameObject("Boom");
             fx.transform.position = pos;
-            fx.transform.localScale = Vector3.one * 1.6f;
+            fx.transform.localScale = Vector3.one * radius;
             var sr = fx.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 11;
             var cf = fx.AddComponent<ColorFallback>();
@@ -121,6 +122,50 @@ namespace IL6
             cf.OutlineWidth = 3;
             cf.OutlineColor = new Color(1f, 0.85f, 0.3f, 1f);
             Object.Destroy(fx, 0.4f);
+        }
+
+        public static void ChainLightning(Vector3 from, Zombie origin, int jumps, int dmg)
+        {
+            var visited = new HashSet<Zombie> { origin };
+            Vector3 prevPos = from;
+            for (int i = 0; i < jumps; i++)
+            {
+                var hits = Physics2D.OverlapCircleAll(prevPos, 3.5f);
+                Zombie next = null;
+                float bestDist = float.MaxValue;
+                foreach (var h in hits)
+                {
+                    var z = h.GetComponent<Zombie>();
+                    if (z == null || z.IsDead || visited.Contains(z)) continue;
+                    float d = Vector2.Distance(prevPos, z.transform.position);
+                    if (d < bestDist) { bestDist = d; next = z; }
+                }
+                if (next == null) break;
+                next.TakeDamage(dmg);
+                visited.Add(next);
+                SpawnLightningVisual(prevPos, next.transform.position);
+                prevPos = next.transform.position;
+            }
+        }
+
+        private static void SpawnLightningVisual(Vector3 a, Vector3 b)
+        {
+            var fx = new GameObject("Bolt");
+            Vector3 mid = (a + b) * 0.5f;
+            float len = Vector3.Distance(a, b);
+            float angle = Mathf.Atan2(b.y - a.y, b.x - a.x) * Mathf.Rad2Deg;
+            fx.transform.position = mid;
+            fx.transform.rotation = Quaternion.Euler(0, 0, angle);
+            fx.transform.localScale = new Vector3(len, 0.08f, 1f);
+            var sr = fx.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 12;
+            var cf = fx.AddComponent<ColorFallback>();
+            cf.Tint = new Color(0.7f, 0.95f, 1f, 1f);
+            cf.Shape = FallbackShape.Square;
+            cf.Circle = false;
+            cf.PixelSize = 32;
+            cf.OutlineWidth = 0;
+            Object.Destroy(fx, 0.18f);
         }
     }
 }
