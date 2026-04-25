@@ -27,10 +27,73 @@ namespace IL6
             DrawWorldFarmButtons();
             DrawRecruitDialog();
             DrawRuneModal();
+            DrawPhaseBanner();
             DrawBossWarning();
             DrawAutoSaveToast();
+            DrawControlsHint();
             DrawDeathOverlay();
             DrawDamageFlash();
+        }
+
+        private string _phaseBanner = "";
+        private float _phaseBannerLeft;
+        private System.Action _unsubE, _unsubN, _unsubD, _unsubA;
+
+        private void OnEnable()
+        {
+            _unsubE = EventBus.Instance.Subscribe<IL6.Events.EveningStartedPayload>(p => ShowBanner($"Day {p.Day}  🌅  저녁"));
+            _unsubN = EventBus.Instance.Subscribe<IL6.Events.NightStartedPayload>(p => ShowBanner($"Day {p.Day}  🌙  밤이 찾아옵니다"));
+            _unsubD = EventBus.Instance.Subscribe<IL6.Events.DawnStartedPayload>(p => ShowBanner($"Day {p.Day}  🌄  새벽"));
+            _unsubA = EventBus.Instance.Subscribe<IL6.Events.DayStartedPayload>(p => ShowBanner($"Day {p.Day}  ☀  새 날"));
+        }
+
+        private void OnDisable()
+        {
+            _unsubE?.Invoke(); _unsubN?.Invoke(); _unsubD?.Invoke(); _unsubA?.Invoke();
+        }
+
+        private void ShowBanner(string text)
+        {
+            _phaseBanner = text;
+            _phaseBannerLeft = 2.6f;
+        }
+
+        private GUIStyle _bannerStyle;
+        private void DrawPhaseBanner()
+        {
+            if (_phaseBannerLeft <= 0f) return;
+            _phaseBannerLeft -= Time.unscaledDeltaTime;
+            if (_bannerStyle == null)
+            {
+                _bannerStyle = new GUIStyle(GUI.skin.label)
+                {
+                    fontSize = 32, fontStyle = FontStyle.Bold,
+                    alignment = TextAnchor.MiddleCenter,
+                    normal = { textColor = UiTheme.TextGold },
+                };
+            }
+            float a = Mathf.Clamp01(_phaseBannerLeft / 1.5f);
+            UiTheme.Rect(new Rect(0, 100, Screen.width, 56), new Color(0.05f, 0.07f, 0.12f, 0.7f * a));
+            UiTheme.Rect(new Rect(0, 100, Screen.width, 1), new Color(0.78f, 0.62f, 0.30f, a));
+            UiTheme.Rect(new Rect(0, 155, Screen.width, 1), new Color(0.78f, 0.62f, 0.30f, a));
+            var oldC = GUI.contentColor;
+            GUI.contentColor = new Color(1f, 0.86f, 0.45f, a);
+            GUI.Label(new Rect(0, 108, Screen.width, 44), _phaseBanner, _bannerStyle);
+            GUI.contentColor = oldC;
+        }
+
+        private void DrawControlsHint()
+        {
+            const string hint = "WASD/방향키 이동 · E 채집 · F 영입 · 자동 공격";
+            const int W = 420, H = 24;
+            var r = new Rect(Screen.width / 2 - W / 2, Screen.height - H - 8, W, H);
+            UiTheme.Rect(r, new Color(0.05f, 0.07f, 0.12f, 0.55f));
+            UiTheme.Rect(new Rect(r.x, r.y, r.width, 1), new Color(0.78f, 0.62f, 0.30f, 0.4f));
+            UiTheme.Rect(new Rect(r.x, r.yMax - 1, r.width, 1), new Color(0.78f, 0.62f, 0.30f, 0.4f));
+            var oldC = GUI.contentColor;
+            GUI.contentColor = UiTheme.TextSubtle;
+            GUI.Label(r, hint, _section);
+            GUI.contentColor = oldC;
         }
 
         private GUIStyle _bossWarnStyle;
