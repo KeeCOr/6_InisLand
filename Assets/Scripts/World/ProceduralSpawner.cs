@@ -34,6 +34,8 @@ namespace IL6
 
         private class ChunkData { public List<GameObject> Spawned = new(); }
         private readonly Dictionary<(int, int), ChunkData> _loaded = new();
+        // 한 번이라도 로드된 적 있는 청크 — 재로드 시 동물/NPC 는 재생성 안 함 (나무/돌만)
+        private readonly HashSet<(int, int)> _everVisited = new();
 
         private void Start()
         {
@@ -91,7 +93,14 @@ namespace IL6
             var data = new ChunkData();
             _loaded[key] = data;
 
-            if (IsInStarterZone(key.Item1, key.Item2)) return;
+            if (IsInStarterZone(key.Item1, key.Item2))
+            {
+                _everVisited.Add(key);
+                return;
+            }
+
+            // 첫 방문이면 동물/NPC 포함 풀 스폰. 재방문이면 나무/돌만 (재생되는 자원).
+            bool firstVisit = _everVisited.Add(key);
 
             uint seed = Seed ^ unchecked((uint)((key.Item1 * 73856093) ^ (key.Item2 * 19349663)));
             var rng = new SeededRng(seed);
@@ -110,8 +119,8 @@ namespace IL6
                 float cumNpc = cumDeer + NpcChance;
                 if (roll < cumTree) data.Spawned.Add(CreateTree(x, y));
                 else if (roll < cumRock) data.Spawned.Add(CreateRock(x, y));
-                else if (roll < cumDeer) SpawnAnimalAt(x, y, rng, data.Spawned);
-                else if (roll < cumNpc) data.Spawned.Add(CreateNpc(x, y, rng));
+                else if (firstVisit && roll < cumDeer) SpawnAnimalAt(x, y, rng, data.Spawned);
+                else if (firstVisit && roll < cumNpc) data.Spawned.Add(CreateNpc(x, y, rng));
             }
         }
 
