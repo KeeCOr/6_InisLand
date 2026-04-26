@@ -409,7 +409,7 @@ namespace IL6
 
             // 페이지 인디케이터 (점 3개)
             int dotY = (int)r.yMax - 60;
-            int dotX = (int)r.x + r.width / 2 - 18;
+            int dotX = (int)(r.x + r.width / 2 - 18);
             for (int i = 0; i < 3; i++)
             {
                 Color dot = i == _tutPage ? UiTheme.TextGold : UiTheme.PanelBorderDim;
