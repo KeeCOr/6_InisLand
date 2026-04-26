@@ -414,10 +414,26 @@ namespace IL6
         private void TryAttack()
         {
             if (_attackCd > 0f) return;
-            var z = FindNearestZombie(AttackRange);
-            if (z == null) return;
-            SpawnProjectile(z);
+            // 우선순위: 좀비 (밤) → 늑대 (낮의 위협). 사슴/토끼/맘모스 같은 평화 동물은 공격 안 함.
+            MonoBehaviour target = FindNearestZombie(AttackRange);
+            if (target == null) target = FindNearestHostileAnimal(AttackRange);
+            if (target == null) return;
+            SpawnProjectile(target);
             _attackCd = AttackCooldown * GetCampfireFireRateMul();
+        }
+
+        private WolfAi FindNearestHostileAnimal(float range)
+        {
+            var all = Object.FindObjectsByType<WolfAi>(FindObjectsSortMode.None);
+            WolfAi best = null;
+            float bestDist = range;
+            foreach (var w in all)
+            {
+                if (w == null || w.CurrentHp <= 0) continue;
+                float d = Vector2.Distance(transform.position, w.transform.position);
+                if (d < bestDist) { best = w; bestDist = d; }
+            }
+            return best;
         }
 
         private float GetCampfireFireRateMul()
@@ -445,24 +461,19 @@ namespace IL6
             return best;
         }
 
-        private void SpawnProjectile(Zombie target)
+        private void SpawnProjectile(MonoBehaviour target)
         {
             var go = new GameObject("CompProjectile");
             go.transform.position = transform.position;
-            go.transform.localScale = Vector3.one * 0.28f;
+            go.transform.localScale = Vector3.one * 0.6f;
             var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 9;
-            var cf = go.AddComponent<ColorFallback>();
-            cf.Tint = new Color(0.55f, 1f, 0.7f);
-            cf.Shape = FallbackShape.Circle;
-            cf.Circle = true;
-            cf.PixelSize = 32;
-            cf.OutlineWidth = 1;
-            cf.OutlineColor = new Color(0.15f, 0.4f, 0.25f, 1f);
+            sr.sortingOrder = 50;
+            sr.color = new Color(0.55f, 1f, 0.7f);
+            // Projectile.Awake 가 sprite 자체 생성 — ColorFallback 안 씀
             var proj = go.AddComponent<Projectile>();
             proj.Speed = ProjectileSpeed;
             proj.Damage = Damage;
-            proj.HitRadius = 0.4f;
+            proj.HitRadius = 0.45f;
             proj.Aim(target, transform.position);
         }
     }
