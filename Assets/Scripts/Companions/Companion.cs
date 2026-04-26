@@ -443,35 +443,44 @@ namespace IL6
         private void TryAttack()
         {
             if (_attackCd > 0f) return;
-            // 우선순위: 좀비 (밤) → 늑대 (낮의 위협). 사슴/토끼/맘모스 같은 평화 동물은 공격 안 함.
+            // 우선순위: 좀비 (밤) → 동물 (낮 — 늑대 위협 + 사슴 등 사냥)
             MonoBehaviour target = FindNearestZombie(AttackRange);
-            if (target == null) target = FindNearestHostileAnimal(AttackRange);
+            if (target == null) target = FindNearestAnimal(AttackRange);
             if (target == null) return;
             SpawnProjectile(target);
             _attackCd = AttackCooldown * GetCampfireFireRateMul();
         }
 
-        private WolfAi FindNearestHostileAnimal(float range)
+        private MonoBehaviour FindNearestAnimal(float range)
         {
-            var all = Object.FindObjectsByType<WolfAi>(FindObjectsSortMode.None);
-            WolfAi best = null;
+            MonoBehaviour best = null;
             float bestDist = range;
-            foreach (var w in all)
+            // 늑대 (위협)
+            var ws = Object.FindObjectsByType<WolfAi>(FindObjectsSortMode.None);
+            foreach (var w in ws)
             {
                 if (w == null || w.CurrentHp <= 0) continue;
                 float d = Vector2.Distance(transform.position, w.transform.position);
                 if (d < bestDist) { best = w; bestDist = d; }
             }
+            // 평화 동물 (사냥감)
+            var ds = Object.FindObjectsByType<DeerAi>(FindObjectsSortMode.None);
+            foreach (var d in ds)
+            {
+                if (d == null || d.CurrentHp <= 0) continue;
+                float dist = Vector2.Distance(transform.position, d.transform.position);
+                if (dist < bestDist) { best = d; bestDist = dist; }
+            }
             return best;
         }
 
-        /// <summary>SightRange 안에서 좀비 우선, 없으면 늑대.</summary>
+        /// <summary>SightRange 안에서 좀비 우선, 없으면 늑대/사슴 등 동물.</summary>
         private Transform FindAnyHostileInSight()
         {
             var z = FindNearestZombie(SightRange);
             if (z != null) return z.transform;
-            var w = FindNearestHostileAnimal(SightRange);
-            return w != null ? w.transform : null;
+            var a = FindNearestAnimal(SightRange);
+            return a != null ? a.transform : null;
         }
 
         private float GetCampfireFireRateMul()
