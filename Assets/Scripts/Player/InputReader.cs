@@ -17,8 +17,10 @@ namespace IL6
         {
             float ax = (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) ? 1f : 0f)
                      - (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) ? 1f : 0f);
-            float ay = (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) ? 1f : 0f)
-                     - (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) ? 1f : 0f);
+            // 2D world 좌표는 +Y가 위 → W/위 = +1, S/아래 = -1.
+            // (이전에는 부호가 뒤집혀 있어서 W가 아래로 가고 S가 위로 갔던 버그)
+            float ay = (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) ? 1f : 0f)
+                     - (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) ? 1f : 0f);
             MoveAxis = MathUtil.SafeNormalize(new Vector2(ax, ay));
 
             InteractPressed = Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Space);

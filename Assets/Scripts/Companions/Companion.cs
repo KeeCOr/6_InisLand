@@ -341,19 +341,39 @@ namespace IL6
             return Vector2.zero;
         }
 
+        // 플레이어 진행 방향 캐시 — 정지 상태에서도 마지막 방향 유지.
+        private static Vector2 _lastPlayerFacing = Vector2.down;
+
         private Vector2 GetFormationSlot()
         {
             if (Player == null) return transform.position;
+
+            // 플레이어 velocity 로 facing 갱신
+            var prb = Player.GetComponent<Rigidbody2D>();
+            if (prb != null && prb.velocity.sqrMagnitude > 0.04f)
+            {
+                _lastPlayerFacing = prb.velocity.normalized;
+            }
+
+            Vector2 behind = -_lastPlayerFacing;
+            Vector2 perp = new Vector2(-behind.y, behind.x); // 좌측 90°
+
+            // 동료별 인덱스 (instanceID 정렬로 안정)
             var all = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
-            int n = Mathf.Max(1, all.Length);
             int myId = GetInstanceID();
             int myIdx = 0;
             foreach (var c in all)
             {
                 if (c != null && c != this && c.GetInstanceID() < myId) myIdx++;
             }
-            float angle = (myIdx / (float)n) * Mathf.PI * 2f + Mathf.PI * 0.5f;
-            return (Vector2)Player.position + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * FormationRadius;
+
+            // 일렬 종대로 뒤따름 — 한 줄에 2명씩, 점점 멀리.
+            int row = myIdx / 2;          // 0,0,1,1,2,2,...
+            int side = myIdx % 2;          // 0=좌(또는 단독), 1=우
+            float behindDist = (row + 1) * FormationRadius * 0.9f;
+            float sideOffset = 0f;
+            if (myIdx > 0) sideOffset = (side == 0 ? -0.45f : 0.45f);
+            return (Vector2)Player.position + behind * behindDist + perp * sideOffset;
         }
 
         private Vector2 SeparationFromOthers()
