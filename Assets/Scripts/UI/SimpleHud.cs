@@ -81,16 +81,7 @@ namespace IL6
                 if (_teleportPending && _fadeAlpha > 0.92f)
                 {
                     _teleportPending = false;
-                    Vector3 villageCenter = new Vector3(GameConstants.VillageCenterX, GameConstants.VillageCenterY, 0f);
-                    if (Player != null) Player.transform.position = villageCenter;
-                    // 동료들도 같이 마을로 — 외곽에 두고 오면 사라진 것처럼 보임
-                    var comps = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
-                    foreach (var c in comps)
-                    {
-                        if (c == null || c.IsDead) continue;
-                        Vector2 jitter = Random.insideUnitCircle * 1.2f;
-                        c.transform.position = villageCenter + (Vector3)jitter;
-                    }
+                    BringEveryoneToVillage();
                 }
             }
             if (_fadeAlpha <= 0.001f) return;
@@ -111,6 +102,37 @@ namespace IL6
             GUI.contentColor = oldC;
         }
 
+        /// <summary>플레이어 + 모든 살아있는 동료/펫 을 마을 중심으로 즉시 이동.</summary>
+        private void BringEveryoneToVillage()
+        {
+            Vector3 villageCenter = new Vector3(GameConstants.VillageCenterX, GameConstants.VillageCenterY, 0f);
+            if (Player != null)
+            {
+                Player.transform.position = villageCenter;
+                var prb = Player.GetComponent<Rigidbody2D>();
+                if (prb != null) prb.velocity = Vector2.zero;
+            }
+            var comps = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
+            foreach (var c in comps)
+            {
+                if (c == null || c.IsDead) continue;
+                Vector2 jitter = Random.insideUnitCircle * 1.5f;
+                c.transform.position = villageCenter + (Vector3)jitter;
+                var rb = c.GetComponent<Rigidbody2D>();
+                if (rb != null) rb.velocity = Vector2.zero;
+            }
+            // 펫(개/매)도 같이
+            var pets = Object.FindObjectsByType<Pet>(FindObjectsSortMode.None);
+            foreach (var p in pets)
+            {
+                if (p == null) continue;
+                Vector2 jitter = Random.insideUnitCircle * 1.0f;
+                p.transform.position = villageCenter + (Vector3)jitter;
+                var rb = p.GetComponent<Rigidbody2D>();
+                if (rb != null) rb.velocity = Vector2.zero;
+            }
+        }
+
         // OnEnable에서 추가 페이즈 핸들러 등록 (기존 unsubE/N/D/A 옆에 한 쌍 더)
         private System.Action _unsubFadeIn, _unsubFadeOut;
         private void HookFadeEvents()
@@ -124,6 +146,8 @@ namespace IL6
             _unsubFadeOut = EventBus.Instance.Subscribe<NightStartedPayload>(_ =>
             {
                 _fadeTarget = 0f;
+                // Evening 페이즈가 스킵된 경우(디버그 강제 밤 등) 안전망 — 즉시 마을 집결
+                BringEveryoneToVillage();
             });
         }
 
