@@ -65,9 +65,20 @@ namespace IL6
             if (p != null) _player = p.transform;
         }
 
+        private static NightController _cachedNight;
+
         private void Update()
         {
             if (IsDead) return;
+
+            // 낮이면 좀비 자체 정리 — Night 가 아닌 어떤 페이즈에도 좀비 없음
+            if (_cachedNight == null) _cachedNight = Object.FindFirstObjectByType<NightController>();
+            if (_cachedNight != null && _cachedNight.CurrentPhase != Phase.Night)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             if (PoisonRemainingSec > 0f)
             {
                 PoisonRemainingSec -= Time.deltaTime;

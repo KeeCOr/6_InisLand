@@ -56,7 +56,7 @@ namespace IL6
             _unsubEvening = EventBus.Instance.Subscribe<EveningStartedPayload>(_ => { CurrentPhase = Phase.Evening; });
             _unsubNight = EventBus.Instance.Subscribe<NightStartedPayload>(p => StartNight(p.Day));
             _unsubDawn = EventBus.Instance.Subscribe<DawnStartedPayload>(_ => { CurrentPhase = Phase.Dawn; EndNight(); });
-            _unsubDay = EventBus.Instance.Subscribe<DayStartedPayload>(_ => { CurrentPhase = Phase.Day; });
+            _unsubDay = EventBus.Instance.Subscribe<DayStartedPayload>(_ => { CurrentPhase = Phase.Day; EndNight(); });
         }
 
         private void OnDestroy()

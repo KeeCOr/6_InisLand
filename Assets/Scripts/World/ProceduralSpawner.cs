@@ -228,22 +228,22 @@ namespace IL6
                 Outline = new Color(0.1f, 0.05f, 0.02f, 1f),
                 Weight = 0.13f, PackMin = 1, PackMax = 1,
             },
-            // 늑대 (포식자, 무리, 25%만 고기)
+            // 늑대 (포식자, 무리, 25%만 고기) — HP 3배, 무리 4-7
             new AnimalArchetype {
                 Name = "Wolf_proc", MeatMin = 1, MeatMax = 1, MeatDropChance = 0.25f,
-                DurationSec = 1.5f, Hp = 16,
+                DurationSec = 1.5f, Hp = 48,
                 FleeRadius = 0f, FleeSpeed = 0f, // 안 도망감
                 Scale = 0.85f, ColliderRadius = 0.35f,
                 Tint = new Color(0.45f, 0.45f, 0.5f),
                 Shape = FallbackShape.Triangle,
                 Outline = new Color(0.15f, 0.15f, 0.18f, 1f),
                 Weight = 0.13f, IsPredator = true, PredatorDamage = 6,
-                PackMin = 2, PackMax = 4,
+                PackMin = 4, PackMax = 7,
             },
-            // 사슴 (낮춘 빈도)
+            // 사슴 (낮춘 빈도) — HP 4배
             new AnimalArchetype {
                 Name = "Deer_proc", MeatMin = 2, MeatMax = 2, MeatDropChance = 1f,
-                DurationSec = 3f, Hp = 12,
+                DurationSec = 3f, Hp = 48,
                 FleeRadius = 3.5f, FleeSpeed = 3f,
                 Scale = 1f, ColliderRadius = 0.4f,
                 Tint = new Color(0.55f, 0.4f, 0.25f),
@@ -262,10 +262,10 @@ namespace IL6
                 Outline = new Color(0.45f, 0.6f, 0.85f, 1f),
                 Weight = 0.06f, PackMin = 1, PackMax = 1, DropsFrostbloom = true,
             },
-            // 맘모스 (희귀, 매우 단단함 200 HP, 고기 30~50)
+            // 맘모스 (희귀, 매우 단단함 2000 HP, 고기 30~50)
             new AnimalArchetype {
                 Name = "Mammoth_proc", MeatMin = 30, MeatMax = 50, MeatDropChance = 1f,
-                DurationSec = 12f, Hp = 200,
+                DurationSec = 12f, Hp = 2000,
                 FleeRadius = 1.5f, FleeSpeed = 1.0f,
                 Scale = 2.2f, ColliderRadius = 0.85f,
                 Tint = new Color(0.45f, 0.32f, 0.22f),
