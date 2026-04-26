@@ -279,21 +279,33 @@ namespace IL6
             // 1) 플레이어 마을 안 + 동료 마을 안 → 자리 지킴 (앵커)
             if (playerInside && selfInside) return SeparationFromOthers();
 
-            // 2) 플레이어와 동료가 펜스를 사이에 두고 다른 쪽 → 가장 가까운 문으로 스프린트
+            // 2) 플레이어와 동료가 펜스를 사이에 두고 다른 쪽 → 문 통과 2단계 경로
+            //    Step 1: 문의 수직 축에 정렬 (좌우 오프셋 줄임)
+            //    Step 2: 정렬되면 문 방향으로 직진해 통과
             if (playerInside != selfInside)
             {
                 var door = Door.FindNearest((Vector2)transform.position);
                 if (door != null)
                 {
                     Vector2 doorPos = door.transform.position;
-                    Vector2 toDoor = doorPos - (Vector2)transform.position;
-                    if (toDoor.magnitude > 0.4f)
+                    Vector2 outward = (doorPos - VillageCenter).normalized;        // 문이 마을 밖을 향하는 방향
+                    Vector2 tangent = new Vector2(-outward.y, outward.x);          // 문의 좌우 축
+
+                    Vector2 fromDoor = (Vector2)transform.position - doorPos;
+                    float alongOutward = Vector2.Dot(fromDoor, outward);  // +: 동료가 문 바깥쪽 / -: 안쪽
+                    float alongTangent = Vector2.Dot(fromDoor, tangent);  // 문 좌우 오프셋
+
+                    // Step 1: 좌우 정렬 — 펜스 옆에 부딪히지 않도록 같은 거리에서 tangent=0 으로
+                    if (Mathf.Abs(alongTangent) > 0.4f)
                     {
-                        return toDoor.normalized * MoveSpeed * SprintSpeedMul + SeparationFromOthers() * 0.3f;
+                        Vector2 alignTarget = doorPos + outward * alongOutward;
+                        Vector2 toAlign = alignTarget - (Vector2)transform.position;
+                        return toAlign.normalized * MoveSpeed * SprintSpeedMul;
                     }
-                    // 문 바로 앞 — 플레이어 쪽으로 한 발 더 밀어내기
-                    Vector2 toPlayer = ((Vector2)Player.position - (Vector2)transform.position).normalized;
-                    return toPlayer * MoveSpeed * SprintSpeedMul;
+
+                    // Step 2: 정렬 완료 — 문 통과 (selfInside면 바깥으로, 아니면 안으로)
+                    Vector2 throughDir = selfInside ? outward : -outward;
+                    return throughDir * MoveSpeed * SprintSpeedMul;
                 }
             }
 

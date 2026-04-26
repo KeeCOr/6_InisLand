@@ -29,6 +29,9 @@ namespace IL6
 
         private Collider2D _self;
         private Collider2D _playerCol;
+        // 이미 IgnoreCollision 처리된 우호 콜라이더 목록 (동료 포함)
+        private readonly System.Collections.Generic.HashSet<Collider2D> _hooked = new();
+        private float _refreshTimer;
 
         private void Awake()
         {
@@ -39,12 +42,19 @@ namespace IL6
         private void Start()
         {
             TryHookPlayer();
+            HookAllCompanions();
         }
 
         private void Update()
         {
-            // 플레이어가 늦게 생성되거나 재할당되면 다시 시도
             if (_playerCol == null) TryHookPlayer();
+            // 새로 영입된 동료가 있을 수 있으니 0.5s 간격으로 갱신
+            _refreshTimer -= Time.deltaTime;
+            if (_refreshTimer <= 0f)
+            {
+                _refreshTimer = 0.5f;
+                HookAllCompanions();
+            }
         }
 
         private void TryHookPlayer()
@@ -54,7 +64,25 @@ namespace IL6
             var col = p.GetComponent<Collider2D>();
             if (col == null) return;
             _playerCol = col;
-            Physics2D.IgnoreCollision(_self, _playerCol, true);
+            Hook(col);
+        }
+
+        private void HookAllCompanions()
+        {
+            var comps = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
+            foreach (var c in comps)
+            {
+                if (c == null) continue;
+                var col = c.GetComponent<Collider2D>();
+                if (col != null) Hook(col);
+            }
+        }
+
+        private void Hook(Collider2D col)
+        {
+            if (col == null || _hooked.Contains(col)) return;
+            Physics2D.IgnoreCollision(_self, col, true);
+            _hooked.Add(col);
         }
 
         private void OnDestroy()
