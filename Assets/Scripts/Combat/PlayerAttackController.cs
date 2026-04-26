@@ -174,6 +174,12 @@ namespace IL6
                     }
                     if (z.IsDead && Progression.GetStacks(RuneKind.Detonator) > 0)
                         Projectile.Detonate(z.transform.position, Progression.DetonateDmg, Progression.DetonateRadius);
+                    // 흡혈 (근접 처치 포함)
+                    if (z.IsDead && Progression.VampirismHeal > 0)
+                    {
+                        var pc = Progression.GetComponent<PlayerController>();
+                        if (pc != null) pc.Heal(Progression.VampirismHeal);
+                    }
                 }
             }
             else if (target is DeerAi deer)

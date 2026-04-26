@@ -64,7 +64,9 @@ namespace IL6
 
         private void Update()
         {
-            if (_session == null) return;
+            // GameSession.Instance 가 HardReset 등으로 사라졌다 다시 생기는 경우 대비해 매번 다시 조회
+            if (_session == null || GameSession.Instance != _session) _session = GameSession.Instance;
+            if (_session == null || _session.Cycle == null) return;
             _session.Cycle.Update(Time.deltaTime);
 
             if (Player != null && Player.IsDead && !_diedEmitted)

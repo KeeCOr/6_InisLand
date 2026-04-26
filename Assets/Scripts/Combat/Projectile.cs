@@ -138,9 +138,49 @@ namespace IL6
                 if (d < HitRadius)
                 {
                     DealDamage(_target);
-                    Destroy(gameObject);
+                    EnsurePierceInit();
+                    // 관통 — 추가로 적중할 수 있는 횟수 남았으면 destroy 안 함
+                    if (_pierceLeft > 0)
+                    {
+                        _pierceLeft--;
+                        // 다음 타겟 찾기 — 이미 친 적은 다시 안 침
+                        _hitOnce.Add(_target);
+                        _target = FindNextTargetInLine();
+                        if (_target == null) Destroy(gameObject);
+                    }
+                    else
+                    {
+                        Destroy(gameObject);
+                    }
                 }
             }
+        }
+
+        private int _pierceLeft = -1;
+        private readonly System.Collections.Generic.HashSet<MonoBehaviour> _hitOnce = new();
+        private void EnsurePierceInit()
+        {
+            if (_pierceLeft >= 0) return;
+            _pierceLeft = OwnerProgression != null ? OwnerProgression.PierceExtraHits : 0;
+        }
+
+        private MonoBehaviour FindNextTargetInLine()
+        {
+            EnsurePierceInit();
+            // 같은 방향으로 가까운 적 (Zombie 우선)
+            Vector2 from = transform.position;
+            float bestDist = 5f;
+            MonoBehaviour best = null;
+            var zs = Object.FindObjectsByType<Zombie>(FindObjectsSortMode.None);
+            foreach (var z in zs)
+            {
+                if (z == null || z.IsDead || _hitOnce.Contains(z)) continue;
+                Vector2 to = (Vector2)z.transform.position - from;
+                if (Vector2.Dot(to.normalized, _direction) < 0.5f) continue; // 정면만
+                float d = to.magnitude;
+                if (d < bestDist) { bestDist = d; best = z; }
+            }
+            return best;
         }
 
         private void SpawnTrailGhost()
@@ -202,6 +242,12 @@ namespace IL6
             if (z.IsDead && OwnerProgression.GetStacks(RuneKind.Detonator) > 0)
             {
                 Detonate(z.transform.position, OwnerProgression.DetonateDmg, OwnerProgression.DetonateRadius);
+            }
+            // 흡혈 — 처치 시 플레이어 회복
+            if (z.IsDead && OwnerProgression.VampirismHeal > 0)
+            {
+                var pc = OwnerProgression.GetComponent<PlayerController>();
+                if (pc != null) pc.Heal(OwnerProgression.VampirismHeal);
             }
         }
 

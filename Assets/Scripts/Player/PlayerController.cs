@@ -87,6 +87,22 @@ namespace IL6
             CurrentHp = Mathf.Max(0, CurrentHp - amount);
             GameFeel.HitFlash(this, GetComponent<SpriteRenderer>());
             CameraFollow.Shake(0.18f + amount * 0.012f, 0.25f);
+
+            // 가시 (Thorns) — 인근 적에게 반사 대미지
+            if (_progression != null && _progression.ThornsDmg > 0)
+            {
+                int td = _progression.ThornsDmg;
+                float r = _progression.ThornsRadius;
+                var hits = Physics2D.OverlapCircleAll(transform.position, r);
+                foreach (var h in hits)
+                {
+                    if (h == null) continue;
+                    var z = h.GetComponent<Zombie>();
+                    if (z != null && !z.IsDead) { z.TakeDamage(td); continue; }
+                    var w = h.GetComponent<WolfAi>();
+                    if (w != null && w.CurrentHp > 0) w.TakeDamage(td);
+                }
+            }
         }
 
         public void Heal(int amount)

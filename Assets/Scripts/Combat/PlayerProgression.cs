@@ -6,18 +6,23 @@ namespace IL6
 {
     public enum RuneKind
     {
+        // 레거시 (단순 능력치) — 풀에서는 제거됐지만 enum 은 보존 (구 세이브 호환)
         DamageUp,
         FireRateUp,
         HpUp,
         RangeUp,
         MoveSpeedUp,
+        // 효과 기반 룬
         PoisonBlade,
         IceArrow,
         MultiShot,
         Detonator,
-        LightningStrike, // 신규: 적중 시 인근 적에게 체인
-        SummonDog,       // 신규: 근접 펫 소환
-        SummonHawk,      // 신규: 원거리 펫 소환
+        LightningStrike,
+        SummonDog,
+        SummonHawk,
+        Vampirism,    // 신규: 처치 시 HP 회복
+        Thorns,       // 신규: 피격 시 인근 적에게 반사 대미지
+        Pierce,       // 신규: 투사체 관통 (1회 추가 적중)
     }
 
     /// <summary>
@@ -70,6 +75,10 @@ namespace IL6
         public int LightningJumps => GetStacks(RuneKind.LightningStrike);
         public float LightningChance => GetStacks(RuneKind.LightningStrike) switch { 0 => 0f, 1 => 0.5f, 2 => 0.7f, 3 => 1f, _ => 0f };
         public int LightningDmg => Scaled(RuneKind.LightningStrike, 6, 9, 20);
+        public int VampirismHeal => GetStacks(RuneKind.Vampirism) switch { 0 => 0, 1 => 2, 2 => 4, 3 => 9, _ => 0 };
+        public int ThornsDmg => GetStacks(RuneKind.Thorns) switch { 0 => 0, 1 => 5, 2 => 9, 3 => 20, _ => 0 };
+        public float ThornsRadius => GetStacks(RuneKind.Thorns) switch { 0 => 0f, 1 => 1.5f, 2 => 1.8f, 3 => 2.5f, _ => 0f };
+        public int PierceExtraHits => GetStacks(RuneKind.Pierce) switch { 0 => 0, 1 => 1, 2 => 2, 3 => 4, _ => 0 };
 
         private int Scaled(RuneKind kind, int s1, int s2, int s3)
         {
@@ -137,7 +146,7 @@ namespace IL6
         public List<RuneKind> PickThreeOffer(uint seed)
         {
             var rng = new SeededRng(seed ^ (uint)Level);
-            // 풀 (마스터 안 된 것만), 특수 룬 가중 ×2
+            // 효과 기반 룬만 — 단순 능력치(DamageUp/FireRateUp/HpUp/RangeUp/MoveSpeedUp) 제외.
             var pool = new List<RuneKind>();
             void AddIfRoom(RuneKind k, int weight)
             {
@@ -151,11 +160,9 @@ namespace IL6
             AddIfRoom(RuneKind.Detonator, 2);
             AddIfRoom(RuneKind.SummonDog, 2);
             AddIfRoom(RuneKind.SummonHawk, 2);
-            AddIfRoom(RuneKind.DamageUp, 1);
-            AddIfRoom(RuneKind.FireRateUp, 1);
-            AddIfRoom(RuneKind.HpUp, 1);
-            AddIfRoom(RuneKind.RangeUp, 1);
-            AddIfRoom(RuneKind.MoveSpeedUp, 1);
+            AddIfRoom(RuneKind.Vampirism, 2);
+            AddIfRoom(RuneKind.Thorns, 2);
+            AddIfRoom(RuneKind.Pierce, 2);
 
             var pick = new List<RuneKind>();
             var used = new HashSet<RuneKind>();
@@ -180,6 +187,9 @@ namespace IL6
             RuneKind.Detonator => "💥 폭발 처치",
             RuneKind.SummonDog => "🐕 사냥개 소환",
             RuneKind.SummonHawk => "🦅 매 소환",
+            RuneKind.Vampirism => "🩸 흡혈",
+            RuneKind.Thorns => "🌵 가시",
+            RuneKind.Pierce => "🏹 관통",
             RuneKind.DamageUp => "⚔ 대미지",
             RuneKind.FireRateUp => "⚡ 공격속도",
             RuneKind.HpUp => "❤ 체력",
@@ -258,6 +268,30 @@ namespace IL6
                         1 => "매 1마리 (원거리 4 dmg)",
                         2 => "매 2마리 (각 7 dmg)",
                         3 => "매 3마리 정예 (각 10 dmg)",
+                        _ => ""
+                    };
+                case RuneKind.Vampirism:
+                    return level switch
+                    {
+                        1 => "처치 시 +2 HP",
+                        2 => "처치 시 +4 HP",
+                        3 => "처치 시 +9 HP",
+                        _ => ""
+                    };
+                case RuneKind.Thorns:
+                    return level switch
+                    {
+                        1 => "피격 시 1.5u 내 적에 5 반사",
+                        2 => "피격 시 1.8u 내 적에 9 반사",
+                        3 => "피격 시 2.5u 내 적에 20 반사",
+                        _ => ""
+                    };
+                case RuneKind.Pierce:
+                    return level switch
+                    {
+                        1 => "투사체 1회 추가 관통",
+                        2 => "투사체 2회 추가 관통",
+                        3 => "투사체 4회 추가 관통",
                         _ => ""
                     };
             }
