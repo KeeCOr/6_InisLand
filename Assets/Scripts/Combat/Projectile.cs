@@ -20,30 +20,80 @@ namespace IL6
         private float _trailTimer;
         private GameObject _glow;
 
+        // 모든 투사체가 공유하는 흰 원 스프라이트 — 한 번만 생성, 색은 sr.color 로.
+        private static Sprite _sharedCircle;
+        private static Sprite _sharedRing;
+
+        private static Sprite GetCircleSprite()
+        {
+            if (_sharedCircle != null) return _sharedCircle;
+            const int N = 64;
+            var tex = new Texture2D(N, N, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear };
+            float r = N / 2f;
+            for (int y = 0; y < N; y++)
+                for (int x = 0; x < N; x++)
+                {
+                    float dx = x - r, dy = y - r;
+                    float d2 = dx * dx + dy * dy;
+                    bool inside = d2 < (r - 2) * (r - 2);
+                    bool ring = d2 < r * r && !inside;
+                    if (inside) tex.SetPixel(x, y, Color.white);
+                    else if (ring) tex.SetPixel(x, y, new Color(0f, 0f, 0f, 1f));
+                    else tex.SetPixel(x, y, new Color(0, 0, 0, 0));
+                }
+            tex.Apply();
+            _sharedCircle = Sprite.Create(tex, new Rect(0, 0, N, N), new Vector2(0.5f, 0.5f), N);
+            return _sharedCircle;
+        }
+
+        private static Sprite GetGlowSprite()
+        {
+            if (_sharedRing != null) return _sharedRing;
+            const int N = 64;
+            var tex = new Texture2D(N, N, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear };
+            float r = N / 2f;
+            for (int y = 0; y < N; y++)
+                for (int x = 0; x < N; x++)
+                {
+                    float dx = x - r, dy = y - r;
+                    float dist = Mathf.Sqrt(dx * dx + dy * dy);
+                    float t = Mathf.Clamp01(1f - dist / r);
+                    // 부드러운 가우시안풍 그라데이션
+                    float a = t * t * t;
+                    tex.SetPixel(x, y, new Color(1f, 1f, 1f, a));
+                }
+            tex.Apply();
+            _sharedRing = Sprite.Create(tex, new Rect(0, 0, N, N), new Vector2(0.5f, 0.5f), N);
+            return _sharedRing;
+        }
+
+        private void Awake()
+        {
+            // 본체 스프라이트 즉시 생성 — ColorFallback 실행 순서에 의존 X
+            var sr = GetComponent<SpriteRenderer>();
+            if (sr != null && sr.sprite == null)
+            {
+                sr.sprite = GetCircleSprite();
+                if (sr.color.a < 0.05f) sr.color = new Color(1f, 0.95f, 0.4f, 1f);
+            }
+        }
+
         private void Start()
         {
-            // 본체 뒤에 큰 반투명 글로우 자식.
+            // 큰 반투명 글로우 자식 — soft 그라데이션 스프라이트.
             var sr = GetComponent<SpriteRenderer>();
             if (sr == null) return;
 
             _glow = new GameObject("__glow");
             _glow.transform.SetParent(transform, false);
-            _glow.transform.localScale = Vector3.one * 2.2f;
+            _glow.transform.localScale = Vector3.one * 2.4f;
             var gs = _glow.AddComponent<SpriteRenderer>();
             gs.sortingOrder = sr.sortingOrder - 1;
-            // ColorFallback.Start 가 sr.color 를 늦게 세팅할 수 있어 안전하게 fallback
+            gs.sprite = GetGlowSprite();
             Color c = sr.color;
-            if (c == Color.white || c.a < 0.05f) c = new Color(1f, 0.95f, 0.4f, 1f);
-            c.a = 0.55f;
+            if (c.a < 0.05f) c = new Color(1f, 0.95f, 0.4f, 1f);
+            c.a = 0.6f;
             gs.color = c;
-
-            var cf = _glow.AddComponent<ColorFallback>();
-            cf.Tint = c;
-            cf.Shape = FallbackShape.Circle;
-            cf.Circle = true;
-            cf.PixelSize = 32;
-            cf.OutlineWidth = 0;
-            cf.OutlineColor = new Color(0, 0, 0, 0);
         }
 
         public void Aim(MonoBehaviour target, Vector3 spawnPos)
@@ -102,17 +152,11 @@ namespace IL6
             go.transform.localScale = transform.lossyScale * 0.85f;
             var ts = go.AddComponent<SpriteRenderer>();
             ts.sortingOrder = sr.sortingOrder - 2;
+            ts.sprite = GetGlowSprite();
             Color c = sr.color;
-            if (c == Color.white || c.a < 0.05f) c = new Color(1f, 0.95f, 0.4f, 1f);
-            c.a = 0.7f;
+            if (c.a < 0.05f) c = new Color(1f, 0.95f, 0.4f, 1f);
+            c.a = 0.6f;
             ts.color = c;
-            var cf = go.AddComponent<ColorFallback>();
-            cf.Tint = c;
-            cf.Shape = FallbackShape.Circle;
-            cf.Circle = true;
-            cf.PixelSize = 24;
-            cf.OutlineWidth = 0;
-            cf.OutlineColor = new Color(0, 0, 0, 0);
             Destroy(go, 0.35f);
         }
 

@@ -144,17 +144,8 @@ namespace IL6
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 50;
-            // ColorFallback.Start 가 늦게 돌 때 대비해 sr.color 도 명시적으로 박음
-            Color tint = Color.Lerp(CurrentProjectileColor, Color.white, 0.35f);
-            sr.color = tint;
-
-            var cf = go.AddComponent<ColorFallback>();
-            cf.Tint = tint;
-            cf.Shape = FallbackShape.Circle;
-            cf.Circle = true;
-            cf.PixelSize = 48;
-            cf.OutlineWidth = 4;
-            cf.OutlineColor = new Color(0.05f, 0.05f, 0.1f, 1f);
+            // Projectile.Awake 가 자체적으로 sprite 만들고 sr.color 로 색칠 — ColorFallback 안 씀.
+            sr.color = Color.Lerp(CurrentProjectileColor, Color.white, 0.25f);
 
             float speedMul = Progression != null ? Progression.ProjectileSpeedMultiplier : 1f;
             var proj = go.AddComponent<Projectile>();

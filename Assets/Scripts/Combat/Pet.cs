@@ -113,15 +113,7 @@ namespace IL6
                 go.transform.localScale = Vector3.one * 0.65f;
                 var sr = go.AddComponent<SpriteRenderer>();
                 sr.sortingOrder = 50;
-                Color tint = new Color(1f, 0.95f, 0.5f);
-                sr.color = tint;
-                var cf = go.AddComponent<ColorFallback>();
-                cf.Tint = tint;
-                cf.Shape = FallbackShape.Triangle;
-                cf.Circle = false;
-                cf.PixelSize = 32;
-                cf.OutlineWidth = 3;
-                cf.OutlineColor = new Color(0.3f, 0.2f, 0f, 1f);
+                sr.color = new Color(1f, 0.95f, 0.5f);
                 var proj = go.AddComponent<Projectile>();
                 proj.Speed = 12f;
                 proj.Damage = Damage;
