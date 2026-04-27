@@ -103,12 +103,25 @@ namespace IL6
             return n;
         }
 
-        public bool CanRecruit() => CurrentCompanionCount() < VillageCapacity();
+        public bool CanRecruit()
+            => CurrentCompanionCount() < VillageCapacity() && _recruitsThisDay < MaxRecruitsPerDay;
+
+        // 일일 영입 제한 — 1분(낮 1주기) 당 최대 3명
+        public const int MaxRecruitsPerDay = 3;
+        private static int _recruitsThisDay;
+        private static int _lastResetDay = -1;
+
+        public static void ResetDailyRecruits(int day)
+        {
+            if (_lastResetDay != day) { _recruitsThisDay = 0; _lastResetDay = day; }
+        }
+        public static int RecruitsThisDay => _recruitsThisDay;
 
         public void Recruit()
         {
-            // 마을 수용 한도 — 펜스 제외 건물 수만큼만 영입 가능
+            // 마을 수용 한도 + 일일 영입 한도
             if (!CanRecruit()) return;
+            _recruitsThisDay++;
 
             // 영입되면 Dynamic 으로 전환 — Companion 이 velocity 로 이동해야 하고 다른 유닛과 물리적 상호작용도 가능.
             var rb = GetComponent<Rigidbody2D>();

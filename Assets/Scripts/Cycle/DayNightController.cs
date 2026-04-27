@@ -26,20 +26,29 @@ namespace IL6
         public Phase Phase { get; private set; } = Phase.Day;
         public float ElapsedInPhase { get; private set; }
 
-        /// <summary>레벨이 오를수록 낮/밤 길이가 늘어남 — PlayerProgression 가 갱신.</summary>
+        /// <summary>레벨이 오를수록 낮/밤 길이가 늘어남 — PlayerProgression 가 갱신.
+        /// 단, 현재 페이즈 길이는 PhaseLockedDuration 에 진입 시점 값으로 캐시 — 도중 변경되어도 영향 X.</summary>
         public float LevelDurationMul = 1f;
 
-        public DayNightController(BalanceConfig balance) { _balance = balance; }
+        /// <summary>현재 페이즈 시작 시점에 잠긴 지속 시간 — 진행 중에는 변하지 않음.</summary>
+        private float _phaseLockedDuration;
 
-        public float PhaseDurationSec => DurationOf(Phase);
+        public DayNightController(BalanceConfig balance)
+        {
+            _balance = balance;
+            _phaseLockedDuration = ComputeDuration(Phase);
+        }
+
+        public float PhaseDurationSec => _phaseLockedDuration > 0f ? _phaseLockedDuration : ComputeDuration(Phase);
 
         public void Update(float dt)
         {
             ElapsedInPhase += dt;
-            while (ElapsedInPhase >= DurationOf(Phase))
+            while (ElapsedInPhase >= _phaseLockedDuration)
             {
-                ElapsedInPhase -= DurationOf(Phase);
+                ElapsedInPhase -= _phaseLockedDuration;
                 Advance();
+                _phaseLockedDuration = ComputeDuration(Phase);
             }
         }
 
@@ -56,11 +65,11 @@ namespace IL6
             Day = snap.day;
             Phase = snap.phase;
             ElapsedInPhase = snap.elapsedInPhase;
+            _phaseLockedDuration = ComputeDuration(Phase);
         }
 
-        private float DurationOf(Phase p)
+        private float ComputeDuration(Phase p)
         {
-            // Day/Night 만 레벨에 따라 길어짐. Evening/Dawn 은 짧은 시네마틱이라 고정.
             float baseDur = p switch
             {
                 Phase.Day => _balance.DayDurationSec,

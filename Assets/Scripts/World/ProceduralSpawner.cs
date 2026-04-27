@@ -47,7 +47,8 @@ namespace IL6
         }
 
         private float _dailyNpcTimer;
-        public float DailyNpcIntervalSec = 20f; // 낮 1분당 ~3명
+        public float DailyNpcIntervalSec = 30f; // 낮 1분당 ~2명 (마을당 동시 최대 2명까지)
+        public int MaxAliveNpcs = 3;             // 월드에 동시 살아있는 영입 가능 NPC 상한
 
         private void Update()
         {
@@ -126,21 +127,12 @@ namespace IL6
             float baseX = key.Item1 * ChunkSize;
             float baseY = key.Item2 * ChunkSize;
 
-            // 첫 방문 청크는 무조건 NPC 1명을 랜덤 슬롯 중 하나에 배치 — 플레이어 영입 기회 보장.
-            int guaranteedNpcSlot = firstVisit ? rng.IntRange(0, SlotsPerChunk - 1) : -1;
-
+            // 첫 방문이라도 NPC 강제 스폰 X — 영입 페이스가 너무 빨라지는 것 방지.
+            // NPC 는 랜덤 roll(NpcChance) + 마을 근처 일일 스폰 (MaxAliveNpcs 캡) 으로만.
             for (int i = 0; i < SlotsPerChunk; i++)
             {
                 float x = baseX + rng.Next() * ChunkSize;
                 float y = baseY + rng.Next() * ChunkSize;
-
-                if (i == guaranteedNpcSlot)
-                {
-                    // sink 추가 안 함 — NPC 도 자유 이동 가능 (Kinematic 이라 청크 정리에 영향 X 이지만 일관성)
-                    CreateNpc(x, y, rng);
-                    continue;
-                }
-
                 float roll = rng.Next();
                 float cumTree = TreeChance;
                 float cumRock = cumTree + RockChance;
@@ -149,7 +141,12 @@ namespace IL6
                 if (roll < cumTree) data.Spawned.Add(CreateTree(x, y));
                 else if (roll < cumRock) data.Spawned.Add(CreateRock(x, y));
                 else if (firstVisit && roll < cumDeer) SpawnAnimalAt(x, y, rng, data.Spawned);
-                else if (firstVisit && roll < cumNpc) CreateNpc(x, y, rng);
+                else if (firstVisit && roll < cumNpc)
+                {
+                    // 월드 NPC 캡 적용
+                    int alive = Object.FindObjectsByType<RecruitableNpc>(FindObjectsSortMode.None).Length;
+                    if (alive < MaxAliveNpcs) CreateNpc(x, y, rng);
+                }
             }
         }
 
@@ -509,7 +506,10 @@ namespace IL6
             if (session == null || session.Cycle == null) return;
             if (session.Cycle.Phase != Phase.Day) return;
 
-            // 마을 외곽 6.5~9u 바깥에 1명
+            // 월드에 이미 살아있는 NPC 가 상한 이상이면 스폰 스킵 — 누적 방지
+            int alive = Object.FindObjectsByType<RecruitableNpc>(FindObjectsSortMode.None).Length;
+            if (alive >= MaxAliveNpcs) return;
+
             uint seed = Seed ^ unchecked((uint)Time.frameCount);
             var rng = new SeededRng(seed);
             float angle = rng.Next() * Mathf.PI * 2f;

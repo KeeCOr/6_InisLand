@@ -52,9 +52,9 @@ namespace IL6
             VillageStarter.SpawnStarterVillage(villageCenter);
 
             // 매일 아침마다 마을 근처에 영입 가능한 NPC 1명 스폰
-            _unsubDailyNpc = EventBus.Instance.Subscribe<DayStartedPayload>(_ =>
+            _unsubDailyNpc = EventBus.Instance.Subscribe<DayStartedPayload>(p =>
             {
-                if (Chunks != null) { /* keep */ }
+                RecruitableNpc.ResetDailyRecruits(p.Day);
                 var spawner = Object.FindFirstObjectByType<ProceduralSpawner>();
                 if (spawner != null) spawner.SpawnDailyVillageNpc();
             });

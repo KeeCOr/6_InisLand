@@ -267,7 +267,19 @@ namespace IL6
             {
                 _hideCheckTimer = 1.0f;
                 TryAutoHide();
+                UpdateColliderByPlayerDistance();
             }
+        }
+
+        public float CollisionDisableDistance = 8f;
+
+        private void UpdateColliderByPlayerDistance()
+        {
+            if (Player == null || _col == null) return;
+            float d = Vector2.Distance(transform.position, Player.position);
+            // 멀면 콜라이더 disabled — 다른 유닛이 동료를 통과 가능 (군집 정체 방지)
+            bool shouldEnable = d <= CollisionDisableDistance;
+            if (_col.enabled != shouldEnable) _col.enabled = shouldEnable;
 
             if (!IsDead)
             {

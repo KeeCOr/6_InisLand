@@ -22,6 +22,9 @@ namespace IL6
         public enum HudMode { Melee, Ranged, Build }
         private HudMode _hudMode = HudMode.Melee;
 
+        // 빌드 배치 모드 — 핫바에서 건물 선택 후 _pendingBuildKind 설정, 다음 월드 클릭에 ConstructionSite 스폰.
+        private BuildingKind? _pendingBuildKind;
+
         private void SetHudMode(HudMode m)
         {
             _hudMode = m;
@@ -60,6 +63,134 @@ namespace IL6
             DrawDamageFlash();
             DrawNightIntroFade();
             DrawDawnFlare();
+            DrawPlacementPreview();
+            HandlePlacementInput();
+        }
+
+        // ====================================================================
+        // 배치 모드 — 핫바에서 건물 고른 후 마우스로 위치 지정
+        // ====================================================================
+        private void DrawPlacementPreview()
+        {
+            if (_pendingBuildKind == null) return;
+            var cam = Camera.main;
+            if (cam == null) return;
+            Vector3 wp = MouseWorldPos(cam);
+
+            // 화면 가운데 안내 텍스트
+            var bannerStyle = new GUIStyle(GUI.skin.label) {
+                fontSize = 22, fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = UiTheme.TextGold }
+            };
+            string label = $"📍 {_pendingBuildKind} — 땅을 클릭해 배치 (우클릭/ESC 취소)";
+            UiTheme.Rect(new Rect(0, 100, Screen.width, 36), new Color(0.05f, 0.07f, 0.12f, 0.85f));
+            GUI.Label(new Rect(0, 105, Screen.width, 26), label, bannerStyle);
+
+            // 마우스 위치에 작은 골드 + (커서)
+            Vector3 sp = cam.WorldToScreenPoint(wp);
+            float gx = sp.x, gy = Screen.height - sp.y;
+            UiTheme.Rect(new Rect(gx - 1, gy - 12, 2, 24), UiTheme.TextGold);
+            UiTheme.Rect(new Rect(gx - 12, gy - 1, 24, 2), UiTheme.TextGold);
+        }
+
+        private void HandlePlacementInput()
+        {
+            if (_pendingBuildKind == null) return;
+            var ev = Event.current;
+            if (ev == null) return;
+            if (ev.type == EventType.KeyDown && ev.keyCode == KeyCode.Escape)
+            {
+                _pendingBuildKind = null; ev.Use(); return;
+            }
+            if (ev.type == EventType.MouseDown && ev.button == 1) // 우클릭 취소
+            {
+                _pendingBuildKind = null; ev.Use(); return;
+            }
+            if (ev.type == EventType.MouseDown && ev.button == 0)
+            {
+                ConfirmPlacement();
+                ev.Use();
+            }
+        }
+
+        private static Vector3 MouseWorldPos(Camera cam)
+        {
+            Vector3 mp = Input.mousePosition;
+            mp.z = -cam.transform.position.z;
+            return cam.ScreenToWorldPoint(mp);
+        }
+
+        private void ConfirmPlacement()
+        {
+            if (_pendingBuildKind == null) return;
+            var session = GameSession.Instance;
+            if (session == null) return;
+            var cam = Camera.main;
+            if (cam == null) return;
+            Vector3 wp = MouseWorldPos(cam);
+            wp.z = 0f;
+
+            BuildingKind kind = _pendingBuildKind.Value;
+            int wood = Inflate(BaseWoodCost(kind), kind);
+            int stone = kind == BuildingKind.Watchtower ? Inflate(4, kind) : 0;
+
+            if (session.Resources.Get(ResourceKind.Wood) < wood) return;
+            if (stone > 0 && session.Resources.Get(ResourceKind.Stone) < stone) return;
+
+            if (!session.Resources.Spend(ResourceKind.Wood, wood)) return;
+            if (stone > 0 && !session.Resources.Spend(ResourceKind.Stone, stone)) return;
+
+            // ConstructionSite 스폰
+            SpawnConstructionSite(kind, wp);
+            _pendingBuildKind = null;
+            Sfx.Build();
+        }
+
+        private static int BaseWoodCost(BuildingKind k) => k switch
+        {
+            BuildingKind.Campfire => 5,
+            BuildingKind.House => 6,
+            BuildingKind.Fence => 1,
+            BuildingKind.Storage => 8,
+            BuildingKind.Farm => 6,
+            BuildingKind.Watchtower => 8,
+            _ => 5,
+        };
+
+        private void SpawnConstructionSite(BuildingKind kind, Vector3 pos)
+        {
+            var go = new GameObject($"Construction_{kind}");
+            go.transform.position = pos;
+            go.transform.localScale = Vector3.one * 0.9f;
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 3;
+            sr.color = new Color(0.7f, 0.78f, 0.85f, 0.5f);
+            var cf = go.AddComponent<ColorFallback>();
+            cf.Tint = new Color(0.7f, 0.78f, 0.85f, 0.5f);
+            cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
+            cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.95f, 0.78f, 0.35f, 1f);
+
+            var site = go.AddComponent<ConstructionSite>();
+            site.Kind = kind;
+            site.TotalTime = 8f;
+            site.OnComplete = (k, p) =>
+            {
+                switch (k)
+                {
+                    case BuildingKind.Campfire: SpawnCampfire(p); break;
+                    case BuildingKind.House: SpawnHouse(p); break;
+                    case BuildingKind.Fence: VillageStarter.SpawnFence(p, 0f); break;
+                    case BuildingKind.Storage:
+                        SpawnStorage(p);
+                        var ses = GameSession.Instance;
+                        if (ses != null) ses.Resources.IncreaseCap(50);
+                        break;
+                    case BuildingKind.Farm: SpawnFarm(p); break;
+                    case BuildingKind.Watchtower: SpawnWatchtower(p); break;
+                    case BuildingKind.Barricade: SpawnBarricade(p); break;
+                }
+            };
         }
 
         // ====================================================================
@@ -995,8 +1126,22 @@ namespace IL6
             public string Icon, Name;
             public int CostWood, CostStone;
             public Color Color;
-            public System.Action OnBuild;
+            public BuildingKind Kind;
+            public bool Available;
         }
+
+        /// <summary>건물 종류별로 이미 지은 개수 — 비용 점증에 사용.</summary>
+        private static int CountBuiltOfKind(BuildingKind k)
+        {
+            int n = 0;
+            var bs = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
+            foreach (var b in bs) if (b != null && b.Kind == k && b.CurrentHp > 0) n++;
+            return n;
+        }
+
+        private static float CostMul(BuildingKind k) => 1f + 0.35f * CountBuiltOfKind(k);
+        private static int Inflate(int baseCost, BuildingKind k)
+            => Mathf.RoundToInt(baseCost * CostMul(k));
 
         private void DrawBuildHotbar()
         {
@@ -1006,24 +1151,35 @@ namespace IL6
             int wood = session.Resources.Get(ResourceKind.Wood);
             int stone = session.Resources.Get(ResourceKind.Stone);
 
-            // 농장 한도 체크 — 창고 수에 비례
             bool farmAllowed = FarmBuilding.CurrentFarmCount() < FarmBuilding.MaxFarmsAllowed();
 
             BuildSlot[] slots = {
-                new BuildSlot { Icon = "🔥", Name = "모닥불",   CostWood = 5, Color = new Color(1f, 0.55f, 0.2f),
-                    OnBuild = () => SpawnCampfire(Player.transform.position) },
-                new BuildSlot { Icon = "🏠", Name = "집 (+4)",   CostWood = 6, Color = new Color(0.85f, 0.6f, 0.4f),
-                    OnBuild = () => SpawnHouse(Player.transform.position) },
-                new BuildSlot { Icon = "🥕", Name = "울타리",    CostWood = 1, Color = new Color(0.78f, 0.62f, 0.30f),
-                    OnBuild = () => VillageStarter.SpawnFence(Player.transform.position + new Vector3(0f, 1.0f, 0f), 0f) },
-                new BuildSlot { Icon = "📦", Name = "창고",      CostWood = 8, Color = new Color(0.55f, 0.45f, 0.3f),
-                    OnBuild = () => { SpawnStorage(Player.transform.position); session.Resources.IncreaseCap(50); } },
+                new BuildSlot { Icon = "🔥", Name = "모닥불",
+                    CostWood = Inflate(5, BuildingKind.Campfire),
+                    Kind = BuildingKind.Campfire, Available = true,
+                    Color = new Color(1f, 0.55f, 0.2f) },
+                new BuildSlot { Icon = "🏠", Name = "집 (+4)",
+                    CostWood = Inflate(6, BuildingKind.House),
+                    Kind = BuildingKind.House, Available = true,
+                    Color = new Color(0.85f, 0.6f, 0.4f) },
+                new BuildSlot { Icon = "🥕", Name = "울타리",
+                    CostWood = Inflate(1, BuildingKind.Fence),
+                    Kind = BuildingKind.Fence, Available = true,
+                    Color = new Color(0.78f, 0.62f, 0.30f) },
+                new BuildSlot { Icon = "📦", Name = "창고",
+                    CostWood = Inflate(8, BuildingKind.Storage),
+                    Kind = BuildingKind.Storage, Available = true,
+                    Color = new Color(0.55f, 0.45f, 0.3f) },
                 new BuildSlot { Icon = farmAllowed ? "🌾" : "🌾✖",
                     Name = farmAllowed ? "농장" : "창고 필요",
-                    CostWood = 6, Color = new Color(0.5f, 0.85f, 0.35f),
-                    OnBuild = () => { if (farmAllowed) SpawnFarm(Player.transform.position); } },
-                new BuildSlot { Icon = "🏹", Name = "망루",      CostWood = 8, CostStone = 4, Color = new Color(0.6f, 0.85f, 0.55f),
-                    OnBuild = () => SpawnWatchtower(Player.transform.position) },
+                    CostWood = Inflate(6, BuildingKind.Farm),
+                    Kind = BuildingKind.Farm, Available = farmAllowed,
+                    Color = new Color(0.5f, 0.85f, 0.35f) },
+                new BuildSlot { Icon = "🏹", Name = "망루",
+                    CostWood = Inflate(8, BuildingKind.Watchtower),
+                    CostStone = Inflate(4, BuildingKind.Watchtower),
+                    Kind = BuildingKind.Watchtower, Available = true,
+                    Color = new Color(0.6f, 0.85f, 0.55f) },
             };
 
             const int CellW = 96, CellH = 96, Gap = 6;
@@ -1065,15 +1221,11 @@ namespace IL6
                 GUI.Label(new Rect(r.x, r.y + 66, r.width, 16), cost, costStyle);
                 GUI.contentColor = oldC;
 
-                // 클릭 영역 (보더 안쪽)
+                // 클릭 영역 — 즉시 스폰 대신 배치 모드 진입 (땅 클릭으로 확정)
                 if (ok && GUI.Button(r, "", GUIStyle.none))
                 {
-                    if (session.Resources.Spend(ResourceKind.Wood, s.CostWood)
-                        && (s.CostStone == 0 || session.Resources.Spend(ResourceKind.Stone, s.CostStone)))
-                    {
-                        Sfx.Build();
-                        s.OnBuild();
-                    }
+                    _pendingBuildKind = s.Kind;
+                    Sfx.Click();
                 }
             }
         }
@@ -1713,7 +1865,7 @@ namespace IL6
         private void SpawnBarricade(Vector3 playerPos)
         {
             var go = new GameObject("Barricade");
-            go.transform.position = playerPos + new Vector3(0f, 1.2f, 0f);
+            go.transform.position = playerPos;
             go.transform.localScale = new Vector3(1.2f, 0.4f, 1f);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
@@ -1732,7 +1884,7 @@ namespace IL6
         private void SpawnStorage(Vector3 playerPos)
         {
             var go = new GameObject("Storage");
-            go.transform.position = playerPos + new Vector3(-1.4f, 0f, 0f);
+            go.transform.position = playerPos;
             go.transform.localScale = new Vector3(1.0f, 0.9f, 1f);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
@@ -1747,7 +1899,7 @@ namespace IL6
         private void SpawnHouse(Vector3 playerPos)
         {
             var go = new GameObject("House");
-            go.transform.position = playerPos + new Vector3(0f, 1.4f, 0f);
+            go.transform.position = playerPos;
             go.transform.localScale = new Vector3(1.1f, 1.0f, 1f);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
@@ -1762,7 +1914,7 @@ namespace IL6
         private void SpawnFarm(Vector3 playerPos)
         {
             var go = new GameObject("Farm");
-            go.transform.position = playerPos + new Vector3(0f, -1.4f, 0f);
+            go.transform.position = playerPos;
             go.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 2;
@@ -1777,7 +1929,7 @@ namespace IL6
         private void SpawnWatchtower(Vector3 playerPos)
         {
             var go = new GameObject("Watchtower");
-            go.transform.position = playerPos + new Vector3(0f, 1.6f, 0f);
+            go.transform.position = playerPos;
             go.transform.localScale = new Vector3(0.7f, 1.4f, 1f);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 4;
@@ -1798,7 +1950,7 @@ namespace IL6
         private void SpawnCampfire(Vector3 playerPos)
         {
             var go = new GameObject("Campfire");
-            go.transform.position = playerPos + new Vector3(1.2f, 0f, 0f);
+            go.transform.position = playerPos;
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
             var cf = go.AddComponent<ColorFallback>();
