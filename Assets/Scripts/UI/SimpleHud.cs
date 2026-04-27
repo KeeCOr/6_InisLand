@@ -59,6 +59,52 @@ namespace IL6
             DrawDeathOverlay();
             DrawDamageFlash();
             DrawNightIntroFade();
+            DrawDawnFlare();
+        }
+
+        // ====================================================================
+        // 아침 연출: Dawn/Day 시작 → 골드빛 오버레이가 밝아지다 사라짐 + "☀ 아침"
+        // ====================================================================
+        private float _dawnAlpha;          // 0 = 비활성, >0 = 진행
+        private float _dawnLifetime = 2.6f;
+        private GUIStyle _dawnStyle;
+
+        private void DrawDawnFlare()
+        {
+            if (_dawnAlpha <= 0.001f) return;
+            _dawnAlpha -= Time.unscaledDeltaTime / _dawnLifetime;
+
+            // 0~0.4 구간: 페이드 인 (alpha → 0.55), 0.4~1 구간: 페이드 아웃 (0.55 → 0)
+            float k = Mathf.Clamp01(_dawnAlpha);
+            float intensity = k > 0.6f ? Mathf.InverseLerp(1f, 0.6f, k) * 0.55f : k / 0.6f * 0.55f;
+
+            // 위쪽이 더 밝은 그라데이션 — 5분할 사각으로 흉내
+            int bands = 6;
+            for (int i = 0; i < bands; i++)
+            {
+                float t = i / (float)(bands - 1);
+                float bandAlpha = intensity * Mathf.Lerp(1f, 0.4f, t);
+                Color c = Color.Lerp(new Color(1f, 0.85f, 0.55f), new Color(1f, 0.65f, 0.30f), t);
+                c.a = bandAlpha;
+                float yTop = (Screen.height / (float)bands) * i;
+                float h = Screen.height / (float)bands + 1;
+                UiTheme.Rect(new Rect(0, yTop, Screen.width, h), c);
+            }
+
+            // 중앙 텍스트
+            if (_dawnStyle == null)
+            {
+                _dawnStyle = new GUIStyle(GUI.skin.label) {
+                    fontSize = 36, fontStyle = FontStyle.Bold,
+                    alignment = TextAnchor.MiddleCenter,
+                    normal = { textColor = new Color(1f, 0.95f, 0.7f) }
+                };
+            }
+            float textA = intensity / 0.55f;
+            var oldC = GUI.contentColor;
+            GUI.contentColor = new Color(1f, 0.95f, 0.7f, textA);
+            GUI.Label(new Rect(0, Screen.height / 2 - 24, Screen.width, 48), "☀  아침이 밝았다", _dawnStyle);
+            GUI.contentColor = oldC;
         }
 
         // ====================================================================
@@ -134,7 +180,7 @@ namespace IL6
         }
 
         // OnEnable에서 추가 페이즈 핸들러 등록 (기존 unsubE/N/D/A 옆에 한 쌍 더)
-        private System.Action _unsubFadeIn, _unsubFadeOut;
+        private System.Action _unsubFadeIn, _unsubFadeOut, _unsubDawnFlare;
         private void HookFadeEvents()
         {
             if (_unsubFadeIn != null) return;
@@ -149,12 +195,14 @@ namespace IL6
                 // Evening 페이즈가 스킵된 경우(디버그 강제 밤 등) 안전망 — 즉시 마을 집결
                 BringEveryoneToVillage();
             });
+            _unsubDawnFlare = EventBus.Instance.Subscribe<DawnStartedPayload>(_ => _dawnAlpha = 1f);
         }
 
         private void UnhookFadeEvents()
         {
             _unsubFadeIn?.Invoke(); _unsubFadeIn = null;
             _unsubFadeOut?.Invoke(); _unsubFadeOut = null;
+            _unsubDawnFlare?.Invoke(); _unsubDawnFlare = null;
         }
 
         private AchievementManager.Entry? _achToast;
