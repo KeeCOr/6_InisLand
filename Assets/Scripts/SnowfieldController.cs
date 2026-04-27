@@ -18,6 +18,7 @@ namespace IL6
         public Camera MainCamera;
 
         private System.Action _unsubPlayerDied;
+        private System.Action _unsubDailyNpc;
         private GameSession _session;
 
         private void Start()
@@ -49,6 +50,14 @@ namespace IL6
 
             // 마을 자리에 모닥불 + 울타리 링 자동 스폰 (이미 있으면 스킵)
             VillageStarter.SpawnStarterVillage(villageCenter);
+
+            // 매일 아침마다 마을 근처에 영입 가능한 NPC 1명 스폰
+            _unsubDailyNpc = EventBus.Instance.Subscribe<DayStartedPayload>(_ =>
+            {
+                if (Chunks != null) { /* keep */ }
+                var spawner = Object.FindFirstObjectByType<ProceduralSpawner>();
+                if (spawner != null) spawner.SpawnDailyVillageNpc();
+            });
 
             // 맨 첫 타일(마을 영역) 정리 — 동료/NPC/동물 모두 제거.
             // 영입은 외곽에서 만나는 RecruitableNpc 로만, 동물은 외곽 청크에서만.
@@ -93,6 +102,7 @@ namespace IL6
         private void OnDestroy()
         {
             _unsubPlayerDied?.Invoke();
+            _unsubDailyNpc?.Invoke();
         }
     }
 

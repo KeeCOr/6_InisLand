@@ -108,10 +108,21 @@ namespace IL6
             float baseX = key.Item1 * ChunkSize;
             float baseY = key.Item2 * ChunkSize;
 
+            // 첫 방문 청크는 무조건 NPC 1명을 랜덤 슬롯 중 하나에 배치 — 플레이어 영입 기회 보장.
+            int guaranteedNpcSlot = firstVisit ? rng.IntRange(0, SlotsPerChunk - 1) : -1;
+
             for (int i = 0; i < SlotsPerChunk; i++)
             {
                 float x = baseX + rng.Next() * ChunkSize;
                 float y = baseY + rng.Next() * ChunkSize;
+
+                if (i == guaranteedNpcSlot)
+                {
+                    // sink 추가 안 함 — NPC 도 자유 이동 가능 (Kinematic 이라 청크 정리에 영향 X 이지만 일관성)
+                    CreateNpc(x, y, rng);
+                    continue;
+                }
+
                 float roll = rng.Next();
                 float cumTree = TreeChance;
                 float cumRock = cumTree + RockChance;
@@ -120,7 +131,7 @@ namespace IL6
                 if (roll < cumTree) data.Spawned.Add(CreateTree(x, y));
                 else if (roll < cumRock) data.Spawned.Add(CreateRock(x, y));
                 else if (firstVisit && roll < cumDeer) SpawnAnimalAt(x, y, rng, data.Spawned);
-                else if (firstVisit && roll < cumNpc) data.Spawned.Add(CreateNpc(x, y, rng));
+                else if (firstVisit && roll < cumNpc) CreateNpc(x, y, rng);
             }
         }
 
@@ -203,6 +214,7 @@ namespace IL6
             public int PredatorDamage;    // IsPredator 인 경우만
             public int PackMin, PackMax;  // 무리 사이즈 (1=단독)
             public bool DropsFrostbloom;
+            public int MinDay;            // 0=처음부터 등장, N=Day N 이상에서만 (늑대/맘모스 등)
         }
 
         // 가중치 기반 동물 풀.
@@ -252,6 +264,7 @@ namespace IL6
                 Outline = new Color(0.15f, 0.15f, 0.18f, 1f),
                 Weight = 0.13f, IsPredator = true, PredatorDamage = 6,
                 PackMin = 4, PackMax = 7,
+                MinDay = 3,
             },
             // 사슴 (낮춘 빈도) — HP 12배
             new AnimalArchetype {
@@ -284,20 +297,31 @@ namespace IL6
                 Tint = new Color(0.45f, 0.32f, 0.22f),
                 Shape = FallbackShape.Rounded,
                 Outline = new Color(0.15f, 0.08f, 0.02f, 1f),
-                Weight = 0.04f, PackMin = 1, PackMax = 1,
+                Weight = 0.005f, PackMin = 1, PackMax = 1,
+                MinDay = 5,
             },
         };
 
         private static void SpawnAnimalAt(float x, float y, SeededRng rng, System.Collections.Generic.List<GameObject> sink)
         {
-            // 가중치 추첨
+            // 현재 게임 일자 — 일자별 출현 제한 적용
+            int day = GameSession.Instance != null && GameSession.Instance.Cycle != null
+                ? GameSession.Instance.Cycle.Day : 1;
+
+            // 가중치 추첨 — 출현 가능한 종만
             float total = 0f;
-            for (int i = 0; i < _animals.Length; i++) total += _animals[i].Weight;
+            for (int i = 0; i < _animals.Length; i++)
+            {
+                if (day < _animals[i].MinDay) continue;
+                total += _animals[i].Weight;
+            }
+            if (total <= 0f) return;
             float roll = rng.Next() * total;
             AnimalArchetype a = _animals[0];
             float acc = 0f;
             for (int i = 0; i < _animals.Length; i++)
             {
+                if (day < _animals[i].MinDay) continue;
                 acc += _animals[i].Weight;
                 if (roll <= acc) { a = _animals[i]; break; }
             }
@@ -310,10 +334,11 @@ namespace IL6
                 // 개체별로 yield + drop 결정 (각 개체 독립)
                 int yield = a.MeatMin == a.MeatMax ? a.MeatMin : rng.IntRange(a.MeatMin, a.MeatMax);
                 if (a.MeatDropChance < 1f && rng.Next() > a.MeatDropChance) yield = 0;
-                // HP ±20% 랜덤 — 모든 개체 같은 종이라도 변동
                 float hpRoll = 0.80f + rng.Next() * 0.40f;
                 int hp = Mathf.Max(1, Mathf.RoundToInt(a.Hp * hpRoll));
-                sink.Add(CreateOneAnimal(a, x + ox, y + oy, yield, hp));
+                // 동물은 sink(청크) 에 추가하지 않음 — 청크 언로드 시 같이 destroy 되는 버그 방지.
+                // 동물은 자유롭게 이동 → 죽거나 멀어질 때까지 영속.
+                CreateOneAnimal(a, x + ox, y + oy, yield, hp);
             }
         }
 
@@ -453,6 +478,19 @@ namespace IL6
                 Tint = new Color(0.6f, 0.55f, 0.7f), Shape = FallbackShape.Circle,
             },
         };
+
+        /// <summary>매일 아침 마을 근처에 동료 후보 1명 스폰 — DayStartedPayload 구독자가 호출.</summary>
+        public void SpawnDailyVillageNpc()
+        {
+            // 마을 외곽 6.5~9u 바깥에 1명
+            uint seed = Seed ^ unchecked((uint)Time.frameCount);
+            var rng = new SeededRng(seed);
+            float angle = rng.Next() * Mathf.PI * 2f;
+            float dist = 6.5f + rng.Next() * 2.5f;
+            float x = GameConstants.VillageCenterX + Mathf.Cos(angle) * dist;
+            float y = GameConstants.VillageCenterY + Mathf.Sin(angle) * dist;
+            CreateNpc(x, y, rng);
+        }
 
         private static GameObject CreateNpc(float x, float y, SeededRng rng)
         {

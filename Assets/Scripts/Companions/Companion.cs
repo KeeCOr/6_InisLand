@@ -220,10 +220,14 @@ namespace IL6
         {
             _attackCd -= Time.deltaTime;
             // 채집/농사 중엔 전투 안 함 — 피격 시에만 TakeDamage 가 모드 전환.
+            // 플레이어가 시야 밖이면 전투 중단하고 따라가야 함 (요청).
+            bool playerInSight = Player != null
+                && Vector2.Distance(transform.position, Player.position) < SightRange;
             bool combatAllowed = IsCombat
                 && CurrentMode != Mode.Hiding
                 && CurrentMode != Mode.Working
-                && CurrentMode != Mode.Farming;
+                && CurrentMode != Mode.Farming
+                && playerInSight;
             if (combatAllowed) TryAttack();
 
             if (!IsDead)
