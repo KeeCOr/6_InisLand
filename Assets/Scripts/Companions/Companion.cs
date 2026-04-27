@@ -183,22 +183,53 @@ namespace IL6
             if (Shelter != null) Shelter.HostedCompanions.Remove(this);
         }
 
-        private void OnNightStarted()
+        private float _hideCheckTimer;
+
+        private Building FindNearestShelter()
         {
-            if (IsCombat) return;
-            if (CurrentMode == Mode.Farming) return; // 밭에 배치된 비전투원은 그대로
-            // 가까운 비-바리게이트 건물에 숨음
             var buildings = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
             Building best = null;
             float bestDist = float.MaxValue;
             foreach (var b in buildings)
             {
-                if (b == null) continue;
+                if (b == null || b.CurrentHp <= 0) continue;
                 if (b.Kind == BuildingKind.Barricade || b.Kind == BuildingKind.Fence) continue;
                 float d = Vector2.Distance(transform.position, b.transform.position);
                 if (d < bestDist) { best = b; bestDist = d; }
             }
-            if (best != null) HideInBuilding(best);
+            return best;
+        }
+
+        /// <summary>눈보라 또는 비전투 + 적 시야 진입 시 가까운 건물로 자동 대피.</summary>
+        private void TryAutoHide()
+        {
+            if (IsDead) return;
+            if (CurrentMode == Mode.Hiding) return;
+            if (CurrentMode == Mode.Working) return; // 채집 중인 동료는 우선 일 마저
+
+            bool blizzard = false;
+            var night = Object.FindFirstObjectByType<NightController>();
+            if (night != null && night.IsBlizzard && night.CurrentPhase == Phase.Night) blizzard = true;
+
+            bool nonCombatThreatened = false;
+            if (!IsCombat)
+            {
+                if (FindNearestZombie(SightRange) != null) nonCombatThreatened = true;
+                else if (FindNearestHostileAnimal(SightRange) != null) nonCombatThreatened = true;
+            }
+
+            if (!blizzard && !nonCombatThreatened) return;
+            var b = FindNearestShelter();
+            if (b != null) HideInBuilding(b);
+        }
+
+        private void OnNightStarted()
+        {
+            // 비전투원 + 밤 시작 시 즉시 대피 (기존 동작 유지). 눈보라/적 침공 대피는 TryAutoHide 가 폴링.
+            if (IsCombat) return;
+            if (CurrentMode == Mode.Farming) return;
+            var b = FindNearestShelter();
+            if (b != null) HideInBuilding(b);
         }
 
         private void OnDawnStarted()
@@ -229,6 +260,14 @@ namespace IL6
                 && CurrentMode != Mode.Farming
                 && playerInSight;
             if (combatAllowed) TryAttack();
+
+            // 자동 대피 — 눈보라 (전투든 아니든) 또는 적 침공 + 비전투
+            _hideCheckTimer -= Time.deltaTime;
+            if (_hideCheckTimer <= 0f)
+            {
+                _hideCheckTimer = 1.0f;
+                TryAutoHide();
+            }
 
             if (!IsDead)
             {
@@ -447,12 +486,24 @@ namespace IL6
         private void TryAttack()
         {
             if (_attackCd > 0f) return;
-            // 우선순위: 좀비 (밤) → 동물 (낮 — 늑대 위협 + 사슴 등 사냥)
             MonoBehaviour target = FindNearestZombie(AttackRange);
             if (target == null) target = FindNearestAnimal(AttackRange);
             if (target == null) return;
             SpawnProjectile(target);
             _attackCd = AttackCooldown * GetCampfireFireRateMul();
+        }
+
+        /// <summary>가장 가까운 망루 안에 있으면 데미지 곱연산 — TryAttack의 SpawnProjectile에서 사용.</summary>
+        private float GetWatchtowerBoost()
+        {
+            var towers = Object.FindObjectsByType<Watchtower>(FindObjectsSortMode.None);
+            foreach (var t in towers)
+            {
+                if (t == null) continue;
+                if (Vector2.Distance(transform.position, t.transform.position) < t.CompanionBoostRadius)
+                    return t.CompanionDamageMul;
+            }
+            return 1f;
         }
 
         private MonoBehaviour FindNearestAnimal(float range)
@@ -520,10 +571,9 @@ namespace IL6
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 50;
             sr.color = new Color(0.55f, 1f, 0.7f);
-            // Projectile.Awake 가 sprite 자체 생성 — ColorFallback 안 씀
             var proj = go.AddComponent<Projectile>();
             proj.Speed = ProjectileSpeed;
-            proj.Damage = Damage;
+            proj.Damage = Mathf.RoundToInt(Damage * GetWatchtowerBoost());
             proj.HitRadius = 0.45f;
             proj.Aim(target, transform.position);
         }

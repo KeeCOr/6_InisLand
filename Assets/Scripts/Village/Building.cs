@@ -4,7 +4,7 @@ using IL6.Events;
 
 namespace IL6
 {
-    public enum BuildingKind { Campfire, Barricade, Fence }
+    public enum BuildingKind { Campfire, Barricade, Fence, House, Storage, Farm, Watchtower }
 
     /// <summary>
     /// 모든 건물 공통. HP, 파괴 처리, 안에 숨은 비전투 동료 노출.
@@ -29,8 +29,24 @@ namespace IL6
                 BuildingKind.Campfire => b.CampfireHp,
                 BuildingKind.Barricade => b.BarricadeHp,
                 BuildingKind.Fence => b.FenceHp,
+                BuildingKind.House => 200,
+                BuildingKind.Storage => 250,
+                BuildingKind.Farm => 150,
+                BuildingKind.Watchtower => 220,
                 _ => b.BarricadeHp,
             };
+            // 망루는 펜스 HP 50% 부스트 (스택)
+            if (Kind == BuildingKind.Fence)
+            {
+                int towers = 0;
+                var existing = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
+                foreach (var bb in existing)
+                {
+                    if (bb == null || bb == this) continue;
+                    if (bb.Kind == BuildingKind.Watchtower) towers++;
+                }
+                baseHp = Mathf.RoundToInt(baseHp * (1f + 0.5f * towers));
+            }
             // 마을 성장도 — 펜스 제외 건물 수에 따라 HP 가산.
             // 기존 building 1개당 +12%, 최대 +200%.
             int existingCore = 0;

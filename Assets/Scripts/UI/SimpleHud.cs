@@ -1006,17 +1006,22 @@ namespace IL6
             int wood = session.Resources.Get(ResourceKind.Wood);
             int stone = session.Resources.Get(ResourceKind.Stone);
 
+            // 농장 한도 체크 — 창고 수에 비례
+            bool farmAllowed = FarmBuilding.CurrentFarmCount() < FarmBuilding.MaxFarmsAllowed();
+
             BuildSlot[] slots = {
                 new BuildSlot { Icon = "🔥", Name = "모닥불",   CostWood = 5, Color = new Color(1f, 0.55f, 0.2f),
                     OnBuild = () => SpawnCampfire(Player.transform.position) },
-                new BuildSlot { Icon = "🪵", Name = "바리게이트", CostWood = 5, Color = new Color(0.55f, 0.4f, 0.22f),
-                    OnBuild = () => SpawnBarricade(Player.transform.position) },
+                new BuildSlot { Icon = "🏠", Name = "집 (+4)",   CostWood = 6, Color = new Color(0.85f, 0.6f, 0.4f),
+                    OnBuild = () => SpawnHouse(Player.transform.position) },
                 new BuildSlot { Icon = "🥕", Name = "울타리",    CostWood = 1, Color = new Color(0.78f, 0.62f, 0.30f),
                     OnBuild = () => VillageStarter.SpawnFence(Player.transform.position + new Vector3(0f, 1.0f, 0f), 0f) },
                 new BuildSlot { Icon = "📦", Name = "창고",      CostWood = 8, Color = new Color(0.55f, 0.45f, 0.3f),
                     OnBuild = () => { SpawnStorage(Player.transform.position); session.Resources.IncreaseCap(50); } },
-                new BuildSlot { Icon = "🌾", Name = "농장",      CostWood = 6, Color = new Color(0.5f, 0.85f, 0.35f),
-                    OnBuild = () => SpawnFarm(Player.transform.position) },
+                new BuildSlot { Icon = farmAllowed ? "🌾" : "🌾✖",
+                    Name = farmAllowed ? "농장" : "창고 필요",
+                    CostWood = 6, Color = new Color(0.5f, 0.85f, 0.35f),
+                    OnBuild = () => { if (farmAllowed) SpawnFarm(Player.transform.position); } },
                 new BuildSlot { Icon = "🏹", Name = "망루",      CostWood = 8, CostStone = 4, Color = new Color(0.6f, 0.85f, 0.55f),
                     OnBuild = () => SpawnWatchtower(Player.transform.position) },
             };
@@ -1736,7 +1741,22 @@ namespace IL6
             cf.Tint = new Color(0.55f, 0.45f, 0.3f);
             cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.25f, 0.18f, 0.1f, 1f);
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Campfire; // 비-바리게이트로 분류
+            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Storage;
+        }
+
+        private void SpawnHouse(Vector3 playerPos)
+        {
+            var go = new GameObject("House");
+            go.transform.position = playerPos + new Vector3(0f, 1.4f, 0f);
+            go.transform.localScale = new Vector3(1.1f, 1.0f, 1f);
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 3;
+            var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
+            var cf = go.AddComponent<ColorFallback>();
+            cf.Tint = new Color(0.85f, 0.6f, 0.4f);
+            cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
+            cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.4f, 0.2f, 0.1f, 1f);
+            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.House;
         }
 
         private void SpawnFarm(Vector3 playerPos)
@@ -1751,7 +1771,7 @@ namespace IL6
             cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.18f, 0.3f, 0.12f, 1f);
             go.AddComponent<FarmBuilding>();
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Campfire; // 비-바리게이트
+            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Farm;
         }
 
         private void SpawnWatchtower(Vector3 playerPos)
@@ -1767,7 +1787,7 @@ namespace IL6
             cf.Tint = new Color(0.5f, 0.4f, 0.28f);
             cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.2f, 0.15f, 0.08f, 1f);
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Campfire; // 비-바리게이트 분류 (호스팅 가능)
+            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Watchtower;
             go.AddComponent<Watchtower>();
             var hp = go.AddComponent<HpBarUi>(); hp.Building = b;
             hp.Offset = new Vector2(0f, 0.85f); hp.Size = new Vector2(0.8f, 0.1f);

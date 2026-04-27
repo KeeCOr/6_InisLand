@@ -77,21 +77,22 @@ namespace IL6
             }
         }
 
-        /// <summary>초반 그레이스 — 건물 수와 무관하게 항상 허용되는 최저 수용 인원.</summary>
+        /// <summary>초반 그레이스 — 집이 0채여도 항상 허용되는 최저 수용 인원.</summary>
         public const int FreeCapacity = 12;
+        /// <summary>집(House) 1채당 추가 인구.</summary>
+        public const int CapacityPerHouse = 4;
 
-        /// <summary>현재 마을이 수용 가능한 동료 수 — 펜스 제외 핵심 건물 개수, 단 최저 FreeCapacity 보장.</summary>
+        /// <summary>현재 마을이 수용 가능한 동료 수 — FreeCapacity + 집 수 × CapacityPerHouse.</summary>
         public static int VillageCapacity()
         {
-            int built = 0;
+            int houses = 0;
             var bs = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
             foreach (var b in bs)
             {
                 if (b == null || b.CurrentHp <= 0) continue;
-                if (b.Kind == BuildingKind.Fence) continue;
-                built++;
+                if (b.Kind == BuildingKind.House) houses++;
             }
-            return Mathf.Max(FreeCapacity, built);
+            return FreeCapacity + houses * CapacityPerHouse;
         }
 
         public static int CurrentCompanionCount()

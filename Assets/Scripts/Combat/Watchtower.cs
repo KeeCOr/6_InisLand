@@ -12,6 +12,8 @@ namespace IL6
         public float Range = 8f;
         public int Damage = 7;
         public float FireInterval = 1.2f;
+        public float CompanionBoostRadius = 3.5f; // 망루 근처 동료 대미지 ×1.5
+        public float CompanionDamageMul = 1.5f;
 
         private float _cd;
         private NightController _night;

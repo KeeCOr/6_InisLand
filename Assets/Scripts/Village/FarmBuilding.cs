@@ -13,9 +13,27 @@ namespace IL6
     public sealed class FarmBuilding : MonoBehaviour
     {
         public int NightsToRipe = 2;
-        public int BaseYield = 4;
-        public int PerWorkerBonus = 3;
+        public int BaseYield = 10;
+        public int PerWorkerBonus = 6;
         public int MaxWorkers = 2;
+
+        /// <summary>최대 농장 수 = 1(기본) + 창고 수. 창고를 지을 때마다 농장 한도 +1.</summary>
+        public static int MaxFarmsAllowed()
+        {
+            int storages = 0;
+            var bs = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
+            foreach (var b in bs)
+            {
+                if (b == null || b.CurrentHp <= 0) continue;
+                if (b.Kind == BuildingKind.Storage) storages++;
+            }
+            return 1 + storages;
+        }
+
+        public static int CurrentFarmCount()
+        {
+            return Object.FindObjectsByType<FarmBuilding>(FindObjectsSortMode.None).Length;
+        }
 
         public bool HarvestReady { get; private set; }
         public int NightsPassed { get; private set; }
