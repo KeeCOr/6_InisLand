@@ -54,7 +54,7 @@ namespace IL6
         [Header("Building HP")]
         public int CampfireHp = 400;
         public int BarricadeHp = 200;
-        public int FenceHp = 18;
+        public int FenceHp = 8;
 
         [Header("Building Cost (wood)")]
         public int CampfireCost = 5;
