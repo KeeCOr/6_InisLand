@@ -1,3 +1,4 @@
+#if UNITY_INCLUDE_TESTS
 using NUnit.Framework;
 using UnityEngine;
 using IL6;
@@ -32,3 +33,4 @@ namespace IL6.Tests
         }
     }
 }
+#endif
