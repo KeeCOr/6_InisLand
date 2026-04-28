@@ -88,8 +88,8 @@ namespace IL6
         private float _coldTickTimer;
         private const float ColdTickInterval = 4f;
         private const int ColdDamagePerTick = 2;
-        private const float VillageHalfSize = 5f;
         private static readonly Vector2 VillageCenterV = new Vector2(GameConstants.VillageCenterX, GameConstants.VillageCenterY);
+        private static float VillageHalfSize => VillageStarter.CurrentHalfSize;
 
         private void Update()
         {

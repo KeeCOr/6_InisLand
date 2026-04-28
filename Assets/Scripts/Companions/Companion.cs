@@ -31,6 +31,47 @@ namespace IL6
         public float AttackCooldown = 1.6f;
         public float ProjectileSpeed = 7f;
 
+        [Header("Per-companion progression")]
+        public int Xp;
+        public int Level = 1;
+        // 레벨업 임계 — 적 처치 1당 +1 XP. 5/12/22/35/...
+        public int XpToNext => 4 + Level * 3;
+
+        public enum Equip { None, SharpenedBlade, Crossbow, ThickFur, ToolKit }
+        public Equip Equipped = Equip.None;
+
+        /// <summary>레벨 + 장비 보정 적용된 실제 데미지.</summary>
+        public int EffectiveDamage()
+        {
+            float mul = 1f + (Level - 1) * 0.10f; // 레벨당 +10%
+            if (Equipped == Equip.SharpenedBlade) mul *= 1.30f; // 근접용
+            if (Equipped == Equip.Crossbow) mul *= 1.20f; // 원거리용
+            return Mathf.RoundToInt(Damage * mul);
+        }
+
+        /// <summary>레벨 + 장비 보정된 MaxHp.</summary>
+        public int EffectiveMaxHp()
+        {
+            int baseHp = MaxHp;
+            float mul = 1f + (Level - 1) * 0.08f;
+            if (Equipped == Equip.ThickFur) mul *= 1.25f;
+            return Mathf.RoundToInt(baseHp * mul);
+        }
+
+        /// <summary>적 처치 시 호출 — Companion.SpawnProjectile 의 Projectile 이 사망 시 호출하면 좋지만,
+        /// 여기서는 단순화: 인근 좀비 사망에서 GameSession 통해 broadcast 받음.</summary>
+        public void GrantXp(int amount)
+        {
+            Xp += amount;
+            while (Xp >= XpToNext)
+            {
+                Xp -= XpToNext;
+                Level++;
+                CurrentHp = Mathf.Min(EffectiveMaxHp(), CurrentHp + 10);
+                GameFeel.FloatText(transform.position, $"Lv {Level}!", new Color(1f, 0.86f, 0.45f));
+            }
+        }
+
         [Header("Morale")]
         public int Morale = 100;
 
@@ -293,15 +334,14 @@ namespace IL6
         }
 
         private static readonly Vector2 VillageCenter = new Vector2(GameConstants.VillageCenterX, GameConstants.VillageCenterY);
-        // VillageStarter.SpawnStarterVillage 의 halfSize 와 일치 — 펜스 사각 경계.
-        private const float VillageHalfSize = 5f;
-        private const float SprintSpeedMul = 2.2f; // 문 향해 달릴 때 속도 배수
+        private const float SprintSpeedMul = 2.2f;
 
-        /// <summary>주어진 위치가 마을 펜스 사각형 안인지 (원형 거리 X, 사각 경계 O).</summary>
+        /// <summary>주어진 위치가 (현재 확장된) 마을 펜스 사각 안인지.</summary>
         private static bool IsInsideVillageBounds(Vector2 pos)
         {
+            float h = VillageStarter.CurrentHalfSize;
             Vector2 d = pos - VillageCenter;
-            return Mathf.Abs(d.x) < VillageHalfSize && Mathf.Abs(d.y) < VillageHalfSize;
+            return Mathf.Abs(d.x) < h && Mathf.Abs(d.y) < h;
         }
 
         private void FixedUpdate()
@@ -592,7 +632,7 @@ namespace IL6
                 var prog = p.GetComponent<PlayerProgression>();
                 if (prog != null) allyMul = prog.AllyDamageMul;
             }
-            proj.Damage = Mathf.RoundToInt(Damage * GetWatchtowerBoost() * allyMul);
+            proj.Damage = Mathf.RoundToInt(EffectiveDamage() * GetWatchtowerBoost() * allyMul);
             proj.HitRadius = 0.45f;
             proj.Aim(target, transform.position);
         }

@@ -260,7 +260,7 @@ namespace IL6
 
         // 마을 펜스 사각형 — VillageStarter 의 halfSize 와 일치
         private static readonly Vector2 _villageCenter = new Vector2(GameConstants.VillageCenterX, GameConstants.VillageCenterY);
-        private const float _villageHalfSize = 5f;
+        private static float _villageHalfSize => VillageStarter.CurrentHalfSize;
         private const float _villageMargin = 1.0f; // 펜스에서 추가로 1u 더 밖
 
         /// <summary>

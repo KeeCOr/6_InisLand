@@ -12,8 +12,91 @@ namespace IL6
         /// 중심점 주변에 모닥불 + 사각 울타리 + 남쪽 문(플레이어만 통과) 스폰.
         /// 이미 근처에 모닥불 있으면 스킵.
         /// </summary>
+        /// <summary>현재 마을 펜스 사각형 반경 — 건물 추가 시 단계적으로 확장.</summary>
+        public static float CurrentHalfSize { get; private set; } = 5f;
+        public const float MinHalfSize = 5f;
+        public const float MaxHalfSize = 14f;
+        public const float HalfSizePerBuilding = 0.4f; // 비-펜스 건물 1당 +0.4u
+
+        /// <summary>비-펜스 건물 수에 따른 목표 halfSize.</summary>
+        public static float TargetHalfSize()
+        {
+            int built = 0;
+            var bs = UnityEngine.Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
+            foreach (var b in bs)
+            {
+                if (b == null || b.CurrentHp <= 0) continue;
+                if (b.Kind == BuildingKind.Fence) continue;
+                built++;
+            }
+            return Mathf.Min(MaxHalfSize, MinHalfSize + (built - 1) * HalfSizePerBuilding);
+        }
+
+        /// <summary>새 건물 짓고 나면 호출 — 새 외곽 반경에 맞춰 펜스 추가 + 새 게이트.</summary>
+        public static void OnBuildingAdded(Vector3 center)
+        {
+            float target = TargetHalfSize();
+            if (target <= CurrentHalfSize + 0.05f) return;
+            CurrentHalfSize = target;
+            BuildOuterRing(center, target);
+        }
+
+        private static void BuildOuterRing(Vector3 center, float halfSize, float spacing = 1.0f)
+        {
+            int slots = Mathf.Max(3, Mathf.RoundToInt((halfSize * 2f) / spacing) + 1);
+            int gateSlot = slots / 2;
+            float startOffset = -halfSize;
+
+            // 남쪽 — 가운데는 게이트
+            for (int i = 0; i < slots; i++)
+            {
+                float lx = startOffset + i * spacing;
+                Vector3 pos = center + new Vector3(lx, -halfSize, 0f);
+                if (TooCloseToFence(pos, 0.4f)) continue;
+                if (i == gateSlot && !HasGateNear(pos, 1.2f)) SpawnGate(pos);
+                else if (i != gateSlot) SpawnFence(pos, 0f);
+            }
+            // 북쪽
+            for (int i = 0; i < slots; i++)
+            {
+                float lx = startOffset + i * spacing;
+                Vector3 pos = center + new Vector3(lx, halfSize, 0f);
+                if (TooCloseToFence(pos, 0.4f)) continue;
+                SpawnFence(pos, 0f);
+            }
+            // 동/서
+            for (int i = 0; i < slots; i++)
+            {
+                float ly = startOffset + i * spacing;
+                Vector3 wpos = center + new Vector3(-halfSize, ly, 0f);
+                Vector3 epos = center + new Vector3(halfSize, ly, 0f);
+                if (!TooCloseToFence(wpos, 0.4f)) SpawnFence(wpos, 90f);
+                if (!TooCloseToFence(epos, 0.4f)) SpawnFence(epos, 90f);
+            }
+        }
+
+        private static bool TooCloseToFence(Vector3 pos, float radius)
+        {
+            var bs = UnityEngine.Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
+            foreach (var b in bs)
+            {
+                if (b == null || b.Kind != BuildingKind.Fence) continue;
+                if (Vector2.Distance(pos, b.transform.position) < radius) return true;
+            }
+            return false;
+        }
+
+        private static bool HasGateNear(Vector3 pos, float radius)
+        {
+            var ds = UnityEngine.Object.FindObjectsByType<Door>(FindObjectsSortMode.None);
+            foreach (var d in ds)
+                if (d != null && Vector2.Distance(pos, d.transform.position) < radius) return true;
+            return false;
+        }
+
         public static void SpawnStarterVillage(Vector3 center, float halfSize = 5f, float spacing = 1.0f)
         {
+            CurrentHalfSize = halfSize;
             // 이미 모닥불이 가까이 있으면 (씬 재진입 등) 추가 스폰 안 함
             var existing = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
             foreach (var b in existing)

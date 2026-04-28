@@ -195,6 +195,13 @@ namespace IL6
                     case BuildingKind.Infirmary: SpawnInfirmary(p); break;
                     case BuildingKind.HuntersHut: SpawnHuntersHut(p); break;
                 }
+                // 비-펜스 건물 추가 시 마을 펜스 자동 확장
+                if (k != BuildingKind.Fence)
+                {
+                    var s = GameSession.Instance;
+                    Vector3 center = new Vector3(GameConstants.VillageCenterX, GameConstants.VillageCenterY, 0f);
+                    VillageStarter.OnBuildingAdded(center);
+                }
             };
         }
 
@@ -387,10 +394,14 @@ namespace IL6
 
         private void OnEnable()
         {
-            _unsubE = EventBus.Instance.Subscribe<EveningStartedPayload>(p => ShowBanner($"Day {p.Day}  🌅  저녁"));
-            _unsubN = EventBus.Instance.Subscribe<NightStartedPayload>(p => ShowBanner($"Day {p.Day}  🌙  밤이 찾아옵니다"));
-            _unsubD = EventBus.Instance.Subscribe<DawnStartedPayload>(p => ShowBanner($"Day {p.Day}  🌄  새벽"));
-            _unsubA = EventBus.Instance.Subscribe<DayStartedPayload>(p => ShowBanner($"Day {p.Day}  ☀  새 날"));
+            _unsubE = EventBus.Instance.Subscribe<EveningStartedPayload>(p =>
+                { ShowBanner($"Day {p.Day}  🌅  저녁"); Music.PlayForPhase(Phase.Evening); });
+            _unsubN = EventBus.Instance.Subscribe<NightStartedPayload>(p =>
+                { ShowBanner($"Day {p.Day}  🌙  밤이 찾아옵니다"); Music.PlayForPhase(Phase.Night); });
+            _unsubD = EventBus.Instance.Subscribe<DawnStartedPayload>(p =>
+                { ShowBanner($"Day {p.Day}  🌄  새벽"); Music.PlayForPhase(Phase.Dawn); });
+            _unsubA = EventBus.Instance.Subscribe<DayStartedPayload>(p =>
+                { ShowBanner($"Day {p.Day}  ☀  새 날"); Music.PlayForPhase(Phase.Day); });
             HookFadeEvents();
         }
 
@@ -417,6 +428,7 @@ namespace IL6
                 _ => "",
             };
             ShowBanner(txt);
+            Music.PlayForPhase(s.Cycle.Phase);
         }
 
         private void ShowBanner(string text)

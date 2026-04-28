@@ -64,6 +64,20 @@ namespace IL6
             TotalKills++;
             var night = Object.FindFirstObjectByType<NightController>();
             if (night != null) night.OnNightKill();
+
+            // 가장 가까운 살아있는 동료에게 +1 XP — 위치 기반은 NightController 의 좀비 위치를
+            // 알 수 없어 여기서는 플레이어 기준으로 가까운 동료를 픽함
+            var p = GameObject.FindWithTag("Player");
+            if (p == null) return;
+            var comps = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
+            Companion best = null; float bestDist = float.MaxValue;
+            foreach (var c in comps)
+            {
+                if (c == null || c.IsDead) continue;
+                float d = Vector2.Distance(c.transform.position, p.transform.position);
+                if (d < bestDist) { bestDist = d; best = c; }
+            }
+            if (best != null) best.GrantXp(1);
         }
         public void OnCompanionLost() { CompanionsLost++; }
 
