@@ -227,6 +227,10 @@ namespace IL6
             public float Weight;
             public bool IsPredator;       // true → WolfAi, false → DeerAi
             public int PredatorDamage;    // IsPredator 인 경우만
+            public float PredatorMoveSpeed;   // 0 = WolfAi 기본값
+            public float PredatorAttackRange; // 0 = WolfAi 기본값
+            public float PredatorSightRange;  // 0 = WolfAi 기본값
+            public float PredatorAttackCooldown; // 0 = WolfAi 기본값
             public int PackMin, PackMax;  // 무리 사이즈 (1=단독)
             public bool DropsFrostbloom;
             public int MinDay;            // 0=처음부터 등장, N=Day N 이상에서만 (늑대/맘모스 등)
@@ -235,7 +239,7 @@ namespace IL6
         // 가중치 기반 동물 풀.
         private static readonly AnimalArchetype[] _animals =
         {
-            // 토끼 (가장 흔함)
+            // 토끼 — HP 가 낮아서 출현 빈도도 낮춤
             new AnimalArchetype {
                 Name = "Rabbit_proc", MeatMin = 1, MeatMax = 1, MeatDropChance = 1f,
                 DurationSec = 1.5f, Hp = 12,
@@ -244,9 +248,9 @@ namespace IL6
                 Tint = new Color(0.92f, 0.88f, 0.82f),
                 Shape = FallbackShape.Circle,
                 Outline = new Color(0.4f, 0.3f, 0.2f, 1f),
-                Weight = 0.34f, PackMin = 1, PackMax = 1,
+                Weight = 0.16f, PackMin = 1, PackMax = 1,
             },
-            // 여우
+            // 여우 — 중간 HP, 빈도도 중간
             new AnimalArchetype {
                 Name = "Fox_proc", MeatMin = 2, MeatMax = 2, MeatDropChance = 1f,
                 DurationSec = 2.5f, Hp = 24,
@@ -255,9 +259,9 @@ namespace IL6
                 Tint = new Color(0.85f, 0.45f, 0.18f),
                 Shape = FallbackShape.Triangle,
                 Outline = new Color(0.4f, 0.18f, 0.05f, 1f),
-                Weight = 0.20f, PackMin = 1, PackMax = 1,
+                Weight = 0.13f, PackMin = 1, PackMax = 1,
             },
-            // 멧돼지
+            // 멧돼지 — HP 높아서 빈도 ↑
             new AnimalArchetype {
                 Name = "Boar_proc", MeatMin = 3, MeatMax = 5, MeatDropChance = 1f,
                 DurationSec = 4.5f, Hp = 240,
@@ -266,7 +270,7 @@ namespace IL6
                 Tint = new Color(0.35f, 0.25f, 0.18f),
                 Shape = FallbackShape.Rounded,
                 Outline = new Color(0.1f, 0.05f, 0.02f, 1f),
-                Weight = 0.13f, PackMin = 1, PackMax = 1,
+                Weight = 0.22f, PackMin = 1, PackMax = 1,
             },
             // 늑대 (포식자, 무리, 25%만 고기) — HP 3배, 무리 4-7
             new AnimalArchetype {
@@ -281,7 +285,7 @@ namespace IL6
                 PackMin = 4, PackMax = 7,
                 MinDay = 3,
             },
-            // 사슴 (낮춘 빈도) — HP 12배
+            // 사슴 — HP 높음, 빈도 ↑
             new AnimalArchetype {
                 Name = "Deer_proc", MeatMin = 2, MeatMax = 2, MeatDropChance = 1f,
                 DurationSec = 3f, Hp = 320,
@@ -290,9 +294,9 @@ namespace IL6
                 Tint = new Color(0.55f, 0.4f, 0.25f),
                 Shape = FallbackShape.Circle,
                 Outline = new Color(0.2f, 0.12f, 0.05f, 1f),
-                Weight = 0.10f, PackMin = 1, PackMax = 1,
+                Weight = 0.30f, PackMin = 1, PackMax = 1,
             },
-            // 흰토끼 (희귀, Frostbloom 보너스)
+            // 흰토끼 (희귀, Frostbloom 보너스) — HP 낮아서 빈도 더 ↓
             new AnimalArchetype {
                 Name = "SnowHare_proc", MeatMin = 1, MeatMax = 1, MeatDropChance = 1f,
                 DurationSec = 1.8f, Hp = 14,
@@ -301,19 +305,24 @@ namespace IL6
                 Tint = new Color(0.95f, 0.97f, 1f),
                 Shape = FallbackShape.Circle,
                 Outline = new Color(0.45f, 0.6f, 0.85f, 1f),
-                Weight = 0.06f, PackMin = 1, PackMax = 1, DropsFrostbloom = true,
+                Weight = 0.03f, PackMin = 1, PackMax = 1, DropsFrostbloom = true,
             },
-            // 맘모스 (희귀, 매우 단단함 2000 HP, 고기 30~50)
+            // 맘모스 (희귀, 매우 단단함, 공격적) — 느리지만 강타. 가까이 가면 위험.
             new AnimalArchetype {
                 Name = "Mammoth_proc", MeatMin = 30, MeatMax = 50, MeatDropChance = 1f,
                 DurationSec = 12f, Hp = 2000,
-                FleeRadius = 1.5f, FleeSpeed = 1.0f,
+                FleeRadius = 0f, FleeSpeed = 0f, // flee 안 함 — predator
                 Scale = 2.2f, ColliderRadius = 0.85f,
                 Tint = new Color(0.45f, 0.32f, 0.22f),
                 Shape = FallbackShape.Rounded,
                 Outline = new Color(0.15f, 0.08f, 0.02f, 1f),
                 Weight = 0.005f, PackMin = 1, PackMax = 1,
                 MinDay = 5,
+                IsPredator = true, PredatorDamage = 30,
+                PredatorMoveSpeed = 1.8f,    // 매우 느림
+                PredatorAttackRange = 2.0f,  // 큰 몸체로 근접
+                PredatorSightRange = 5.0f,   // 짧은 시야 — 가까이 가야 반응
+                PredatorAttackCooldown = 1.8f,
             },
         };
 
@@ -390,6 +399,10 @@ namespace IL6
                 ai.MaxHp = hpOverride;
                 ai.InitHp(hpOverride);
                 ai.Damage = a.PredatorDamage;
+                if (a.PredatorMoveSpeed > 0f) ai.MoveSpeed = a.PredatorMoveSpeed;
+                if (a.PredatorAttackRange > 0f) ai.AttackRange = a.PredatorAttackRange;
+                if (a.PredatorSightRange > 0f) ai.SightRange = a.PredatorSightRange;
+                if (a.PredatorAttackCooldown > 0f) ai.AttackCooldown = a.PredatorAttackCooldown;
             }
             else
             {
