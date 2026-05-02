@@ -216,7 +216,7 @@ namespace IL6
             return go;
         }
 
-        private struct AnimalArchetype
+        public struct AnimalArchetype
         {
             public string Name;
             public int MeatMin, MeatMax;  // 고기 yield 범위 (rng 으로 결정)
@@ -243,7 +243,7 @@ namespace IL6
         }
 
         // 가중치 기반 동물 풀.
-        private static readonly AnimalArchetype[] _animals =
+        public static readonly AnimalArchetype[] _animals =
         {
             // 토끼 — HP 가 낮아서 출현 빈도도 낮춤
             new AnimalArchetype {
@@ -392,7 +392,7 @@ namespace IL6
             }
         }
 
-        private static GameObject CreateOneAnimal(AnimalArchetype a, float x, float y, int yieldOverride, int hpOverride)
+        public static GameObject CreateOneAnimal(AnimalArchetype a, float x, float y, int yieldOverride, int hpOverride)
         {
             var go = new GameObject(a.Name);
             go.transform.position = new Vector3(x, y, 0);
@@ -468,7 +468,7 @@ namespace IL6
             "려화", "도윤", "서원", "은규", "혜인", "지운", "한결", "무영", "선유", "여린"
         };
 
-        private struct NpcArchetype
+        public struct NpcArchetype
         {
             public string Role;
             public string Dialog;
@@ -483,7 +483,7 @@ namespace IL6
             public FallbackShape Shape;
         }
 
-        private static readonly NpcArchetype[] _npcArchetypes =
+        public static readonly NpcArchetype[] _npcArchetypes =
         {
             new NpcArchetype
             {
@@ -552,6 +552,34 @@ namespace IL6
             float x = GameConstants.VillageCenterX + Mathf.Cos(angle) * dist;
             float y = GameConstants.VillageCenterY + Mathf.Sin(angle) * dist;
             CreateNpc(x, y, rng);
+        }
+
+        /// <summary>특정 NPC 아키타입을 지정 위치에 직접 스폰 — PrefabGenerator 용.</summary>
+        public static GameObject CreateNpcFromArchetype(NpcArchetype arch, string displayName, Vector3 pos)
+        {
+            var go = new GameObject($"Npc_{arch.Role}_{displayName}");
+            go.transform.position = pos;
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 7;
+            var npc = go.AddComponent<RecruitableNpc>();
+            npc.DisplayName = displayName;
+            npc.Role = arch.Role;
+            npc.DialogText = arch.Dialog;
+            npc.CombatRating = arch.CombatRating;
+            npc.FarmRating = arch.FarmRating;
+            npc.IsCombat = arch.IsCombat;
+            npc.MoveSpeed = arch.MoveSpeed;
+            npc.AttackRange = arch.AttackRange;
+            npc.AttackDamage = arch.AttackDamage;
+            npc.AttackCooldown = arch.AttackCooldown;
+            var cf = go.AddComponent<ColorFallback>();
+            cf.Tint = arch.Tint;
+            cf.Shape = arch.Shape;
+            cf.Circle = arch.Shape == FallbackShape.Circle;
+            cf.PixelSize = 64;
+            cf.OutlineWidth = 2;
+            cf.OutlineColor = new Color(0.1f, 0.1f, 0.15f, 1f);
+            return go;
         }
 
         private static GameObject CreateNpc(float x, float y, SeededRng rng)

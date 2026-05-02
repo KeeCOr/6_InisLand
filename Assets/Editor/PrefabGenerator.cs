@@ -6,16 +6,13 @@ namespace IL6.EditorBuild
 {
     /// <summary>
     /// IL6 의 모든 절차적 스폰 GameObject 를 .prefab 자산으로 한 번에 만들어 저장.
-    /// Unity 에디터 메뉴: IL6/Tools/Generate Prefabs.
+    /// Unity 메뉴: IL6/Tools/Generate All Prefabs.
     ///
     /// 동작:
-    ///   1. 빈 (0,0,0) 위치에 각 종류 GameObject 생성 (ProceduralSpawner / VillageStarter
-    ///      의 기존 Spawn 메서드 호출).
+    ///   1. 빈 (0,0,0) 위치에 각 종류 GameObject 생성 (BuildingFactory / VillageStarter
+    ///      / ProceduralSpawner 정적 메서드 호출).
     ///   2. PrefabUtility.SaveAsPrefabAsset 로 Assets/Prefabs/.../Name.prefab 저장.
     ///   3. 씬에서 즉시 Destroy.
-    ///
-    /// 만들어진 프리팹은 인스펙터에서 sprite/머티리얼 교체 후, Spawn 메서드에서
-    /// Instantiate(prefab) 로 교체하면 됨.
     /// </summary>
     public static class PrefabGenerator
     {
@@ -30,16 +27,39 @@ namespace IL6.EditorBuild
             EnsureDir(CompanionsDir);
             EnsureDir(BuildingsDir);
 
-            int created = 0;
+            int n = 0;
 
-            // === 건물 — VillageStarter / SimpleHud 의 SpawnX 메서드들 ===
-            // 빌딩들은 SimpleHud 의 인스턴스 메서드라 직접 호출 어려움.
-            // 가장 단순한 두 가지(모닥불, 펜스) 만 VillageStarter 정적 메서드 사용:
-            created += SaveOne(VillageStarter.SpawnCampfire(Vector3.zero), $"{BuildingsDir}/Campfire.prefab");
-            created += SaveOne(VillageStarter.SpawnFence(Vector3.zero, 0f), $"{BuildingsDir}/Fence.prefab");
-            created += SaveOne(VillageStarter.SpawnGate(Vector3.zero), $"{BuildingsDir}/Gate.prefab");
+            // === 건물 ===
+            n += SaveOne(VillageStarter.SpawnCampfire(Vector3.zero), $"{BuildingsDir}/Campfire.prefab");
+            n += SaveOne(VillageStarter.SpawnFence(Vector3.zero, 0f), $"{BuildingsDir}/Fence.prefab");
+            n += SaveOne(VillageStarter.SpawnGate(Vector3.zero), $"{BuildingsDir}/Gate.prefab");
+            n += SaveOne(BuildingFactory.SpawnBarricade(Vector3.zero), $"{BuildingsDir}/Barricade.prefab");
+            n += SaveOne(BuildingFactory.SpawnHouse(Vector3.zero), $"{BuildingsDir}/House.prefab");
+            n += SaveOne(BuildingFactory.SpawnStorage(Vector3.zero), $"{BuildingsDir}/Storage.prefab");
+            n += SaveOne(BuildingFactory.SpawnFarm(Vector3.zero), $"{BuildingsDir}/Farm.prefab");
+            n += SaveOne(BuildingFactory.SpawnWatchtower(Vector3.zero), $"{BuildingsDir}/Watchtower.prefab");
+            n += SaveOne(BuildingFactory.SpawnInfirmary(Vector3.zero), $"{BuildingsDir}/Infirmary.prefab");
+            n += SaveOne(BuildingFactory.SpawnHuntersHut(Vector3.zero), $"{BuildingsDir}/HuntersHut.prefab");
 
-            Debug.Log($"[PrefabGenerator] {created} prefabs saved to {BuildingsDir} (Animals/Companions need Editor-side instantiate — see comment).");
+            // === 동물 — 모든 archetype ===
+            foreach (var a in ProceduralSpawner._animals)
+            {
+                int hp = Mathf.Max(1, a.Hp);
+                int yield = a.MeatMin == a.MeatMax ? a.MeatMin : a.MeatMin;
+                var go = ProceduralSpawner.CreateOneAnimal(a, 0, 0, yield, hp);
+                // 파일명 — Name 의 _proc 접미 제거
+                string name = a.Name.Replace("_proc", "");
+                n += SaveOne(go, $"{AnimalsDir}/{name}.prefab");
+            }
+
+            // === 동료(NPC) — 모든 archetype ===
+            foreach (var arch in ProceduralSpawner._npcArchetypes)
+            {
+                var go = ProceduralSpawner.CreateNpcFromArchetype(arch, "Sample", Vector3.zero);
+                n += SaveOne(go, $"{CompanionsDir}/{arch.Role}.prefab");
+            }
+
+            Debug.Log($"[PrefabGenerator] {n} prefabs saved.  Animals→{AnimalsDir}, Companions→{CompanionsDir}, Buildings→{BuildingsDir}");
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
@@ -47,8 +67,6 @@ namespace IL6.EditorBuild
         private static int SaveOne(GameObject go, string assetPath)
         {
             if (go == null) { Debug.LogWarning($"[PrefabGenerator] null GameObject for {assetPath}"); return 0; }
-            // SaveAsPrefabAsset 은 root GO 를 prefab 으로, 그리고 in-scene 인스턴스도 prefab 인스턴스로 변환함.
-            // 우리는 깨끗한 프리팹만 원하므로 SaveAsPrefabAsset 후 즉시 Destroy.
             var saved = PrefabUtility.SaveAsPrefabAsset(go, assetPath, out bool success);
             Object.DestroyImmediate(go);
             if (!success) { Debug.LogError($"[PrefabGenerator] failed to save {assetPath}"); return 0; }

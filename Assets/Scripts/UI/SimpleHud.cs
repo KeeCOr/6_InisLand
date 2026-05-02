@@ -1928,141 +1928,16 @@ namespace IL6
         }
 
         // ====================================================================
-        // Spawn 헬퍼들
+        // Spawn 헬퍼들 — 본체는 BuildingFactory 정적 메서드로 이전됨.
+        // SimpleHud 는 단순 위임만 (PrefabGenerator 도 같은 정적 메서드 호출).
         // ====================================================================
-        private void SpawnBarricade(Vector3 playerPos)
-        {
-            var go = new GameObject("Barricade");
-            go.transform.position = playerPos;
-            go.transform.localScale = new Vector3(1.2f, 0.4f, 1f);
-            var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 3;
-            var col = go.AddComponent<BoxCollider2D>();
-            col.size = Vector2.one;
-            var cf = go.AddComponent<ColorFallback>();
-            cf.Tint = new Color(0.45f, 0.28f, 0.15f);
-            cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
-            cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.2f, 0.1f, 0.05f, 1f);
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Barricade;
-            var hp = go.AddComponent<HpBarUi>(); hp.Building = b;
-            hp.Offset = new Vector2(0f, 0.6f); hp.Size = new Vector2(1.0f, 0.1f);
-            hp.BgColor = new Color(0.05f, 0.05f, 0.08f, 0.9f); hp.FillColor = new Color(0.6f, 0.4f, 0.2f);
-        }
-
-        private void SpawnStorage(Vector3 playerPos)
-        {
-            var go = new GameObject("Storage");
-            go.transform.position = playerPos;
-            go.transform.localScale = new Vector3(1.0f, 0.9f, 1f);
-            var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 3;
-            var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
-            var cf = go.AddComponent<ColorFallback>();
-            cf.Tint = new Color(0.55f, 0.45f, 0.3f);
-            cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
-            cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.25f, 0.18f, 0.1f, 1f);
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Storage;
-        }
-
-        private void SpawnHuntersHut(Vector3 playerPos)
-        {
-            var go = new GameObject("HuntersHut");
-            go.transform.position = playerPos;
-            go.transform.localScale = new Vector3(1.0f, 1.0f, 1f);
-            var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 3;
-            var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
-            var cf = go.AddComponent<ColorFallback>();
-            cf.Tint = new Color(0.55f, 0.4f, 0.25f);
-            cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
-            cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.25f, 0.15f, 0.05f, 1f);
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.HuntersHut;
-        }
-
-        private void SpawnInfirmary(Vector3 playerPos)
-        {
-            var go = new GameObject("Infirmary");
-            go.transform.position = playerPos;
-            go.transform.localScale = new Vector3(1.0f, 1.0f, 1f);
-            var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 3;
-            var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
-            var cf = go.AddComponent<ColorFallback>();
-            cf.Tint = new Color(0.95f, 0.97f, 0.95f);
-            cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
-            cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.5f, 0.7f, 0.5f, 1f);
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Infirmary;
-            go.AddComponent<HealingShrine>();
-        }
-
-        private void SpawnHouse(Vector3 playerPos)
-        {
-            var go = new GameObject("House");
-            go.transform.position = playerPos;
-            go.transform.localScale = new Vector3(1.1f, 1.0f, 1f);
-            var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 3;
-            var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
-            var cf = go.AddComponent<ColorFallback>();
-            cf.Tint = new Color(0.85f, 0.6f, 0.4f);
-            cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
-            cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.4f, 0.2f, 0.1f, 1f);
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.House;
-        }
-
-        private void SpawnFarm(Vector3 playerPos)
-        {
-            var go = new GameObject("Farm");
-            go.transform.position = playerPos;
-            go.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
-            var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 2;
-            var cf = go.AddComponent<ColorFallback>();
-            cf.Tint = new Color(0.35f, 0.55f, 0.25f);
-            cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
-            cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.18f, 0.3f, 0.12f, 1f);
-            go.AddComponent<FarmBuilding>();
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Farm;
-        }
-
-        private void SpawnWatchtower(Vector3 playerPos)
-        {
-            var go = new GameObject("Watchtower");
-            go.transform.position = playerPos;
-            go.transform.localScale = new Vector3(0.7f, 1.4f, 1f);
-            var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 4;
-            var col = go.AddComponent<BoxCollider2D>();
-            col.size = Vector2.one;
-            var cf = go.AddComponent<ColorFallback>();
-            cf.Tint = new Color(0.5f, 0.4f, 0.28f);
-            cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
-            cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.2f, 0.15f, 0.08f, 1f);
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Watchtower;
-            go.AddComponent<Watchtower>();
-            var hp = go.AddComponent<HpBarUi>(); hp.Building = b;
-            hp.Offset = new Vector2(0f, 0.85f); hp.Size = new Vector2(0.8f, 0.1f);
-            hp.BgColor = new Color(0.05f, 0.05f, 0.08f, 0.9f);
-            hp.FillColor = new Color(0.4f, 0.85f, 0.55f);
-        }
-
-        private void SpawnCampfire(Vector3 playerPos)
-        {
-            var go = new GameObject("Campfire");
-            go.transform.position = playerPos;
-            var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 3;
-            var cf = go.AddComponent<ColorFallback>();
-            cf.Tint = new Color(1f, 0.5f, 0.1f);
-            cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
-            cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.3f, 0.1f, 0f, 1f);
-            var col = go.AddComponent<CircleCollider2D>(); col.radius = 0.45f;
-            var aura = go.AddComponent<CampfireAura>();
-            aura.Radius = 2.5f; aura.DamagePerSecond = 6f; aura.TickInterval = 0.5f;
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Campfire;
-            var hp = go.AddComponent<HpBarUi>(); hp.Building = b;
-            hp.Offset = new Vector2(0f, 0.7f); hp.Size = new Vector2(1.0f, 0.12f);
-            hp.BgColor = new Color(0.05f, 0.05f, 0.08f, 0.9f); hp.FillColor = new Color(1f, 0.55f, 0.2f);
-        }
+        private void SpawnBarricade(Vector3 p) => BuildingFactory.SpawnBarricade(p);
+        private void SpawnStorage(Vector3 p) => BuildingFactory.SpawnStorage(p);
+        private void SpawnHuntersHut(Vector3 p) => BuildingFactory.SpawnHuntersHut(p);
+        private void SpawnInfirmary(Vector3 p) => BuildingFactory.SpawnInfirmary(p);
+        private void SpawnHouse(Vector3 p) => BuildingFactory.SpawnHouse(p);
+        private void SpawnFarm(Vector3 p) => BuildingFactory.SpawnFarm(p);
+        private void SpawnWatchtower(Vector3 p) => BuildingFactory.SpawnWatchtower(p);
+        private void SpawnCampfire(Vector3 p) => VillageStarter.SpawnCampfire(p);
     }
 }
