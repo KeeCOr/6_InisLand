@@ -25,14 +25,39 @@ export const RESOURCES = {
   startingFrostbloom: 0,
 } as const;
 
+export const PLAYER = {
+  maxHp: 100,
+  speed: 120,
+} as const;
+
+export const GATHERING = {
+  treeWood: 3,
+  treeGatherMs: 4000,
+  rockStone: 2,
+  rockGatherMs: 6000,
+  deerMeat: 2,
+} as const;
+
+export const BONFIRE = {
+  damagePerSec: 5,
+  radius: 128,
+  buffAttack: 0.15,
+} as const;
+
 export type BalanceConfig = {
   dayCycle: typeof DAY_CYCLE;
   vision: typeof VISION;
   resources: typeof RESOURCES;
+  player: typeof PLAYER;
+  gathering: typeof GATHERING;
+  bonfire: typeof BONFIRE;
 };
 
 export const BALANCE: BalanceConfig = {
   dayCycle: DAY_CYCLE,
   vision: VISION,
   resources: RESOURCES,
+  player: PLAYER,
+  gathering: GATHERING,
+  bonfire: BONFIRE,
 };

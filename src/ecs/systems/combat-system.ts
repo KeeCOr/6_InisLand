@@ -38,7 +38,7 @@ export function combatSystem(world: GameWorld): void {
     }
     if (nearest >= 0) {
       const dmg = calculateDamage(Combat.damage[pid]!, 0, 0);
-      Health.current[nearest] -= dmg;
+      Health.current[nearest]! -= dmg;
       Combat.lastAttackTime[pid] = now;
     }
   }
@@ -57,7 +57,7 @@ export function combatSystem(world: GameWorld): void {
       const d = distSq(Position.x[zid]!, Position.y[zid]!, Position.x[pid]!, Position.y[pid]!);
       if (d <= rangeSq) {
         const dmg = calculateDamage(Combat.damage[zid]!, 0, 0);
-        Health.current[pid] -= dmg;
+        Health.current[pid]! -= dmg;
         Combat.lastAttackTime[zid] = now;
         break;
       }

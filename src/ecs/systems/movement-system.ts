@@ -9,7 +9,7 @@ export function movementSystem(world: GameWorld): void {
   const entities = movingQuery(world);
   for (let i = 0; i < entities.length; i++) {
     const eid = entities[i]!;
-    Position.x[eid] += Velocity.vx[eid]! * dt;
-    Position.y[eid] += Velocity.vy[eid]! * dt;
+    Position.x[eid]! += Velocity.vx[eid]! * dt;
+    Position.y[eid]! += Velocity.vy[eid]! * dt;
   }
 }

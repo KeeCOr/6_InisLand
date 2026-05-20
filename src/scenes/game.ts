@@ -1,0 +1,594 @@
+import Phaser from 'phaser';
+import { defineQuery } from 'bitecs';
+import { createGameWorld, addEntity, addComponent, removeEntity, hasComponent } from '@/ecs/world';
+import type { GameWorld } from '@/ecs/world';
+import {
+  Position, Velocity, Health, Combat, PlayerTag, ZombieTag, DeerTag, ResourceNode,
+} from '@/ecs/components';
+import { movementSystem } from '@/ecs/systems/movement-system';
+import { combatSystem } from '@/ecs/systems/combat-system';
+import { zombieAiSystem } from '@/ecs/systems/zombie-ai-system';
+import { deerAiSystem } from '@/ecs/systems/deer-ai-system';
+import { createDeathSystem } from '@/ecs/systems/death-system';
+import { InputAdapter } from '@/input/input-adapter';
+import { DayNightCycle, Phase } from '@/gameplay/day-night-cycle';
+import { ResourceManager, ResourceKind } from '@/gameplay/resource-manager';
+import { VillageGrid, BuildingType } from '@/gameplay/village-grid';
+import { WaveSpawner } from '@/gameplay/wave-spawner';
+import { EventBus } from '@/events/event-bus';
+import type { GameEvents } from '@/events/types';
+import { LONGSWORD } from '@/config/weapons';
+import { BASIC_ZOMBIE } from '@/config/enemies';
+import { PLAYER, GATHERING, BONFIRE, VISION } from '@/config/balance';
+import { TILE_SIZE, VILLAGE_GRID_SIZE } from '@/config/constants';
+import { HUD } from '@/ui/hud';
+import { GameOverScreen } from '@/ui/game-over';
+import { createRng } from '@/util/rng';
+
+const SNOWFIELD_SIZE = 2400;
+const VILLAGE_PX = VILLAGE_GRID_SIZE * TILE_SIZE; // 768
+const VILLAGE_OFFSET = (SNOWFIELD_SIZE - VILLAGE_PX) / 2; // 816
+
+const zombieQuery = defineQuery([ZombieTag, Health]);
+
+export class GameScene extends Phaser.Scene {
+  private world!: GameWorld;
+  private bus!: EventBus<GameEvents>;
+  private inputAdapter!: InputAdapter;
+  private cycle!: DayNightCycle;
+  private resources!: ResourceManager;
+  private village!: VillageGrid;
+  private waveSpawner!: WaveSpawner;
+  private hud!: HUD;
+  private gameOver!: GameOverScreen;
+  private deathSystem!: (w: GameWorld) => number[];
+  private rng!: ReturnType<typeof createRng>;
+
+  private playerEid = -1;
+  private kills = 0;
+  private isDead = false;
+
+  // Night wave state
+  private currentWave = 0;
+  private waveTimer = 0;
+  private wavePending = false;
+
+  // Gathering state
+  private gatherTarget = -1;
+  private gatherProgress = 0;
+  private gatherBar!: Phaser.GameObjects.Graphics;
+
+  // Vision mask
+  private visionMask!: Phaser.GameObjects.Graphics;
+
+  // Tracked entity lists
+  private snowfieldEntities: number[] = [];
+  private villageSprites: Phaser.GameObjects.Sprite[] = [];
+
+  constructor() {
+    super({ key: 'Game' });
+  }
+
+  create(): void {
+    this.bus = new EventBus<GameEvents>();
+    this.world = createGameWorld();
+    this.inputAdapter = new InputAdapter();
+    this.inputAdapter.register(this);
+    this.cycle = new DayNightCycle(this.bus);
+    this.resources = new ResourceManager(this.bus);
+    this.village = new VillageGrid();
+    this.waveSpawner = new WaveSpawner();
+    this.deathSystem = createDeathSystem(this.bus);
+    this.gameOver = new GameOverScreen();
+    this.rng = createRng(Date.now());
+    this.kills = 0;
+    this.isDead = false;
+    this.currentWave = 0;
+    this.waveTimer = 0;
+    this.wavePending = false;
+    this.gatherTarget = -1;
+    this.gatherProgress = 0;
+    this.snowfieldEntities = [];
+    this.villageSprites = [];
+
+    this.drawBackground();
+
+    // Place starting village
+    this.village.place(BuildingType.Bonfire, 11, 11);
+    this.placeStartingBarricades();
+    this.drawVillage();
+
+    // Create player
+    this.playerEid = this.spawnPlayer();
+    this.hud = new HUD(this, this.resources, this.cycle, this.playerEid);
+
+    // Spawn snowfield content
+    this.spawnSnowfieldContent();
+
+    // Camera
+    const playerSprite = this.world.sprites.get(this.playerEid);
+    if (playerSprite) {
+      this.cameras.main.startFollow(playerSprite, true, 0.1, 0.1);
+      this.cameras.main.setBounds(0, 0, SNOWFIELD_SIZE, SNOWFIELD_SIZE);
+    }
+
+    // Vision + gather bar graphics
+    this.visionMask = this.add.graphics().setDepth(900);
+    this.gatherBar = this.add.graphics().setDepth(950);
+
+    // Events
+    this.bus.on('night:started', () => this.onNightStart());
+    this.bus.on('dawn:started', () => this.onDawnStart());
+    this.bus.on('zombie:died', () => { this.kills++; });
+    this.bus.on('player:died', () => {
+      if (!this.isDead) {
+        this.isDead = true;
+        this.gameOver.show(this, this.cycle.day, this.kills);
+      }
+    });
+  }
+
+  override update(_time: number, delta: number): void {
+    if (this.isDead) return;
+
+    const dtSec = delta / 1000;
+    this.world.deltaTime = dtSec;
+    this.world.elapsed += delta;
+
+    // Day/night cycle
+    this.cycle.update(delta);
+
+    // Player input
+    const inp = this.inputAdapter.poll();
+    Velocity.vx[this.playerEid] = inp.dx * PLAYER.speed;
+    Velocity.vy[this.playerEid] = inp.dy * PLAYER.speed;
+
+    // Gathering
+    this.updateGathering(inp.interact, delta);
+
+    // Night-specific systems
+    if (this.cycle.phase === Phase.Night) {
+      this.updateNightWaves(delta);
+      zombieAiSystem(this.world);
+      combatSystem(this.world);
+      this.applyBonfireDamage(dtSec);
+    }
+
+    // Day-specific: deer flee + player can attack deer (reuse combat for melee range)
+    if (this.cycle.phase === Phase.Day) {
+      deerAiSystem(this.world);
+    }
+
+    movementSystem(this.world);
+
+    // Death system
+    const dead = this.deathSystem(this.world);
+    for (const eid of dead) {
+      // Drop meat from deer
+      if (hasComponent(this.world, DeerTag, eid)) {
+        this.resources.add(ResourceKind.Meat, GATHERING.deerMeat);
+      }
+      const sprite = this.world.sprites.get(eid);
+      if (sprite) {
+        sprite.destroy();
+        this.world.sprites.delete(eid);
+      }
+      removeEntity(this.world, eid);
+      this.snowfieldEntities = this.snowfieldEntities.filter((e) => e !== eid);
+    }
+
+    // Sync sprites
+    this.world.sprites.forEach((sprite, eid) => {
+      sprite.x = Position.x[eid]!;
+      sprite.y = Position.y[eid]!;
+    });
+
+    // Vision
+    this.drawVision();
+
+    // HUD
+    this.hud.update();
+  }
+
+  // --- Spawning ---
+
+  private spawnPlayer(): number {
+    const eid = addEntity(this.world);
+    addComponent(this.world, Position, eid);
+    addComponent(this.world, Velocity, eid);
+    addComponent(this.world, Health, eid);
+    addComponent(this.world, Combat, eid);
+    addComponent(this.world, PlayerTag, eid);
+
+    const cx = SNOWFIELD_SIZE / 2;
+    const cy = SNOWFIELD_SIZE / 2;
+    Position.x[eid] = cx;
+    Position.y[eid] = cy;
+    Health.current[eid] = PLAYER.maxHp;
+    Health.max[eid] = PLAYER.maxHp;
+    Combat.damage[eid] = LONGSWORD.damage;
+    Combat.range[eid] = LONGSWORD.range;
+    Combat.cooldown[eid] = LONGSWORD.cooldownMs;
+    Combat.lastAttackTime[eid] = 0;
+
+    const sprite = this.add.sprite(cx, cy, 'player').setDepth(100);
+    this.world.sprites.set(eid, sprite);
+    return eid;
+  }
+
+  private spawnSnowfieldContent(): void {
+    const cx = SNOWFIELD_SIZE / 2;
+    const cy = SNOWFIELD_SIZE / 2;
+
+    // Trees
+    for (let i = 0; i < 30; i++) {
+      const angle = this.rng.next() * Math.PI * 2;
+      const dist = 200 + this.rng.next() * 600;
+      this.spawnResourceNode(
+        cx + Math.cos(angle) * dist,
+        cy + Math.sin(angle) * dist,
+        0, GATHERING.treeWood, GATHERING.treeGatherMs, 'tree',
+      );
+    }
+
+    // Rocks
+    for (let i = 0; i < 15; i++) {
+      const angle = this.rng.next() * Math.PI * 2;
+      const dist = 250 + this.rng.next() * 500;
+      this.spawnResourceNode(
+        cx + Math.cos(angle) * dist,
+        cy + Math.sin(angle) * dist,
+        1, GATHERING.rockStone, GATHERING.rockGatherMs, 'rock',
+      );
+    }
+
+    // Deer
+    for (let i = 0; i < 8; i++) {
+      const angle = this.rng.next() * Math.PI * 2;
+      const dist = 300 + this.rng.next() * 500;
+      this.spawnDeer(cx + Math.cos(angle) * dist, cy + Math.sin(angle) * dist);
+    }
+  }
+
+  private spawnResourceNode(
+    x: number, y: number, kind: number, amount: number, gatherTime: number, texture: string,
+  ): void {
+    const eid = addEntity(this.world);
+    addComponent(this.world, Position, eid);
+    addComponent(this.world, ResourceNode, eid);
+    Position.x[eid] = x;
+    Position.y[eid] = y;
+    ResourceNode.kind[eid] = kind;
+    ResourceNode.amount[eid] = amount;
+    ResourceNode.gatherTime[eid] = gatherTime;
+
+    const sprite = this.add.sprite(x, y, texture).setDepth(50);
+    this.world.sprites.set(eid, sprite);
+    this.snowfieldEntities.push(eid);
+  }
+
+  private spawnDeer(x: number, y: number): void {
+    const eid = addEntity(this.world);
+    addComponent(this.world, Position, eid);
+    addComponent(this.world, Velocity, eid);
+    addComponent(this.world, Health, eid);
+    addComponent(this.world, DeerTag, eid);
+    Position.x[eid] = x;
+    Position.y[eid] = y;
+    Health.current[eid] = 30;
+    Health.max[eid] = 30;
+
+    const sprite = this.add.sprite(x, y, 'deer').setDepth(60);
+    this.world.sprites.set(eid, sprite);
+    this.snowfieldEntities.push(eid);
+  }
+
+  private spawnZombie(x: number, y: number): void {
+    const eid = addEntity(this.world);
+    addComponent(this.world, Position, eid);
+    addComponent(this.world, Velocity, eid);
+    addComponent(this.world, Health, eid);
+    addComponent(this.world, Combat, eid);
+    addComponent(this.world, ZombieTag, eid);
+    Position.x[eid] = x;
+    Position.y[eid] = y;
+    Health.current[eid] = BASIC_ZOMBIE.hp;
+    Health.max[eid] = BASIC_ZOMBIE.hp;
+    Combat.damage[eid] = BASIC_ZOMBIE.damage;
+    Combat.range[eid] = BASIC_ZOMBIE.attackRange;
+    Combat.cooldown[eid] = BASIC_ZOMBIE.attackCooldownMs;
+    Combat.lastAttackTime[eid] = 0;
+
+    const sprite = this.add.sprite(x, y, 'zombie').setDepth(80);
+    this.world.sprites.set(eid, sprite);
+  }
+
+  // --- Village ---
+
+  private placeStartingBarricades(): void {
+    const positions = [
+      [10, 10], [11, 10], [12, 10], [13, 10],
+      [10, 13], [11, 13], [12, 13], [13, 13],
+      [10, 11], [10, 12],
+      [13, 11], [13, 12],
+    ];
+    for (const [gx, gy] of positions) {
+      this.village.place(BuildingType.Barricade, gx!, gy!);
+    }
+  }
+
+  private drawBackground(): void {
+    // Use a single tileSprite for snow and draw village area separately
+    const snowBg = this.add.tileSprite(
+      SNOWFIELD_SIZE / 2, SNOWFIELD_SIZE / 2,
+      SNOWFIELD_SIZE, SNOWFIELD_SIZE,
+      'snow_tile',
+    ).setDepth(0);
+    void snowBg;
+
+    // Village ground overlay
+    const villageBg = this.add.tileSprite(
+      VILLAGE_OFFSET + VILLAGE_PX / 2,
+      VILLAGE_OFFSET + VILLAGE_PX / 2,
+      VILLAGE_PX, VILLAGE_PX,
+      'village_tile',
+    ).setDepth(1);
+    void villageBg;
+  }
+
+  private drawVillage(): void {
+    for (const s of this.villageSprites) s.destroy();
+    this.villageSprites = [];
+
+    for (const b of this.village.getBuildings()) {
+      const def = b.type === BuildingType.Bonfire
+        ? { w: 2, h: 2 }
+        : { w: 1, h: 1 };
+      const px = VILLAGE_OFFSET + b.gridX * TILE_SIZE + (def.w * TILE_SIZE) / 2;
+      const py = VILLAGE_OFFSET + b.gridY * TILE_SIZE + (def.h * TILE_SIZE) / 2;
+      const texture = b.type === BuildingType.Bonfire ? 'bonfire' : 'barricade';
+      const sprite = this.add.sprite(px, py, texture).setDepth(40);
+      this.villageSprites.push(sprite);
+    }
+  }
+
+  // --- Night Waves ---
+
+  private onNightStart(): void {
+    this.currentWave = 0;
+    this.waveTimer = 0;
+    this.wavePending = true;
+    this.hud.setWaveText('밤 시작!');
+  }
+
+  private onDawnStart(): void {
+    this.hud.setWaveText('');
+
+    // Kill remaining zombies
+    const remaining = zombieQuery(this.world);
+    for (let i = 0; i < remaining.length; i++) {
+      const eid = remaining[i]!;
+      Health.current[eid] = 0;
+    }
+
+    // Respawn snowfield content
+    this.spawnSnowfieldContent();
+  }
+
+  private updateNightWaves(dtMs: number): void {
+    if (!this.wavePending) return;
+
+    this.waveTimer += dtMs;
+    const waveInterval = 60_000;
+
+    // Count alive zombies
+    const alive = zombieQuery(this.world);
+    let aliveCount = 0;
+    for (let i = 0; i < alive.length; i++) {
+      if (Health.current[alive[i]!]! > 0) aliveCount++;
+    }
+
+    const shouldSpawn =
+      this.currentWave === 0 ||
+      (aliveCount <= 0 && this.currentWave < this.waveSpawner.totalWaves) ||
+      this.waveTimer >= waveInterval;
+
+    if (shouldSpawn) {
+      this.currentWave++;
+      if (this.currentWave > this.waveSpawner.totalWaves) {
+        this.wavePending = false;
+        return;
+      }
+
+      const wave = this.waveSpawner.getWave(this.cycle.day, this.currentWave);
+      const cx = SNOWFIELD_SIZE / 2;
+      const cy = SNOWFIELD_SIZE / 2;
+
+      for (const pos of wave.positions) {
+        this.spawnZombie(cx + pos.x, cy + pos.y);
+      }
+      this.waveTimer = 0;
+      this.hud.setWaveText(`Wave ${this.currentWave}/${this.waveSpawner.totalWaves} (${wave.count})`);
+      this.bus.emit('wave:started', { waveNumber: this.currentWave, count: wave.count });
+    }
+  }
+
+  // --- Gathering ---
+
+  private updateGathering(interactPressed: boolean, dtMs: number): void {
+    if (!interactPressed || this.cycle.phase !== Phase.Day) {
+      this.gatherTarget = -1;
+      this.gatherProgress = 0;
+      this.gatherBar.clear();
+      return;
+    }
+
+    const px = Position.x[this.playerEid]!;
+    const py = Position.y[this.playerEid]!;
+
+    // Find nearest resource node
+    if (this.gatherTarget < 0) {
+      let nearest = -1;
+      let nearestDist = Infinity;
+      for (const eid of this.snowfieldEntities) {
+        if (!hasComponent(this.world, ResourceNode, eid)) continue;
+        const dx = Position.x[eid]! - px;
+        const dy = Position.y[eid]! - py;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 48 && dist < nearestDist) {
+          nearestDist = dist;
+          nearest = eid;
+        }
+      }
+      this.gatherTarget = nearest;
+    }
+
+    if (this.gatherTarget < 0) {
+      this.gatherBar.clear();
+      return;
+    }
+
+    const target = this.gatherTarget;
+
+    // Check if target still exists
+    if (!hasComponent(this.world, ResourceNode, target)) {
+      this.gatherTarget = -1;
+      this.gatherProgress = 0;
+      this.gatherBar.clear();
+      return;
+    }
+
+    const gatherTime = ResourceNode.gatherTime[target]!;
+    this.gatherProgress += dtMs;
+
+    // Progress bar
+    const nx = Position.x[target]!;
+    const ny = Position.y[target]! - 20;
+    const progress = Math.min(this.gatherProgress / gatherTime, 1);
+    this.gatherBar.clear();
+    this.gatherBar.fillStyle(0x333333);
+    this.gatherBar.fillRect(nx - 16, ny, 32, 4);
+    this.gatherBar.fillStyle(0x44cc44);
+    this.gatherBar.fillRect(nx - 16, ny, 32 * progress, 4);
+
+    if (this.gatherProgress >= gatherTime) {
+      const kind = ResourceNode.kind[target]!;
+      const amount = ResourceNode.amount[target]!;
+      const resourceKind =
+        kind === 0 ? ResourceKind.Wood :
+        kind === 1 ? ResourceKind.Stone :
+        ResourceKind.Meat;
+      this.resources.add(resourceKind, amount);
+
+      // Remove node
+      const sprite = this.world.sprites.get(target);
+      if (sprite) {
+        sprite.destroy();
+        this.world.sprites.delete(target);
+      }
+      removeEntity(this.world, target);
+      this.snowfieldEntities = this.snowfieldEntities.filter((e) => e !== target);
+
+      this.gatherTarget = -1;
+      this.gatherProgress = 0;
+      this.gatherBar.clear();
+    }
+  }
+
+  // --- Bonfire AOE ---
+
+  private applyBonfireDamage(dtSec: number): void {
+    const bonfires = this.village
+      .getBuildings()
+      .filter((b) => b.type === BuildingType.Bonfire);
+    if (bonfires.length === 0) return;
+
+    const zombies = zombieQuery(this.world);
+    const radiusSq = BONFIRE.radius * BONFIRE.radius;
+    const dmg = BONFIRE.damagePerSec * dtSec;
+
+    for (const bonfire of bonfires) {
+      const bx = VILLAGE_OFFSET + bonfire.gridX * TILE_SIZE + TILE_SIZE;
+      const by = VILLAGE_OFFSET + bonfire.gridY * TILE_SIZE + TILE_SIZE;
+
+      for (let i = 0; i < zombies.length; i++) {
+        const zid = zombies[i]!;
+        if (Health.current[zid]! <= 0) continue;
+        const dx = Position.x[zid]! - bx;
+        const dy = Position.y[zid]! - by;
+        if (dx * dx + dy * dy < radiusSq) {
+          Health.current[zid]! -= dmg;
+        }
+      }
+    }
+  }
+
+  // --- Vision ---
+
+  private drawVision(): void {
+    const px = Position.x[this.playerEid]!;
+    const py = Position.y[this.playerEid]!;
+    const isNight = this.cycle.phase === Phase.Night || this.cycle.phase === Phase.Evening;
+    const radiusTiles = isNight ? VISION.nightRadiusTiles : VISION.dayRadiusTiles;
+    const radius = radiusTiles * TILE_SIZE;
+    const darkness = isNight ? 0.85 : 0.35;
+
+    const cam = this.cameras.main;
+    const left = cam.scrollX;
+    const top = cam.scrollY;
+    const w = cam.width;
+    const h = cam.height;
+
+    this.visionMask.clear();
+
+    // Dark overlay with gradient circle cutout
+    // Draw outer dark ring, progressively lighter toward center
+    const steps = 10;
+    for (let i = steps; i >= 1; i--) {
+      const outerR = radius * (i / steps) + radius * 0.3;
+      const alpha = darkness * (i / steps);
+      this.visionMask.fillStyle(0x0c1626, alpha);
+      this.visionMask.fillRect(left, top, w, h);
+      // "Erase" center circle by drawing transparent over it
+      this.visionMask.fillStyle(0x0c1626, 0);
+      this.visionMask.fillCircle(px, py, outerR);
+    }
+
+    // Simplify: just draw one dark overlay with a circular hole
+    this.visionMask.clear();
+
+    // Use a simpler approach: dark rectangle + alpha mask
+    // Phaser doesn't support true alpha masking easily with graphics,
+    // so we approximate with concentric rings
+    const ringCount = 6;
+    for (let i = ringCount; i >= 0; i--) {
+      const r = radius + (radius * 0.5 * i) / ringCount;
+      const alpha = darkness * ((ringCount - i) / ringCount);
+      if (alpha < 0.01) continue;
+
+      this.visionMask.fillStyle(0x0c1626, alpha * 0.3);
+      // Draw 4 rectangles around the circle (top, bottom, left, right)
+      // Top band
+      this.visionMask.fillRect(left, top, w, Math.max(0, py - r - top));
+      // Bottom band
+      const bottomY = py + r;
+      this.visionMask.fillRect(left, bottomY, w, Math.max(0, top + h - bottomY));
+      // Left band
+      this.visionMask.fillRect(left, py - r, Math.max(0, px - r - left), r * 2);
+      // Right band
+      const rightX = px + r;
+      this.visionMask.fillRect(rightX, py - r, Math.max(0, left + w - rightX), r * 2);
+    }
+
+    // Night: add dark corners that the rectangle bands miss
+    if (isNight) {
+      this.visionMask.fillStyle(0x0c1626, darkness);
+      // Full overlay outside vision
+      const outerR = radius * 1.2;
+      this.visionMask.fillRect(left, top, w, Math.max(0, py - outerR - top));
+      this.visionMask.fillRect(left, py + outerR, w, Math.max(0, top + h - py - outerR));
+      this.visionMask.fillRect(left, py - outerR, Math.max(0, px - outerR - left), outerR * 2);
+      this.visionMask.fillRect(px + outerR, py - outerR, Math.max(0, left + w - px - outerR), outerR * 2);
+    }
+  }
+}
