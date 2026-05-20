@@ -12,6 +12,7 @@ import { deerAiSystem } from '@/ecs/systems/deer-ai-system';
 import { createDeathSystem } from '@/ecs/systems/death-system';
 import { InputAdapter } from '@/input/input-adapter';
 import { DayNightCycle, Phase } from '@/gameplay/day-night-cycle';
+import { createVisionProfile } from '@/gameplay/vision';
 import { ResourceManager, ResourceKind } from '@/gameplay/resource-manager';
 import { VillageGrid, BuildingType } from '@/gameplay/village-grid';
 import { WaveSpawner } from '@/gameplay/wave-spawner';
@@ -19,7 +20,7 @@ import { EventBus } from '@/events/event-bus';
 import type { GameEvents } from '@/events/types';
 import { LONGSWORD } from '@/config/weapons';
 import { BASIC_ZOMBIE } from '@/config/enemies';
-import { PLAYER, GATHERING, BONFIRE, VISION } from '@/config/balance';
+import { PLAYER, GATHERING, BONFIRE } from '@/config/balance';
 import { TILE_SIZE, VILLAGE_GRID_SIZE } from '@/config/constants';
 import { HUD } from '@/ui/hud';
 import { GameOverScreen } from '@/ui/game-over';
@@ -601,10 +602,7 @@ export class GameScene extends Phaser.Scene {
   private drawVision(): void {
     const px = Position.x[this.playerEid]!;
     const py = Position.y[this.playerEid]!;
-    const isNight = this.cycle.phase === Phase.Night || this.cycle.phase === Phase.Evening;
-    const radiusTiles = isNight ? VISION.nightRadiusTiles : VISION.dayRadiusTiles;
-    const radius = radiusTiles * TILE_SIZE;
-    const darkness = isNight ? 0.85 : 0.35;
+    const profile = createVisionProfile(this.cycle.phase, TILE_SIZE);
 
     const cam = this.cameras.main;
     const left = cam.scrollX;
@@ -613,33 +611,20 @@ export class GameScene extends Phaser.Scene {
     const h = cam.height;
 
     this.visionMask.clear();
+    this.visionMask.setBlendMode(Phaser.BlendModes.NORMAL);
+    if (profile.darkness <= 0) return;
 
-    // Outer darkness: 4 rectangles forming a frame around a central opening
-    const outerR = radius;
-    this.visionMask.fillStyle(0x0c1626, darkness);
-    // Top
-    this.visionMask.fillRect(left, top, w, Math.max(0, py - outerR - top));
-    // Bottom
-    this.visionMask.fillRect(left, py + outerR, w, Math.max(0, top + h - py - outerR));
-    // Left
-    this.visionMask.fillRect(left, py - outerR, Math.max(0, px - outerR - left), outerR * 2);
-    // Right
-    this.visionMask.fillRect(px + outerR, py - outerR, Math.max(0, left + w - px - outerR), outerR * 2);
+    const r = profile.fadeRadius;
+    this.visionMask.fillStyle(profile.tint, profile.darkness);
+    this.visionMask.fillRect(left, top, w, Math.max(0, py - r - top));
+    this.visionMask.fillRect(left, py + r, w, Math.max(0, top + h - py - r));
+    this.visionMask.fillRect(left, py - r, Math.max(0, px - r - left), r * 2);
+    this.visionMask.fillRect(px + r, py - r, Math.max(0, left + w - px - r), r * 2);
 
-    // Corner fill (rectangles leave corners uncovered)
-    // Draw dark triangles as small rects at corners of the opening
-    const cornerSize = outerR * 0.3;
-    for (let cx = -1; cx <= 1; cx += 2) {
-      for (let cy = -1; cy <= 1; cy += 2) {
-        const cornerX = px + cx * outerR;
-        const cornerY = py + cy * outerR;
-        this.visionMask.fillStyle(0x0c1626, darkness * 0.7);
-        this.visionMask.fillRect(
-          cx > 0 ? cornerX - cornerSize : cornerX,
-          cy > 0 ? cornerY - cornerSize : cornerY,
-          cornerSize, cornerSize,
-        );
-      }
+    const ringWidth = Math.max(4, (profile.fadeRadius - profile.clearRadius) / profile.fadeSteps.length);
+    for (const step of profile.fadeSteps) {
+      this.visionMask.lineStyle(ringWidth, profile.tint, step.alpha);
+      this.visionMask.strokeCircle(px, py, step.radius);
     }
   }
 }
