@@ -3,6 +3,7 @@ import path from 'node:path';
 
 export default defineConfig({
   root: '.',
+  base: './',
   publicDir: 'public',
   server: {
     port: 5173,

@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "type": "module",
-  "main": "main.js",
+  "main": "main.cjs",
   "description": "Snowfield colony survival + auto-battler. Fantasy medieval VS-like.",
   "scripts": {
     "dev": "vite",
@@ -35,7 +35,7 @@
       "artifactName": "6IL_v0.2.0_portable.exe"
     },
     "files": [
-      "main.js",
+      "main.cjs",
       "dist/**/*"
     ],
     "directories": {
