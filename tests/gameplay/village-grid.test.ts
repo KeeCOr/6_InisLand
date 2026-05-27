@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { VillageGrid, BuildingType } from '@/gameplay/village-grid';
+import { VillageGrid, BuildingType, getFenceRingForBounds } from '@/gameplay/village-grid';
 
 describe('VillageGrid', () => {
   it('creates a 24x24 grid', () => {
@@ -59,5 +59,20 @@ describe('VillageGrid', () => {
     const px = grid.toPixel(12, 12);
     expect(px.x).toBe(12 * 32);
     expect(px.y).toBe(12 * 32);
+  });
+
+  it('builds a fence ring around all provided building bounds', () => {
+    const positions = getFenceRingForBounds([
+      { minX: 11, minY: 11, maxX: 12, maxY: 12 },
+      { minX: 5, minY: 6, maxX: 8, maxY: 9 },
+      { minX: 16, minY: 14, maxX: 19, maxY: 17 },
+    ], 1);
+
+    expect(positions).toContainEqual([4, 5]);
+    expect(positions).toContainEqual([20, 18]);
+    expect(positions).toContainEqual([12, 5]);
+    expect(positions).toContainEqual([4, 12]);
+    expect(positions).not.toContainEqual([11, 11]);
+    expect(positions).not.toContainEqual([5, 6]);
   });
 });

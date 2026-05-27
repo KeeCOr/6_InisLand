@@ -14,7 +14,7 @@ import { InputAdapter } from '@/input/input-adapter';
 import { DayNightCycle, Phase } from '@/gameplay/day-night-cycle';
 import { createVisionProfile } from '@/gameplay/vision';
 import { ResourceManager, ResourceKind } from '@/gameplay/resource-manager';
-import { VillageGrid, BuildingType } from '@/gameplay/village-grid';
+import { VillageGrid, BuildingType, getFenceRingForBounds } from '@/gameplay/village-grid';
 import { WaveSpawner } from '@/gameplay/wave-spawner';
 import { EventBus } from '@/events/event-bus';
 import type { GameEvents } from '@/events/types';
@@ -29,6 +29,13 @@ import { createRng } from '@/util/rng';
 const SNOWFIELD_SIZE = 2400;
 const VILLAGE_PX = VILLAGE_GRID_SIZE * TILE_SIZE; // 768
 const VILLAGE_OFFSET = (SNOWFIELD_SIZE - VILLAGE_PX) / 2; // 816
+const VILLAGE_DECOR_BOUNDS = [
+  { minX: 5, minY: 6, maxX: 8, maxY: 9 },
+  { minX: 16, minY: 14, maxX: 19, maxY: 17 },
+  { minX: 4, minY: 14, maxX: 6, maxY: 16 },
+  { minX: 18, minY: 8, maxX: 20, maxY: 10 },
+  { minX: 11, minY: 11, maxX: 12, maxY: 12 },
+] as const;
 
 const zombieQuery = defineQuery([ZombieTag, Health]);
 
@@ -309,12 +316,7 @@ export class GameScene extends Phaser.Scene {
   // --- Village ---
 
   private placeStartingBarricades(): void {
-    const positions = [
-      [10, 10], [11, 10], [12, 10], [13, 10],
-      [10, 13], [11, 13], [12, 13], [13, 13],
-      [10, 11], [10, 12],
-      [13, 11], [13, 12],
-    ];
+    const positions = getFenceRingForBounds(VILLAGE_DECOR_BOUNDS, 1, VILLAGE_GRID_SIZE);
     for (const [gx, gy] of positions) {
       this.village.place(BuildingType.Barricade, gx!, gy!);
     }
@@ -380,10 +382,10 @@ export class GameScene extends Phaser.Scene {
     const villageCenterX = VILLAGE_OFFSET + VILLAGE_PX / 2;
     const villageCenterY = VILLAGE_OFFSET + VILLAGE_PX / 2;
     const glow = this.add.sprite(villageCenterX, villageCenterY, 'warm_glow').setDepth(30).setScale(1.7);
-    const cabinA = this.add.sprite(villageCenterX - 180, villageCenterY - 135, 'cabin').setDepth(35);
-    const cabinB = this.add.sprite(villageCenterX + 185, villageCenterY + 120, 'cabin').setDepth(35).setScale(0.92);
-    const crates = this.add.sprite(villageCenterX - 230, villageCenterY + 120, 'crate_stack').setDepth(36);
-    const logs = this.add.sprite(villageCenterX + 230, villageCenterY - 90, 'log_stack').setDepth(36);
+    const cabinA = this.add.sprite(villageCenterX - 176, villageCenterY - 144, 'cabin').setDepth(35);
+    const cabinB = this.add.sprite(villageCenterX + 176, villageCenterY + 112, 'cabin').setDepth(35).setScale(0.92);
+    const crates = this.add.sprite(villageCenterX - 240, villageCenterY + 112, 'crate_stack').setDepth(36);
+    const logs = this.add.sprite(villageCenterX + 240, villageCenterY - 112, 'log_stack').setDepth(36);
     this.villageSprites.push(glow, cabinA, cabinB, crates, logs);
 
     for (const b of this.village.getBuildings()) {

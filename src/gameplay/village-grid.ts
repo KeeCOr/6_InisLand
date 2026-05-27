@@ -24,6 +24,37 @@ export interface Building {
   maxHp: number;
 }
 
+export interface GridBounds {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+}
+
+export function getFenceRingForBounds(
+  bounds: readonly GridBounds[],
+  margin = 1,
+  gridSize = VILLAGE_GRID_SIZE,
+): [number, number][] {
+  if (bounds.length === 0) return [];
+
+  const minX = Math.max(0, Math.min(...bounds.map((b) => b.minX)) - margin);
+  const minY = Math.max(0, Math.min(...bounds.map((b) => b.minY)) - margin);
+  const maxX = Math.min(gridSize - 1, Math.max(...bounds.map((b) => b.maxX)) + margin);
+  const maxY = Math.min(gridSize - 1, Math.max(...bounds.map((b) => b.maxY)) + margin);
+
+  const positions: [number, number][] = [];
+  for (let x = minX; x <= maxX; x++) {
+    positions.push([x, minY]);
+    if (maxY !== minY) positions.push([x, maxY]);
+  }
+  for (let y = minY + 1; y < maxY; y++) {
+    positions.push([minX, y]);
+    if (maxX !== minX) positions.push([maxX, y]);
+  }
+  return positions;
+}
+
 export class VillageGrid {
   readonly size = VILLAGE_GRID_SIZE;
   private readonly cells: (Building | null)[][] = [];
