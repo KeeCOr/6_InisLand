@@ -2,11 +2,13 @@
 
 This pass adds the requested weapon variants and mecha zombie direction.
 
+Important correction: the protagonist direction is a red-haired girl. Runtime candidates now use the existing red-haired girl sheets in `public/assets/characters/player_survivor_axe.png` and `public/assets/characters/player_survivor_bow.png`.
+
 ## Files
 
 | File | Contents |
 |---|---|
-| `main_character_axe_bow_64_concept.png` | Main character axe version and bow version, each with idle/action 64x64 concept poses |
+| `main_character_axe_bow_64_concept.png` | Superseded concept pass. Do not treat this as the final protagonist identity if it conflicts with the red-haired girl direction |
 | `mecha_zombie_64_concept.png` | Mecha zombie enemy with idle/walk/attack 64x64 concept poses |
 
 ## Notes

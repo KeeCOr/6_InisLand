@@ -221,7 +221,7 @@ export class GameScene extends Phaser.Scene {
     Combat.cooldown[eid] = LONGSWORD.cooldownMs;
     Combat.lastAttackTime[eid] = 0;
 
-    const sprite = this.add.sprite(cx, cy, 'player').setDepth(100);
+    const sprite = this.add.sprite(cx, cy, 'player', 0).setDepth(100).setScale(0.48);
     this.world.sprites.set(eid, sprite);
     return eid;
   }

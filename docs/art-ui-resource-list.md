@@ -8,7 +8,7 @@ Last updated: 2026-05-28
 
 | ID | 우선순위 | 리소스 | 파일명 제안 | 필요 구성 |
 |---|---:|---|---|---|
-| IMG-001 | P0 | 플레이어 생존자 | `public/assets/characters/player_survivor.png` | idle, walk 4방향, attack, hit, death |
+| IMG-001 | P0 | 플레이어 생존자: 붉은 머리 여자아이 | `public/assets/characters/player_survivor_axe.png`, `public/assets/characters/player_survivor_bow.png` | idle, walk 4방향, attack, hit, death. 현재 도끼 버전은 게임 적용, 활 버전은 무기 변형 후보 |
 | IMG-002 | P0 | 기본 좀비 | `public/assets/characters/zombie_basic.png` | walk, attack, hit, death |
 | IMG-003 | P0 | 사슴 | `public/assets/characters/animal_deer.png` | idle, run, hit, death, carcass |
 | IMG-004 | P0 | 모닥불 | `public/assets/buildings/campfire_levels.png` | L1-L5, 켜짐, 약해짐, 꺼짐 |

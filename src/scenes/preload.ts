@@ -32,6 +32,14 @@ export class PreloadScene extends Phaser.Scene {
 
   preload(): void {
     this.load.image('snow_tile', 'assets/tilesets/snowfield_base.png');
+    this.load.spritesheet('player', 'assets/characters/player_survivor_axe.png', {
+      frameWidth: 96,
+      frameHeight: 96,
+    });
+    this.load.spritesheet('player_bow', 'assets/characters/player_survivor_bow.png', {
+      frameWidth: 96,
+      frameHeight: 96,
+    });
   }
 
   create(): void {
@@ -72,19 +80,6 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   private createCharacters(): void {
-    texture(this, 'player', 32, 36, (ctx) => {
-      rect(ctx, '#151016', 12, 4, 10, 6);
-      rect(ctx, '#b8442f', 9, 5, 14, 12);
-      rect(ctx, '#f1b58b', 12, 12, 9, 8);
-      rect(ctx, '#21191a', 10, 20, 13, 12);
-      rect(ctx, '#6e4d36', 8, 19, 17, 6);
-      rect(ctx, '#c8d3dd', 23, 13, 7, 3);
-      rect(ctx, '#784b34', 7, 31, 7, 4);
-      rect(ctx, '#784b34', 18, 31, 7, 4);
-      rect(ctx, '#f2d2a8', 14, 15, 3, 2);
-      stroke(ctx, '#120e12', 7, 4, 19, 31);
-    });
-
     texture(this, 'zombie', 30, 34, (ctx) => {
       rect(ctx, '#111820', 8, 5, 15, 8);
       rect(ctx, '#303946', 7, 12, 17, 14);

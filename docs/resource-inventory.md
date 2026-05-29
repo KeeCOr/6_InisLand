@@ -20,7 +20,7 @@ Last updated: 2026-05-20
 
 | Texture key | Current source | Current size | In-game use | Asset status |
 | --- | --- | ---: | --- | --- |
-| `player` | Generated solid rectangle | 24x24 | 플레이어 캐릭터 | Missing final sprite |
+| `player` | `public/assets/characters/player_survivor_axe.png` | 96x96 frame sheet | 플레이어 캐릭터 | Partial red-haired girl axe sheet applied |
 | `zombie` | Generated solid rectangle | 20x20 | 기본 좀비 | Missing final sprite |
 | `deer` | Generated solid rectangle | 18x18 | 사슴/고기 획득 대상 | Missing final sprite |
 | `tree` | Generated solid rectangle | 24x32 | 나무 자원 노드 | Missing final sprite |
@@ -36,7 +36,7 @@ Last updated: 2026-05-20
 
 | Priority | Resource | Count | Exists? | Current fallback | Notes |
 | --- | --- | ---: | --- | --- | --- |
-| P0 | Player idle/move sprite | 1 set | No | `player` rectangle | 4-direction or 8-direction pixel animation recommended. |
+| P0 | Player idle/move sprite | 1 set | Partial | `public/assets/characters/player_survivor_axe.png`, `public/assets/characters/player_survivor_bow.png` | Red-haired girl protagonist variants are available; axe version is applied to the playable slice. |
 | P0 | Basic zombie sprite | 1 set | No | `zombie` rectangle | Needs readable silhouette at 20-32 px. |
 | P0 | Deer sprite | 1 set | No | `deer` rectangle | Daytime resource target, should be visually distinct from enemies. |
 | P0 | Tree resource sprite | 1 | No | `tree` rectangle | Should communicate gatherable wood. |
