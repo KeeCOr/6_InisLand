@@ -20,6 +20,10 @@ namespace IL6
 
         private void Awake()
         {
+            // Door.TryHookPlayer() 이 FindWithTag("Player") 를 사용하므로 반드시 설정
+            if (!gameObject.CompareTag("Player"))
+                gameObject.tag = "Player";
+
             _rb = GetComponent<Rigidbody2D>();
             _input = GetComponent<InputReader>();
             _balance = BalanceConfig.Instance;

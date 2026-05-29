@@ -59,7 +59,13 @@ namespace IL6
 
         private void TryHookPlayer()
         {
+            // 태그로 먼저 찾고, 없으면 컴포넌트로 폴백
             var p = GameObject.FindWithTag("Player");
+            if (p == null)
+            {
+                var pc = Object.FindFirstObjectByType<PlayerController>();
+                if (pc != null) p = pc.gameObject;
+            }
             if (p == null) return;
             var col = p.GetComponent<Collider2D>();
             if (col == null) return;

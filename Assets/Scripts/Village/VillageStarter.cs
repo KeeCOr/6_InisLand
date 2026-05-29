@@ -141,16 +141,16 @@ namespace IL6
 
         public static GameObject SpawnGate(Vector3 pos)
         {
-            // 문 — 좌우 기둥 + 빈 가운데. 콜라이더는 좁은 박스로, 플레이어는 통과.
+            // 문 — 플레이어/동료는 통과(Door.IgnoreCollision), 좀비는 차단
             var go = new GameObject("Gate");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(0.95f, 0.18f, 1f);
+            go.transform.localScale = new Vector3(1.0f, 0.4f, 1f);
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 4;
 
             var col = go.AddComponent<BoxCollider2D>();
-            col.size = Vector2.one;
+            col.size = new Vector2(0.95f, 0.8f);
 
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.78f, 0.62f, 0.30f); // 골드 — 입구임을 표시
@@ -187,8 +187,8 @@ namespace IL6
             var go = new GameObject("Fence");
             go.transform.position = pos;
             go.transform.rotation = Quaternion.Euler(0, 0, rotDeg);
-            // 수평 펜스 스프라이트(64px@64PPU=1unit) 기준: 1.0u 폭 × 0.5u 높이
-            go.transform.localScale = new Vector3(1.0f, 0.5f, 1f);
+            // 수평 펜스 스프라이트(64px@64PPU=1unit) 기준: 1.0u 폭 × 0.4u 높이
+            go.transform.localScale = new Vector3(1.0f, 0.4f, 1f);
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
@@ -197,7 +197,8 @@ namespace IL6
             if (fSpr != null) sr.sprite = fSpr;
 
             var col = go.AddComponent<BoxCollider2D>();
-            col.size = Vector2.one;
+            // 시각 크기보다 살짝 작게 — 플레이어가 문 옆에서 걸리지 않도록
+            col.size = new Vector2(0.9f, 0.8f);
 
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.55f, 0.4f, 0.22f);
