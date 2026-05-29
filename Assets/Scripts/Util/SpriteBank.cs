@@ -49,6 +49,36 @@ namespace IL6
             _        => CompanionUncle(),
         };
 
+        // ── 프랍 (나무 / 바위 / 장식물) ──────────────────────────────────────────
+        public static Sprite PineTree()       => Load("Props/pine_tree");
+        public static Sprite BareTree()       => Load("Props/bare_tree");
+        public static Sprite SnowRocks()      => Load("Props/snow_rocks");
+        public static Sprite SmallRocks()     => Load("Props/small_rocks");
+        public static Sprite Stump()          => Load("Props/stump");
+        public static Sprite SnowBush()       => Load("Props/snow_bush");
+        public static Sprite Logs()           => Load("Props/logs");
+
+        // ── 건물 ─────────────────────────────────────────────────────────────────
+        public static Sprite Campfire()       => Load("Props/campfire");
+        public static Sprite Cabin()          => Load("Props/cabin");
+        public static Sprite Watchtower()     => Load("Props/watchtower");
+        public static Sprite FenceVertical()  => Load("Props/fence_vertical");
+        public static Sprite SnowFenceH()     => Load("Props/snow_fence_h");
+        public static Sprite WoodBarricade()  => Load("Props/wood_barricade");
+        public static Sprite StoneWall()      => Load("Props/stone_wall");
+        public static Sprite SpikeBarricade() => Load("Props/spike_barricade");
+
+        // ── BuildingKind → 스프라이트 ─────────────────────────────────────────────
+        public static Sprite BuildingByKind(BuildingKind k) => k switch
+        {
+            BuildingKind.Campfire    => Campfire(),
+            BuildingKind.Fence       => FenceVertical(),
+            BuildingKind.Barricade   => WoodBarricade(),
+            BuildingKind.Watchtower  => Watchtower(),
+            BuildingKind.House       => Cabin(),
+            _                        => null,
+        };
+
         // ── AnimalArchetype 이름 → 스프라이트 ────────────────────────────────────
         public static Sprite AnimalByName(string procName) => procName switch
         {

@@ -163,6 +163,9 @@ namespace IL6
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 4;
+            var rockSpr = SpriteBank.SnowRocks();
+            if (rockSpr != null) sr.sprite = rockSpr;
+
             var col = go.AddComponent<CircleCollider2D>();
             col.radius = 0.35f;
 
@@ -196,6 +199,8 @@ namespace IL6
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 5;
+            var treeSpr = SpriteBank.PineTree();
+            if (treeSpr != null) sr.sprite = treeSpr;
 
             var col = go.AddComponent<CircleCollider2D>();
             col.radius = 0.4f;

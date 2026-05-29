@@ -191,6 +191,8 @@ namespace IL6
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
+            var fSpr = SpriteBank.FenceVertical();
+            if (fSpr != null) sr.sprite = fSpr;
 
             var col = go.AddComponent<BoxCollider2D>();
             col.size = Vector2.one;

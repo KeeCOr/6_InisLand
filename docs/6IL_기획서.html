@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InisLand — 눈보라 마을 기획서</title>
+<style>
+  :root {
+    --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+    --border: #30363d; --text: #e6edf3; --text-dim: #8b949e;
+    --blue: #58a6ff; --green: #3fb950; --orange: #f0883e;
+    --red: #f85149; --purple: #bc8cff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system,'Segoe UI','Noto Sans KR',sans-serif; background:var(--bg); color:var(--text); line-height:1.7; }
+  .hero {
+    background: linear-gradient(135deg, #0d2137 0%, #0d1117 50%, #1a0d2e 100%);
+    padding: 60px 40px 48px; text-align:center; position:relative; overflow:hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background: radial-gradient(ellipse at 30% 60%, rgba(88,166,255,0.07) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 40%, rgba(188,140,255,0.05) 0%, transparent 60%);
+  }
+  .hero-label { font-size:.75rem; color:var(--text-dim); letter-spacing:.15em; text-transform:uppercase; margin-bottom:12px; position:relative; }
+  .hero h1 { font-size:2.4rem; font-weight:800; color:var(--text); position:relative; margin-bottom:10px; }
+  .hero h1 span { color:var(--blue); }
+  .hero .subtitle { font-size:1rem; color:var(--text-dim); position:relative; max-width:540px; margin:0 auto 24px; }
+  .hero .quote { font-style:italic; color:var(--purple); font-size:.9rem; margin-bottom:20px; position:relative; }
+  .badges { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; position:relative; }
+  .badge { padding:4px 12px; border-radius:20px; font-size:.78rem; font-weight:500; border:1px solid; }
+  .badge-blue { background:rgba(88,166,255,.1); color:var(--blue); border-color:rgba(88,166,255,.3); }
+  .badge-green { background:rgba(63,185,80,.1); color:var(--green); border-color:rgba(63,185,80,.3); }
+  .badge-purple { background:rgba(188,140,255,.1); color:var(--purple); border-color:rgba(188,140,255,.3); }
+  .badge-orange { background:rgba(240,136,62,.1); color:var(--orange); border-color:rgba(240,136,62,.3); }
+
+  .preview-wrap { max-width:900px; margin:28px auto 0; position:relative; padding:0 24px; }
+  .preview-wrap img { width:100%; border-radius:10px; border:1px solid var(--border); display:block; }
+
+  .container { max-width:900px; margin:0 auto; padding:40px 24px; }
+  .section { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:20px; }
+  .section h2 { font-size:1.15rem; font-weight:700; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }
+  .section h3 { font-size:.95rem; font-weight:600; color:var(--blue); margin:16px 0 8px; }
+  p { font-size:.9rem; color:var(--text-dim); margin-bottom:10px; }
+  ul { padding-left:20px; }
+  li { font-size:.88rem; color:var(--text-dim); margin-bottom:4px; }
+  strong { color:var(--text); }
+
+  .loop-flow { display:flex; flex-direction:column; gap:0; margin:12px 0; }
+  .loop-step { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:12px 16px; font-size:.87rem; position:relative; }
+  .loop-step + .loop-step { margin-top:6px; }
+  .loop-step .phase { font-weight:700; color:var(--blue); }
+  .loop-step .phase.night { color:var(--purple); }
+  .loop-step .phase.dawn { color:var(--orange); }
+  .loop-arrow { text-align:center; color:var(--text-dim); font-size:.8rem; padding:2px 0; }
+
+  table { width:100%; border-collapse:collapse; font-size:.85rem; margin:10px 0; }
+  th { background:var(--surface2); padding:8px 12px; text-align:left; color:var(--text-dim); font-weight:600; border-bottom:1px solid var(--border); }
+  td { padding:8px 12px; border-bottom:1px solid var(--border); color:var(--text-dim); }
+  tr:last-child td { border-bottom:none; }
+
+  .kpi-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; }
+  .kpi-card { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:14px 16px; }
+  .kpi-card .num { font-size:1.5rem; font-weight:700; color:var(--green); }
+  .kpi-card .label { font-size:.78rem; color:var(--text-dim); margin-top:2px; }
+
+  .changelog tr:first-child { background:rgba(63,185,80,.05); }
+  .footer { text-align:center; padding:24px; color:var(--text-dim); font-size:.78rem; border-top:1px solid var(--border); margin-top:8px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">Game Design Document · 6_IL · v0.2.0</div>
+  <h1>Inis<span>Land</span> — 눈보라 마을</h1>
+  <p class="quote">"끝없는 겨울. 마지막 마을의 마지막 수호자."</p>
+  <p class="subtitle">뱀서바이벌 × 낮/밤 베이스 디펜스 × 탑다운 설원 생존</p>
+  <div class="badges">
+    <span class="badge badge-blue">⚡ Phaser 3 + TypeScript</span>
+    <span class="badge badge-purple">🧬 bitecs ECS</span>
+    <span class="badge badge-green">🧪 Vitest 72 tests</span>
+    <span class="badge badge-orange">📦 Electron Portable</span>
+  </div>
+</div>
+
+<div class="preview-wrap">
+  <img src="./6IL_gameplay_preview.png" alt="플레이 미리보기">
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <h2>🎯 문제 정의</h2>
+    <p>"혼자서도 짧은 세션 안에 <strong>생존과 경영 두 재미</strong>를 모두 느낄 수 있는 게임이 없다."</p>
+    <p>낮에는 설원 탐험가, 밤에는 마을 수호자 — 두 역할이 하나의 세션(15~25분) 안에서 자연스럽게 전환된다.</p>
+  </div>
+
+  <div class="section">
+    <h2>👤 페르소나</h2>
+    <p><strong>이진혁, 27세, 직장인</strong></p>
+    <ul>
+      <li>자투리 시간(20~30분)에 게임. 긴 캠페인 불가.</li>
+      <li>로그라이크/생존류 선호, 복잡한 조작은 부담.</li>
+      <li>"오늘 밤은 버텼다"는 성취감이 핵심 동기.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>🔄 코어 루프</h2>
+    <div class="loop-flow">
+      <div class="loop-step"><span class="phase">☀ 낮 (40s+)</span> — 설원 탐험 · 나무/돌/고기 채집 · 동물 사냥 · 동료 영입 · 건물 건설</div>
+      <div class="loop-arrow">↓ 저녁 — 자동 텔레포트 (플레이어+동료+펫 마을로)</div>
+      <div class="loop-step"><span class="phase night">🌙 밤 (40s+)</span> — 좀비 웨이브 격퇴 · 모닥불 방어 · 바리케이드 사수 · 25킬마다 보스 등장</div>
+      <div class="loop-arrow">↓ 새벽 — HP 전회복 · 건물 +25%HP · NPC 1명 스폰 · 자동 저장</div>
+      <div class="loop-step"><span class="phase dawn">🌅 다음 낮</span> — 레벨 업 (페이즈 길이 ×1.25), 반복</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🏗️ 건물 시스템 (10종)</h2>
+    <table>
+      <thead><tr><th>건물</th><th>역할</th><th>HP</th><th>비용</th></tr></thead>
+      <tbody>
+        <tr><td>🔥 Campfire</td><td>좀비 화상 오라(2.5u DPS 6) + 마을 온도 유지</td><td>280</td><td>5W</td></tr>
+        <tr><td>🏠 House</td><td>인구 한도 +4 (동료 영입 필수)</td><td>140</td><td>6W</td></tr>
+        <tr><td>🥕 Fence</td><td>외곽 차단 (마을 크기에 따라 자동 확장)</td><td>14</td><td>1W</td></tr>
+        <tr><td>📦 Storage</td><td>자원 캡 +50, 농장 한도 +1</td><td>200</td><td>8W</td></tr>
+        <tr><td>🌾 Farm</td><td>식량 생산 (노인 워커 +5 보너스)</td><td>90</td><td>6W</td></tr>
+        <tr><td>🏹 Watchtower</td><td>야간 자동 사격 + 동료 데미지 ×1.5</td><td>160</td><td>8W+4S</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>👥 동료 / NPC 아키타입</h2>
+    <table>
+      <thead><tr><th>타입</th><th>특성</th></tr></thead>
+      <tbody>
+        <tr><td>아이</td><td>이동 빠름 · 전투력 낮음 · 비전투 역할</td></tr>
+        <tr><td>노인</td><td>이동 느림 · 농장 수확 +5 보너스</td></tr>
+        <tr><td>사냥꾼</td><td>원거리 공격 특화</td></tr>
+        <tr><td>치유사</td><td>주변 아군 HP 회복</td></tr>
+        <tr><td>무사</td><td>근접 전투 특화 · 바리케이드 방어</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>📊 성공 KPI</h2>
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="num">50%</div><div class="label">Day 3 생존율 목표</div></div>
+      <div class="kpi-card"><div class="num">15~25분</div><div class="label">목표 세션 길이</div></div>
+      <div class="kpi-card"><div class="num">7/10</div><div class="label">밤 격퇴 성취감 설문 목표</div></div>
+      <div class="kpi-card"><div class="num">72</div><div class="label">Vitest 단위 테스트 수</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🛠️ 기술 스택</h2>
+    <ul>
+      <li><strong>렌더링</strong>: Phaser 3.60 (Canvas 2D)</li>
+      <li><strong>ECS</strong>: bitecs — 유닛/자원/이펙트 컴포넌트 분리</li>
+      <li><strong>언어</strong>: TypeScript 5.x + Vite 번들러</li>
+      <li><strong>패키징</strong>: Electron 35 + electron-builder (Windows Portable)</li>
+      <li><strong>테스트</strong>: Vitest</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>📝 변경 이력</h2>
+    <table class="changelog">
+      <thead><tr><th>버전</th><th>날짜</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td>v0.2.0</td><td>2026-05-29</td><td>UX 온보딩 씬 추가 (낮/밤 페이즈 2슬라이드 설명)</td></tr>
+        <tr><td>v0.1.0</td><td>2026-05-20</td><td>ECS 기반 프로토타입 — 낮/밤 사이클, 자원 수집, 좀비 웨이브</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<div class="footer">InisLand — 눈보라 마을 기획서 v0.2.0 · 2026-05-29 · 오진우</div>
+</body>
+</html>
