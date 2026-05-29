@@ -218,6 +218,8 @@ namespace IL6
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 4;
+            var cSpr = SpriteBank.Campfire();
+            if (cSpr != null) sr.sprite = cSpr;
 
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(1f, 0.5f, 0.1f);

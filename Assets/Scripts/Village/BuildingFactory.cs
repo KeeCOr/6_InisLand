@@ -5,10 +5,14 @@ namespace IL6
     /// <summary>
     /// 모든 건물 프리팹/런타임 스폰을 한 곳에 모아둔 정적 팩토리.
     /// SimpleHud / ConstructionSite OnComplete / PrefabGenerator 모두 여기서 호출.
-    /// 기존 SimpleHud 의 SpawnHouse/SpawnFarm/... 인스턴스 메서드를 이쪽으로 이전.
     /// </summary>
     public static class BuildingFactory
     {
+        private static void ApplySprite(SpriteRenderer sr, Sprite spr)
+        {
+            if (spr != null) sr.sprite = spr;
+        }
+
         public static GameObject SpawnBarricade(Vector3 pos)
         {
             var go = new GameObject("Barricade");
@@ -16,6 +20,7 @@ namespace IL6
             go.transform.localScale = new Vector3(1.2f, 0.4f, 1f);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
+            ApplySprite(sr, SpriteBank.WoodBarricade());
             var col = go.AddComponent<BoxCollider2D>();
             col.size = Vector2.one;
             var cf = go.AddComponent<ColorFallback>();
@@ -33,6 +38,7 @@ namespace IL6
             go.transform.localScale = new Vector3(1.1f, 1.0f, 1f);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
+            ApplySprite(sr, SpriteBank.Cabin());
             var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.85f, 0.6f, 0.4f);
@@ -49,6 +55,7 @@ namespace IL6
             go.transform.localScale = new Vector3(1.0f, 0.9f, 1f);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
+            ApplySprite(sr, SpriteBank.Logs());
             var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.55f, 0.45f, 0.3f);
@@ -81,6 +88,7 @@ namespace IL6
             go.transform.localScale = new Vector3(0.7f, 1.4f, 1f);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 4;
+            ApplySprite(sr, SpriteBank.Watchtower());
             var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.5f, 0.4f, 0.28f);
@@ -115,6 +123,7 @@ namespace IL6
             go.transform.localScale = new Vector3(1.0f, 1.0f, 1f);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
+            ApplySprite(sr, SpriteBank.Cabin());
             var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.55f, 0.4f, 0.25f);
