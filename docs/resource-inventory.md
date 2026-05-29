@@ -27,7 +27,7 @@ Last updated: 2026-05-20
 | `rock` | Generated solid rectangle | 20x16 | 바위 자원 노드 | Missing final sprite |
 | `bonfire` | Generated solid rectangle | 48x48 | 중심 모닥불/방어 오브젝트 | Missing final sprite/effect |
 | `barricade` | Generated solid rectangle | 28x28 | 바리케이드 | Missing final sprite/damage states |
-| `snow_tile` | Generated tile | 32x32 | 설원 배경 | Missing final tile |
+| `snow_tile` | `public/assets/tilesets/snowfield_base.png` | 64x64 | 설원 배경 | Partial base tile applied |
 | `village_tile` | Generated tile | 32x32 | 마을 지면 배경 | Missing final tile |
 
 ## Required For Current Playable Slice
@@ -43,7 +43,7 @@ Last updated: 2026-05-20
 | P0 | Rock resource sprite | 1 | No | `rock` rectangle | Should communicate gatherable stone. |
 | P0 | Bonfire sprite | 1 base + 1 glow/effect | No | `bonfire` rectangle | Core village landmark; high visual priority. |
 | P0 | Barricade sprite | 1 base | No | `barricade` rectangle | Later should gain damaged/broken states. |
-| P0 | Snowfield ground tile | 1-3 tiles | No | `snow_tile` generated tile | Needs subtle variation to avoid flat repetition. |
+| P0 | Snowfield ground tile | 1-3 tiles | Partial | `public/assets/tilesets/snowfield_base.png` | Base 64x64 tile generated and applied; edge/zone variants still needed. |
 | P0 | Village ground tile | 1-3 tiles | No | `village_tile` generated tile | Should distinguish safe zone from snowfield. |
 | P1 | Attack hit effect | 1-2 effects | No | None | Current combat has no visual feedback beyond HP changes/death. |
 | P1 | Gathering progress/impact effect | 1-2 effects | Partial | Graphics progress bar | Add chop/mining hit particles later. |

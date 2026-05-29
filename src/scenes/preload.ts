@@ -30,6 +30,10 @@ export class PreloadScene extends Phaser.Scene {
     super({ key: 'Preload' });
   }
 
+  preload(): void {
+    this.load.image('snow_tile', 'assets/tilesets/snowfield_base.png');
+  }
+
   create(): void {
     this.createTiles();
     this.createCharacters();
@@ -41,19 +45,6 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   private createTiles(): void {
-    texture(this, 'snow_tile', 64, 64, (ctx) => {
-      rect(ctx, '#b8d1e8', 0, 0, 64, 64);
-      rect(ctx, '#c6dcf0', 0, 0, 64, 64);
-      rect(ctx, '#aac5df', 9, 42, 7, 2);
-      rect(ctx, '#8fadca', 18, 45, 4, 2);
-      rect(ctx, '#dcebf6', 35, 12, 12, 3);
-      rect(ctx, '#9fbed9', 45, 50, 8, 2);
-      rect(ctx, '#82a3c4', 58, 23, 2, 2);
-      rect(ctx, '#e2f0f8', 4, 59, 13, 2);
-      rect(ctx, '#b2cce4', 27, 31, 3, 2);
-      rect(ctx, '#d5e7f4', 50, 5, 5, 2);
-    });
-
     texture(this, 'village_tile', 64, 64, (ctx) => {
       rect(ctx, '#b9d0e4', 0, 0, 64, 64);
       rect(ctx, '#c8dceb', 0, 0, 64, 64);
