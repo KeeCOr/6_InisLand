@@ -66,8 +66,8 @@ namespace IL6
 
         private void Start()
         {
-            // 모든 건물에 HpBarUi 자동 부착 (이미 있으면 스킵). 풀체력에서는 자동 숨김.
-            if (GetComponent<HpBarUi>() == null)
+            // 펜스/게이트는 수십 개라 HP 바 제외 — 나머지만 부착 (풀체력에서 자동 숨김)
+            if (Kind != BuildingKind.Fence && GetComponent<HpBarUi>() == null)
             {
                 var hp = gameObject.AddComponent<HpBarUi>();
                 hp.Building = this;
@@ -76,9 +76,8 @@ namespace IL6
                 hp.BgColor = new Color(0.05f, 0.05f, 0.08f, 0.9f);
                 hp.FillColor = Kind switch
                 {
-                    BuildingKind.Campfire => new Color(1f, 0.55f, 0.2f),
+                    BuildingKind.Campfire  => new Color(1f, 0.55f, 0.2f),
                     BuildingKind.Barricade => new Color(0.6f, 0.4f, 0.2f),
-                    BuildingKind.Fence => new Color(0.55f, 0.4f, 0.22f),
                     _ => new Color(0.5f, 0.85f, 0.5f),
                 };
             }
