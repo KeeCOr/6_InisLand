@@ -26,24 +26,37 @@ namespace IL6
         {
             var sr = GetComponent<SpriteRenderer>();
 
-            // 이름 기반 자동 스프라이트 로드 — 씬에 수동 배치된 오브젝트도 적용
+            // 이름 기반 자동 스프라이트 로드 + 스케일 보정 (씬 수동 배치 포함)
             if (sr.sprite == null)
             {
                 string n = gameObject.name.ToLowerInvariant();
-                Sprite auto =
-                    (n.Contains("pine") || (n.Contains("tree") && !n.Contains("bare"))) ? SpriteBank.PineTree() :
-                    n.Contains("bare") ? SpriteBank.BareTree() :
-                    (n.Contains("rock") || n.Contains("stone")) ? SpriteBank.SnowRocks() :
-                    n.Contains("campfire") ? SpriteBank.Campfire() :
-                    n.Contains("fence") ? SpriteBank.FenceVertical() :
-                    (n.Contains("barricade") || n.Contains("wood_bar")) ? SpriteBank.WoodBarricade() :
-                    n.Contains("watchtower") ? SpriteBank.Watchtower() :
-                    n.Contains("cabin") || n.Contains("house") ? SpriteBank.Cabin() :
-                    n.Contains("stump") ? SpriteBank.Stump() :
-                    n.Contains("bush") ? SpriteBank.SnowBush() :
-                    n.Contains("log") ? SpriteBank.Logs() :
-                    null;
-                if (auto != null) sr.sprite = auto;
+                Sprite auto = null;
+                Vector3 autoScale = Vector3.zero; // 0 = 스케일 유지
+
+                if (n.Contains("pine") || (n.Contains("tree") && !n.Contains("bare")))
+                    { auto = SpriteBank.PineTree();      autoScale = Vector3.one * 2.2f; }
+                else if (n.Contains("bare"))
+                    { auto = SpriteBank.BareTree();      autoScale = Vector3.one * 1.8f; }
+                else if (n.Contains("rock") || n.Contains("snow_rock"))
+                    { auto = SpriteBank.SnowRocks();     autoScale = new Vector3(2.0f, 1.5f, 1f); }
+                else if (n.Contains("small_rock"))
+                    { auto = SpriteBank.SmallRocks();    autoScale = Vector3.one * 1.2f; }
+                else if (n.Contains("campfire"))
+                    { auto = SpriteBank.Campfire();      autoScale = Vector3.one * 1.4f; }
+                else if (n.Contains("stump"))
+                    { auto = SpriteBank.Stump();         autoScale = Vector3.one * 1.0f; }
+                else if (n.Contains("bush"))
+                    { auto = SpriteBank.SnowBush();      autoScale = Vector3.one * 1.0f; }
+                else if (n.Contains("log"))
+                    { auto = SpriteBank.Logs();          autoScale = Vector3.one * 1.2f; }
+
+                if (auto != null)
+                {
+                    sr.sprite = auto;
+                    // 스케일이 기본값(1,1,1)이면 권장 스케일 적용
+                    if (autoScale != Vector3.zero && transform.localScale == Vector3.one)
+                        transform.localScale = autoScale;
+                }
             }
 
             if (sr.sprite != null) return;

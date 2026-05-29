@@ -187,11 +187,13 @@ namespace IL6
             var go = new GameObject("Fence");
             go.transform.position = pos;
             go.transform.rotation = Quaternion.Euler(0, 0, rotDeg);
-            go.transform.localScale = new Vector3(0.9f, 0.18f, 1f);
+            // 수평 펜스 스프라이트(64px@64PPU=1unit) 기준: 1.0u 폭 × 0.5u 높이
+            go.transform.localScale = new Vector3(1.0f, 0.5f, 1f);
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
-            var fSpr = SpriteBank.FenceVertical();
+            // 수평 방향 스프라이트 사용 — 폭이 넓은 판자 형태
+            var fSpr = SpriteBank.SnowFenceH();
             if (fSpr != null) sr.sprite = fSpr;
 
             var col = go.AddComponent<BoxCollider2D>();
