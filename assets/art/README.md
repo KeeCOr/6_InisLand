@@ -14,7 +14,6 @@ Use this folder for art direction and production notes. Final game-ready exports
 The 6IL-related visual resources found in `C:\Development\0_KPM` have been copied here:
 
 - `generated/characters/kpm-style/`: character and boss candidate sheets copied from the old KPM sprite set, plus the generated bear sheet.
-- `reference/kpm-stylegen/`: style generation reference images from `0_KPM/.claude/codex-images`.
-- `reference/kpm-imagegen/`: image generation work files from `0_KPM/.claude/tmp/imagegen`.
+- `reference/kpm-imagegen/`: image generation work files copied from the old KPM workspace.
 
 KPM dashboard documents, app files, release builds, and dependency folders were not copied because they are not 6IL game resources.

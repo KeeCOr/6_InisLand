@@ -1,4 +1,4 @@
-# 6IL Image and UI Resource List
+﻿# 6IL Image and UI Resource List
 
 Last updated: 2026-05-28
 
@@ -9,15 +9,15 @@ Last updated: 2026-05-28
 | ID | 우선순위 | 리소스 | 파일명 제안 | 필요 구성 |
 |---|---:|---|---|---|
 | IMG-001 | P0 | 플레이어 생존자: 붉은 머리 여자아이 | `public/assets/characters/player_survivor_axe.png`, `public/assets/characters/player_survivor_bow.png` | idle, walk 4방향, attack, hit, death. 현재 도끼 버전은 게임 적용, 활 버전은 무기 변형 후보 |
-| IMG-002 | P0 | 기본 좀비 | `public/assets/characters/zombie_basic.png` | walk, attack, hit, death |
-| IMG-003 | P0 | 사슴 | `public/assets/characters/animal_deer.png` | idle, run, hit, death, carcass |
-| IMG-004 | P0 | 모닥불 | `public/assets/buildings/campfire_levels.png` | L1-L5, 켜짐, 약해짐, 꺼짐 |
-| IMG-005 | P0 | 나무 바리케이드/울타리 | `public/assets/buildings/barricade_wood.png` | 정상, 손상 1, 손상 2, 파괴 |
+| IMG-002 | P0 | 기본 좀비: 메카 좀비 | `public/assets/characters/27_enemy_01_mecha_zombie.png` | 현재 게임 적용. walk, attack, hit, death 변형 후보 포함 |
+| IMG-003 | P0 | 사슴 | `public/assets/characters/24_animal_01_deer_anim.png` | 현재 게임 적용. idle, run, hit, death, carcass 후보 포함 |
+| IMG-004 | P0 | 모닥불 | `public/assets/props/08_props.png` (`campfire`), `public/assets/fx/41_warm_glow.png` | 현재 게임 적용. L1-L5, 약해짐, 꺼짐 변형은 추가 필요 |
+| IMG-005 | P0 | 나무 바리케이드/울타리 | `public/assets/props/08_props.png`, `public/assets/props/08c_props_fence_trees.png`, `public/assets/buildings/07_items_barricades.png` | 현재 게임 적용. 손상 1, 손상 2, 파괴 변형은 추가 필요 |
 | IMG-006 | P0 | 설원 타일셋 | `public/assets/tilesets/snowfield_base.png` | 눈 평지, 음영, 경계, 발자국 |
 | IMG-007 | P0 | 마을 지면 타일셋 | `public/assets/tilesets/village_ground.png` | 다져진 눈, 길, 목재 바닥, 경계 |
-| IMG-008 | P1 | 오두막/숙소 | `public/assets/buildings/lodging_levels.png` | L1-L5, 손상, 파괴 |
-| IMG-009 | P1 | 창고/상자/장작더미 | `public/assets/props/village_decor_set.png` | 상자, 장작, 깃발, 울타리 소품 |
-| IMG-010 | P1 | 나무/바위/철 광맥 | `public/assets/props/resource_nodes.png` | 기본, 채집 중, 고갈 |
+| IMG-008 | P1 | 오두막/숙소 | `public/assets/props/08_props.png` (`cabin`, `watchtower`) | 현재 게임 적용. L1-L5, 손상, 파괴 변형은 추가 필요 |
+| IMG-009 | P1 | 창고/상자/장작더미 | `public/assets/props/40_crate_stack.png`, `public/assets/buildings/07_items_barricades.png` (`logs`) | 상자, 장작은 현재 게임 적용. 깃발 등 추가 소품 필요 |
+| IMG-010 | P1 | 나무/바위/철 광맥 | `public/assets/props/08_props.png`, `public/assets/props/08b_props_extras.png` | 나무/바위는 현재 게임 적용. 채집 중, 고갈, 철 광맥 변형은 추가 필요 |
 | IMG-011 | P1 | 전투 이펙트 | `public/assets/fx/combat_fx.png` | 베기, 피격, 사망, 얼음 파편 |
 | IMG-012 | P1 | 모닥불/시야 이펙트 | `public/assets/fx/campfire_vision_fx.png` | 불꽃, 광원, 밤 시야 마스크 |
 | IMG-013 | P2 | 동료 주민 10종 | `public/assets/characters/companions.png` | 아이, 청년, 장년, 노인 남/여 |
@@ -48,8 +48,8 @@ Last updated: 2026-05-28
 
 | 파일 | 용도 |
 |---|---|
-| `docs/assets/art/generated/6il-image-resource-sheet.png` | 캐릭터, 건물, 환경, 이펙트 제작 방향 참고 |
-| `docs/assets/art/generated/6il-ui-resource-sheet.png` | HUD, 아이콘, 패널, 무기/룬 UI 제작 방향 참고 |
+| `assets/art/generated/6il-image-resource-sheet.png` | 캐릭터, 건물, 환경, 이펙트 제작 방향 참고 |
+| `assets/art/generated/6il-ui-resource-sheet.png` | HUD, 아이콘, 패널, 무기/룬 UI 제작 방향 참고 |
 
 ## 4. 스타일 기준
 
@@ -58,3 +58,4 @@ Last updated: 2026-05-28
 - 모든 캐릭터와 오브젝트는 어두운 밤 배경에서도 외곽 실루엣이 읽혀야 함.
 - UI는 작은 크기에서도 식별 가능한 단순한 실루엣을 우선.
 - 최종 게임 적용용 이미지는 투명 PNG 또는 atlas로 분리 필요.
+

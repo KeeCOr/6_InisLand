@@ -37,6 +37,12 @@ const VILLAGE_DECOR_BOUNDS = [
   { minX: 11, minY: 11, maxX: 12, maxY: 12 },
 ] as const;
 
+type SpriteFrameRef = {
+  texture: string;
+  frame?: string;
+  scale?: number;
+};
+
 const zombieQuery = defineQuery([ZombieTag, Health]);
 
 export class GameScene extends Phaser.Scene {
@@ -191,6 +197,9 @@ export class GameScene extends Phaser.Scene {
     this.world.sprites.forEach((sprite, eid) => {
       sprite.x = Position.x[eid]!;
       sprite.y = Position.y[eid]!;
+      if (sprite instanceof Phaser.GameObjects.Sprite && Math.abs(Velocity.vx[eid] ?? 0) > 1) {
+        sprite.setFlipX(Velocity.vx[eid]! < 0);
+      }
     });
 
     // Vision
@@ -237,7 +246,8 @@ export class GameScene extends Phaser.Scene {
       this.spawnResourceNode(
         cx + Math.cos(angle) * dist,
         cy + Math.sin(angle) * dist,
-        0, GATHERING.treeWood, GATHERING.treeGatherMs, 'tree',
+        0, GATHERING.treeWood, GATHERING.treeGatherMs,
+        { texture: 'props_sheet', frame: 'pine_tree', scale: 0.72 },
       );
     }
 
@@ -248,7 +258,8 @@ export class GameScene extends Phaser.Scene {
       this.spawnResourceNode(
         cx + Math.cos(angle) * dist,
         cy + Math.sin(angle) * dist,
-        1, GATHERING.rockStone, GATHERING.rockGatherMs, 'rock',
+        1, GATHERING.rockStone, GATHERING.rockGatherMs,
+        { texture: 'props_extra', frame: 'snow_rocks', scale: 0.78 },
       );
     }
 
@@ -261,7 +272,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private spawnResourceNode(
-    x: number, y: number, kind: number, amount: number, gatherTime: number, texture: string,
+    x: number, y: number, kind: number, amount: number, gatherTime: number, spriteRef: SpriteFrameRef,
   ): void {
     const eid = addEntity(this.world);
     addComponent(this.world, Position, eid);
@@ -272,7 +283,10 @@ export class GameScene extends Phaser.Scene {
     ResourceNode.amount[eid] = amount;
     ResourceNode.gatherTime[eid] = gatherTime;
 
-    const sprite = this.add.sprite(x, y, texture).setDepth(50);
+    const sprite = this.add
+      .sprite(x, y, spriteRef.texture, spriteRef.frame)
+      .setDepth(50)
+      .setScale(spriteRef.scale ?? 1);
     this.world.sprites.set(eid, sprite);
     this.snowfieldEntities.push(eid);
   }
@@ -288,7 +302,8 @@ export class GameScene extends Phaser.Scene {
     Health.current[eid] = 30;
     Health.max[eid] = 30;
 
-    const sprite = this.add.sprite(x, y, 'deer').setDepth(60);
+    const sprite = this.add.sprite(x, y, 'deer', 0).setDepth(60).setScale(0.18);
+    sprite.play('deer_run');
     this.world.sprites.set(eid, sprite);
     this.snowfieldEntities.push(eid);
   }
@@ -309,7 +324,8 @@ export class GameScene extends Phaser.Scene {
     Combat.cooldown[eid] = BASIC_ZOMBIE.attackCooldownMs;
     Combat.lastAttackTime[eid] = 0;
 
-    const sprite = this.add.sprite(x, y, 'zombie').setDepth(80);
+    const sprite = this.add.sprite(x, y, 'zombie', 0).setDepth(80).setScale(0.48);
+    sprite.play('zombie_walk');
     this.world.sprites.set(eid, sprite);
   }
 
@@ -342,7 +358,13 @@ export class GameScene extends Phaser.Scene {
   }
 
   private drawEnvironmentDetails(): void {
-    const addDecor = (key: string, count: number, minDist: number, maxDist: number, depth: number) => {
+    const addDecor = (
+      spriteRef: SpriteFrameRef,
+      count: number,
+      minDist: number,
+      maxDist: number,
+      depth: number,
+    ) => {
       const cx = SNOWFIELD_SIZE / 2;
       const cy = SNOWFIELD_SIZE / 2;
 
@@ -350,17 +372,20 @@ export class GameScene extends Phaser.Scene {
         const angle = this.rng.next() * Math.PI * 2;
         const dist = minDist + this.rng.next() * (maxDist - minDist);
         const sprite = this.add
-          .sprite(cx + Math.cos(angle) * dist, cy + Math.sin(angle) * dist, key)
-          .setDepth(depth);
+          .sprite(cx + Math.cos(angle) * dist, cy + Math.sin(angle) * dist, spriteRef.texture, spriteRef.frame)
+          .setDepth(depth)
+          .setScale((spriteRef.scale ?? 1) * (0.88 + this.rng.next() * 0.24));
         sprite.setFlipX(this.rng.next() > 0.5);
         sprite.setAlpha(0.85 + this.rng.next() * 0.15);
       }
     };
 
-    addDecor('snow_patch', 70, 120, 1050, 2);
-    addDecor('footprints', 36, 120, 900, 3);
-    addDecor('small_rock', 24, 260, 1000, 4);
-    addDecor('stump', 14, 260, 920, 4);
+    addDecor({ texture: 'snow_patch' }, 70, 120, 1050, 2);
+    addDecor({ texture: 'fx_footprints', scale: 0.7 }, 42, 120, 900, 3);
+    addDecor({ texture: 'barricade_sheet', frame: 'small_rocks', scale: 0.66 }, 24, 260, 1000, 4);
+    addDecor({ texture: 'props_fence_trees', frame: 'stump', scale: 0.64 }, 18, 260, 920, 4);
+    addDecor({ texture: 'props_fence_trees', frame: 'snow_bush', scale: 0.62 }, 40, 180, 1050, 4);
+    addDecor({ texture: 'props_fence_trees', frame: 'bare_tree', scale: 0.76 }, 14, 360, 1080, 9);
 
     const forestPositions = [
       { x: 180, y: 240 }, { x: 260, y: 420 }, { x: 170, y: 700 },
@@ -370,8 +395,13 @@ export class GameScene extends Phaser.Scene {
       { x: 1710, y: 2210 }, { x: 2050, y: 2160 },
     ];
 
-    for (const pos of forestPositions) {
-      this.add.sprite(pos.x, pos.y, 'tree').setDepth(10).setScale(1.2);
+    for (let i = 0; i < forestPositions.length; i++) {
+      const pos = forestPositions[i]!;
+      const usePine = i % 3 !== 1;
+      const sprite = usePine
+        ? this.add.sprite(pos.x, pos.y, 'props_sheet', 'pine_tree').setScale(0.82)
+        : this.add.sprite(pos.x, pos.y, 'props_fence_trees', 'bare_tree').setScale(0.9);
+      sprite.setDepth(10);
     }
   }
 
@@ -381,26 +411,56 @@ export class GameScene extends Phaser.Scene {
 
     const villageCenterX = VILLAGE_OFFSET + VILLAGE_PX / 2;
     const villageCenterY = VILLAGE_OFFSET + VILLAGE_PX / 2;
-    const glow = this.add.sprite(villageCenterX, villageCenterY, 'warm_glow').setDepth(30).setScale(1.7);
-    const cabinA = this.add.sprite(villageCenterX - 176, villageCenterY - 144, 'cabin').setDepth(35);
-    const cabinB = this.add.sprite(villageCenterX + 176, villageCenterY + 112, 'cabin').setDepth(35).setScale(0.92);
-    const crates = this.add.sprite(villageCenterX - 240, villageCenterY + 112, 'crate_stack').setDepth(36);
-    const logs = this.add.sprite(villageCenterX + 240, villageCenterY - 112, 'log_stack').setDepth(36);
-    this.villageSprites.push(glow, cabinA, cabinB, crates, logs);
+    const glow = this.add.sprite(villageCenterX, villageCenterY, 'fx_warm_glow').setDepth(30).setScale(1.7);
+    const cabinA = this.add.sprite(villageCenterX - 176, villageCenterY - 144, 'props_sheet', 'cabin').setDepth(35).setScale(0.82);
+    const cabinB = this.add.sprite(villageCenterX + 176, villageCenterY + 112, 'props_sheet', 'watchtower').setDepth(35).setScale(0.78);
+    const crates = this.add.sprite(villageCenterX - 240, villageCenterY + 112, 'prop_crate_stack').setDepth(36).setScale(0.74);
+    const logs = this.add.sprite(villageCenterX + 240, villageCenterY - 112, 'barricade_sheet', 'logs').setDepth(36).setScale(0.9);
+    const villageFence = this.add.sprite(villageCenterX - 32, villageCenterY + 232, 'props_extra', 'short_fence').setDepth(36).setScale(0.88);
+    const villageRocks = this.add.sprite(villageCenterX + 238, villageCenterY + 206, 'props_extra', 'snow_rocks').setDepth(36).setScale(0.72);
+    this.villageSprites.push(glow, cabinA, cabinB, crates, logs, villageFence, villageRocks);
 
-    for (const b of this.village.getBuildings()) {
+    const buildings = this.village.getBuildings();
+    for (const b of buildings) {
       const def = b.type === BuildingType.Bonfire
         ? { w: 2, h: 2 }
         : { w: 1, h: 1 };
       const px = VILLAGE_OFFSET + b.gridX * TILE_SIZE + (def.w * TILE_SIZE) / 2;
       const py = VILLAGE_OFFSET + b.gridY * TILE_SIZE + (def.h * TILE_SIZE) / 2;
-      const texture = b.type === BuildingType.Bonfire ? 'bonfire' : 'barricade';
-      const sprite = this.add.sprite(px, py, texture).setDepth(40);
+      const spriteRef = b.type === BuildingType.Bonfire
+        ? { texture: 'props_sheet', frame: 'campfire', scale: 0.68 }
+        : this.getBarricadeSpriteRef(b.gridX, b.gridY, buildings);
+      const sprite = this.add
+        .sprite(px, py, spriteRef.texture, spriteRef.frame)
+        .setDepth(40)
+        .setScale(spriteRef.scale ?? 1);
       if (b.type === BuildingType.Bonfire) {
         sprite.setDepth(45);
       }
       this.villageSprites.push(sprite);
     }
+  }
+
+  private getBarricadeSpriteRef(
+    gridX: number,
+    gridY: number,
+    buildings: ReturnType<VillageGrid['getBuildings']>,
+  ): SpriteFrameRef {
+    const hasVerticalNeighbor = buildings.some((b) => (
+      b.type === BuildingType.Barricade
+      && b.gridX === gridX
+      && Math.abs(b.gridY - gridY) === 1
+    ));
+    const hasHorizontalNeighbor = buildings.some((b) => (
+      b.type === BuildingType.Barricade
+      && b.gridY === gridY
+      && Math.abs(b.gridX - gridX) === 1
+    ));
+
+    if (hasVerticalNeighbor && !hasHorizontalNeighbor) {
+      return { texture: 'props_fence_trees', frame: 'fence_vertical', scale: 0.62 };
+    }
+    return { texture: 'props_sheet', frame: 'snow_fence_horizontal', scale: 0.48 };
   }
 
   // --- Night Waves ---

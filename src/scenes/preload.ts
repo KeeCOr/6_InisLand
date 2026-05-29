@@ -2,6 +2,14 @@ import Phaser from 'phaser';
 
 type PaintFn = (ctx: CanvasRenderingContext2D) => void;
 
+type SheetFrame = {
+  name: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
 function texture(scene: Phaser.Scene, key: string, width: number, height: number, paint: PaintFn): void {
   const canvasTexture = scene.textures.createCanvas(key, width, height);
   if (!canvasTexture) {
@@ -12,6 +20,15 @@ function texture(scene: Phaser.Scene, key: string, width: number, height: number
   ctx.clearRect(0, 0, width, height);
   paint(ctx);
   canvasTexture.refresh();
+}
+
+function addSheetFrames(scene: Phaser.Scene, key: string, frames: SheetFrame[]): void {
+  const sheet = scene.textures.get(key);
+  for (const frame of frames) {
+    if (!sheet.has(frame.name)) {
+      sheet.add(frame.name, 0, frame.x, frame.y, frame.width, frame.height);
+    }
+  }
 }
 
 function rect(ctx: CanvasRenderingContext2D, color: string, x: number, y: number, w: number, h: number): void {
@@ -32,6 +49,13 @@ export class PreloadScene extends Phaser.Scene {
 
   preload(): void {
     this.load.image('snow_tile', 'assets/tilesets/snowfield_base.png');
+    this.load.image('props_sheet', 'assets/props/08_props.png');
+    this.load.image('props_extra', 'assets/props/08b_props_extras.png');
+    this.load.image('props_fence_trees', 'assets/props/08c_props_fence_trees.png');
+    this.load.image('barricade_sheet', 'assets/buildings/07_items_barricades.png');
+    this.load.image('prop_crate_stack', 'assets/props/40_crate_stack.png');
+    this.load.image('fx_footprints', 'assets/fx/39_footprints.png');
+    this.load.image('fx_warm_glow', 'assets/fx/41_warm_glow.png');
     this.load.spritesheet('player', 'assets/characters/player_survivor_axe.png', {
       frameWidth: 96,
       frameHeight: 96,
@@ -40,16 +64,53 @@ export class PreloadScene extends Phaser.Scene {
       frameWidth: 96,
       frameHeight: 96,
     });
+    this.load.spritesheet('zombie', 'assets/characters/27_enemy_01_mecha_zombie.png', {
+      frameWidth: 96,
+      frameHeight: 96,
+    });
+    this.load.spritesheet('deer', 'assets/characters/24_animal_01_deer_anim.png', {
+      frameWidth: 313,
+      frameHeight: 313,
+    });
   }
 
   create(): void {
+    this.createSheetFrames();
     this.createTiles();
     this.createCharacters();
+    this.createAnimations();
     this.createResources();
     this.createVillageProps();
     this.createEffects();
 
     this.scene.start('Game');
+  }
+
+  private createSheetFrames(): void {
+    addSheetFrames(this, 'props_sheet', [
+      { name: 'pine_tree', x: 31, y: 33, width: 104, height: 185 },
+      { name: 'watchtower', x: 193, y: 47, width: 99, height: 178 },
+      { name: 'campfire', x: 318, y: 103, width: 105, height: 94 },
+      { name: 'snow_fence_horizontal', x: 424, y: 116, width: 149, height: 67 },
+      { name: 'cabin', x: 608, y: 54, width: 128, height: 156 },
+    ]);
+    addSheetFrames(this, 'props_extra', [
+      { name: 'short_fence', x: 24, y: 24, width: 78, height: 86 },
+      { name: 'snow_rocks', x: 145, y: 45, width: 97, height: 73 },
+    ]);
+    addSheetFrames(this, 'props_fence_trees', [
+      { name: 'fence_vertical', x: 10, y: 15, width: 52, height: 103 },
+      { name: 'bare_tree', x: 148, y: 18, width: 104, height: 100 },
+      { name: 'snow_bush', x: 296, y: 53, width: 71, height: 53 },
+      { name: 'stump', x: 417, y: 41, width: 75, height: 68 },
+    ]);
+    addSheetFrames(this, 'barricade_sheet', [
+      { name: 'wood_barricade', x: 25, y: 28, width: 172, height: 76 },
+      { name: 'stone_wall', x: 217, y: 35, width: 166, height: 72 },
+      { name: 'spike_barricade', x: 407, y: 20, width: 91, height: 94 },
+      { name: 'logs', x: 34, y: 153, width: 78, height: 53 },
+      { name: 'small_rocks', x: 139, y: 151, width: 52, height: 47 },
+    ]);
   }
 
   private createTiles(): void {
@@ -80,27 +141,21 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   private createCharacters(): void {
-    texture(this, 'zombie', 30, 34, (ctx) => {
-      rect(ctx, '#111820', 8, 5, 15, 8);
-      rect(ctx, '#303946', 7, 12, 17, 14);
-      rect(ctx, '#1d252f', 5, 15, 5, 12);
-      rect(ctx, '#1d252f', 22, 15, 5, 12);
-      rect(ctx, '#2a323d', 9, 26, 5, 7);
-      rect(ctx, '#2a323d', 18, 26, 5, 7);
-      rect(ctx, '#e23a31', 13, 9, 4, 4);
-      rect(ctx, '#ff8275', 14, 10, 2, 1);
-      stroke(ctx, '#090d12', 5, 5, 22, 28);
-    });
+    // Character sheets are loaded from public assets. This hook remains for future generated fallbacks.
+  }
 
-    texture(this, 'deer', 36, 28, (ctx) => {
-      rect(ctx, '#3a271f', 5, 11, 22, 10);
-      rect(ctx, '#2b1d18', 25, 8, 7, 7);
-      rect(ctx, '#c7b18d', 29, 6, 2, 5);
-      rect(ctx, '#241713', 6, 20, 4, 7);
-      rect(ctx, '#241713', 21, 20, 4, 7);
-      rect(ctx, '#6f4b34', 3, 12, 5, 5);
-      rect(ctx, '#d8c6a0', 32, 11, 2, 2);
-      stroke(ctx, '#17100d', 3, 7, 31, 20);
+  private createAnimations(): void {
+    this.anims.create({
+      key: 'zombie_walk',
+      frames: this.anims.generateFrameNumbers('zombie', { start: 4, end: 7 }),
+      frameRate: 6,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: 'deer_run',
+      frames: this.anims.generateFrameNumbers('deer', { start: 8, end: 11 }),
+      frameRate: 7,
+      repeat: -1,
     });
   }
 

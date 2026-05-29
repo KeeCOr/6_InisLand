@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
@@ -301,14 +301,14 @@
         <p>
           이 목록은 <code>docs/superpowers/specs/2026-04-21-6il-game-design.md</code>의
           아트 수량과 게임 시스템을 기준으로, 아트 작업자가 바로 태스크로 관리할 수 있게
-          세분화한 마스터 목록입니다. 현재 실제 게임용 아트 파일은 거의 없고,
-          <code>src/*.png</code>와 <code>docs/6IL_gameplay_preview.png</code>는 방향성 참고 이미지로 분류했습니다.
+          세분화한 마스터 목록입니다. 현재 일부 게임용 아트 파일은 <code>public/assets/</code>에 적용되어 있고,
+          제작/생성/레퍼런스 리소스는 <code>assets/</code>에서 관리합니다.
         </p>
         <div class="callout">
           권장 관리 방식: 각 행을 이슈/스프레드시트 한 줄로 옮기고, <strong>담당자</strong>,
           <strong>진행 상태</strong>, <strong>원본 파일 링크</strong>, <strong>게임 적용 여부</strong> 칼럼만 추가하면 됩니다.
-          파일명은 아래 제안명을 기준으로 통일하고, 원본은 <code>art/source/</code>, 게임 내보내기는
-          <code>public/assets/</code> 또는 <code>src/assets/</code>로 분리하는 것을 권장합니다.
+          파일명은 아래 제안명을 기준으로 통일하고, 원본/생성본/레퍼런스는 <code>assets/</code>, 게임 내보내기는
+          <code>public/assets/</code>로 분리합니다.
         </div>
 
         <h3>작업 상태 기준</h3>
@@ -407,10 +407,10 @@
             <tr><td>CHR-008</td><td>P2</td><td>노인 남성 동료</td><td>idle, walk, work, ranged attack, hit, death, portrait</td><td><code>characters/companion_elder_m.png</code></td><td><span class="status missing">Missing</span></td><td>느린 이동, 높은 서사 식별성.</td></tr>
             <tr><td>CHR-009</td><td>P2</td><td>노인 여성 동료</td><td>idle, walk, work, ranged attack, hit, death, portrait</td><td><code>characters/companion_elder_f.png</code></td><td><span class="status missing">Missing</span></td><td>느린 이동, 높은 서사 식별성.</td></tr>
             <tr><td>CHR-010</td><td>P2</td><td>튜토리얼 문지기/NPC</td><td>idle, talk, point, portrait</td><td><code>characters/npc_gatekeeper.png</code></td><td><span class="status missing">Missing</span></td><td>초반 조작 안내와 마을 정착 분위기용.</td></tr>
-            <tr><td>ENE-001</td><td class="priority">P0</td><td>기본 좀비</td><td>idle, walk, attack, hit, death</td><td><code>characters/zombie_basic.png</code></td><td><span class="status missing">Missing</span></td><td>Phase 1 밤 웨이브 핵심.</td></tr>
+            <tr><td>ENE-001</td><td class="priority">P0</td><td>기본 좀비: 메카 좀비</td><td>idle, walk, attack, hit, death</td><td><code>characters/27_enemy_01_mecha_zombie.png</code></td><td><span class="status partial">Partial</span></td><td>현재 게임의 <code>zombie</code> 텍스처로 적용.</td></tr>
             <tr><td>ENE-002</td><td>P2</td><td>빠른 좀비</td><td>walk/run, attack, hit, death</td><td><code>characters/zombie_runner.png</code></td><td><span class="status missing">Missing</span></td><td>좀비 3종 중 속도 변주.</td></tr>
             <tr><td>ENE-003</td><td>P2</td><td>중장갑 좀비</td><td>walk, heavy attack, hit, stagger, death</td><td><code>characters/zombie_brute.png</code></td><td><span class="status missing">Missing</span></td><td>바리게이트 파괴 압박용.</td></tr>
-            <tr><td>ANI-001</td><td class="priority">P0</td><td>사슴</td><td>idle, walk/run, hit, death, carcass</td><td><code>characters/animal_deer.png</code></td><td><span class="status missing">Missing</span></td><td>사냥/고기 획득 기본 동물.</td></tr>
+            <tr><td>ANI-001</td><td class="priority">P0</td><td>사슴</td><td>idle, walk/run, hit, death, carcass</td><td><code>characters/24_animal_01_deer_anim.png</code></td><td><span class="status partial">Partial</span></td><td>현재 게임의 <code>deer</code> 텍스처로 적용.</td></tr>
             <tr><td>ANI-002</td><td>P2</td><td>토끼</td><td>idle, hop/run, hit, death</td><td><code>characters/animal_rabbit.png</code></td><td><span class="status missing">Missing</span></td><td>근교 약한 수동 동물.</td></tr>
             <tr><td>ANI-003</td><td>P2</td><td>늑대</td><td>idle, run, bite, hit, death</td><td><code>characters/animal_wolf.png</code></td><td><span class="status missing">Missing</span></td><td>중경 위험 동물.</td></tr>
             <tr><td>ANI-004</td><td>P3</td><td>거대 사슴/매머드</td><td>idle, walk, charge, hit, death, boss carcass</td><td><code>characters/animal_giant_stag.png</code></td><td><span class="status missing">Missing</span></td><td>심경 거대동물, 보스급 사냥 대상.</td></tr>
@@ -465,15 +465,15 @@
           <tbody>
             <tr><td>ENV-001</td><td class="priority">P0</td><td>설원 기본 타일셋</td><td>평지, 눈결, 음영, 가장자리, 절벽/막힘</td><td><code>tilesets/snowfield_base.png</code></td><td><span class="status partial">Partial</span></td><td>64x64 기본 눈밭 타일 생성 및 게임 적용 완료. 가장자리/절벽 변형은 추가 필요.</td></tr>
             <tr><td>ENV-002</td><td class="priority">P0</td><td>마을 지면 타일셋</td><td>다져진 눈, 목재 바닥, 길, 경계</td><td><code>tilesets/village_ground.png</code></td><td><span class="status missing">Missing</span></td><td>밤 방어/건설 영역.</td></tr>
-            <tr><td>ENV-003</td><td>P1</td><td>설원 장식 props</td><td>작은 바위, 마른 덤불, 통나무, 눈더미 15-25개</td><td><code>props/snowfield_decor_set.png</code></td><td><span class="status missing">Missing</span></td><td>참고 이미지 기반 분위기 강화.</td></tr>
-            <tr><td>ENV-004</td><td>P1</td><td>마을 장식 props</td><td>장작더미, 깃발, 상자, 울타리, 발자국</td><td><code>props/village_decor_set.png</code></td><td><span class="status missing">Missing</span></td><td>마을이 실제 사는 공간처럼 보이게 함.</td></tr>
+            <tr><td>ENV-003</td><td>P1</td><td>설원 장식 props</td><td>작은 바위, 마른 덤불, 통나무, 눈더미 15-25개</td><td><code>props/08b_props_extras.png</code>, <code>props/08c_props_fence_trees.png</code>, <code>fx/39_footprints.png</code></td><td><span class="status partial">Partial</span></td><td>설원 배경 장식으로 작은 바위, 그루터기, 덤불, 앙상한 나무, 발자국 적용.</td></tr>
+            <tr><td>ENV-004</td><td>P1</td><td>마을 장식 props</td><td>장작더미, 깃발, 상자, 울타리, 발자국</td><td><code>props/08_props.png</code>, <code>props/40_crate_stack.png</code>, <code>buildings/07_items_barricades.png</code></td><td><span class="status partial">Partial</span></td><td>오두막, 감시탑, 상자, 장작, 울타리, 모닥불, 바리케이드 시트 적용.</td></tr>
             <tr><td>ENV-005</td><td>P2</td><td>근교/중경/심경 구역 변주</td><td>구역별 눈색, 바위 밀도, 위험 장식 각 1세트</td><td><code>tilesets/snowfield_zone_variants.png</code></td><td><span class="status missing">Missing</span></td><td>거리별 위험도 읽기.</td></tr>
             <tr><td>ENV-006</td><td>P3</td><td>초대형 눈보라 환경 오버레이</td><td>흰 안개, 눈 입자, 화면 가장자리 얼음, 시야 축소 마스크</td><td><code>fx/blizzard_environment.png</code></td><td><span class="status missing">Missing</span></td><td>희귀 이벤트 전용 시각 톤.</td></tr>
             <tr><td>ENV-007</td><td>P2</td><td>개발용 충돌/스폰/경계 표시</td><td>충돌, 스폰, 안전지대, 웨이브 방향 아이콘</td><td><code>dev/map_debug_markers.png</code></td><td><span class="status missing">Missing</span></td><td>게임 내 숨김 가능, 레벨 제작용.</td></tr>
-            <tr><td>REF-001</td><td>P1</td><td>플레이 예시 이미지: 낮</td><td>참고 이미지</td><td><code>docs/assets/art/reference/day_gameplay_wide.png</code></td><td><span class="status partial">Partial</span></td><td>비주얼 방향 참고, 게임 리소스 아님.</td></tr>
-            <tr><td>REF-002</td><td>P1</td><td>플레이 예시 이미지: 밤</td><td>참고 이미지</td><td><code>docs/assets/art/reference/night_gameplay_wide.png</code></td><td><span class="status partial">Partial</span></td><td>야간 시야/조명 톤 참고.</td></tr>
-            <tr><td>REF-003</td><td>P1</td><td>방어 밤 예시 이미지</td><td>참고 이미지</td><td><code>docs/assets/art/reference/defense_night.png</code></td><td><span class="status partial">Partial</span></td><td>마을 방어 구도 참고.</td></tr>
-            <tr><td>REF-004</td><td>P1</td><td>키 비주얼/섬 이미지</td><td>참고 이미지</td><td><code>docs/assets/art/reference/InisLand.png</code></td><td><span class="status partial">Partial</span></td><td>월드 톤/타이틀 방향 참고.</td></tr>
+            <tr><td>REF-001</td><td>P1</td><td>플레이 예시 이미지: 낮</td><td>참고 이미지</td><td><code>assets/art/reference/day_gameplay_wide.png</code></td><td><span class="status partial">Partial</span></td><td>비주얼 방향 참고, 게임 리소스 아님.</td></tr>
+            <tr><td>REF-002</td><td>P1</td><td>플레이 예시 이미지: 밤</td><td>참고 이미지</td><td><code>assets/art/reference/night_gameplay_wide.png</code></td><td><span class="status partial">Partial</span></td><td>야간 시야/조명 톤 참고.</td></tr>
+            <tr><td>REF-003</td><td>P1</td><td>방어 밤 예시 이미지</td><td>참고 이미지</td><td><code>assets/art/reference/defense_night.png</code></td><td><span class="status partial">Partial</span></td><td>마을 방어 구도 참고.</td></tr>
+            <tr><td>REF-004</td><td>P1</td><td>키 비주얼/섬 이미지</td><td>참고 이미지</td><td><code>assets/art/reference/InisLand.png</code></td><td><span class="status partial">Partial</span></td><td>월드 톤/타이틀 방향 참고.</td></tr>
           </tbody>
         </table>
 
@@ -532,7 +532,7 @@
             <tr><td>MKT-002</td><td>P4</td><td>게임 로고</td><td>가로형, 정사각형, 밝은/어두운 배경용</td><td><code>branding/game_logo.png</code></td><td><span class="status missing">Missing</span></td><td>메인 메뉴와 스토어 캡슐.</td></tr>
             <tr><td>MKT-003</td><td>P4</td><td>스토어 캡슐/배너</td><td>itch.io/Steam 규격별 변형</td><td><code>marketing/store_capsules/</code></td><td><span class="status missing">Missing</span></td><td>출시 준비 단계.</td></tr>
             <tr><td>MKT-004</td><td>P4</td><td>프로모션 스크린샷 프레임</td><td>3-6종 레이아웃, 로고/문구 배치</td><td><code>marketing/screenshot_frames.png</code></td><td><span class="status missing">Missing</span></td><td>SNS, 보도자료, 출시 페이지.</td></tr>
-            <tr><td>MKT-005</td><td>P4</td><td>키 아트</td><td>설원 마을, 모닥불, 좀비 웨이브, 동료 실루엣</td><td><code>marketing/key_art.png</code></td><td><span class="status partial">Partial</span></td><td><code>docs/assets/art/reference/InisLand.png</code>는 방향 참고로만 보유.</td></tr>
+            <tr><td>MKT-005</td><td>P4</td><td>키 아트</td><td>설원 마을, 모닥불, 좀비 웨이브, 동료 실루엣</td><td><code>marketing/key_art.png</code></td><td><span class="status partial">Partial</span></td><td><code>assets/art/reference/InisLand.png</code>는 방향 참고로만 보유.</td></tr>
           </tbody>
         </table>
 
@@ -623,17 +623,17 @@
             </tr>
             <tr>
               <td><code>zombie</code></td>
-              <td>Generated pixel texture</td>
-              <td>30x34</td>
+              <td><code>public/assets/characters/27_enemy_01_mecha_zombie.png</code></td>
+              <td>96x96 frame sheet</td>
               <td>기본 좀비</td>
-              <td><span class="status missing">Missing</span> final sprite</td>
+              <td><span class="status partial">Partial</span> mecha zombie sheet applied</td>
             </tr>
             <tr>
               <td><code>deer</code></td>
-              <td>Generated pixel texture</td>
-              <td>36x28</td>
+              <td><code>public/assets/characters/24_animal_01_deer_anim.png</code></td>
+              <td>313x313 frame sheet</td>
               <td>사슴/고기 획득 대상</td>
-              <td><span class="status missing">Missing</span> final sprite</td>
+              <td><span class="status partial">Partial</span> deer sheet applied</td>
             </tr>
             <tr>
               <td><code>tree</code></td>
@@ -960,21 +960,27 @@
 
       <section>
         <h2>권장 폴더 구조</h2>
-        <pre><code>public/assets/
-  sprites/
-    player/
-    enemies/
-    animals/
-    resources/
-    buildings/
-    effects/
-    ui/
+        <pre><code>assets/
+  art/
+    generated/
+    reference/
   audio/
     bgm/
     sfx/
-    ambience/
-  atlases/
-  icons/</code></pre>
+    reference/
+
+public/assets/
+  characters/
+  buildings/
+  props/
+  tilesets/
+  fx/
+  ui/
+    icons/
+  audio/
+    bgm/
+    sfx/
+    voice/</code></pre>
       </section>
 
       <section>
@@ -989,9 +995,9 @@
           </thead>
           <tbody>
             <tr>
-              <td>실제 게임 아트 파일 없음</td>
-              <td>플레이는 가능하지만 prototype 느낌이 강함</td>
-              <td>P0 placeholder 텍스처부터 교체.</td>
+              <td>일부 P0 아트만 적용됨</td>
+              <td>설원/마을 프랍은 개선됐지만 적, 동물, UI는 여전히 prototype 느낌이 남음</td>
+              <td>좀비, 사슴, HUD 아이콘 순서로 교체.</td>
             </tr>
             <tr>
               <td>오디오 파일 없음</td>
@@ -1030,3 +1036,4 @@
     </main>
   </body>
 </html>
+

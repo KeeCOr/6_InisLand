@@ -21,12 +21,12 @@ Last updated: 2026-05-20
 | Texture key | Current source | Current size | In-game use | Asset status |
 | --- | --- | ---: | --- | --- |
 | `player` | `public/assets/characters/player_survivor_axe.png` | 96x96 frame sheet | 플레이어 캐릭터 | Partial red-haired girl axe sheet applied |
-| `zombie` | Generated solid rectangle | 20x20 | 기본 좀비 | Missing final sprite |
-| `deer` | Generated solid rectangle | 18x18 | 사슴/고기 획득 대상 | Missing final sprite |
-| `tree` | Generated solid rectangle | 24x32 | 나무 자원 노드 | Missing final sprite |
-| `rock` | Generated solid rectangle | 20x16 | 바위 자원 노드 | Missing final sprite |
-| `bonfire` | Generated solid rectangle | 48x48 | 중심 모닥불/방어 오브젝트 | Missing final sprite/effect |
-| `barricade` | Generated solid rectangle | 28x28 | 바리케이드 | Missing final sprite/damage states |
+| `zombie` | `public/assets/characters/27_enemy_01_mecha_zombie.png` | 96x96 frame sheet | 기본 좀비 | Partial mecha zombie sheet applied |
+| `deer` | `public/assets/characters/24_animal_01_deer_anim.png` | 313x313 frame sheet | 사슴/고기 획득 대상 | Partial deer sheet applied |
+| `tree` | `public/assets/props/08_props.png` (`pine_tree`) | sheet frame | 나무 자원 노드 | Partial applied |
+| `rock` | `public/assets/props/08b_props_extras.png` (`snow_rocks`) | sheet frame | 바위 자원 노드 | Partial applied |
+| `bonfire` | `public/assets/props/08_props.png` (`campfire`) + `public/assets/fx/41_warm_glow.png` | sheet frame/effect | 중심 모닥불/방어 오브젝트 | Partial applied |
+| `barricade` | `public/assets/props/08_props.png`, `public/assets/props/08c_props_fence_trees.png` | sheet frames | 바리케이드 | Partial applied |
 | `snow_tile` | `public/assets/tilesets/snowfield_base.png` | 64x64 | 설원 배경 | Partial base tile applied |
 | `village_tile` | Generated tile | 32x32 | 마을 지면 배경 | Missing final tile |
 
@@ -37,14 +37,15 @@ Last updated: 2026-05-20
 | Priority | Resource | Count | Exists? | Current fallback | Notes |
 | --- | --- | ---: | --- | --- | --- |
 | P0 | Player idle/move sprite | 1 set | Partial | `public/assets/characters/player_survivor_axe.png`, `public/assets/characters/player_survivor_bow.png` | Red-haired girl protagonist variants are available; axe version is applied to the playable slice. |
-| P0 | Basic zombie sprite | 1 set | No | `zombie` rectangle | Needs readable silhouette at 20-32 px. |
-| P0 | Deer sprite | 1 set | No | `deer` rectangle | Daytime resource target, should be visually distinct from enemies. |
-| P0 | Tree resource sprite | 1 | No | `tree` rectangle | Should communicate gatherable wood. |
-| P0 | Rock resource sprite | 1 | No | `rock` rectangle | Should communicate gatherable stone. |
-| P0 | Bonfire sprite | 1 base + 1 glow/effect | No | `bonfire` rectangle | Core village landmark; high visual priority. |
-| P0 | Barricade sprite | 1 base | No | `barricade` rectangle | Later should gain damaged/broken states. |
+| P0 | Basic zombie sprite | 1 set | Partial | `public/assets/characters/27_enemy_01_mecha_zombie.png` | Mecha zombie sheet is applied to the playable slice. |
+| P0 | Deer sprite | 1 set | Partial | `public/assets/characters/24_animal_01_deer_anim.png` | Deer sheet is applied to the playable slice. |
+| P0 | Tree resource sprite | 1 | Partial | `public/assets/props/08_props.png` (`pine_tree`) | Applied to gatherable trees and forest dressing. |
+| P0 | Rock resource sprite | 1 | Partial | `public/assets/props/08b_props_extras.png` (`snow_rocks`) | Applied to gatherable rocks and snowfield dressing. |
+| P0 | Bonfire sprite | 1 base + 1 glow/effect | Partial | `public/assets/props/08_props.png` (`campfire`), `public/assets/fx/41_warm_glow.png` | Core village landmark is now using imported art. |
+| P0 | Barricade sprite | 1 base | Partial | `public/assets/props/08_props.png`, `public/assets/props/08c_props_fence_trees.png` | Fence ring uses horizontal and vertical imported fence art. |
 | P0 | Snowfield ground tile | 1-3 tiles | Partial | `public/assets/tilesets/snowfield_base.png` | Base 64x64 tile generated and applied; edge/zone variants still needed. |
 | P0 | Village ground tile | 1-3 tiles | No | `village_tile` generated tile | Should distinguish safe zone from snowfield. |
+| P1 | Snowfield/village props | Several | Partial | `public/assets/props/*.png`, `public/assets/buildings/07_items_barricades.png` | Applied cabins, watchtower, crates, logs, stumps, bushes, footprints, and rocks. |
 | P1 | Attack hit effect | 1-2 effects | No | None | Current combat has no visual feedback beyond HP changes/death. |
 | P1 | Gathering progress/impact effect | 1-2 effects | Partial | Graphics progress bar | Add chop/mining hit particles later. |
 | P1 | Death/despawn effect | 1 effect | No | Instant sprite destroy | Useful for clarity when enemies/deer die. |
@@ -85,33 +86,39 @@ These are not required for the current executable to run, but are implied by the
 | Atlases | Packed sprite atlases | 1+ | No | Design expects `assets/atlases`; no atlas pipeline exists yet. |
 | Localization font | Korean-capable bitmap/web font | 1 | No | Current source text appears encoding-corrupted in several files; font/text cleanup should happen before final UI art pass. |
 
-## Missing Folder Structure
+## Folder Structure
 
-Recommended structure once real assets are added:
+Current resource structure:
 
 ```text
-public/assets/
-  sprites/
-    player/
-    enemies/
-    animals/
-    resources/
-    buildings/
-    effects/
-    ui/
+assets/
+  art/
+    generated/
+    reference/
   audio/
     bgm/
     sfx/
-    ambience/
-  atlases/
-  icons/
+    reference/
+
+public/assets/
+  characters/
+  buildings/
+  props/
+  tilesets/
+  fx/
+  ui/
+    icons/
+  audio/
+    bgm/
+    sfx/
+    voice/
 ```
 
 ## Current Gaps
 
 | Gap | Impact | Suggested next step |
 | --- | --- | --- |
-| No real game art files | Game is playable but reads as prototype blocks | Replace P0 placeholder textures first. |
+| Some P0 art still missing | Props, player, zombie, and deer are improved, but UI still reads as prototype | Replace HUD/resource icons next. |
 | No audio files | No phase/combat feedback through sound | Add minimal P1 SFX pack after P0 visuals. |
 | No app icon | Packaged exe uses default Electron icon | Add `build.win.icon` and `.ico` asset. |
 | No atlas pipeline | Many separate future assets may become messy | Add atlas loading only when several sprites exist. |
