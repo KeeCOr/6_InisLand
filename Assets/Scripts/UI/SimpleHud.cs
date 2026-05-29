@@ -491,11 +491,11 @@ namespace IL6
             if (_clockBig == null)
             {
                 _clockBig = new GUIStyle(GUI.skin.label) {
-                    fontSize = 30, fontStyle = FontStyle.Bold,
+                    fontSize = 16, fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.MiddleCenter,
                     normal = { textColor = UiTheme.TextGold } };
                 _clockSmall = new GUIStyle(GUI.skin.label) {
-                    fontSize = 14, fontStyle = FontStyle.Bold,
+                    fontSize = 11,
                     alignment = TextAnchor.MiddleCenter,
                     normal = { textColor = UiTheme.TextCream } };
             }
@@ -522,8 +522,8 @@ namespace IL6
             int ss = Mathf.FloorToInt(rem % 60f);
             string clock = $"{mm:00}:{ss:00}";
 
-            int W = 300, H = 80;
-            var r = new Rect(Screen.width / 2 - W / 2, 12, W, H);
+            int W = 130, H = 62;
+            var r = new Rect(Screen.width - W - 12, 12, W, H);
 
             // 배경 패널 (페이즈 색조)
             Color tint = s.Cycle.Phase switch
@@ -545,16 +545,16 @@ namespace IL6
             float progress = dur > 0 ? Mathf.Clamp01(1f - rem / dur) : 0f;
             UiTheme.Rect(new Rect(r.x, r.yMax - 4, r.width * progress, 4), tint);
 
-            // 큰 시계 텍스트 + 아이콘
-            GUI.Label(new Rect(r.x, r.y + 4, r.width, 36), $"{phaseIcon}  {clock}  남음", _clockBig);
-            // Day + 페이즈명
-            GUI.Label(new Rect(r.x, r.y + 40, r.width, 20), $"Day {s.Cycle.Day}  ·  {phaseName}", _clockSmall);
-            // 현재 기온
+            // 시계 + 페이즈 아이콘
+            GUI.Label(new Rect(r.x, r.y + 3, r.width, 20), $"{phaseIcon} {phaseName} {clock}", _clockBig);
+            // Day
+            GUI.Label(new Rect(r.x, r.y + 22, r.width, 16), $"Day {s.Cycle.Day}", _clockSmall);
+            // 기온
             float temp = GetTemperatureCelsius();
             Color tempColor = temp < -25f ? new Color(0.55f, 0.85f, 1f) : UiTheme.TextSubtle;
             var oldTempC = GUI.contentColor;
             GUI.contentColor = tempColor;
-            GUI.Label(new Rect(r.x, r.y + 58, r.width, 18), $"🌡 현재 기온  {temp:F0}°C", _clockSmall);
+            GUI.Label(new Rect(r.x, r.y + 38, r.width, 16), $"🌡 {temp:F0}°C", _clockSmall);
             GUI.contentColor = oldTempC;
         }
 
@@ -860,81 +860,55 @@ namespace IL6
         }
 
         // ====================================================================
-        // STAT CARD (top-left): HP / XP / 무기 — 현대 RPG 풍 컴팩트 카드
+        // STAT CARD (top-left): HP / XP — 얇은 바 2줄
         // ====================================================================
         private void DrawStatCard()
         {
-            const int W = 460, H = 200;
-            // 하단 좌측으로 이동 — HP/XP/장비를 아래로
-            var panel = new Rect(12, Screen.height - H - 12, W, H);
-            UiTheme.Panel(panel);
-            int innerX = (int)panel.x + 14;
-            int innerW = W - 28;
-            int y = (int)panel.y + 12;
+            const int W = 220;
+            int x = 12, y = 12;
 
             if (Player != null)
             {
-                // HP 바 with text overlay
                 float hpPct = Player.MaxHp > 0 ? (float)Player.CurrentHp / Player.MaxHp : 0f;
                 Color hpFill = Color.Lerp(new Color(0.85f, 0.2f, 0.18f), new Color(0.4f, 0.85f, 0.4f), hpPct);
-                UiTheme.Bar(new Rect(innerX, y, innerW, 26), hpPct, hpFill);
-                var hpStyle = new GUIStyle(_section) {
+                // HP 배경
+                UiTheme.Rect(new Rect(x - 1, y - 1, W + 2, 14), UiTheme.PanelBorderDim);
+                UiTheme.Bar(new Rect(x, y, W, 12), hpPct, hpFill);
+                var hpStyle = new GUIStyle(GUI.skin.label) {
+                    fontSize = 10, fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.MiddleCenter,
-                    normal = { textColor = Color.white },
-                    fontSize = 17
+                    normal = { textColor = Color.white }
                 };
-                GUI.Label(new Rect(innerX, y, innerW, 26), $"HP  {Player.CurrentHp} / {Player.MaxHp}", hpStyle);
-                y += 32;
-            }
-            else
-            {
-                GUI.Label(new Rect(innerX, y, innerW, 22), "Player NULL", _label);
-                y += 28;
+                GUI.Label(new Rect(x, y, W, 12), $"HP {Player.CurrentHp}/{Player.MaxHp}", hpStyle);
+                y += 14;
             }
 
-            // XP 바 with text overlay
             if (Progression != null)
             {
                 float xpPct = Progression.XpToNext > 0 ? (float)Progression.Xp / Progression.XpToNext : 0f;
-                UiTheme.Bar(new Rect(innerX, y, innerW, 20), xpPct, UiTheme.BarXpFill);
-                var xpStyle = new GUIStyle(_label) {
-                    alignment = TextAnchor.MiddleCenter,
-                    normal = { textColor = new Color(0.05f, 0.1f, 0.18f) },
-                    fontSize = 14, fontStyle = FontStyle.Bold
-                };
-                GUI.Label(new Rect(innerX, y, innerW, 20),
-                    $"Lv {Progression.Level}    {Progression.Xp} / {Progression.XpToNext} XP", xpStyle);
-                y += 26;
-            }
-
-            // 모드 탭 — 근접 / 원거리 / 건축
-            int tabW = (innerW - 12) / 3;
-            DrawModeTab(new Rect(innerX, y, tabW, 30), HudMode.Melee, "⚔ 근접 [1]");
-            DrawModeTab(new Rect(innerX + tabW + 6, y, tabW, 30), HudMode.Ranged, "🏹 원거리 [2]");
-            DrawModeTab(new Rect(innerX + (tabW + 6) * 2, y, tabW, 30), HudMode.Build, "🏠 건축 [3]");
-            y += 36;
-
-            // 모드별 표시
-            if (_hudMode == HudMode.Build)
-            {
-                GUI.Label(new Rect(innerX, y, innerW, 22), "건축 모드 — 하단 핫바에서 선택", _labelSubtle);
-                y += 24;
-            }
-            else if (Attacker != null && Attacker.Weapon != null)
-            {
-                var w = Attacker.Weapon;
-                GUI.Label(new Rect(innerX, y, innerW, 24), $"⚔ {w.DisplayName}", _weapon);
-                y += 28;
-                // 쿨타임 바 제거 — 사용자 요청
+                UiTheme.Rect(new Rect(x - 1, y - 1, W + 2, 9), UiTheme.PanelBorderDim);
+                UiTheme.Bar(new Rect(x, y, W, 7), xpPct, UiTheme.BarXpFill);
+                y += 9;
             }
 
             // 채집 진행 (활성일 때만)
             if (Gather != null && Gather.IsActive)
             {
-                UiTheme.Bar(new Rect(innerX, y, innerW, 10), Gather.Progress, new Color(0.6f, 0.85f, 0.4f));
-                GUI.Label(new Rect(innerX, y - 18, innerW, 16),
-                    $"채집 {(Gather.Progress * 100):F0}%", _labelSubtle);
+                UiTheme.Rect(new Rect(x - 1, y + 1, W + 2, 9), UiTheme.PanelBorderDim);
+                UiTheme.Bar(new Rect(x, y + 2, W, 7), Gather.Progress, new Color(0.6f, 0.85f, 0.4f));
+                var gStyle = new GUIStyle(GUI.skin.label) {
+                    fontSize = 9, alignment = TextAnchor.MiddleCenter,
+                    normal = { textColor = UiTheme.TextCream }
+                };
+                GUI.Label(new Rect(x, y + 2, W, 7), $"채집 {(Gather.Progress * 100):F0}%", gStyle);
             }
+
+            // 모드 탭 — HP/XP 아래 작게
+            int tabY = 12 + 14 + 9 + 6;
+            int tabW = (W - 8) / 3;
+            DrawModeTab(new Rect(x,             tabY, tabW, 22), HudMode.Melee,  "⚔[1]");
+            DrawModeTab(new Rect(x + tabW + 4,  tabY, tabW, 22), HudMode.Ranged, "🏹[2]");
+            DrawModeTab(new Rect(x + (tabW+4)*2, tabY, tabW, 22), HudMode.Build,  "🏠[3]");
         }
 
         private void DrawModeTab(Rect r, HudMode mode, string label)
@@ -1052,14 +1026,14 @@ namespace IL6
             if (_resStyle == null)
                 _resStyle = new GUIStyle(GUI.skin.label)
                 {
-                    fontSize = 15, fontStyle = FontStyle.Bold,
+                    fontSize = 13, fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.MiddleLeft,
                     normal = { textColor = UiTheme.TextCream }
                 };
 
-            // WaveStanceBar(H=120) 바로 아래
-            const int W = 320, H = 34;
-            var panel = new Rect(12, 138, W, H);
+            // StatCard(12+14+9+22+4=61) 아래
+            const int W = 280, H = 24;
+            var panel = new Rect(12, 63, W, H);
             UiTheme.Rect(panel, new Color(0.05f, 0.07f, 0.12f, 0.90f));
             UiTheme.Rect(new Rect(panel.x - 1, panel.y - 1, panel.width + 2, panel.height + 2), UiTheme.PanelBorderDim);
 
@@ -1090,21 +1064,21 @@ namespace IL6
         }
 
         // ====================================================================
-        // WAVE / STANCE BAR (bottom-left): 좀비 웨이브 + 동료 스탠스
+        // WAVE / STANCE BAR: 웨이브 정보 + 동료 스탠스 (좌상단, 자원 아래)
         // ====================================================================
         private void DrawWaveStanceBar()
         {
             var session = GameSession.Instance;
             if (session == null) return;
 
-            const int W = 320, H = 120;
-            // 상단 좌측으로 이동 — StatCard 가 하단으로 내려가서 자리 비움
-            var panel = new Rect(12, 12, W, H);
+            const int W = 280, H = 50;
+            // ResourceBar(63+24+4=91) 아래
+            var panel = new Rect(12, 91, W, H);
             UiTheme.Panel(panel);
 
-            int innerX = (int)panel.x + 12;
-            int innerW = W - 24;
-            int y = (int)panel.y + 8;
+            int innerX = (int)panel.x + 10;
+            int innerW = W - 20;
+            int y = (int)panel.y + 6;
 
             // 페이즈별 컨텍스트 라인
             if (Night != null && Night.CurrentPhase == Phase.Night)
@@ -1155,8 +1129,8 @@ namespace IL6
                 Companion.Stance.Aggressive => "⚔ 공세",
                 _ => "",
             };
-            int btnY = (int)panel.yMax - 32;
-            if (UiTheme.Button(new Rect(innerX, btnY, innerW, 26), $"동료 {sLabel}  ({liveCount})", _smallBtn, liveCount > 0))
+            int btnY = (int)panel.yMax - 22;
+            if (UiTheme.Button(new Rect(innerX, btnY, innerW, 18), $"동료 {sLabel} ({liveCount})", _smallBtn, liveCount > 0))
             {
                 var next = majority switch
                 {
@@ -1240,7 +1214,7 @@ namespace IL6
                     Color = new Color(0.55f, 0.4f, 0.25f) },
             };
 
-            const int CellW = 96, CellH = 96, Gap = 6;
+            const int CellW = 72, CellH = 72, Gap = 4;
             int totalW = CellW * slots.Length + Gap * (slots.Length - 1);
             int startX = Screen.width / 2 - totalW / 2;
             int y = Screen.height - CellH - 12;
@@ -1259,7 +1233,7 @@ namespace IL6
                 UiTheme.Rect(new Rect(r.x, r.y, r.width, 4), s.Color);
 
                 // 아이콘 (큰 글자)
-                var iconStyle = new GUIStyle(_title) { fontSize = 32, alignment = TextAnchor.MiddleCenter };
+                var iconStyle = new GUIStyle(_title) { fontSize = 22, alignment = TextAnchor.MiddleCenter };
                 var oldC = GUI.contentColor;
                 GUI.contentColor = ok ? Color.white : new Color(1f, 1f, 1f, 0.4f);
                 GUI.Label(new Rect(r.x, r.y + 10, r.width, 36), s.Icon, iconStyle);
@@ -1267,7 +1241,7 @@ namespace IL6
                 // 이름
                 GUI.contentColor = ok ? UiTheme.TextCream : new Color(1f, 1f, 1f, 0.4f);
                 var nameStyle = new GUIStyle(_label) {
-                    fontSize = 14, fontStyle = FontStyle.Bold,
+                    fontSize = 11, fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.MiddleCenter,
                 };
                 GUI.Label(new Rect(r.x, r.y + 46, r.width, 18), s.Name, nameStyle);
@@ -1296,7 +1270,7 @@ namespace IL6
             var session = GameSession.Instance;
             if (session == null) return;
 
-            const int W = 280, H = 160;
+            const int W = 220, H = 100;
             var panel = new Rect(Screen.width - W - 12, Screen.height - H - 12, W, H);
             UiTheme.Panel(panel);
 
