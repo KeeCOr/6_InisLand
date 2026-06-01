@@ -21,13 +21,15 @@ namespace IL6
         public static int MaxFarmsAllowed()
         {
             int storages = 0;
+            int seedLevels = 0;
             var bs = UnityEngine.Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
             foreach (var b in bs)
             {
                 if (b == null || b.CurrentHp <= 0) continue;
                 if (b.Kind == BuildingKind.Storage) storages++;
+                if (b.Kind == BuildingKind.SeedStorage) seedLevels += Mathf.Max(1, b.Level);
             }
-            return 1 + storages;
+            return 1 + storages + seedLevels;
         }
 
         public static int CurrentFarmCount()
@@ -71,7 +73,8 @@ namespace IL6
         public int Harvest()
         {
             if (!HarvestReady) return 0;
-            int yield = BaseYield + Workers.Count * PerWorkerBonus;
+            int baseYield = BaseYield + Workers.Count * PerWorkerBonus;
+            int yield = Mathf.Max(1, Mathf.RoundToInt(baseYield * BuildingUpgradeRules.CropYieldMultiplier()));
             var session = GameSession.Instance;
             if (session != null) session.Resources.Add(ResourceKind.Food, yield);
             GameFeel.FloatText(transform.position, $"+{yield} Food", new Color(0.7f, 0.95f, 0.5f));

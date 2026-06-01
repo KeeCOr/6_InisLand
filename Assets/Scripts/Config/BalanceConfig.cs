@@ -3,8 +3,7 @@ using UnityEngine;
 namespace IL6
 {
     /// <summary>
-    /// 게임 밸런스 단일 소스. ScriptableObject로 만들어 Inspector에서 수정 가능.
-    /// 메뉴: Assets > Create > 6IL > Balance Config
+    /// Central gameplay balance asset. Values can be edited from Resources/BalanceConfig.
     /// </summary>
     [CreateAssetMenu(fileName = "BalanceConfig", menuName = "6IL/Balance Config")]
     public sealed class BalanceConfig : ScriptableObject
@@ -55,22 +54,28 @@ namespace IL6
         public int WaveMaxCount = 300;
 
         [Header("Building HP")]
-        public int CampfireHp = 280;   // 400→280, 너무 탱키하던 거 다운
-        public int BarricadeHp = 280;  // 200→280, 메인 방어 벽
-        public int FenceHp = 14;       // 4→14, 실수 한 방엔 안 부서짐
+        public int CampfireHp = 280;
+        public int BrazierHp = 520;
+        public int BlacksmithHp = 360;
+        public int SeedStorageHp = 180;
+        public int CarpenterHp = 220;
+        public int BarricadeHp = 280;
+        public int FenceHp = 14;
 
         [Header("Building Cost (wood)")]
         public int CampfireCost = 5;
         public int BarricadeCost = 5;
+        public int BrazierCost = 12;
+        public int BlacksmithCost = 10;
+        public int SeedStorageCost = 8;
+        public int CarpenterCost = 12;
 
         [Header("Campfire Aura")]
         public float BonfireDamagePerSec = 5f;
         public float BonfireRadius = 128f;
         public float BonfireAttackBuff = 0.15f;
-        /// <summary>밤마다 모닥불 HP가 소모되는 초당 속도. MaxHp=280 기준 약 9분마다 재충전 필요.</summary>
         public float CampfireHpDrainPerSec = 0.5f;
 
-        // 싱글톤 접근 (Resources에서 자동 로드)
         private static BalanceConfig _instance;
         public static BalanceConfig Instance
         {

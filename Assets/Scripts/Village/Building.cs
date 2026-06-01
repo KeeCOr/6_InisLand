@@ -4,14 +4,27 @@ using IL6.Events;
 
 namespace IL6
 {
-    public enum BuildingKind { Campfire, Barricade, Fence, House, Storage, Farm, Watchtower, Infirmary, HuntersHut }
+    public enum BuildingKind
+    {
+        Campfire,
+        Barricade,
+        Fence,
+        House,
+        Storage,
+        Farm,
+        Watchtower,
+        Infirmary,
+        HuntersHut,
+        Brazier,
+        Blacksmith,
+        SeedStorage,
+        Carpenter
+    }
 
-    /// <summary>
-    /// 모든 건물 공통. HP, 파괴 처리, 안에 숨은 비전투 동료 노출.
-    /// </summary>
     public sealed class Building : MonoBehaviour
     {
         public BuildingKind Kind;
+        public int Level { get; private set; } = 1;
         public int CurrentHp { get; private set; }
         public int MaxHp { get; private set; }
         public int Eid { get; set; }
@@ -20,37 +33,57 @@ namespace IL6
         public readonly List<Companion> HostedCompanions = new();
 
         private System.Action _unsubDawn;
+        private bool _started;
 
-        private void Awake()
+        private void Start()
         {
-            var b = BalanceConfig.Instance;
-            int baseHp = Kind switch
-            {
-                BuildingKind.Campfire => b.CampfireHp,
-                BuildingKind.Barricade => b.BarricadeHp,
-                BuildingKind.Fence => b.FenceHp,
-                BuildingKind.House => 140,    // 200→140 — 작은 거주지
-                BuildingKind.Storage => 200,  // 250→200 — 자원함
-                BuildingKind.Farm => 90,      // 150→90 — 가장 약한 핵심 건물 (지속 식량 위해 보호 필요)
-                BuildingKind.Watchtower => 200, // 220→200
-                BuildingKind.Infirmary => 180,  // 회복 건물
-                BuildingKind.HuntersHut => 160, // 사냥꾼 오두막 — 야외 동물 스폰 부스트
-                _ => b.BarricadeHp,
-            };
-            // 망루는 펜스 HP 50% 부스트 (스택)
+            _started = true;
+            if (MaxHp <= 0) RecalculateStats(true);
+            EnsureHpBar();
+            _unsubDawn = EventBus.Instance.Subscribe<DawnStartedPayload>(_ => DawnRepair());
+        }
+
+        public void Initialize(BuildingKind kind)
+        {
+            Kind = kind;
+            Level = Mathf.Max(1, Level);
+            RecalculateStats(true);
+            ApplyLevelEffects();
+            if (_started) EnsureHpBar();
+        }
+
+        public ResourceCost NextUpgradeCost()
+        {
+            return BuildingUpgradeRules.UpgradeCost(Kind, Level);
+        }
+
+        public bool CanUpgrade(ResourceStore store)
+        {
+            return Level < BuildingUpgradeRules.MaxLevel && NextUpgradeCost().CanPay(store);
+        }
+
+        public bool TryUpgrade(ResourceStore store)
+        {
+            if (Level >= BuildingUpgradeRules.MaxLevel) return false;
+            var cost = NextUpgradeCost();
+            if (!cost.Pay(store)) return false;
+
+            Level++;
+            RecalculateStats(false);
+            ApplyLevelEffects();
+            RecalculateAllBuildings();
+            GameFeel.FloatText(transform.position, $"{Kind} Lv.{Level}", new Color(1f, 0.86f, 0.45f));
+            return true;
+        }
+
+        public void RecalculateStats(bool fullHeal)
+        {
+            int baseHp = BuildingUpgradeRules.BaseHp(Kind, BalanceConfig.Instance);
             if (Kind == BuildingKind.Fence)
             {
-                int towers = 0;
-                var existing = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
-                foreach (var bb in existing)
-                {
-                    if (bb == null || bb == this) continue;
-                    if (bb.Kind == BuildingKind.Watchtower) towers++;
-                }
-                baseHp = Mathf.RoundToInt(baseHp * (1f + 0.5f * towers));
+                baseHp = Mathf.RoundToInt(baseHp * BuildingUpgradeRules.FenceHpMultiplier());
             }
-            // 마을 성장도 — 펜스 제외 건물 수에 따라 HP 가산.
-            // 기존 building 1개당 +12%, 최대 +200%.
+
             int existingCore = 0;
             var all = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
             foreach (var bb in all)
@@ -59,29 +92,12 @@ namespace IL6
                 if (bb.Kind == BuildingKind.Fence) continue;
                 existingCore++;
             }
-            float growth = 1f + Mathf.Min(existingCore * 0.12f, 2f);
-            MaxHp = Mathf.RoundToInt(baseHp * growth);
-            CurrentHp = MaxHp;
-        }
 
-        private void Start()
-        {
-            // 펜스/게이트는 수십 개라 HP 바 제외 — 나머지만 부착 (풀체력에서 자동 숨김)
-            if (Kind != BuildingKind.Fence && GetComponent<HpBarUi>() == null)
-            {
-                var hp = gameObject.AddComponent<HpBarUi>();
-                hp.Building = this;
-                hp.Offset = new Vector2(0f, 0.6f);
-                hp.Size = new Vector2(0.9f, 0.10f);
-                hp.BgColor = new Color(0.05f, 0.05f, 0.08f, 0.9f);
-                hp.FillColor = Kind switch
-                {
-                    BuildingKind.Campfire  => new Color(1f, 0.55f, 0.2f),
-                    BuildingKind.Barricade => new Color(0.6f, 0.4f, 0.2f),
-                    _ => new Color(0.5f, 0.85f, 0.5f),
-                };
-            }
-            _unsubDawn = EventBus.Instance.Subscribe<DawnStartedPayload>(_ => DawnRepair());
+            float growth = 1f + Mathf.Min(existingCore * 0.12f, 2f);
+            float levelMul = 1f + 0.35f * (Level - 1);
+            int oldMax = MaxHp;
+            MaxHp = Mathf.RoundToInt(baseHp * growth * levelMul);
+            CurrentHp = fullHeal ? MaxHp : Mathf.Min(MaxHp, CurrentHp + Mathf.Max(0, MaxHp - oldMax));
         }
 
         public float LastDamagedAt { get; private set; } = -100f;
@@ -100,7 +116,6 @@ namespace IL6
             }
         }
 
-        /// <summary>외부 (HUD 수리 버튼) 에서 즉시 HP 회복.</summary>
         public void RepairHp(int amount)
         {
             if (CurrentHp <= 0) return;
@@ -133,6 +148,41 @@ namespace IL6
                 if (c != null) c.ExposeAndFlee();
             }
             HostedCompanions.Clear();
+        }
+
+        private void EnsureHpBar()
+        {
+            if (Kind == BuildingKind.Fence || GetComponent<HpBarUi>() != null) return;
+
+            var hp = gameObject.AddComponent<HpBarUi>();
+            hp.Building = this;
+            hp.Offset = new Vector2(0f, 0.6f);
+            hp.Size = new Vector2(0.9f, 0.10f);
+            hp.BgColor = new Color(0.05f, 0.05f, 0.08f, 0.9f);
+            hp.FillColor = Kind switch
+            {
+                BuildingKind.Campfire => new Color(1f, 0.55f, 0.2f),
+                BuildingKind.Brazier => new Color(1f, 0.72f, 0.22f),
+                BuildingKind.Blacksmith => new Color(1f, 0.35f, 0.18f),
+                BuildingKind.Barricade => new Color(0.6f, 0.4f, 0.2f),
+                _ => new Color(0.5f, 0.85f, 0.5f),
+            };
+        }
+
+        private void ApplyLevelEffects()
+        {
+            var aura = GetComponent<CampfireAura>();
+            if (aura != null) aura.ApplyBuildingLevel(Kind, Level);
+        }
+
+        private static void RecalculateAllBuildings()
+        {
+            var all = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
+            foreach (var b in all)
+            {
+                if (b == null || b.CurrentHp <= 0) continue;
+                b.RecalculateStats(false);
+            }
         }
     }
 }

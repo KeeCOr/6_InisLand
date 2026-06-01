@@ -46,6 +46,7 @@ namespace IL6
             DrawDebugCorner();     // 하단 우측: 디버그 + SFX
             DrawWorldChopButton();
             DrawWorldRepairButton();
+            DrawWorldUpgradeButton();
             DrawWorldRefuelButton();
             DrawWorldFarmButtons();
             DrawRecruitDialog();
@@ -133,14 +134,11 @@ namespace IL6
             wp.z = 0f;
 
             BuildingKind kind = _pendingBuildKind.Value;
-            int wood = Inflate(BaseWoodCost(kind), kind);
-            int stone = kind == BuildingKind.Watchtower ? Inflate(4, kind) : 0;
+            ResourceCost cost = BuildingUpgradeRules.BuildCost(kind, CostMul(kind));
 
-            if (session.Resources.Get(ResourceKind.Wood) < wood) return;
-            if (stone > 0 && session.Resources.Get(ResourceKind.Stone) < stone) return;
+            if (!cost.CanPay(session.Resources)) return;
 
-            if (!session.Resources.Spend(ResourceKind.Wood, wood)) return;
-            if (stone > 0 && !session.Resources.Spend(ResourceKind.Stone, stone)) return;
+            if (!cost.Pay(session.Resources)) return;
 
             // ConstructionSite 스폰
             SpawnConstructionSite(kind, wp);
@@ -148,18 +146,8 @@ namespace IL6
             Sfx.Build();
         }
 
-        private static int BaseWoodCost(BuildingKind k) => k switch
-        {
-            BuildingKind.Campfire => 5,
-            BuildingKind.House => 6,
-            BuildingKind.Fence => 1,
-            BuildingKind.Storage => 8,
-            BuildingKind.Farm => 6,
-            BuildingKind.Watchtower => 8,
-            BuildingKind.Infirmary => 7,
-            BuildingKind.HuntersHut => 8,
-            _ => 5,
-        };
+        private static int BaseWoodCost(BuildingKind k) => BuildingUpgradeRules.BaseWoodCost(k);
+        private static int BaseStoneCost(BuildingKind k) => BuildingUpgradeRules.BaseStoneCost(k);
 
         private void SpawnConstructionSite(BuildingKind kind, Vector3 pos)
         {
@@ -182,6 +170,10 @@ namespace IL6
                 switch (k)
                 {
                     case BuildingKind.Campfire: SpawnCampfire(p); break;
+                    case BuildingKind.Brazier: SpawnBrazier(p); break;
+                    case BuildingKind.Blacksmith: SpawnBlacksmith(p); break;
+                    case BuildingKind.SeedStorage: SpawnSeedStorage(p); break;
+                    case BuildingKind.Carpenter: SpawnCarpenter(p); break;
                     case BuildingKind.House: SpawnHouse(p); break;
                     case BuildingKind.Fence: VillageStarter.SpawnFence(p, 0f); break;
                     case BuildingKind.Storage:
@@ -1177,6 +1169,8 @@ namespace IL6
         private static float CostMul(BuildingKind k) => 1f + 0.35f * CountBuiltOfKind(k);
         private static int Inflate(int baseCost, BuildingKind k)
             => Mathf.RoundToInt(baseCost * CostMul(k));
+        private static ResourceCost BuildCost(BuildingKind k)
+            => BuildingUpgradeRules.BuildCost(k, CostMul(k));
 
         private void DrawBuildHotbar()
         {
@@ -1190,52 +1184,80 @@ namespace IL6
 
             BuildSlot[] slots = {
                 new BuildSlot { Icon = "🔥", Name = "모닥불",
-                    CostWood = Inflate(5, BuildingKind.Campfire),
+                    CostWood = BuildCost(BuildingKind.Campfire).Wood,
+                    CostStone = BuildCost(BuildingKind.Campfire).Stone,
                     Kind = BuildingKind.Campfire, Available = true,
                     Color = new Color(1f, 0.55f, 0.2f) },
+                new BuildSlot { Icon = "🔥", Name = "화로",
+                    CostWood = BuildCost(BuildingKind.Brazier).Wood,
+                    CostStone = BuildCost(BuildingKind.Brazier).Stone,
+                    Kind = BuildingKind.Brazier, Available = true,
+                    Color = new Color(1f, 0.72f, 0.22f) },
                 new BuildSlot { Icon = "🏠", Name = "집 (+4)",
-                    CostWood = Inflate(6, BuildingKind.House),
+                    CostWood = BuildCost(BuildingKind.House).Wood,
+                    CostStone = BuildCost(BuildingKind.House).Stone,
                     Kind = BuildingKind.House, Available = true,
                     Color = new Color(0.85f, 0.6f, 0.4f) },
                 new BuildSlot { Icon = "🥕", Name = "울타리",
-                    CostWood = Inflate(1, BuildingKind.Fence),
+                    CostWood = BuildCost(BuildingKind.Fence).Wood,
+                    CostStone = BuildCost(BuildingKind.Fence).Stone,
                     Kind = BuildingKind.Fence, Available = true,
                     Color = new Color(0.78f, 0.62f, 0.30f) },
                 new BuildSlot { Icon = "📦", Name = "창고",
-                    CostWood = Inflate(8, BuildingKind.Storage),
+                    CostWood = BuildCost(BuildingKind.Storage).Wood,
+                    CostStone = BuildCost(BuildingKind.Storage).Stone,
                     Kind = BuildingKind.Storage, Available = true,
                     Color = new Color(0.55f, 0.45f, 0.3f) },
+                new BuildSlot { Icon = "🌱", Name = "씨앗고",
+                    CostWood = BuildCost(BuildingKind.SeedStorage).Wood,
+                    CostStone = BuildCost(BuildingKind.SeedStorage).Stone,
+                    Kind = BuildingKind.SeedStorage, Available = true,
+                    Color = new Color(0.62f, 0.52f, 0.28f) },
                 new BuildSlot { Icon = farmAllowed ? "🌾" : "🌾✖",
-                    Name = farmAllowed ? "농장" : "창고 필요",
-                    CostWood = Inflate(6, BuildingKind.Farm),
+                    Name = farmAllowed ? "농장" : "씨앗고 필요",
+                    CostWood = BuildCost(BuildingKind.Farm).Wood,
+                    CostStone = BuildCost(BuildingKind.Farm).Stone,
                     Kind = BuildingKind.Farm, Available = farmAllowed,
                     Color = new Color(0.5f, 0.85f, 0.35f) },
                 new BuildSlot { Icon = "🏹", Name = "망루",
-                    CostWood = Inflate(8, BuildingKind.Watchtower),
-                    CostStone = Inflate(4, BuildingKind.Watchtower),
+                    CostWood = BuildCost(BuildingKind.Watchtower).Wood,
+                    CostStone = BuildCost(BuildingKind.Watchtower).Stone,
                     Kind = BuildingKind.Watchtower, Available = true,
                     Color = new Color(0.6f, 0.85f, 0.55f) },
                 new BuildSlot { Icon = "🏥", Name = "의무실",
-                    CostWood = Inflate(7, BuildingKind.Infirmary),
+                    CostWood = BuildCost(BuildingKind.Infirmary).Wood,
+                    CostStone = BuildCost(BuildingKind.Infirmary).Stone,
                     Kind = BuildingKind.Infirmary, Available = true,
                     Color = new Color(0.9f, 0.95f, 0.95f) },
                 new BuildSlot { Icon = "🪤", Name = "사냥꾼 오두막",
-                    CostWood = Inflate(8, BuildingKind.HuntersHut),
+                    CostWood = BuildCost(BuildingKind.HuntersHut).Wood,
+                    CostStone = BuildCost(BuildingKind.HuntersHut).Stone,
                     Kind = BuildingKind.HuntersHut, Available = true,
                     Color = new Color(0.55f, 0.4f, 0.25f) },
+                new BuildSlot { Icon = "🪚", Name = "목공소",
+                    CostWood = BuildCost(BuildingKind.Carpenter).Wood,
+                    CostStone = BuildCost(BuildingKind.Carpenter).Stone,
+                    Kind = BuildingKind.Carpenter, Available = true,
+                    Color = new Color(0.58f, 0.38f, 0.18f) },
+                new BuildSlot { Icon = "⚒", Name = "대장간",
+                    CostWood = BuildCost(BuildingKind.Blacksmith).Wood,
+                    CostStone = BuildCost(BuildingKind.Blacksmith).Stone,
+                    Kind = BuildingKind.Blacksmith, Available = true,
+                    Color = new Color(0.9f, 0.3f, 0.15f) },
             };
 
-            const int CellW = 72, CellH = 72, Gap = 4;
-            int totalW = CellW * slots.Length + Gap * (slots.Length - 1);
+            const int CellH = 72, Gap = 4;
+            int cellW = Mathf.Clamp((Screen.width - 24 - Gap * (slots.Length - 1)) / slots.Length, 58, 72);
+            int totalW = cellW * slots.Length + Gap * (slots.Length - 1);
             int startX = Screen.width / 2 - totalW / 2;
             int y = Screen.height - CellH - 12;
 
             for (int i = 0; i < slots.Length; i++)
             {
                 var s = slots[i];
-                int cx = startX + i * (CellW + Gap);
-                var r = new Rect(cx, y, CellW, CellH);
-                bool ok = wood >= s.CostWood && stone >= s.CostStone;
+                int cx = startX + i * (cellW + Gap);
+                var r = new Rect(cx, y, cellW, CellH);
+                bool ok = s.Available && wood >= s.CostWood && stone >= s.CostStone;
 
                 // 셀 배경 + 보더
                 UiTheme.Rect(new Rect(r.x - 1, r.y - 1, r.width + 2, r.height + 2), ok ? UiTheme.PanelBorder : UiTheme.PanelBorderDim);
@@ -1261,7 +1283,7 @@ namespace IL6
                 string cost = s.CostStone > 0 ? $"{s.CostWood}W + {s.CostStone}S" : $"{s.CostWood}W";
                 GUI.contentColor = ok ? UiTheme.TextSubtle : new Color(0.5f, 0.5f, 0.5f, 0.6f);
                 var costStyle = new GUIStyle(_labelSubtle) { fontSize = 13, alignment = TextAnchor.MiddleCenter };
-                GUI.Label(new Rect(r.x, r.y + 66, r.width, 16), cost, costStyle);
+                GUI.Label(new Rect(r.x, r.y + 58, r.width, 14), cost, costStyle);
                 GUI.contentColor = oldC;
 
                 // 클릭 영역 — 즉시 스폰 대신 배치 모드 진입 (땅 클릭으로 확정)
@@ -1488,6 +1510,64 @@ namespace IL6
                 if (session.Resources.Spend(ResourceKind.Wood, Cost))
                 {
                     best.RepairHp(healAmount);
+                    Sfx.Build();
+                }
+            }
+        }
+
+        private void DrawWorldUpgradeButton()
+        {
+            if (Player == null) return;
+            var session = GameSession.Instance;
+            if (session == null) return;
+
+            const float Range = 3.5f;
+            var companions = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
+            var bs = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
+            Building best = null;
+            float bestDist = float.MaxValue;
+            Vector3 ppos = Player.transform.position;
+
+            foreach (var b in bs)
+            {
+                if (b == null || b.CurrentHp <= 0) continue;
+                if (b.Level >= BuildingUpgradeRules.MaxLevel) continue;
+
+                bool anyNear = Vector2.Distance(ppos, b.transform.position) <= Range;
+                if (!anyNear)
+                {
+                    foreach (var c in companions)
+                    {
+                        if (c == null || c.IsDead) continue;
+                        if (Vector2.Distance(c.transform.position, b.transform.position) <= Range)
+                        { anyNear = true; break; }
+                    }
+                }
+                if (!anyNear) continue;
+
+                float d = Vector2.Distance(ppos, b.transform.position);
+                if (d < bestDist) { bestDist = d; best = b; }
+            }
+            if (best == null) return;
+
+            var cam = Camera.main;
+            if (cam == null) return;
+            Vector3 sp = cam.WorldToScreenPoint(best.transform.position + new Vector3(0f, 1.35f, 0f));
+            if (sp.z < 0) return;
+            float guiY = Screen.height - sp.y;
+
+            ResourceCost cost = best.NextUpgradeCost();
+            bool ok = cost.CanPay(session.Resources);
+            string effect = BuildingUpgradeRules.UpgradeSummary(best.Kind, best.Level + 1);
+            string label = ok
+                ? $"⬆ Lv.{best.Level + 1} {effect} ({cost})"
+                : $"⬆ Lv.{best.Level + 1} 자원 부족 ({cost})";
+            var rect = new Rect(sp.x - 120, guiY - 14, 240, 28);
+            var bigBtn = new GUIStyle(_btn) { fontSize = 11, fontStyle = FontStyle.Bold };
+            if (UiTheme.Button(rect, label, bigBtn, ok))
+            {
+                if (best.TryUpgrade(session.Resources))
+                {
                     Sfx.Build();
                 }
             }
@@ -1943,5 +2023,9 @@ namespace IL6
         private void SpawnFarm(Vector3 p) => BuildingFactory.SpawnFarm(p);
         private void SpawnWatchtower(Vector3 p) => BuildingFactory.SpawnWatchtower(p);
         private void SpawnCampfire(Vector3 p) => VillageStarter.SpawnCampfire(p);
+        private void SpawnBrazier(Vector3 p) => BuildingFactory.SpawnBrazier(p);
+        private void SpawnBlacksmith(Vector3 p) => BuildingFactory.SpawnBlacksmith(p);
+        private void SpawnSeedStorage(Vector3 p) => BuildingFactory.SpawnSeedStorage(p);
+        private void SpawnCarpenter(Vector3 p) => BuildingFactory.SpawnCarpenter(p);
     }
 }

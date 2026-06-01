@@ -96,7 +96,7 @@ namespace IL6
             var center = Grid.TileToWorld(tx, ty);
             var go = Instantiate(prefab, new Vector3(center.x + (w - 1) * Grid.TileSize / 2f, center.y + (h - 1) * Grid.TileSize / 2f, 0), Quaternion.identity);
             var b = go.GetComponent<Building>();
-            if (b != null) { b.Kind = kind; b.Eid = eid; b.Grid = Grid; }
+            if (b != null) { b.Initialize(kind); b.Eid = eid; b.Grid = Grid; }
             Grid.Place(tx, ty, w, h, eid);
         }
     }

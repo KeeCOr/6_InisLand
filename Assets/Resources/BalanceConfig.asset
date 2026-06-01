@@ -20,10 +20,12 @@ MonoBehaviour:
   NightRadiusTiles: 6
   MegaBlizzardRadiusTiles: 3
   StartingWood: 15
+  StartingStone: 5
   StartingMeat: 0
   StartingFood: 5
   StartingFrostbloom: 0
   TreeDurationSec: 9
+  RockDurationSec: 6
   DeerDurationSec: 3
   TreeWoodYield: 4
   DeerMeatYield: 2
@@ -41,7 +43,15 @@ MonoBehaviour:
   WavePerDay: 4
   WaveMaxCount: 300
   CampfireHp: 280
+  BrazierHp: 520
+  BlacksmithHp: 360
+  SeedStorageHp: 180
+  CarpenterHp: 220
   BarricadeHp: 280
   FenceHp: 14
   CampfireCost: 5
+  BrazierCost: 12
+  BlacksmithCost: 10
+  SeedStorageCost: 8
+  CarpenterCost: 12
   BarricadeCost: 5

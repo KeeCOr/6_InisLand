@@ -27,7 +27,7 @@ namespace IL6
             cf.Tint = new Color(0.45f, 0.28f, 0.15f);
             cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.2f, 0.1f, 0.05f, 1f);
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Barricade;
+            go.AddComponent<Building>().Initialize(BuildingKind.Barricade);
             return go;
         }
 
@@ -44,7 +44,7 @@ namespace IL6
             cf.Tint = new Color(0.85f, 0.6f, 0.4f);
             cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.4f, 0.2f, 0.1f, 1f);
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.House;
+            go.AddComponent<Building>().Initialize(BuildingKind.House);
             return go;
         }
 
@@ -61,7 +61,7 @@ namespace IL6
             cf.Tint = new Color(0.55f, 0.45f, 0.3f);
             cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.25f, 0.18f, 0.1f, 1f);
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Storage;
+            go.AddComponent<Building>().Initialize(BuildingKind.Storage);
             return go;
         }
 
@@ -77,7 +77,7 @@ namespace IL6
             cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.18f, 0.3f, 0.12f, 1f);
             go.AddComponent<FarmBuilding>();
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Farm;
+            go.AddComponent<Building>().Initialize(BuildingKind.Farm);
             return go;
         }
 
@@ -94,7 +94,7 @@ namespace IL6
             cf.Tint = new Color(0.5f, 0.4f, 0.28f);
             cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.2f, 0.15f, 0.08f, 1f);
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Watchtower;
+            go.AddComponent<Building>().Initialize(BuildingKind.Watchtower);
             go.AddComponent<Watchtower>();
             return go;
         }
@@ -111,7 +111,7 @@ namespace IL6
             cf.Tint = new Color(0.95f, 0.97f, 0.95f);
             cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.5f, 0.7f, 0.5f, 1f);
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.Infirmary;
+            go.AddComponent<Building>().Initialize(BuildingKind.Infirmary);
             go.AddComponent<HealingShrine>();
             return go;
         }
@@ -129,7 +129,80 @@ namespace IL6
             cf.Tint = new Color(0.55f, 0.4f, 0.25f);
             cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.25f, 0.15f, 0.05f, 1f);
-            var b = go.AddComponent<Building>(); b.Kind = BuildingKind.HuntersHut;
+            go.AddComponent<Building>().Initialize(BuildingKind.HuntersHut);
+            return go;
+        }
+
+        public static GameObject SpawnSeedStorage(Vector3 pos)
+        {
+            var go = new GameObject("SeedStorage");
+            go.transform.position = pos;
+            go.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 3;
+            ApplySprite(sr, SpriteBank.Logs());
+            var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
+            var cf = go.AddComponent<ColorFallback>();
+            cf.Tint = new Color(0.62f, 0.52f, 0.28f);
+            cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 48;
+            cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.25f, 0.18f, 0.08f, 1f);
+            go.AddComponent<Building>().Initialize(BuildingKind.SeedStorage);
+            return go;
+        }
+
+        public static GameObject SpawnCarpenter(Vector3 pos)
+        {
+            var go = new GameObject("Carpenter");
+            go.transform.position = pos;
+            go.transform.localScale = new Vector3(1.0f, 0.9f, 1f);
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 3;
+            ApplySprite(sr, SpriteBank.Logs());
+            var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
+            var cf = go.AddComponent<ColorFallback>();
+            cf.Tint = new Color(0.58f, 0.38f, 0.18f);
+            cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 48;
+            cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.22f, 0.12f, 0.05f, 1f);
+            go.AddComponent<Building>().Initialize(BuildingKind.Carpenter);
+            return go;
+        }
+
+        public static GameObject SpawnBrazier(Vector3 pos)
+        {
+            var go = new GameObject("Brazier");
+            go.transform.position = pos;
+            go.transform.localScale = Vector3.one;
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 4;
+            ApplySprite(sr, SpriteBank.Campfire());
+            var col = go.AddComponent<CircleCollider2D>();
+            col.radius = 0.5f;
+            var cf = go.AddComponent<ColorFallback>();
+            cf.Tint = new Color(1f, 0.62f, 0.16f);
+            cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
+            cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.35f, 0.16f, 0.04f, 1f);
+            var aura = go.AddComponent<CampfireAura>();
+            aura.ApplyBuildingLevel(BuildingKind.Brazier, 1);
+            go.AddComponent<Building>().Initialize(BuildingKind.Brazier);
+            return go;
+        }
+
+        public static GameObject SpawnBlacksmith(Vector3 pos)
+        {
+            var go = new GameObject("Blacksmith");
+            go.transform.position = pos;
+            go.transform.localScale = new Vector3(1.0f, 1.0f, 1f);
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 3;
+            ApplySprite(sr, SpriteBank.Cabin());
+            var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
+            var cf = go.AddComponent<ColorFallback>();
+            cf.Tint = new Color(0.42f, 0.34f, 0.32f);
+            cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
+            cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.7f, 0.22f, 0.08f, 1f);
+            var aura = go.AddComponent<CampfireAura>();
+            aura.ApplyBuildingLevel(BuildingKind.Blacksmith, 1);
+            go.AddComponent<Building>().Initialize(BuildingKind.Blacksmith);
             return go;
         }
     }

@@ -209,7 +209,7 @@ namespace IL6
             cf.OutlineColor = new Color(0.2f, 0.13f, 0.05f, 1f);
 
             var b = go.AddComponent<Building>();
-            b.Kind = BuildingKind.Fence;
+            b.Initialize(BuildingKind.Fence);
             return go;
         }
 
@@ -236,12 +236,10 @@ namespace IL6
             col.radius = 0.45f;
 
             var aura = go.AddComponent<CampfireAura>();
-            aura.Radius = 2.5f;
-            aura.DamagePerSecond = 6f;
-            aura.TickInterval = 0.5f;
+            aura.ApplyBuildingLevel(BuildingKind.Campfire, 1);
 
             var b = go.AddComponent<Building>();
-            b.Kind = BuildingKind.Campfire;
+            b.Initialize(BuildingKind.Campfire);
 
             var hp = go.AddComponent<HpBarUi>();
             hp.Building = b;

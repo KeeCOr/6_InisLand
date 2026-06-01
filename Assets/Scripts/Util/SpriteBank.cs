@@ -72,6 +72,10 @@ namespace IL6
         public static Sprite BuildingByKind(BuildingKind k) => k switch
         {
             BuildingKind.Campfire    => Campfire(),
+            BuildingKind.Brazier     => Campfire(),
+            BuildingKind.Blacksmith  => Cabin(),
+            BuildingKind.SeedStorage => Logs(),
+            BuildingKind.Carpenter   => Logs(),
             BuildingKind.Fence       => FenceVertical(),
             BuildingKind.Barricade   => WoodBarricade(),
             BuildingKind.Watchtower  => Watchtower(),

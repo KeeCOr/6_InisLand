@@ -79,6 +79,37 @@ namespace IL6
             Fuel = Mathf.Clamp(Fuel + amount, 0f, MaxFuel);
         }
 
+        public void ApplyBuildingLevel(BuildingKind kind, int level)
+        {
+            float lv = Mathf.Max(1, level);
+            switch (kind)
+            {
+                case BuildingKind.Brazier:
+                    Radius = 4.5f + 0.45f * (lv - 1f);
+                    BaseVisionRadius = 5.0f + 0.45f * (lv - 1f);
+                    DamagePerSecond = 8f + 1.5f * (lv - 1f);
+                    MaxFuel = 180f + 25f * (lv - 1f);
+                    BurnRatePerSec = 0.8f;
+                    break;
+                case BuildingKind.Blacksmith:
+                    Radius = 3.0f + 0.25f * (lv - 1f);
+                    BaseVisionRadius = 3.0f + 0.25f * (lv - 1f);
+                    DamagePerSecond = 1f;
+                    MaxFuel = 120f + 15f * (lv - 1f);
+                    BurnRatePerSec = 0.65f;
+                    break;
+                default:
+                    Radius = 2.5f + 0.25f * (lv - 1f);
+                    BaseVisionRadius = 3.0f + 0.25f * (lv - 1f);
+                    DamagePerSecond = 6f + 0.75f * (lv - 1f);
+                    MaxFuel = 100f + 15f * (lv - 1f);
+                    BurnRatePerSec = 1f;
+                    break;
+            }
+            Fuel = Mathf.Min(Fuel, MaxFuel);
+            VisionRadius = BaseVisionRadius;
+        }
+
         private void Update()
         {
             // ── 연료 소진 ──────────────────────────────────────────────────
