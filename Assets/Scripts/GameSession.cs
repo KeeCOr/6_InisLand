@@ -341,7 +341,9 @@ namespace IL6
         private void SpawnBornChild(int day)
         {
             Vector2 jitter = Random.insideUnitCircle * 1.2f;
-            var go = new GameObject($"VillageChild_Day{day}");
+            uint nameSeed = unchecked((uint)day * 747796405u + (uint)TotalKills * 2891336453u + (uint)RecruitableNpc.CurrentCompanionCount());
+            string childName = CompanionNameGenerator.GenerateForRole("아이", new SeededRng(nameSeed));
+            var go = new GameObject($"{childName}(Born)");
             go.transform.position = new Vector3(GameConstants.VillageCenterX + jitter.x, GameConstants.VillageCenterY + jitter.y, 0f);
             go.transform.localScale = Vector3.one * 0.7f;
 
@@ -383,7 +385,7 @@ namespace IL6
             family.IsChild = true;
             family.BiologicalSex = CompanionFamily.Sex.Unknown;
 
-            EventBus.Instance.Emit(new CompanionRecruitedPayload("마을의 아이", "아이", "새 생명이 마을에 태어났어요."));
+            EventBus.Instance.Emit(new CompanionRecruitedPayload(childName, "아이", "새 생명이 마을에 태어났어요."));
         }
 
         public float LastAutoSaveAt { get; private set; } = -10f;

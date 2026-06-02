@@ -1,0 +1,100 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace IL6
+{
+    public static class CompanionNameGenerator
+    {
+        private static readonly string[] MaleNames =
+        {
+            "도윤", "서원", "은규", "지운", "한결", "무영",
+            "태오", "이준", "시우", "건우", "하람", "현준"
+        };
+
+        private static readonly string[] FemaleNames =
+        {
+            "려화", "혜인", "선유", "여린", "아린", "서하",
+            "나래", "하윤", "다온", "유나", "소율", "가은"
+        };
+
+        private static readonly string[] ChildNames =
+        {
+            "이나", "별하", "온유", "다솜", "하루", "로운",
+            "나린", "소미", "초아", "은호", "유리", "보라"
+        };
+
+        public static string GenerateForRole(string role, SeededRng rng)
+        {
+            if (rng == null) rng = new SeededRng((uint)Random.Range(1, int.MaxValue));
+            var pool = PoolForRole(role);
+            var used = CollectUsedNames();
+
+            int attempts = pool.Length * 2;
+            for (int i = 0; i < attempts; i++)
+            {
+                string candidate = pool[rng.IntRange(0, pool.Length - 1)];
+                if (!used.Contains(candidate)) return candidate;
+            }
+
+            foreach (var candidate in pool)
+            {
+                if (!used.Contains(candidate)) return candidate;
+            }
+
+            return pool[rng.IntRange(0, pool.Length - 1)];
+        }
+
+        private static string[] PoolForRole(string role)
+        {
+            return role switch
+            {
+                "농부" => FemaleNames,
+                "노인" => FemaleNames,
+                "아이" => ChildNames,
+                _ => MaleNames,
+            };
+        }
+
+        private static HashSet<string> CollectUsedNames()
+        {
+            var used = new HashSet<string>();
+
+            var npcs = Object.FindObjectsByType<RecruitableNpc>(FindObjectsSortMode.None);
+            foreach (var npc in npcs)
+            {
+                if (npc == null) continue;
+                AddCleanName(used, npc.DisplayNamePublic);
+            }
+
+            var companions = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
+            foreach (var companion in companions)
+            {
+                if (companion == null || companion.IsDead) continue;
+                AddCleanName(used, companion.gameObject.name);
+            }
+
+            return used;
+        }
+
+        private static void AddCleanName(HashSet<string> used, string raw)
+        {
+            string clean = CleanName(raw);
+            if (!string.IsNullOrEmpty(clean)) used.Add(clean);
+        }
+
+        private static string CleanName(string raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return "";
+            string clean = raw.Trim();
+
+            int recruited = clean.IndexOf("(Recruited)", System.StringComparison.Ordinal);
+            if (recruited >= 0) clean = clean.Substring(0, recruited).Trim();
+
+            int npcPrefix = clean.LastIndexOf('_');
+            if (npcPrefix >= 0 && npcPrefix + 1 < clean.Length)
+                clean = clean.Substring(npcPrefix + 1).Trim();
+
+            return clean;
+        }
+    }
+}

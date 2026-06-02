@@ -473,11 +473,6 @@ namespace IL6
             return go;
         }
 
-        private static readonly string[] _npcNames =
-        {
-            "려화", "도윤", "서원", "은규", "혜인", "지운", "한결", "무영", "선유", "여린"
-        };
-
         public struct NpcArchetype
         {
             public string Role;
@@ -567,6 +562,12 @@ namespace IL6
         /// <summary>특정 NPC 아키타입을 지정 위치에 직접 스폰 — PrefabGenerator 용.</summary>
         public static GameObject CreateNpcFromArchetype(NpcArchetype arch, string displayName, Vector3 pos)
         {
+            if (string.IsNullOrWhiteSpace(displayName))
+            {
+                uint seed = unchecked((uint)Time.frameCount * 1664525u + (uint)arch.Role.GetHashCode());
+                displayName = CompanionNameGenerator.GenerateForRole(arch.Role, new SeededRng(seed));
+            }
+
             var go = new GameObject($"Npc_{arch.Role}_{displayName}");
             go.transform.position = pos;
             var sr = go.AddComponent<SpriteRenderer>();
@@ -597,7 +598,7 @@ namespace IL6
         private static GameObject CreateNpc(float x, float y, SeededRng rng)
         {
             var arch = _npcArchetypes[rng.IntRange(0, _npcArchetypes.Length - 1)];
-            string nm = _npcNames[rng.IntRange(0, _npcNames.Length - 1)];
+            string nm = CompanionNameGenerator.GenerateForRole(arch.Role, rng);
 
             var go = new GameObject($"Npc_{arch.Role}_{nm}");
             go.transform.position = new Vector3(x, y, 0);
