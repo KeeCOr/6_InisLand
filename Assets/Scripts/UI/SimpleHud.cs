@@ -1,4 +1,5 @@
 using UnityEngine;
+using IL6.Events;
 
 namespace IL6
 {
@@ -15,6 +16,8 @@ namespace IL6
         public PlayerProgression Progression;
 
         private System.Collections.Generic.List<RuneKind> _runeOffer;
+        private readonly System.Collections.Generic.Dictionary<RuneKind, Texture2D> _runeIconCache = new();
+        private readonly System.Collections.Generic.Dictionary<string, Texture2D> _portraitCache = new();
 
         private GUIStyle _label, _labelSubtle, _title, _section, _weapon, _bigDeath, _btn, _smallBtn;
 
@@ -50,6 +53,7 @@ namespace IL6
             DrawWorldRefuelButton();
             DrawWorldFarmButtons();
             DrawRecruitDialog();
+            DrawRecruitCutscene();
             DrawRuneModal();
             DrawPhaseBanner();
             DrawBossWarning();
@@ -391,6 +395,7 @@ namespace IL6
         private string _phaseBanner = "";
         private float _phaseBannerLeft;
         private System.Action _unsubE, _unsubN, _unsubD, _unsubA;
+        private System.Action _unsubRecruit;
 
         private void OnEnable()
         {
@@ -402,12 +407,15 @@ namespace IL6
                 { ShowBanner($"Day {p.Day}  🌄  새벽"); Music.PlayForPhase(Phase.Dawn); });
             _unsubA = EventBus.Instance.Subscribe<DayStartedPayload>(p =>
                 { ShowBanner($"Day {p.Day}  ☀  새 날"); Music.PlayForPhase(Phase.Day); });
+            _unsubRecruit = EventBus.Instance.Subscribe<CompanionRecruitedPayload>(p =>
+                ShowRecruitCutscene(p.DisplayName, p.Role, p.DialogText));
             HookFadeEvents();
         }
 
         private void OnDisable()
         {
             _unsubE?.Invoke(); _unsubN?.Invoke(); _unsubD?.Invoke(); _unsubA?.Invoke();
+            _unsubRecruit?.Invoke(); _unsubRecruit = null;
             UnhookFadeEvents();
         }
 
@@ -1071,7 +1079,7 @@ namespace IL6
             var session = GameSession.Instance;
             if (session == null) return;
 
-            const int W = 280, H = 70;
+            const int W = 280, H = 108;
             // ResourceBar(63+24+4=91) 아래
             var panel = new Rect(12, 91, W, H);
             UiTheme.Panel(panel);
@@ -1121,6 +1129,27 @@ namespace IL6
                 GUI.Label(new Rect(innerX, y, innerW, 20), $"👥 {have}/{cap}", _section);
                 GUI.contentColor = oldC;
                 y += 22;
+            }
+
+            {
+                var compsForFood = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
+                int foodNeed = GameSession.FoodNeededForCompanions(compsForFood);
+                GUI.Label(new Rect(innerX, y, innerW, 18), $"🌾 일일 식량 -{foodNeed}", _labelSubtle);
+                y += 20;
+            }
+
+            if (session.PregnancyActive)
+            {
+                int currentDay = session.Cycle != null ? session.Cycle.Day : 0;
+                int left = session.PregnancyDaysRemaining(currentDay);
+                string parents = string.IsNullOrEmpty(session.LastPregnancyParents) ? "" : $" · {session.LastPregnancyParents}";
+                GUI.Label(new Rect(innerX, y, innerW, 18), $"🤰 출산까지 {left}일{parents}", _labelSubtle);
+                y += 20;
+            }
+            else if (session.LastPregnancyStarted)
+            {
+                GUI.Label(new Rect(innerX, y, innerW, 18), "🤰 임신 소식", _labelSubtle);
+                y += 20;
             }
 
             // 동료 스탠스 토글 (하단 줄)
@@ -1835,6 +1864,104 @@ namespace IL6
             return new string('★', n) + new string('☆', 5 - n);
         }
 
+        private string _recruitCutName;
+        private string _recruitCutRole;
+        private string _recruitCutDialog;
+        private Texture2D _recruitCutPortrait;
+        private float _recruitCutLeft;
+        private bool _recruitCutPaused;
+        private float _recruitCutPrevTimeScale = 1f;
+
+        private void ShowRecruitCutscene(string displayName, string role, string dialogText)
+        {
+            _recruitCutName = string.IsNullOrEmpty(displayName) ? "방랑자" : displayName;
+            _recruitCutRole = string.IsNullOrEmpty(role) ? "동료" : role;
+            _recruitCutDialog = string.IsNullOrEmpty(dialogText) ? "함께하겠습니다." : dialogText;
+            _recruitCutPortrait = PortraitForRole(_recruitCutRole);
+            _recruitCutLeft = 4.5f;
+            if (!_recruitCutPaused)
+            {
+                _recruitCutPrevTimeScale = Time.timeScale;
+                Time.timeScale = 0f;
+                _recruitCutPaused = true;
+            }
+        }
+
+        private void DrawRecruitCutscene()
+        {
+            if (_recruitCutLeft <= 0f)
+            {
+                EndRecruitCutscene();
+                return;
+            }
+            _recruitCutLeft -= Time.unscaledDeltaTime;
+            if (Event.current != null && Event.current.type == EventType.MouseDown)
+            {
+                EndRecruitCutscene();
+                Event.current.Use();
+                return;
+            }
+
+            float fade = Mathf.Clamp01(Mathf.Min(_recruitCutLeft, 4.5f - _recruitCutLeft) / 0.35f);
+            var oldC = GUI.color;
+            GUI.color = new Color(1f, 1f, 1f, fade);
+
+            UiTheme.Rect(new Rect(0, 0, Screen.width, Screen.height), new Color(0f, 0f, 0f, 0.48f * fade));
+
+            int panelW = Mathf.Min(880, Screen.width - 48);
+            int panelH = 210;
+            var panel = new Rect(Screen.width / 2f - panelW / 2f, Screen.height - panelH - 32, panelW, panelH);
+            UiTheme.Rect(new Rect(panel.x - 2, panel.y - 2, panel.width + 4, panel.height + 4), new Color(0.95f, 0.78f, 0.35f, 0.85f * fade));
+            UiTheme.Rect(panel, new Color(0.055f, 0.07f, 0.10f, 0.96f * fade));
+
+            var portraitRect = new Rect(panel.x + 22, panel.y - 178, 260, 360);
+            if (_recruitCutPortrait != null)
+                GUI.DrawTexture(portraitRect, _recruitCutPortrait, ScaleMode.ScaleToFit, true);
+
+            var nameStyle = new GUIStyle(_title) { fontSize = 26, alignment = TextAnchor.MiddleLeft };
+            var roleStyle = new GUIStyle(_labelSubtle) { fontSize = 16, alignment = TextAnchor.MiddleLeft };
+            var dialogStyle = new GUIStyle(_label) { fontSize = 21, wordWrap = true, alignment = TextAnchor.UpperLeft };
+            var hintStyle = new GUIStyle(_labelSubtle) { fontSize = 13, alignment = TextAnchor.MiddleRight };
+
+            float tx = panel.x + 300;
+            float tw = panel.width - 330;
+            GUI.Label(new Rect(tx, panel.y + 24, tw, 34), $"{_recruitCutName}", nameStyle);
+            GUI.Label(new Rect(tx, panel.y + 58, tw, 22), $"새 동료 · {_recruitCutRole}", roleStyle);
+            UiTheme.Separator(new Rect(tx, panel.y + 88, tw, 1));
+            GUI.Label(new Rect(tx, panel.y + 106, tw, 66), $"\"{_recruitCutDialog}\"", dialogStyle);
+            GUI.Label(new Rect(tx, panel.y + panel.height - 34, tw, 22), "클릭해서 닫기", hintStyle);
+
+            GUI.color = oldC;
+        }
+
+        private void EndRecruitCutscene()
+        {
+            _recruitCutLeft = 0f;
+            if (_recruitCutPaused)
+            {
+                bool runeModalOpen = Progression != null && Progression.LevelUpPending;
+                bool deathOpen = Player != null && Player.IsDead;
+                Time.timeScale = runeModalOpen || deathOpen ? 0f : Mathf.Max(0.0001f, _recruitCutPrevTimeScale);
+                _recruitCutPaused = false;
+            }
+        }
+
+        private Texture2D PortraitForRole(string role)
+        {
+            string key = role switch
+            {
+                "아이" => "companion-child-bust",
+                "농부" => "companion-aunt-bust",
+                "노인" => "companion-aunt-bust",
+                _ => "companion-uncle-bust",
+            };
+
+            if (_portraitCache.TryGetValue(key, out var cached)) return cached;
+            var tex = Resources.Load<Texture2D>($"UI/portraits/{key}");
+            _portraitCache[key] = tex;
+            return tex;
+        }
+
         // ====================================================================
         // 룬 모달 / 사망 오버레이
         // ====================================================================
@@ -1863,9 +1990,9 @@ namespace IL6
             int bx = (int)modal.x + (W - total) / 2;
             int by = (int)modal.y + 60;
 
-            var titleStyle = new GUIStyle(_weapon) { fontSize = 24, alignment = TextAnchor.MiddleLeft };
+            var titleStyle = new GUIStyle(_weapon) { fontSize = 22, alignment = TextAnchor.MiddleCenter };
             var bodyStyle = new GUIStyle(_label) { fontSize = 18, wordWrap = true };
-            var subStyle = new GUIStyle(_labelSubtle) { fontSize = 16 };
+            var subStyle = new GUIStyle(_labelSubtle) { fontSize = 15, alignment = TextAnchor.MiddleCenter };
 
             for (int i = 0; i < _runeOffer.Count; i++)
             {
@@ -1884,13 +2011,50 @@ namespace IL6
                 string suffix = willMaster ? "  ★ MASTER" : (next == 2 ? "  +" : "");
                 string title = PlayerProgression.Title(rune) + suffix;
 
-                GUI.Label(new Rect(rect.x + 16, rect.y + 18, rect.width - 32, 32), title, titleStyle);
-                GUI.Label(new Rect(rect.x + 16, rect.y + 56, rect.width - 32, 22),
+                var icon = RuneIcon(rune);
+                if (icon != null)
+                {
+                    var iconRect = new Rect(rect.x + rect.width / 2f - 40f, rect.y + 18f, 80f, 80f);
+                    UiTheme.Rect(new Rect(iconRect.x - 4f, iconRect.y - 4f, iconRect.width + 8f, iconRect.height + 8f),
+                        new Color(0.08f, 0.10f, 0.14f, 0.65f));
+                    GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit, true);
+                }
+
+                GUI.Label(new Rect(rect.x + 16, rect.y + 104, rect.width - 32, 30), title, titleStyle);
+                GUI.Label(new Rect(rect.x + 16, rect.y + 136, rect.width - 32, 22),
                     $"진행 {curStacks}/{PlayerProgression.MaxStacks} → {next}/{PlayerProgression.MaxStacks}", subStyle);
-                UiTheme.Separator(new Rect(rect.x + 16, rect.y + 86, rect.width - 32, 1));
-                GUI.Label(new Rect(rect.x + 16, rect.y + 100, rect.width - 32, btnH - 110),
+                UiTheme.Separator(new Rect(rect.x + 16, rect.y + 164, rect.width - 32, 1));
+                GUI.Label(new Rect(rect.x + 16, rect.y + 178, rect.width - 32, btnH - 188),
                     PlayerProgression.DescribeAt(rune, next), bodyStyle);
             }
+        }
+
+        private Texture2D RuneIcon(RuneKind rune)
+        {
+            if (_runeIconCache.TryGetValue(rune, out var cached)) return cached;
+
+            string name = rune switch
+            {
+                RuneKind.PoisonBlade => "poison-blade",
+                RuneKind.IceArrow => "ice-arrow",
+                RuneKind.LightningStrike => "lightning-strike",
+                RuneKind.MultiShot => "multi-shot",
+                RuneKind.Detonator => "detonator",
+                RuneKind.SummonDog => "summon-dog",
+                RuneKind.SummonHawk => "summon-hawk",
+                RuneKind.Vampirism => "vampirism",
+                RuneKind.Thorns => "thorns",
+                RuneKind.Pierce => "pierce",
+                RuneKind.AllyBoost => "ally-boost",
+                RuneKind.ResourceGift => "resource-gift",
+                _ => null,
+            };
+
+            Texture2D icon = null;
+            if (!string.IsNullOrEmpty(name))
+                icon = Resources.Load<Texture2D>($"UI/rune_choices/rune-choice-{name}");
+            _runeIconCache[rune] = icon;
+            return icon;
         }
 
         private bool _paused;

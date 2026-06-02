@@ -109,6 +109,12 @@ namespace IL6
             CurrentHp = Mathf.Min(MaxHp, CurrentHp + amount);
         }
 
+        public void SetMaxHp(int maxHp, bool fill)
+        {
+            MaxHp = Mathf.Max(1, maxHp);
+            CurrentHp = fill ? MaxHp : Mathf.Min(CurrentHp, MaxHp);
+        }
+
         public enum Mode { Follow, Working, Farming, Hiding, Fleeing }
         public enum Stance { Follow, Hold, Aggressive }
         public Mode CurrentMode { get; private set; } = Mode.Follow;

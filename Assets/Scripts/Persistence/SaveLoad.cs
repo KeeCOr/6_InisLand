@@ -11,6 +11,10 @@ namespace IL6
         public int currentDay = 1;
         public ResourceSnapshot resources = new();
         public uint weatherRng = 42;
+        public bool pregnancyActive;
+        public int pregnancyStartDay;
+        public int pregnancyDueDay;
+        public string pregnancyParents;
     }
 
     public static class SaveLoad

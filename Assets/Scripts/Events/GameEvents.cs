@@ -11,4 +11,14 @@ namespace IL6.Events
     public readonly struct WaveStartedPayload { public readonly int Day, WaveIndex, EnemyCount; public WaveStartedPayload(int d, int w, int e) { Day = d; WaveIndex = w; EnemyCount = e; } }
     public readonly struct WaveClearedPayload { public readonly int Day, WaveIndex; public WaveClearedPayload(int d, int w) { Day = d; WaveIndex = w; } }
     public readonly struct BuildRequestPayload { public readonly string Kind; public BuildRequestPayload(string k) { Kind = k; } }
+    public readonly struct CompanionRecruitedPayload
+    {
+        public readonly string DisplayName, Role, DialogText;
+        public CompanionRecruitedPayload(string displayName, string role, string dialogText)
+        {
+            DisplayName = displayName;
+            Role = role;
+            DialogText = dialogText;
+        }
+    }
 }

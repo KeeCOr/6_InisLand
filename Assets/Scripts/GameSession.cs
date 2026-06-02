@@ -45,11 +45,27 @@ namespace IL6
             {
                 Resources.Restore(save.resources);
                 Cycle.Restore(new DayNightSnapshot { day = save.currentDay, phase = Phase.Day, elapsedInPhase = 0 });
+                PregnancyActive = save.pregnancyActive;
+                PregnancyStartDay = save.pregnancyStartDay;
+                PregnancyDueDay = save.pregnancyDueDay;
+                LastPregnancyParents = save.pregnancyParents;
+                if (PregnancyActive && PregnancyDueDay <= 0)
+                    PregnancyDueDay = save.currentDay + PregnancyDurationDays;
             }
         }
 
         public int LastFoodEaten { get; private set; }
+        public int LastFoodNeeded { get; private set; }
         public int LastFoodShortage { get; private set; }
+        public int ConsecutiveFedDays { get; private set; }
+        public int LastBirthChancePercent { get; private set; }
+        public bool LastChildBorn { get; private set; }
+        public bool PregnancyActive { get; private set; }
+        public int PregnancyStartDay { get; private set; }
+        public int PregnancyDueDay { get; private set; }
+        public bool LastPregnancyStarted { get; private set; }
+        public string LastPregnancyParents { get; private set; }
+        public const int PregnancyDurationDays = 7;
         public int TotalKills { get; private set; }
         public int CompanionsLost { get; private set; }
         public int MaxCompanionsAtOnce { get; private set; }
@@ -104,14 +120,20 @@ namespace IL6
 
         private void OnDayStarted(int day)
         {
+            LastChildBorn = false;
+            LastPregnancyStarted = false;
+            TryCompletePregnancy(day);
+
             var comps = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
-            int needed = comps != null ? comps.Length : 0;
+            int needed = FoodNeededForCompanions(comps);
             int have = Resources.Get(ResourceKind.Food);
             int eat = Mathf.Min(have, needed);
             if (eat > 0) Resources.Spend(ResourceKind.Food, eat);
             int hungry = needed - eat;
+            LastFoodNeeded = needed;
             LastFoodEaten = eat;
             LastFoodShortage = hungry;
+            ConsecutiveFedDays = hungry > 0 ? 0 : ConsecutiveFedDays + 1;
             if (hungry > 0 && comps != null)
             {
                 for (int i = 0; i < hungry && i < comps.Length; i++)
@@ -126,6 +148,8 @@ namespace IL6
                     }
                 }
             }
+
+            TryStartPregnancy(day, comps);
 
             // 새벽 회복: Player + 모든 살아있는 동료 풀 HP
             var player = GameObject.FindWithTag("Player");
@@ -147,6 +171,209 @@ namespace IL6
             LastAutoSaveAt = Time.time;
         }
 
+        public static int FoodNeededForPopulation(int population)
+        {
+            if (population <= 0) return 0;
+
+            if (population <= 10) return population;
+            if (population <= 18) return Mathf.CeilToInt(population * 1.25f);
+            if (population <= 30) return Mathf.CeilToInt(population * 1.5f);
+            return population * 2;
+        }
+
+        public static int FoodNeededForCompanions(Companion[] companions)
+        {
+            if (companions == null || companions.Length == 0) return 0;
+
+            int foodUnitsX2 = 0;
+            int living = 0;
+            foreach (var c in companions)
+            {
+                if (c == null || c.IsDead) continue;
+                living++;
+                var growth = c.GetComponent<VillageChildGrowth>();
+                foodUnitsX2 += growth != null ? growth.FoodUnitsX2 : 2;
+            }
+
+            int baseNeed = Mathf.CeilToInt(foodUnitsX2 / 2f);
+            if (living <= 10) return baseNeed;
+            if (living <= 18) return Mathf.CeilToInt(baseNeed * 1.25f);
+            if (living <= 30) return Mathf.CeilToInt(baseNeed * 1.5f);
+            return baseNeed * 2;
+        }
+
+        public int PregnancyDaysRemaining(int currentDay)
+        {
+            if (!PregnancyActive) return 0;
+            return Mathf.Max(0, PregnancyDueDay - currentDay);
+        }
+
+        private void TryCompletePregnancy(int day)
+        {
+            if (!PregnancyActive || day < PregnancyDueDay) return;
+            SpawnBornChild(day);
+            PregnancyActive = false;
+            LastChildBorn = true;
+        }
+
+        private void TryStartPregnancy(int day, Companion[] companions)
+        {
+            LastBirthChancePercent = 0;
+            if (PregnancyActive) return;
+            if (Resources.Get(ResourceKind.Food) < 20) return;
+            if (LastFoodShortage > 0 || ConsecutiveFedDays < 2) return;
+
+            EnsureFamilyProfiles(companions);
+            PairEligibleAdults();
+
+            int living = 0;
+            if (companions != null)
+            {
+                foreach (var c in companions)
+                {
+                    if (c == null || c.IsDead) continue;
+                    living++;
+                }
+            }
+
+            int cap = RecruitableNpc.VillageCapacity();
+            if (cap - living < 2) return;
+
+            var couples = FindPregnancyEligibleCouples();
+            if (couples.Count == 0) return;
+
+            int chance = 5;
+            int houses = CountBuildings(BuildingKind.House);
+            chance += houses * 2;
+            if (Resources.Get(ResourceKind.Food) >= 40) chance += 3;
+            if (CountBuildings(BuildingKind.Infirmary) > 0) chance += 5;
+            chance = Mathf.Clamp(chance, 0, 25);
+            LastBirthChancePercent = chance;
+
+            uint rollSeed = unchecked((uint)day * 1103515245u + (uint)living * 97u + (uint)TotalKills * 13u);
+            var rng = new SeededRng(rollSeed);
+            if (rng.IntRange(1, 100) > chance) return;
+
+            var chosen = couples[rng.IntRange(0, couples.Count - 1)];
+            PregnancyActive = true;
+            PregnancyStartDay = day;
+            PregnancyDueDay = day + PregnancyDurationDays;
+            LastPregnancyStarted = true;
+            LastPregnancyParents = $"{chosen.male.gameObject.name} + {chosen.female.gameObject.name}";
+        }
+
+        private static void EnsureFamilyProfiles(Companion[] companions)
+        {
+            if (companions == null) return;
+            foreach (var c in companions)
+            {
+                if (c == null || c.IsDead) continue;
+                var family = c.GetComponent<CompanionFamily>();
+                if (family == null) family = c.gameObject.AddComponent<CompanionFamily>();
+                if (family.BiologicalSex != CompanionFamily.Sex.Unknown) continue;
+
+                var growth = c.GetComponent<VillageChildGrowth>();
+                if (growth != null)
+                {
+                    family.IsChild = true;
+                    continue;
+                }
+
+                string name = c.gameObject.name;
+                bool looksFemale = name.Contains("농부") || name.Contains("노인") || name.Contains("Aunt") || name.Contains("aunt");
+                family.BiologicalSex = looksFemale ? CompanionFamily.Sex.Female : CompanionFamily.Sex.Male;
+            }
+        }
+
+        private static void PairEligibleAdults()
+        {
+            var families = Object.FindObjectsByType<CompanionFamily>(FindObjectsSortMode.None);
+            foreach (var female in families)
+            {
+                if (female == null || female.BiologicalSex != CompanionFamily.Sex.Female || female.EverPartnered || !female.IsAdult) continue;
+                foreach (var male in families)
+                {
+                    if (male == null || male.BiologicalSex != CompanionFamily.Sex.Male || male.EverPartnered || !male.IsAdult) continue;
+                    female.PairWith(male);
+                    break;
+                }
+            }
+        }
+
+        private static System.Collections.Generic.List<(CompanionFamily male, CompanionFamily female)> FindPregnancyEligibleCouples()
+        {
+            var result = new System.Collections.Generic.List<(CompanionFamily male, CompanionFamily female)>();
+            var families = Object.FindObjectsByType<CompanionFamily>(FindObjectsSortMode.None);
+            foreach (var female in families)
+            {
+                if (female == null || female.BiologicalSex != CompanionFamily.Sex.Female || !female.IsAdult) continue;
+                var partner = female.FindPartner();
+                if (partner == null || partner.BiologicalSex != CompanionFamily.Sex.Male || !partner.IsAdult) continue;
+                result.Add((partner, female));
+            }
+            return result;
+        }
+
+        private static int CountBuildings(BuildingKind kind)
+        {
+            int count = 0;
+            var buildings = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
+            foreach (var b in buildings)
+            {
+                if (b == null || b.CurrentHp <= 0 || b.Kind != kind) continue;
+                count++;
+            }
+            return count;
+        }
+
+        private void SpawnBornChild(int day)
+        {
+            Vector2 jitter = Random.insideUnitCircle * 1.2f;
+            var go = new GameObject($"VillageChild_Day{day}");
+            go.transform.position = new Vector3(GameConstants.VillageCenterX + jitter.x, GameConstants.VillageCenterY + jitter.y, 0f);
+            go.transform.localScale = Vector3.one * 0.7f;
+
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 7;
+            var spr = SpriteBank.CompanionChild();
+            if (spr != null) sr.sprite = spr;
+
+            var cf = go.AddComponent<ColorFallback>();
+            cf.Tint = new Color(0.95f, 0.85f, 0.75f);
+            cf.Shape = FallbackShape.Circle;
+            cf.Circle = true;
+            cf.PixelSize = 64;
+            cf.OutlineWidth = 2;
+            cf.OutlineColor = new Color(0.1f, 0.1f, 0.15f, 1f);
+
+            var rb = go.AddComponent<Rigidbody2D>();
+            rb.gravityScale = 0f;
+            rb.freezeRotation = true;
+
+            var col = go.AddComponent<CircleCollider2D>();
+            col.radius = 0.28f;
+
+            var child = go.AddComponent<Companion>();
+            var player = GameObject.FindWithTag("Player");
+            if (player != null) child.Player = player.transform;
+            child.IsCombat = false;
+            child.MoveSpeed = 3.2f;
+            child.AttackRange = 1.0f;
+            child.Damage = 1;
+            child.AttackCooldown = 2.5f;
+            child.SetMaxHp(25, true);
+
+            var growth = go.AddComponent<VillageChildGrowth>();
+            growth.BirthDay = day;
+            growth.AgeDays = 0;
+
+            var family = go.AddComponent<CompanionFamily>();
+            family.IsChild = true;
+            family.BiologicalSex = CompanionFamily.Sex.Unknown;
+
+            EventBus.Instance.Emit(new CompanionRecruitedPayload("마을의 아이", "아이", "새 생명이 마을에 태어났어요."));
+        }
+
         public float LastAutoSaveAt { get; private set; } = -10f;
 
         public void SaveNow()
@@ -157,6 +384,10 @@ namespace IL6
                 currentDay = Cycle.Day,
                 resources = Resources.Snapshot(),
                 weatherRng = 42,
+                pregnancyActive = PregnancyActive,
+                pregnancyStartDay = PregnancyStartDay,
+                pregnancyDueDay = PregnancyDueDay,
+                pregnancyParents = LastPregnancyParents,
             });
         }
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using IL6.Events;
 
 namespace IL6
 {
@@ -114,6 +115,8 @@ namespace IL6
             // 마을 수용 한도만 — 일일 한도 없음 (스폰 빈도로 자연 제한)
             if (!CanRecruit()) return;
 
+            EventBus.Instance.Emit(new CompanionRecruitedPayload(DisplayName, Role, DialogText));
+
             // 영입되면 Dynamic 으로 전환 — Companion 이 velocity 로 이동해야 하고 다른 유닛과 물리적 상호작용도 가능.
             var rb = GetComponent<Rigidbody2D>();
             if (rb != null) rb.bodyType = RigidbodyType2D.Dynamic;
@@ -127,6 +130,11 @@ namespace IL6
             comp.Damage = AttackDamage;
             comp.AttackCooldown = AttackCooldown;
             comp.GatherReach = 0.7f;
+
+            var family = gameObject.GetComponent<CompanionFamily>();
+            if (family == null) family = gameObject.AddComponent<CompanionFamily>();
+            family.BiologicalSex = CompanionFamily.SexForRole(Role);
+            family.IsChild = Role == "아이";
 
             var sr = GetComponent<SpriteRenderer>();
             if (sr != null)
