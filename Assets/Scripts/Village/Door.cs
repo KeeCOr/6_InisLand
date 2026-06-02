@@ -3,7 +3,7 @@ using UnityEngine;
 namespace IL6
 {
     /// <summary>
-    /// 울타리 문. 콜라이더가 있어 좀비/동물은 막히지만, 플레이어 콜라이더와는 충돌 무시 (통과 가능).
+    /// 울타리 문. 콜라이더가 있어 좀비/동물은 막히지만, 플레이어/동료는 통과 가능.
     /// 자기 위치에 변경된 플레이어 콜라이더가 들어오는 경우(씬 재로드 등) 도 처리.
     /// </summary>
     [RequireComponent(typeof(Collider2D))]
@@ -28,9 +28,7 @@ namespace IL6
         }
 
         private Collider2D _self;
-        private Collider2D _playerCol;
-        // 이미 IgnoreCollision 처리된 우호 콜라이더 목록 (동료 포함)
-        private readonly System.Collections.Generic.HashSet<Collider2D> _hooked = new();
+        public float FriendlyPassageRadius = 1.45f;
         private float _refreshTimer;
 
         private void Awake()
@@ -47,12 +45,12 @@ namespace IL6
 
         private void Update()
         {
-            if (_playerCol == null) TryHookPlayer();
             // 새로 영입된 동료가 있을 수 있으니 0.5s 간격으로 갱신
             _refreshTimer -= Time.deltaTime;
             if (_refreshTimer <= 0f)
             {
                 _refreshTimer = 0.5f;
+                TryHookPlayer();
                 HookAllCompanions();
             }
         }
@@ -67,10 +65,9 @@ namespace IL6
                 if (pc != null) p = pc.gameObject;
             }
             if (p == null) return;
-            var col = p.GetComponent<Collider2D>();
-            if (col == null) return;
-            _playerCol = col;
-            Hook(col);
+            var cols = p.GetComponentsInChildren<Collider2D>();
+            foreach (var col in cols)
+                Hook(col);
         }
 
         private void HookAllCompanions()
@@ -79,16 +76,32 @@ namespace IL6
             foreach (var c in comps)
             {
                 if (c == null) continue;
-                var col = c.GetComponent<Collider2D>();
-                if (col != null) Hook(col);
+                var cols = c.GetComponentsInChildren<Collider2D>();
+                foreach (var col in cols)
+                    Hook(col);
             }
         }
 
         private void Hook(Collider2D col)
         {
-            if (col == null || _hooked.Contains(col)) return;
+            if (col == null) return;
             Physics2D.IgnoreCollision(_self, col, true);
-            _hooked.Add(col);
+
+            // 플레이어 스케일이 커지면 문 자체는 통과해도 양옆 울타리에 걸릴 수 있다.
+            // 문 주변 울타리도 우호 유닛에게만 열어 둬서 실제 통로 폭을 확보한다.
+            var nearby = Physics2D.OverlapCircleAll(transform.position, FriendlyPassageRadius);
+            foreach (var blocker in nearby)
+            {
+                if (blocker == null || blocker == col || blocker.isTrigger) continue;
+                if (blocker == _self || IsFence(blocker))
+                    Physics2D.IgnoreCollision(blocker, col, true);
+            }
+        }
+
+        private static bool IsFence(Collider2D col)
+        {
+            var building = col.GetComponent<Building>();
+            return building != null && building.Kind == BuildingKind.Fence;
         }
 
         private void OnDestroy()

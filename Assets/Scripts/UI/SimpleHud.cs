@@ -18,6 +18,7 @@ namespace IL6
         private System.Collections.Generic.List<RuneKind> _runeOffer;
         private readonly System.Collections.Generic.Dictionary<RuneKind, Texture2D> _runeIconCache = new();
         private readonly System.Collections.Generic.Dictionary<string, Texture2D> _portraitCache = new();
+        private readonly System.Collections.Generic.Dictionary<string, Texture2D> _hudIconCache = new();
 
         private GUIStyle _label, _labelSubtle, _title, _section, _weapon, _bigDeath, _btn, _smallBtn;
 
@@ -562,7 +563,8 @@ namespace IL6
             Color tempColor = temp < -25f ? new Color(0.55f, 0.85f, 1f) : UiTheme.TextSubtle;
             var oldTempC = GUI.contentColor;
             GUI.contentColor = tempColor;
-            GUI.Label(new Rect(r.x, r.y + 38, r.width, 16), $"🌡 {temp:F0}°C", _clockSmall);
+            DrawHudIcon(new Rect(r.x + 44, r.y + 37, 14, 14), "temp");
+            GUI.Label(new Rect(r.x + 60, r.y + 38, r.width - 60, 16), $"{temp:F0}°C", _clockSmall);
             GUI.contentColor = oldTempC;
         }
 
@@ -879,23 +881,29 @@ namespace IL6
             {
                 float hpPct = Player.MaxHp > 0 ? (float)Player.CurrentHp / Player.MaxHp : 0f;
                 Color hpFill = Color.Lerp(new Color(0.85f, 0.2f, 0.18f), new Color(0.4f, 0.85f, 0.4f), hpPct);
+                DrawHudIcon(new Rect(x, y - 4, 18, 18), "hp");
+                int barX = x + 22;
+                int barW = W - 22;
                 // HP 배경
-                UiTheme.Rect(new Rect(x - 1, y - 1, W + 2, 14), UiTheme.PanelBorderDim);
-                UiTheme.Bar(new Rect(x, y, W, 12), hpPct, hpFill);
+                UiTheme.Rect(new Rect(barX - 1, y - 1, barW + 2, 14), UiTheme.PanelBorderDim);
+                UiTheme.Bar(new Rect(barX, y, barW, 12), hpPct, hpFill);
                 var hpStyle = new GUIStyle(GUI.skin.label) {
                     fontSize = 10, fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.MiddleCenter,
                     normal = { textColor = Color.white }
                 };
-                GUI.Label(new Rect(x, y, W, 12), $"HP {Player.CurrentHp}/{Player.MaxHp}", hpStyle);
+                GUI.Label(new Rect(barX, y, barW, 12), $"HP {Player.CurrentHp}/{Player.MaxHp}", hpStyle);
                 y += 14;
             }
 
             if (Progression != null)
             {
                 float xpPct = Progression.XpToNext > 0 ? (float)Progression.Xp / Progression.XpToNext : 0f;
-                UiTheme.Rect(new Rect(x - 1, y - 1, W + 2, 9), UiTheme.PanelBorderDim);
-                UiTheme.Bar(new Rect(x, y, W, 7), xpPct, UiTheme.BarXpFill);
+                DrawHudIcon(new Rect(x + 2, y - 5, 14, 14), "xp");
+                int barX = x + 22;
+                int barW = W - 22;
+                UiTheme.Rect(new Rect(barX - 1, y - 1, barW + 2, 9), UiTheme.PanelBorderDim);
+                UiTheme.Bar(new Rect(barX, y, barW, 7), xpPct, UiTheme.BarXpFill);
                 y += 9;
             }
 
@@ -1047,7 +1055,6 @@ namespace IL6
 
             // 4 자원 수평 배치
             ResourceKind[] kinds  = { ResourceKind.Wood, ResourceKind.Stone, ResourceKind.Meat, ResourceKind.Food };
-            string[]        emojis = { "🪵", "🪨", "🥩", "🌾" };
             int itemW = W / 4;
             for (int i = 0; i < kinds.Length; i++)
             {
@@ -1056,13 +1063,12 @@ namespace IL6
                 int cap = session.Resources.GetCap(k);
                 int x = (int)panel.x + i * itemW + 6;
 
-                // 컬러 점
-                UiTheme.Icon(new Rect(x, (int)panel.y + 9, 14, 14), UiTheme.ResColor(k));
+                DrawHudIcon(new Rect(x, (int)panel.y + 4, 18, 18), ResourceIconKey(k));
 
                 var oldC = GUI.contentColor;
                 GUI.contentColor = cur >= cap ? UiTheme.TextDanger : UiTheme.TextCream;
-                GUI.Label(new Rect(x + 18, (int)panel.y + 6, itemW - 22, 22),
-                    $"{emojis[i]} {cur}", _resStyle);
+                GUI.Label(new Rect(x + 23, (int)panel.y + 6, itemW - 27, 22),
+                    $"{cur}", _resStyle);
                 GUI.contentColor = oldC;
 
                 // 구분선 (마지막 제외)
@@ -1093,14 +1099,16 @@ namespace IL6
             {
                 var oldC = GUI.contentColor;
                 GUI.contentColor = new Color(0.95f, 0.5f, 0.5f);
-                GUI.Label(new Rect(innerX, y, innerW, 22),
-                    $"🧟 활성 {Night.ActiveZombies}  ·  대기 {Night.WavePending}", _section);
+                DrawHudIcon(new Rect(innerX, y + 1, 18, 18), "wave");
+                GUI.Label(new Rect(innerX + 24, y, innerW - 24, 22),
+                    $"활성 {Night.ActiveZombies}  ·  대기 {Night.WavePending}", _section);
                 GUI.contentColor = oldC;
                 y += 24;
                 if (Night.IsBlizzard)
                 {
                     GUI.contentColor = new Color(0.55f, 0.85f, 1f);
-                    GUI.Label(new Rect(innerX, y, innerW, 22), "❄ 눈보라", _section);
+                    DrawHudIcon(new Rect(innerX, y + 1, 18, 18), "blizzard");
+                    GUI.Label(new Rect(innerX + 24, y, innerW - 24, 22), "눈보라", _section);
                     GUI.contentColor = oldC;
                     y += 24;
                 }
@@ -1116,7 +1124,8 @@ namespace IL6
             }
             else
             {
-                GUI.Label(new Rect(innerX, y, innerW, 22), "☀ 평온한 낮", _labelSubtle);
+                DrawHudIcon(new Rect(innerX, y + 1, 18, 18), "home");
+                GUI.Label(new Rect(innerX + 24, y, innerW - 24, 22), "평온한 낮", _labelSubtle);
                 y += 24;
             }
 
@@ -1126,7 +1135,8 @@ namespace IL6
                 int cap  = RecruitableNpc.VillageCapacity();
                 var oldC = GUI.contentColor;
                 GUI.contentColor = (have >= cap) ? UiTheme.TextDanger : UiTheme.TextCream;
-                GUI.Label(new Rect(innerX, y, innerW, 20), $"👥 {have}/{cap}", _section);
+                DrawHudIcon(new Rect(innerX, y, 18, 18), "population");
+                GUI.Label(new Rect(innerX + 24, y, innerW - 24, 20), $"{have}/{cap}", _section);
                 GUI.contentColor = oldC;
                 y += 22;
             }
@@ -1134,7 +1144,8 @@ namespace IL6
             {
                 var compsForFood = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
                 int foodNeed = GameSession.FoodNeededForCompanions(compsForFood);
-                GUI.Label(new Rect(innerX, y, innerW, 18), $"🌾 일일 식량 -{foodNeed}", _labelSubtle);
+                DrawHudIcon(new Rect(innerX + 1, y, 16, 16), "daily-food");
+                GUI.Label(new Rect(innerX + 24, y, innerW - 24, 18), $"일일 식량 -{foodNeed}", _labelSubtle);
                 y += 20;
             }
 
@@ -1143,12 +1154,14 @@ namespace IL6
                 int currentDay = session.Cycle != null ? session.Cycle.Day : 0;
                 int left = session.PregnancyDaysRemaining(currentDay);
                 string parents = string.IsNullOrEmpty(session.LastPregnancyParents) ? "" : $" · {session.LastPregnancyParents}";
-                GUI.Label(new Rect(innerX, y, innerW, 18), $"🤰 출산까지 {left}일{parents}", _labelSubtle);
+                DrawHudIcon(new Rect(innerX + 1, y, 16, 16), "pregnancy");
+                GUI.Label(new Rect(innerX + 24, y, innerW - 24, 18), $"출산까지 {left}일{parents}", _labelSubtle);
                 y += 20;
             }
             else if (session.LastPregnancyStarted)
             {
-                GUI.Label(new Rect(innerX, y, innerW, 18), "🤰 임신 소식", _labelSubtle);
+                DrawHudIcon(new Rect(innerX + 1, y, 16, 16), "pregnancy");
+                GUI.Label(new Rect(innerX + 24, y, innerW - 24, 18), "임신 소식", _labelSubtle);
                 y += 20;
             }
 
@@ -1170,7 +1183,8 @@ namespace IL6
                 _ => "",
             };
             int btnY = (int)panel.yMax - 22;
-            if (UiTheme.Button(new Rect(innerX, btnY, innerW, 18), $"동료 {sLabel} ({liveCount})", _smallBtn, liveCount > 0))
+            var stanceRect = new Rect(innerX, btnY, innerW, 18);
+            if (UiTheme.Button(stanceRect, $"동료 {sLabel} ({liveCount})", _smallBtn, liveCount > 0))
             {
                 var next = majority switch
                 {
@@ -1180,6 +1194,7 @@ namespace IL6
                 };
                 foreach (var c in allComps) if (c != null) c.SetStance(next);
             }
+            DrawHudIcon(new Rect(innerX + 6, btnY + 1, 16, 16), StanceIconKey(majority));
         }
 
         // ====================================================================
@@ -2138,6 +2153,13 @@ namespace IL6
             var s = GameSession.Instance;
             if (s != null)
             {
+                int deathDay = s.PlayerDeathDay;
+                if (deathDay <= 0)
+                {
+                    deathDay = s.Cycle != null ? s.Cycle.Day : 1;
+                    s.MarkPlayerDied(deathDay);
+                }
+
                 const int W = 360;
                 int sx = Screen.width / 2 - W / 2;
                 int sy = Screen.height / 2 - 30;
@@ -2146,7 +2168,7 @@ namespace IL6
 
                 int row = sy + 12;
                 int lineH = 22;
-                GUI.Label(new Rect(sx + 24, row, W - 48, lineH), $"생존 일수      Day {s.Cycle.Day}", _section); row += lineH;
+                GUI.Label(new Rect(sx + 24, row, W - 48, lineH), $"생존 일수      Day {deathDay}", _section); row += lineH;
                 GUI.Label(new Rect(sx + 24, row, W - 48, lineH), $"좀비 처치      {s.TotalKills}", _section); row += lineH;
                 GUI.Label(new Rect(sx + 24, row, W - 48, lineH), $"동료 최대      {s.MaxCompanionsAtOnce}", _section); row += lineH;
                 GUI.Label(new Rect(sx + 24, row, W - 48, lineH), $"동료 손실      {s.CompanionsLost}", _section); row += lineH + 4;
@@ -2167,6 +2189,48 @@ namespace IL6
         // ====================================================================
         // 헬퍼
         // ====================================================================
+        private Texture2D HudIcon(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return null;
+            if (_hudIconCache.TryGetValue(key, out var cached)) return cached;
+            var tex = Resources.Load<Texture2D>($"UI/hud/hud-{key}");
+            _hudIconCache[key] = tex;
+            return tex;
+        }
+
+        private void DrawHudIcon(Rect rect, string key)
+        {
+            var icon = HudIcon(key);
+            if (icon != null)
+            {
+                GUI.DrawTexture(rect, icon, ScaleMode.ScaleToFit, true);
+                return;
+            }
+            UiTheme.Icon(rect, UiTheme.TextSubtle);
+        }
+
+        private static string ResourceIconKey(ResourceKind kind)
+        {
+            return kind switch
+            {
+                ResourceKind.Wood => "wood",
+                ResourceKind.Stone => "stone",
+                ResourceKind.Meat => "meat",
+                ResourceKind.Food => "food",
+                _ => "stone",
+            };
+        }
+
+        private static string StanceIconKey(Companion.Stance stance)
+        {
+            return stance switch
+            {
+                Companion.Stance.Hold => "hold",
+                Companion.Stance.Aggressive => "aggressive",
+                _ => "follow",
+            };
+        }
+
         private void EnsureStyles()
         {
             if (_label != null) return;

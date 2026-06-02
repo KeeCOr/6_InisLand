@@ -1,5 +1,6 @@
 using UnityEngine;
 using IL6.Events;
+using System.Collections.Generic;
 
 namespace IL6
 {
@@ -19,19 +20,28 @@ namespace IL6
         public float NightOuterAlpha = 0.92f;
         /// <summary>시야 반경의 몇 배 지점에서 완전 어둠이 되는지 (예: 1.3 = 130%).</summary>
         public float GradientEdgeMul = 1.3f;
-        /// <summary>그라데이션 스텝 수 — 많을수록 부드럽고 GPU 비용 증가.</summary>
-        public int GradientSteps = 24;
+        /// <summary>마스크 텍스처 가로 해상도. 낮을수록 가볍고, 높을수록 경계가 부드러움.</summary>
+        public int MaskWidth = 256;
 
         private bool _isNight;
         private System.Action _unsubE, _unsubN, _unsubD, _unsubA;
 
-        // 그라데이션용 1x1 텍스처 캐시
-        private static Texture2D _whiteTex;
+        private Texture2D _maskTex;
+        private Color[] _maskPixels;
+        private int _maskW;
+        private int _maskH;
+        private readonly List<VisionHole> _holes = new();
+
+        private struct VisionHole
+        {
+            public Vector2 ScreenCenter;
+            public float InnerRadius;
+            public float OuterRadius;
+        }
 
         private void Awake()
         {
             if (Cam == null) Cam = Camera.main;
-            EnsureWhiteTex();
         }
 
         private void Start()
@@ -61,6 +71,7 @@ namespace IL6
         {
             if (!_isNight) return;
             if (Cam == null || Target == null) return;
+            if (Event.current.type != EventType.Repaint) return;
 
             DrawDarknessWithHoles();
         }
@@ -71,27 +82,17 @@ namespace IL6
             RadiusUnits = radiusUnits;
         }
 
-        // ── 핵심: 전체화면 어둠 + 밝은 원(플레이어 + 모닥불) 그라데이션 ──
+        // ── 핵심: 시야 안은 투명, 시야 밖은 검정인 알파 마스크를 직접 생성 ──
         private void DrawDarknessWithHoles()
         {
-            // IMGUI 페인터 알고리즘 활용:
-            // (a) 전체 어둠 베이스를 먼저 그린다
-            // (b) 각 시야 원에 대해 "바깥 → 안쪽" 방향으로 동심원을 쌓는다.
-            //     가장 바깥 링 = NightOuterAlpha(어둠), 안쪽으로 갈수록 알파 0(투명) 으로 덮어쓰며
-            //     앞서 그린 어둠을 지운다. 이 방식이 IMGUI AddAlpha 모드 없이도 작동함.
+            _holes.Clear();
+            AddVisionHole(Target.position, RadiusUnits);
 
-            // 1) 전체 어둠 베이스
-            DrawRect(new Rect(0, 0, Screen.width, Screen.height), new Color(0, 0, 0, NightOuterAlpha));
-
-            // 2) 플레이어 시야 원 그라데이션 (구멍 뚫기)
-            DrawVisionHole(Target.position, RadiusUnits);
-
-            // 3) 모닥불 시야 원 그라데이션
             var auras = Object.FindObjectsByType<CampfireAura>(FindObjectsSortMode.None);
             foreach (var a in auras)
             {
                 if (a == null || !a.IsActive) continue;
-                DrawVisionHole(a.transform.position, a.VisionRadius);
+                AddVisionHole(a.transform.position, a.VisionRadius);
             }
 
             float lookoutRadius = BuildingUpgradeRules.LookoutVisionRadius();
@@ -101,81 +102,86 @@ namespace IL6
                 foreach (var b in buildings)
                 {
                     if (b == null || b.CurrentHp <= 0 || b.Kind != BuildingKind.LookoutPost) continue;
-                    DrawVisionHole(b.transform.position, lookoutRadius);
+                    AddVisionHole(b.transform.position, lookoutRadius);
                 }
             }
+
+            RebuildMaskTexture();
+            GUI.color = Color.white;
+            GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), _maskTex, ScaleMode.StretchToFill);
         }
 
-        /// <summary>
-        /// 월드 좌표 center 주변을 밝게 뚫는다.
-        /// IMGUI 페인터 방식: 큰 원(바깥=어둠 alpha)부터 작은 원(안쪽=alpha 0) 순으로 그려
-        /// 앞서 그린 어둠 베이스를 점점 투명하게 덮어 그라데이션 효과 생성.
-        /// </summary>
-        private void DrawVisionHole(Vector3 worldPos, float innerRadius)
+        private void AddVisionHole(Vector3 worldPos, float innerRadius)
         {
             if (innerRadius <= 0f) return;
 
-            float pixelRadius = WorldToScreenRadius(innerRadius);
-            float outerPixelRadius = pixelRadius * GradientEdgeMul;
-
             Vector3 sp = Cam.WorldToScreenPoint(worldPos);
             if (sp.z < 0) return;
-            float cx = sp.x;
-            float cy = Screen.height - sp.y;
 
-            // 바깥 → 안쪽 순서로 그림 (IMGUI 페인터 알고리즘: 나중에 그린 것이 앞)
-            // step i=0: 가장 바깥 원 (반경=outerPixelRadius, alpha=NightOuterAlpha — 베이스와 동일, 효과 없음)
-            // step i=GradientSteps-1: 가장 안쪽 원 (반경=pixelRadius, alpha=0 — 완전히 투명으로 덮어씀)
-            for (int i = 0; i < GradientSteps; i++)
+            float pixelRadius = WorldToScreenRadius(worldPos, innerRadius);
+            _holes.Add(new VisionHole
             {
-                float t = i / (float)(GradientSteps - 1); // 0 = 바깥, 1 = 안쪽
-                float r = Mathf.Lerp(outerPixelRadius, pixelRadius, t);
-                // SmoothStep: 바깥=NightOuterAlpha → 안쪽=0
-                float alpha = NightOuterAlpha * (1f - Mathf.SmoothStep(0f, 1f, t));
-                DrawCircleQuad(cx, cy, r, new Color(0f, 0f, 0f, alpha));
-            }
-
-            // 가장 안쪽 완전 투명 원 (시야 중심 = 완전히 밝음)
-            DrawCircleQuad(cx, cy, pixelRadius, new Color(0f, 0f, 0f, 0f));
+                ScreenCenter = new Vector2(sp.x, Screen.height - sp.y),
+                InnerRadius = pixelRadius,
+                OuterRadius = pixelRadius * GradientEdgeMul,
+            });
         }
 
-        /// <summary>
-        /// IMGUI 에서 원형 마스크를 근사. 여러 겹의 작은 사각형을 원 경계에 배치해 원 모양을 만든다.
-        /// 정밀도는 GradientSteps 와 별개로 원의 분할 수(circleSegs)에 비례.
-        /// </summary>
-        private void DrawCircleQuad(float cx, float cy, float r, Color col)
+        private void RebuildMaskTexture()
         {
-            if (r <= 0f) return;
-            // 원형 근사: 원 내부 전체를 덮는 사각 격자 방식
-            // 반지름 r 의 원 내부를 rows×cols 격자로 채움
-            int segs = Mathf.Clamp(Mathf.RoundToInt(r / 4f), 6, 40);
-            float step = r * 2f / segs;
-            for (int row = 0; row < segs; row++)
+            int targetW = Mathf.Max(64, MaskWidth);
+            int targetH = Mathf.Max(36, Mathf.RoundToInt(targetW * (Screen.height / Mathf.Max(1f, (float)Screen.width))));
+
+            if (_maskTex == null || _maskW != targetW || _maskH != targetH)
             {
-                float py = cy - r + row * step;
-                float relY = (py + step * 0.5f) - cy;
-                float halfW = Mathf.Sqrt(Mathf.Max(0f, r * r - relY * relY));
-                if (halfW <= 0f) continue;
-                DrawRect(new Rect(cx - halfW, py, halfW * 2f, step + 1f), col);
+                _maskW = targetW;
+                _maskH = targetH;
+                _maskTex = new Texture2D(_maskW, _maskH, TextureFormat.RGBA32, false)
+                {
+                    filterMode = FilterMode.Bilinear,
+                    wrapMode = TextureWrapMode.Clamp,
+                };
+                _maskPixels = new Color[_maskW * _maskH];
             }
+
+            float sx = Screen.width / (float)_maskW;
+            float sy = Screen.height / (float)_maskH;
+            for (int y = 0; y < _maskH; y++)
+            {
+                float screenY = (y + 0.5f) * sy;
+                for (int x = 0; x < _maskW; x++)
+                {
+                    float screenX = (x + 0.5f) * sx;
+                    float alpha = AlphaAtScreenPoint(screenX, screenY);
+                    _maskPixels[y * _maskW + x] = new Color(0f, 0f, 0f, alpha);
+                }
+            }
+
+            _maskTex.SetPixels(_maskPixels);
+            _maskTex.Apply(false);
+        }
+
+        private float AlphaAtScreenPoint(float x, float y)
+        {
+            float alpha = NightOuterAlpha;
+            for (int i = 0; i < _holes.Count; i++)
+            {
+                var h = _holes[i];
+                float dist = Vector2.Distance(new Vector2(x, y), h.ScreenCenter);
+                float holeAlpha = dist <= h.InnerRadius
+                    ? 0f
+                    : NightOuterAlpha * Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(h.InnerRadius, h.OuterRadius, dist));
+                if (holeAlpha < alpha) alpha = holeAlpha;
+            }
+            return alpha;
         }
 
         /// <summary>월드 유닛 반경을 현재 카메라 스크린 픽셀 반경으로 변환.</summary>
-        private float WorldToScreenRadius(float worldRadius)
+        private float WorldToScreenRadius(Vector3 worldPos, float worldRadius)
         {
-            // 카메라 중심 기준 두 점의 스크린 거리로 반경 계산
-            Vector3 center = Cam.WorldToScreenPoint(Target.position);
-            Vector3 edge = Cam.WorldToScreenPoint(Target.position + Vector3.right * worldRadius);
+            Vector3 center = Cam.WorldToScreenPoint(worldPos);
+            Vector3 edge = Cam.WorldToScreenPoint(worldPos + Vector3.right * worldRadius);
             return Mathf.Abs(edge.x - center.x);
-        }
-
-        private static void DrawRect(Rect r, Color c)
-        {
-            if (_whiteTex == null) EnsureWhiteTex();
-            var prev = GUI.color;
-            GUI.color = c;
-            GUI.DrawTexture(r, _whiteTex);
-            GUI.color = prev;
         }
 
         private void LateUpdate()

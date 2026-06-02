@@ -69,6 +69,7 @@ namespace IL6
         public int TotalKills { get; private set; }
         public int CompanionsLost { get; private set; }
         public int MaxCompanionsAtOnce { get; private set; }
+        public int PlayerDeathDay { get; private set; }
 
         public int Score => Mathf.Max(0,
             (Cycle != null ? (Cycle.Day - 1) * 10 : 0)
@@ -97,6 +98,12 @@ namespace IL6
             if (best != null) best.GrantXp(1);
         }
         public void OnCompanionLost() { CompanionsLost++; }
+
+        public void MarkPlayerDied(int day)
+        {
+            if (PlayerDeathDay > 0) return;
+            PlayerDeathDay = Mathf.Max(1, day);
+        }
 
         private System.Action _unsubDay;
 

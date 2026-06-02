@@ -54,7 +54,7 @@ namespace IL6
                 Vector3 pos = center + new Vector3(lx, -halfSize, 0f);
                 if (TooCloseToFence(pos, 0.4f)) continue;
                 if (i == gateSlot && !HasGateNear(pos, 1.2f)) SpawnGate(pos);
-                else if (i != gateSlot) SpawnFence(pos, 0f);
+                else if (Mathf.Abs(i - gateSlot) > 1) SpawnFence(pos, 0f);
             }
             // 북쪽
             for (int i = 0; i < slots; i++)
@@ -119,7 +119,7 @@ namespace IL6
                 float lx = startOffset + i * spacing;
                 Vector3 pos = center + new Vector3(lx, -halfSize, 0f);
                 if (i == gateSlot) SpawnGate(pos);
-                else SpawnFence(pos, 0f);
+                else if (Mathf.Abs(i - gateSlot) > 1) SpawnFence(pos, 0f);
             }
             // 북쪽 변
             for (int i = 0; i < slotsPerSide; i++)
@@ -144,13 +144,13 @@ namespace IL6
             // 문 — 플레이어/동료는 통과(Door.IgnoreCollision), 좀비는 차단
             var go = new GameObject("Gate");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(1.0f, 0.4f, 1f);
+            go.transform.localScale = new Vector3(2.8f, 0.7f, 1f);
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 4;
 
             var col = go.AddComponent<BoxCollider2D>();
-            col.size = new Vector2(0.95f, 0.8f);
+            col.size = new Vector2(1.0f, 0.8f);
 
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.78f, 0.62f, 0.30f); // 골드 — 입구임을 표시
@@ -168,7 +168,7 @@ namespace IL6
                 var post = new GameObject("GatePost");
                 post.transform.SetParent(go.transform, false);
                 post.transform.localPosition = new Vector3(s * 0.5f, 0.7f, 0f);
-                post.transform.localScale = new Vector3(0.18f, 4.5f, 1f); // 부모 스케일 0.95×0.18 보정
+                post.transform.localScale = new Vector3(0.12f, 3.0f, 1f);
                 var psr = post.AddComponent<SpriteRenderer>();
                 psr.sortingOrder = 4;
                 var pcf = post.AddComponent<ColorFallback>();
@@ -187,8 +187,8 @@ namespace IL6
             var go = new GameObject("Fence");
             go.transform.position = pos;
             go.transform.rotation = Quaternion.Euler(0, 0, rotDeg);
-            // 수평 펜스 스프라이트(64px@64PPU=1unit) 기준: 1.0u 폭 × 0.4u 높이
-            go.transform.localScale = new Vector3(1.0f, 0.4f, 1f);
+            // 수평 펜스 스프라이트(64px@64PPU=1unit) 기준. 시야에서 방어선처럼 읽히도록 크게 표시.
+            go.transform.localScale = new Vector3(1.22f, 0.72f, 1f);
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
@@ -198,7 +198,7 @@ namespace IL6
 
             var col = go.AddComponent<BoxCollider2D>();
             // 시각 크기보다 살짝 작게 — 플레이어가 문 옆에서 걸리지 않도록
-            col.size = new Vector2(0.9f, 0.8f);
+            col.size = new Vector2(0.82f, 0.58f);
 
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.55f, 0.4f, 0.22f);
