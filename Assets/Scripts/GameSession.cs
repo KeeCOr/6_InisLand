@@ -259,7 +259,19 @@ namespace IL6
             PregnancyStartDay = day;
             PregnancyDueDay = day + PregnancyDurationDays;
             LastPregnancyStarted = true;
-            LastPregnancyParents = $"{chosen.male.gameObject.name} + {chosen.female.gameObject.name}";
+            LastPregnancyParents = $"{chosen.Male.gameObject.name} + {chosen.Female.gameObject.name}";
+        }
+
+        private struct PregnancyCouple
+        {
+            public readonly CompanionFamily Male;
+            public readonly CompanionFamily Female;
+
+            public PregnancyCouple(CompanionFamily male, CompanionFamily female)
+            {
+                Male = male;
+                Female = female;
+            }
         }
 
         private static void EnsureFamilyProfiles(Companion[] companions)
@@ -290,26 +302,26 @@ namespace IL6
             var families = Object.FindObjectsByType<CompanionFamily>(FindObjectsSortMode.None);
             foreach (var female in families)
             {
-                if (female == null || female.BiologicalSex != CompanionFamily.Sex.Female || female.EverPartnered || !female.IsAdult) continue;
+                if (female == null || female.BiologicalSex != CompanionFamily.Sex.Female || female.EverPartnered || !female.IsLivingAdult) continue;
                 foreach (var male in families)
                 {
-                    if (male == null || male.BiologicalSex != CompanionFamily.Sex.Male || male.EverPartnered || !male.IsAdult) continue;
+                    if (male == null || male.BiologicalSex != CompanionFamily.Sex.Male || male.EverPartnered || !male.IsLivingAdult) continue;
                     female.PairWith(male);
                     break;
                 }
             }
         }
 
-        private static System.Collections.Generic.List<(CompanionFamily male, CompanionFamily female)> FindPregnancyEligibleCouples()
+        private static System.Collections.Generic.List<PregnancyCouple> FindPregnancyEligibleCouples()
         {
-            var result = new System.Collections.Generic.List<(CompanionFamily male, CompanionFamily female)>();
+            var result = new System.Collections.Generic.List<PregnancyCouple>();
             var families = Object.FindObjectsByType<CompanionFamily>(FindObjectsSortMode.None);
             foreach (var female in families)
             {
-                if (female == null || female.BiologicalSex != CompanionFamily.Sex.Female || !female.IsAdult) continue;
+                if (female == null || female.BiologicalSex != CompanionFamily.Sex.Female || !female.IsLivingAdult) continue;
                 var partner = female.FindPartner();
-                if (partner == null || partner.BiologicalSex != CompanionFamily.Sex.Male || !partner.IsAdult) continue;
-                result.Add((partner, female));
+                if (partner == null || partner.BiologicalSex != CompanionFamily.Sex.Male || !partner.IsLivingAdult) continue;
+                result.Add(new PregnancyCouple(partner, female));
             }
             return result;
         }

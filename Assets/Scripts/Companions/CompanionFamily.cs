@@ -13,12 +13,20 @@ namespace IL6
         public string PartnerName;
 
         public bool IsAdult => !IsChild && GetComponent<VillageChildGrowth>() == null;
+        public bool IsLivingAdult
+        {
+            get
+            {
+                var companion = GetComponent<Companion>();
+                return IsAdult && (companion == null || !companion.IsDead);
+            }
+        }
         public bool HasLivingPartner => PartnerInstanceId != 0 && FindPartner() != null;
 
         public bool CanPairWith(CompanionFamily other)
         {
             if (other == null || other == this) return false;
-            if (!IsAdult || !other.IsAdult) return false;
+            if (!IsLivingAdult || !other.IsLivingAdult) return false;
             if (EverPartnered || other.EverPartnered) return false;
             if (BiologicalSex == Sex.Unknown || other.BiologicalSex == Sex.Unknown) return false;
             return BiologicalSex != other.BiologicalSex;
