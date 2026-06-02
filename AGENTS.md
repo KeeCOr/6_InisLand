@@ -17,12 +17,14 @@ For Windows executable refreshes:
 1. Use Unity `2022.3.62f3` unless the project version changes.
 2. Prefer `IL6.EditorBuild.BuildScript.BuildWindows`.
 3. Verify `Build/Windows/IL6.exe` and the root `InisLand_v*_portable.exe`.
-4. Delete stale user-facing duplicate executables, but keep Unity/runtime helper executables required by the build.
-5. If Unity is already open and blocks batch mode, report that and do not claim the executable is current.
+4. Rename or copy the final user-facing portable executable to a project-numbered filename such as `6IL_v*_portable.exe`.
+5. Delete stale user-facing duplicate executables, but keep Unity/runtime helper executables required by the build.
+6. If Unity is already open and blocks batch mode, report that and do not claim the executable is current.
 
 After successful implementation and executable refresh:
 
 1. Update the planning document when gameplay, UX, UI, VFX, balance, systems, or scope changed.
-2. Commit and push Unity source, project settings, scripts, assets, planning documents, and small required files to GitHub.
-3. Do not commit generated Unity `Build/` output, portable `.exe`, crash handlers, or other generated executable artifacts to normal Git history unless the user explicitly asks for a release artifact workflow.
-4. Verify there are no unpushed commits or unintended uncommitted changes before reporting completion.
+2. Copy the final root project-numbered portable executable, such as `6IL_v*_portable.exe`, to the configured Google Drive distribution folder when available.
+3. Commit and push Unity source, project settings, scripts, assets, planning documents, and small required files to GitHub.
+4. Do not commit generated Unity `Build/` output, portable `.exe`, crash handlers, or other generated executable artifacts to normal Git history unless the user explicitly asks for a release artifact workflow.
+5. Verify there are no unpushed commits or unintended uncommitted changes before reporting completion.
