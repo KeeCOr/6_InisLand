@@ -46,6 +46,7 @@ namespace IL6
             float mul = 1f + (Level - 1) * 0.10f; // 레벨당 +10%
             if (Equipped == Equip.SharpenedBlade) mul *= 1.30f; // 근접용
             if (Equipped == Equip.Crossbow) mul *= 1.20f; // 원거리용
+            mul *= CompanionTrait.DamageMultiplierFor(this);
             mul *= BuildingUpgradeRules.TrainingDamageMultiplier();
             return Mathf.RoundToInt(Damage * mul);
         }
@@ -56,6 +57,7 @@ namespace IL6
             int baseHp = MaxHp;
             float mul = 1f + (Level - 1) * 0.08f;
             if (Equipped == Equip.ThickFur) mul *= 1.25f;
+            mul *= CompanionTrait.MaxHpMultiplierFor(this);
             return Mathf.RoundToInt(baseHp * mul);
         }
 
@@ -549,7 +551,7 @@ namespace IL6
             if (target == null) target = FindNearestAnimal(AttackRange);
             if (target == null) return;
             SpawnProjectile(target);
-            _attackCd = AttackCooldown * GetCampfireFireRateMul();
+            _attackCd = AttackCooldown * GetCampfireFireRateMul() * CompanionTrait.AttackCooldownMultiplierFor(this);
         }
 
         /// <summary>가장 가까운 망루 안에 있으면 데미지 곱연산 — TryAttack의 SpawnProjectile에서 사용.</summary>

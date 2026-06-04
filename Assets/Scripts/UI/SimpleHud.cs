@@ -1080,8 +1080,53 @@ namespace IL6
         // ====================================================================
         // WAVE / STANCE BAR: 웨이브 정보 + 동료 스탠스 (좌상단, 자원 아래)
         // ====================================================================
+        private void DrawSettlementGoals()
+        {
+            var gm = SettlementGoalManager.Instance;
+            if (gm == null || gm.Goals == null || gm.Goals.Count == 0) return;
+
+            const int W = 330;
+            const int H = 122;
+            var panel = new Rect(Screen.width - W - 12, 91, W, H);
+            UiTheme.Panel(panel);
+
+            var titleStyle = new GUIStyle(_section)
+            {
+                fontSize = 14,
+                alignment = TextAnchor.MiddleLeft,
+                normal = { textColor = UiTheme.TextGold }
+            };
+            var lineStyle = new GUIStyle(_labelSubtle)
+            {
+                fontSize = 11,
+                alignment = TextAnchor.MiddleLeft,
+                wordWrap = false,
+                clipping = TextClipping.Clip,
+            };
+
+            GUI.Label(new Rect(panel.x + 10, panel.y + 6, panel.width - 20, 18), "Mid Goals", titleStyle);
+
+            int shown = 0;
+            float y = panel.y + 28;
+            foreach (var g in gm.Goals)
+            {
+                if (g.Completed) continue;
+                GUI.Label(new Rect(panel.x + 12, y, panel.width - 24, 16), g.Title, _label);
+                GUI.Label(new Rect(panel.x + 12, y + 16, panel.width - 24, 14), g.Progress, lineStyle);
+                y += 32;
+                shown++;
+                if (shown >= 3) break;
+            }
+
+            if (shown == 0)
+            {
+                GUI.Label(new Rect(panel.x + 12, panel.y + 42, panel.width - 24, 22), "All mid goals complete", _labelSubtle);
+            }
+        }
+
         private void DrawWaveStanceBar()
         {
+            DrawSettlementGoals();
             var session = GameSession.Instance;
             if (session == null) return;
 

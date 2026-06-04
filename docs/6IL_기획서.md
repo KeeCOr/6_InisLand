@@ -65,6 +65,11 @@
 
 ---
 
+### 신규 기획 반영: 동료 특성과 낮 탐험 발견물
+- **동료 특성**: 영입/출생 시 동료마다 Brave, Quick Hands, Cold Resistant, Light Eater, Defender, Caregiver 중 하나를 부여한다. 특성은 전투 피해, 공격 속도, 최대 HP, 채집 보조 속도, 일일 식량 소비량에 직접 영향을 준다.
+- **낮 탐험 발견물**: 낮에 처음 방문하는 설원 청크에서 보급 상자, 부서진 썰매, 채석 흔적, 사냥 가방, 서리꽃 군락 같은 발견물이 낮은 확률로 등장한다. 플레이어는 기존 채집 조작으로 발견물을 조사하고 자원을 획득한다.
+- **중기 목표**: 보육소 대신 식량 안정, 방어선 완성, 온기 중심지, 사냥 루트, 숙련된 원정대 목표를 HUD에서 추적한다. 조건을 달성하면 식량 저장 한도, 자원 보급, 건물 수리, 동료 XP 같은 즉시 보상을 지급해 3~7일차 성장 방향을 만든다.
+
 ## 5. 성공 KPI
 
 - Day 3 생존율 50% 이상
@@ -88,3 +93,29 @@
 |-----|------|------|
 | v0.2.0 | 2026-05-29 | UX 온보딩 씬 추가 (낮/밤 페이즈 설명) |
 | v0.1.0 | 2026-05-20 | 초기 ECS 기반 프로토타입 |
+
+<!-- APPLIED_RESOURCES_START -->
+## 적용 리소스
+
+> 자동 갱신: 2026-06-04. 코드, 씬, 프리팹, 설정 파일에서 참조가 확인된 리소스 기준입니다.
+
+- 이미지/스프라이트: `assets/art/Sprites/Player/player_survivor_axe.png`, `assets/art/Sprites/Player/player_survivor_bow.png`
+- Unity/프리팹: `assets/UniversalRenderPipelineGlobalSettings.asset`
+
+메모:
+- 6_IL은 Unity 프로젝트 기준으로 Assets/ 씬, 프리팹, C# 참조를 우선 반영합니다.
+- Unity 기준 적용 리소스만 유지하며, 웹 프로토타입용 `public/` 리소스는 제외했습니다.
+<!-- APPLIED_RESOURCES_END -->
+
+<!-- RESOURCE_PREVIEWS_START -->
+## 공유용 이미지 미리보기
+
+> 자동 갱신: 2026-06-04. 공유 시 문서와 함께 아래 이미지 경로가 포함되어야 합니다.
+
+![6_IL player_survivor_axe](../assets/art/Sprites/Player/player_survivor_axe.png)
+- `assets/art/Sprites/Player/player_survivor_axe.png`
+
+![6_IL player_survivor_bow](../assets/art/Sprites/Player/player_survivor_bow.png)
+- `assets/art/Sprites/Player/player_survivor_bow.png`
+
+<!-- RESOURCE_PREVIEWS_END -->

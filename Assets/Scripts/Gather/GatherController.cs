@@ -35,7 +35,8 @@ namespace IL6
 
             if (_active != null)
             {
-                _progress += Time.deltaTime / _active.DurationSec;
+                float speedMul = CompanionTrait.GatherSpeedMultiplierFor(_active);
+                _progress += Time.deltaTime * speedMul / _active.DurationSec;
                 // 유휴 동료 자동 합류 — 0.5초마다 탐색
                 _assistRecheck -= Time.deltaTime;
                 if (_assistRecheck <= 0f)

@@ -27,6 +27,8 @@ namespace IL6
 
             if (GetComponent<AchievementManager>() == null)
                 gameObject.AddComponent<AchievementManager>();
+            if (GetComponent<SettlementGoalManager>() == null)
+                gameObject.AddComponent<SettlementGoalManager>();
 
             Resources = new ResourceStore();
             Cycle = new DayNightController(BalanceConfig.Instance);
@@ -199,7 +201,9 @@ namespace IL6
                 if (c == null || c.IsDead) continue;
                 living++;
                 var growth = c.GetComponent<VillageChildGrowth>();
-                foodUnitsX2 += growth != null ? growth.FoodUnitsX2 : 2;
+                int units = growth != null ? growth.FoodUnitsX2 : 2;
+                units = Mathf.Max(1, Mathf.RoundToInt(units * CompanionTrait.FoodMultiplierFor(c)));
+                foodUnitsX2 += units;
             }
 
             int baseNeed = Mathf.CeilToInt(foodUnitsX2 / 2f);
@@ -391,6 +395,7 @@ namespace IL6
             var family = go.AddComponent<CompanionFamily>();
             family.IsChild = true;
             family.BiologicalSex = CompanionFamily.Sex.Unknown;
+            CompanionTrait.AssignRandom(go, "?꾩씠", new SeededRng(nameSeed ^ 0xa531c6f1u));
 
             EventBus.Instance.Emit(new CompanionRecruitedPayload(childName, "아이", "새 생명이 마을에 태어났어요."));
         }

@@ -15,6 +15,18 @@ namespace IL6
 
         public void OnGathered(ResourceStore store)
         {
+            var discovery = GetComponent<DiscoverySite>();
+            if (discovery != null)
+            {
+                discovery.Resolve(store);
+                if (DestroyOnGather)
+                {
+                    GameFeel.DeathPoof(transform.position, DiscoverySite.TintFor(discovery.RewardKind), 0.5f);
+                    Destroy(gameObject);
+                }
+                return;
+            }
+
             Color tint = ResourceTint(YieldKind);
             int yield = YieldAmount;
             if (YieldKind == ResourceKind.Wood)

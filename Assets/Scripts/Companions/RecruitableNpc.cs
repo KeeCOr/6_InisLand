@@ -115,7 +115,12 @@ namespace IL6
             // 마을 수용 한도만 — 일일 한도 없음 (스폰 빈도로 자연 제한)
             if (!CanRecruit()) return;
 
-            EventBus.Instance.Emit(new CompanionRecruitedPayload(DisplayName, Role, DialogText));
+            uint traitSeed = unchecked((uint)DisplayName.GetHashCode() ^ (uint)Role.GetHashCode() ^ (uint)Time.frameCount);
+            var trait = CompanionTrait.AssignRandom(gameObject, Role, new SeededRng(traitSeed));
+            string dialog = trait != null && trait.Kind != CompanionTraitKind.None
+                ? $"{DialogText}\nTrait: {trait.DisplayName} - {trait.Description}"
+                : DialogText;
+            EventBus.Instance.Emit(new CompanionRecruitedPayload(DisplayName, Role, dialog));
 
             // 영입되면 Dynamic 으로 전환 — Companion 이 velocity 로 이동해야 하고 다른 유닛과 물리적 상호작용도 가능.
             var rb = GetComponent<Rigidbody2D>();

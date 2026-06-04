@@ -22,6 +22,7 @@ namespace IL6
         [Range(0, 1)] public float RockChance = 0.08f;  // 0.15→0.08
         [Range(0, 1)] public float DeerChance = 0.10f;
         [Range(0, 1)] public float NpcChance = 0.04f;
+        [Range(0, 1)] public float DiscoveryChance = 0.10f;
         public int SlotsPerChunk = 6;
 
         [Header("Starter zone to skip (centered at chunk (Cx, Cy))")]
@@ -154,6 +155,80 @@ namespace IL6
                     if (alive < MaxAliveNpcs) CreateNpc(x, y, rng);
                 }
             }
+
+            bool isDay = GameSession.Instance != null
+                && GameSession.Instance.Cycle != null
+                && GameSession.Instance.Cycle.Phase == Phase.Day;
+            if (firstVisit && isDay && rng.Next() < DiscoveryChance)
+            {
+                float x = baseX + rng.Next() * ChunkSize;
+                float y = baseY + rng.Next() * ChunkSize;
+                data.Spawned.Add(CreateDiscovery(x, y, rng));
+            }
+        }
+
+        private static GameObject CreateDiscovery(float x, float y, SeededRng rng)
+        {
+            var go = new GameObject("Discovery_proc");
+            go.transform.position = new Vector3(x, y, 0f);
+            go.transform.localScale = Vector3.one * 1.15f;
+
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 6;
+
+            var site = go.AddComponent<DiscoverySite>();
+            int pick = rng.IntRange(0, 4);
+            switch (pick)
+            {
+                case 0:
+                    site.Title = "Supply Cache";
+                    site.Description = "A buried cache of preserved food.";
+                    site.RewardKind = ResourceKind.Food;
+                    site.RewardAmount = rng.IntRange(3, 6);
+                    break;
+                case 1:
+                    site.Title = "Broken Sled";
+                    site.Description = "Useful timber and lashings frozen into the snow.";
+                    site.RewardKind = ResourceKind.Wood;
+                    site.RewardAmount = rng.IntRange(4, 8);
+                    break;
+                case 2:
+                    site.Title = "Old Quarry Mark";
+                    site.Description = "Flat stones marked by an older settlement.";
+                    site.RewardKind = ResourceKind.Stone;
+                    site.RewardAmount = rng.IntRange(3, 6);
+                    break;
+                case 3:
+                    site.Title = "Hunter's Bag";
+                    site.Description = "A forgotten bag of smoked meat.";
+                    site.RewardKind = ResourceKind.Meat;
+                    site.RewardAmount = rng.IntRange(2, 4);
+                    break;
+                default:
+                    site.Title = "Blue Flower Patch";
+                    site.Description = "A rare patch of frostbloom under the snow crust.";
+                    site.RewardKind = ResourceKind.Frostbloom;
+                    site.RewardAmount = 1;
+                    break;
+            }
+
+            var col = go.AddComponent<CircleCollider2D>();
+            col.radius = 0.45f;
+
+            var gat = go.AddComponent<Gatherable>();
+            gat.YieldKind = site.RewardKind;
+            gat.YieldAmount = 0;
+            gat.DurationSec = 3.5f;
+            gat.DestroyOnGather = true;
+
+            var cf = go.AddComponent<ColorFallback>();
+            cf.Tint = DiscoverySite.TintFor(site.RewardKind);
+            cf.Shape = pick == 4 ? FallbackShape.Circle : FallbackShape.Rounded;
+            cf.Circle = cf.Shape == FallbackShape.Circle;
+            cf.PixelSize = 64;
+            cf.OutlineWidth = 2;
+            cf.OutlineColor = new Color(0.1f, 0.1f, 0.16f, 1f);
+            return go;
         }
 
         private static GameObject CreateRock(float x, float y)
@@ -592,6 +667,8 @@ namespace IL6
             cf.PixelSize = 64;
             cf.OutlineWidth = 2;
             cf.OutlineColor = new Color(0.1f, 0.1f, 0.15f, 1f);
+            uint traitSeed = unchecked((uint)displayName.GetHashCode() ^ (uint)arch.Role.GetHashCode());
+            CompanionTrait.AssignRandom(go, arch.Role, new SeededRng(traitSeed));
             return go;
         }
 
@@ -627,6 +704,7 @@ namespace IL6
             cf.PixelSize = 64;
             cf.OutlineWidth = 2;
             cf.OutlineColor = new Color(0.1f, 0.1f, 0.15f, 1f);
+            CompanionTrait.AssignRandom(go, arch.Role, rng);
             return go;
         }
     }
