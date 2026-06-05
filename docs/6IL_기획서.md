@@ -141,3 +141,4 @@
 - Tree collision is reduced to the visible trunk/base area instead of the full canopy, making movement blocking easier to read.
 - HUD icons were revised again to match the applied gameplay/reference pixel art more closely: transparent object icons, dark pixel outlines, and no circular badge frame.
 - Low-detail procedural art made with PowerShell System.Drawing was removed from runtime resources. HUD icons now reuse approved generated UI icons, and tree variants are restored/extracted from existing project art sources.
+- Tree runtime sprites were re-extracted with alpha-trimmed padding so no tree variant touches the 64x64 sprite edge, and the mistaken vertical-fence crop was removed from tree spawning.
