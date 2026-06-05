@@ -62,7 +62,28 @@ namespace IL6
         }
 
         public static Sprite PineTree() => Load("Props/pine_tree");
+        public static Sprite PineTree02() => Load("Props/pine_tree_02");
+        public static Sprite PineTree03() => Load("Props/pine_tree_03");
+        public static Sprite PineTree04() => Load("Props/pine_tree_04");
         public static Sprite BareTree() => Load("Props/bare_tree");
+        public static Sprite BareTree02() => Load("Props/bare_tree_02");
+        public static Sprite BareTree03() => Load("Props/bare_tree_03");
+        public static Sprite SnowTree01() => Load("Props/snow_tree_01");
+        public static Sprite SnowTree02() => Load("Props/snow_tree_02");
+
+        public static Sprite TreeVariant(int variant) => Mathf.Abs(variant) % 9 switch
+        {
+            0 => PineTree(),
+            1 => PineTree02(),
+            2 => PineTree03(),
+            3 => PineTree04(),
+            4 => BareTree(),
+            5 => BareTree02(),
+            6 => BareTree03(),
+            7 => SnowTree01(),
+            _ => SnowTree02(),
+        };
+
         public static Sprite SnowRocks() => Load("Props/snow_rocks");
         public static Sprite SmallRocks() => Load("Props/small_rocks");
         public static Sprite Stump() => Load("Props/stump");

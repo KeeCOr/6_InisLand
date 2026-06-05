@@ -300,15 +300,17 @@ namespace IL6
         {
             var go = new GameObject("Tree_proc");
             go.transform.position = new Vector3(x, y, 0);
-            go.transform.localScale = Vector3.one * 2.2f; // Phaser pine_tree: 104x185@0.72 = ~2.3 Unity units wide
+            int variant = TreeVariantIndex(x, y);
+            go.transform.localScale = Vector3.one * TreeScaleForVariant(variant);
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 5;
-            var treeSpr = SpriteBank.PineTree();
+            var treeSpr = SpriteBank.TreeVariant(variant);
             if (treeSpr != null) sr.sprite = treeSpr;
 
             var col = go.AddComponent<CircleCollider2D>();
-            col.radius = 0.4f;
+            col.radius = 0.16f;
+            col.offset = new Vector2(0f, -0.24f);
 
             var b = BalanceConfig.Instance;
             var gat = go.AddComponent<Gatherable>();
@@ -325,6 +327,30 @@ namespace IL6
             cf.OutlineWidth = 2;
             cf.OutlineColor = new Color(0.05f, 0.15f, 0.05f, 1f);
             return go;
+        }
+
+        private static int TreeVariantIndex(float x, float y)
+        {
+            int hx = Mathf.FloorToInt(x * 37.17f);
+            int hy = Mathf.FloorToInt(y * 53.31f);
+            int hash = hx * 73856093 ^ hy * 19349663;
+            return Mathf.Abs(hash) % 9;
+        }
+
+        private static float TreeScaleForVariant(int variant)
+        {
+            return variant switch
+            {
+                1 => 2.05f,
+                2 => 2.25f,
+                3 => 2.0f,
+                4 => 1.85f,
+                5 => 1.75f,
+                6 => 1.9f,
+                7 => 2.05f,
+                8 => 2.15f,
+                _ => 2.15f,
+            };
         }
 
         public struct AnimalArchetype
