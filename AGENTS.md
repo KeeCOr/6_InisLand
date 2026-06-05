@@ -14,6 +14,8 @@ Do not implement gameplay, UI, VFX, build behavior, or runtime behavior in the V
 
 When applying Unity resources such as sprites, textures, audio, VFX, UI art, prefabs, materials, or animations, replace the currently referenced in-game resource instead of only adding a new asset beside it. Prefer preserving the existing authoritative path and `.meta` import settings when safe. If a new path is required, update all scene, prefab, C# `Resources.Load`, serialized field, atlas, addressable, material, animator, and planning-document references so the old resource is no longer used. Delete or archive unused legacy resources when safe, and verify the running/build output references the replacement.
 
+Do not create game art resources with PowerShell `System.Drawing`. It produces low-detail procedural shapes that do not match the project's generated pixel-art style. Use existing approved source art, Unity/editor tooling, WPF bitmap utilities for non-creative crop/resize work, or image-generation/editing workflows instead.
+
 For Windows executable refreshes:
 
 1. Use Unity `2022.3.62f3` unless the project version changes.

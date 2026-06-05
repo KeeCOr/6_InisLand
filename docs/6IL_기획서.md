@@ -140,3 +140,4 @@
 - Procedural tree spawning now picks deterministic variants by world position for more natural map variety.
 - Tree collision is reduced to the visible trunk/base area instead of the full canopy, making movement blocking easier to read.
 - HUD icons were revised again to match the applied gameplay/reference pixel art more closely: transparent object icons, dark pixel outlines, and no circular badge frame.
+- Low-detail procedural art made with PowerShell System.Drawing was removed from runtime resources. HUD icons now reuse approved generated UI icons, and tree variants are restored/extracted from existing project art sources.
