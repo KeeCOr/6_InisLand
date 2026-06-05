@@ -66,11 +66,10 @@ namespace IL6
         private void OnGUI()
         {
             EnsureStyles();
-            DrawStatCard();        // 상단 좌측: HP/XP/모드 탭/무기
-            DrawResourceBar();     // 상단 우측: 자원 세로 카드
-            DrawWaveStanceBar();   // 하단 좌측: 동료 스탠스 + 웨이브 정보
-            if (_hudMode == HudMode.Build) DrawBuildHotbar(); // 건축 모드에서만
-            DrawDebugCorner();     // 하단 우측: 디버그 + SFX
+            DrawStatCard();
+            DrawResourceBar();
+            DrawWaveStanceBar();
+            if (_hudMode == HudMode.Build) DrawBuildHotbar();
             DrawContextActionPanel();
             DrawRecruitDialog();
             DrawRecruitCutscene();
@@ -563,16 +562,10 @@ namespace IL6
                 Phase.Dawn    => new Color(0.95f, 0.78f, 0.55f, 0.95f),
                 _ => new Color(0.1f, 0.1f, 0.15f, 0.95f),
             };
-            // 외곽 골드
-            UiTheme.Rect(new Rect(r.x - 2, r.y - 2, r.width + 4, r.height + 4), UiTheme.PanelBorder);
-            // 어두운 베이스
-            UiTheme.Rect(r, new Color(0.05f, 0.07f, 0.12f, 0.95f));
-            // 페이즈 색조 띠 (좌우 4px)
-            UiTheme.Rect(new Rect(r.x, r.y, 4, r.height), tint);
-            UiTheme.Rect(new Rect(r.xMax - 4, r.y, 4, r.height), tint);
+            UiTheme.Rect(r, new Color(0.05f, 0.07f, 0.12f, 0.38f));
             // 진행 바 (하단)
             float progress = dur > 0 ? Mathf.Clamp01(1f - rem / dur) : 0f;
-            UiTheme.Rect(new Rect(r.x, r.yMax - 4, r.width * progress, 4), tint);
+            UiTheme.Rect(new Rect(r.x, r.yMax - 3, r.width * progress, 3), new Color(tint.r, tint.g, tint.b, 0.72f));
 
             // 시계 + 페이즈 아이콘
             GUI.Label(new Rect(r.x, r.y + 3, r.width, 20), $"{phaseIcon} {phaseName} {clock}", _clockBig);
@@ -895,7 +888,6 @@ namespace IL6
         private void DrawStatCard()
         {
             var panel = HudLayout.TopLeftStatus();
-            UiTheme.Panel(panel);
             int x = (int)panel.x + 10;
             int y = (int)panel.y + 10;
             int W = (int)panel.width - 20;
@@ -955,9 +947,7 @@ namespace IL6
         {
             bool active = _hudMode == mode;
             // 활성 탭은 골드 보더 + 밝은 배경
-            Color border = active ? UiTheme.PanelBorder : UiTheme.PanelBorderDim;
-            Color bg = active ? new Color(0.18f, 0.20f, 0.28f, 1f) : new Color(0.10f, 0.12f, 0.16f, 1f);
-            UiTheme.Rect(new Rect(r.x - 1, r.y - 1, r.width + 2, r.height + 2), border);
+            Color bg = active ? new Color(0.18f, 0.20f, 0.28f, 0.72f) : new Color(0.10f, 0.12f, 0.16f, 0.38f);
             UiTheme.Rect(r, bg);
             var oldC = GUI.contentColor;
             GUI.contentColor = active ? UiTheme.TextGold : UiTheme.TextSubtle;
@@ -1082,7 +1072,6 @@ namespace IL6
             };
 
             var panel = HudLayout.TopRightResources(kinds.Length);
-            UiTheme.Panel(panel);
 
             float x = panel.x + HudStyleConfig.PanelPadding;
             float y = panel.y + HudStyleConfig.PanelPadding;
@@ -1104,10 +1093,6 @@ namespace IL6
                 GUI.Label(new Rect(textX, rowY + 5f, textW, rowH - 4f), $"{cur}/{cap}", _resStyle);
                 GUI.contentColor = oldC;
 
-                if (i < kinds.Length - 1)
-                {
-                    UiTheme.Rect(new Rect(panel.x + 6f, rowY + rowH, panel.width - 12f, 1f), UiTheme.PanelBorderDim);
-                }
             }
         }
 
@@ -1122,7 +1107,6 @@ namespace IL6
             const int W = 330;
             const int H = 122;
             var panel = new Rect(Screen.width - W - 12, 91, W, H);
-            UiTheme.Panel(panel);
 
             var titleStyle = new GUIStyle(_section)
             {
@@ -1167,7 +1151,6 @@ namespace IL6
             const int W = 280, H = 108;
             // ResourceBar(63+24+4=91) 아래
             var panel = new Rect(12, 91, W, H);
-            UiTheme.Panel(panel);
 
             int innerX = (int)panel.x + 10;
             int innerW = W - 20;
@@ -1422,11 +1405,10 @@ namespace IL6
                 var r = new Rect(cx, y, cellW, CellH);
                 bool ok = s.Available && wood >= s.CostWood && stone >= s.CostStone;
 
-                // 셀 배경 + 보더
-                UiTheme.Rect(new Rect(r.x - 1, r.y - 1, r.width + 2, r.height + 2), ok ? UiTheme.PanelBorder : UiTheme.PanelBorderDim);
-                UiTheme.Rect(r, ok ? UiTheme.PanelBg : new Color(0.08f, 0.08f, 0.1f, 0.95f));
+                // 셀 배경
+                UiTheme.Rect(r, ok ? new Color(0.07f, 0.09f, 0.14f, 0.58f) : new Color(0.08f, 0.08f, 0.1f, 0.42f));
                 // 컬러 띠 상단
-                UiTheme.Rect(new Rect(r.x, r.y, r.width, 4), s.Color);
+                UiTheme.Rect(new Rect(r.x, r.y, r.width, 3), new Color(s.Color.r, s.Color.g, s.Color.b, 0.72f));
 
                 // 아이콘 (큰 글자)
                 var iconStyle = new GUIStyle(_title) { fontSize = 22, alignment = TextAnchor.MiddleCenter };
@@ -1642,7 +1624,6 @@ namespace IL6
             actions.Sort((a, b) => a.Priority.CompareTo(b.Priority));
             int count = Mathf.Min(actions.Count, HudStyleConfig.ContextActionLimit);
             var panel = HudLayout.BottomCenterContext(count);
-            UiTheme.Panel(panel);
 
             float x = panel.x + HudStyleConfig.PanelPadding;
             float y = panel.y + HudStyleConfig.PanelPadding;
