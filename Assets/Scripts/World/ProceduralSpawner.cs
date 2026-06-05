@@ -418,7 +418,7 @@ namespace IL6
                 Name = "Mammoth_proc", MeatMin = 30, MeatMax = 50, MeatDropChance = 1f,
                 DurationSec = 12f, Hp = 2000,
                 FleeRadius = 0f, FleeSpeed = 0f, // flee 안 함 — predator
-                Scale = 3.3f, ColliderRadius = 0.85f,
+                Scale = 9.9f, ColliderRadius = 2.55f,
                 Tint = new Color(0.45f, 0.32f, 0.22f),
                 Shape = FallbackShape.Rounded,
                 Outline = new Color(0.15f, 0.08f, 0.02f, 1f),
