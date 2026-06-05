@@ -26,6 +26,22 @@ namespace IL6
         public enum HudMode { Melee, Ranged, Build }
         private HudMode _hudMode = HudMode.Melee;
 
+        private readonly struct ContextAction
+        {
+            public readonly int Priority;
+            public readonly string Label;
+            public readonly bool Enabled;
+            public readonly System.Action Callback;
+
+            public ContextAction(int priority, string label, bool enabled, System.Action callback)
+            {
+                Priority = priority;
+                Label = label;
+                Enabled = enabled;
+                Callback = callback;
+            }
+        }
+
         // 빌드 배치 모드 — 핫바에서 건물 선택 후 _pendingBuildKind 설정, 다음 월드 클릭에 ConstructionSite 스폰.
         private BuildingKind? _pendingBuildKind;
 
@@ -48,11 +64,7 @@ namespace IL6
             DrawWaveStanceBar();   // 하단 좌측: 동료 스탠스 + 웨이브 정보
             if (_hudMode == HudMode.Build) DrawBuildHotbar(); // 건축 모드에서만
             DrawDebugCorner();     // 하단 우측: 디버그 + SFX
-            DrawWorldChopButton();
-            DrawWorldRepairButton();
-            DrawWorldUpgradeButton();
-            DrawWorldRefuelButton();
-            DrawWorldFarmButtons();
+            DrawContextActionPanel();
             DrawRecruitDialog();
             DrawRecruitCutscene();
             DrawRuneModal();
@@ -251,7 +263,7 @@ namespace IL6
             float textA = intensity / 0.55f;
             var oldC = GUI.contentColor;
             GUI.contentColor = new Color(1f, 0.95f, 0.7f, textA);
-            GUI.Label(new Rect(0, Screen.height / 2 - 24, Screen.width, 48), "☀  아침이 밝았다", _dawnStyle);
+            GUI.Label(new Rect(0, Screen.height / 2 - 24, Screen.width, 48), "New dawn", _dawnStyle);
             GUI.contentColor = oldC;
         }
 
@@ -401,13 +413,13 @@ namespace IL6
         private void OnEnable()
         {
             _unsubE = EventBus.Instance.Subscribe<EveningStartedPayload>(p =>
-                { ShowBanner($"Day {p.Day}  🌅  저녁"); Music.PlayForPhase(Phase.Evening); });
+                { ShowBanner($"Day {p.Day}  Evening"); Music.PlayForPhase(Phase.Evening); });
             _unsubN = EventBus.Instance.Subscribe<NightStartedPayload>(p =>
-                { ShowBanner($"Day {p.Day}  🌙  밤이 찾아옵니다"); Music.PlayForPhase(Phase.Night); });
+                { ShowBanner($"Day {p.Day}  Night"); Music.PlayForPhase(Phase.Night); });
             _unsubD = EventBus.Instance.Subscribe<DawnStartedPayload>(p =>
                 { ShowBanner($"Day {p.Day}  🌄  새벽"); Music.PlayForPhase(Phase.Dawn); });
             _unsubA = EventBus.Instance.Subscribe<DayStartedPayload>(p =>
-                { ShowBanner($"Day {p.Day}  ☀  새 날"); Music.PlayForPhase(Phase.Day); });
+                { ShowBanner($"Day {p.Day}  Day"); Music.PlayForPhase(Phase.Day); });
             _unsubRecruit = EventBus.Instance.Subscribe<CompanionRecruitedPayload>(p =>
                 ShowRecruitCutscene(p.DisplayName, p.Role, p.DialogText));
             HookFadeEvents();
@@ -430,9 +442,9 @@ namespace IL6
             _initialBannerShown = true;
             string txt = s.Cycle.Phase switch
             {
-                Phase.Day => $"Day {s.Cycle.Day}  ☀  새 날",
-                Phase.Evening => $"Day {s.Cycle.Day}  🌅  저녁",
-                Phase.Night => $"Day {s.Cycle.Day}  🌙  밤",
+                Phase.Day => $"Day {s.Cycle.Day}  Day",
+                Phase.Evening => $"Day {s.Cycle.Day}  Evening",
+                Phase.Night => $"Day {s.Cycle.Day}  Night",
                 Phase.Dawn => $"Day {s.Cycle.Day}  🌄  새벽",
                 _ => "",
             };
@@ -511,17 +523,17 @@ namespace IL6
 
             string phaseName = s.Cycle.Phase switch
             {
-                Phase.Day => "낮",
-                Phase.Evening => "저녁",
-                Phase.Night => "밤",
+                Phase.Day => "Day",
+                Phase.Evening => "Evening",
+                Phase.Night => "Night",
                 Phase.Dawn => "새벽",
                 _ => "",
             };
             string phaseIcon = s.Cycle.Phase switch
             {
-                Phase.Day => "☀",
-                Phase.Evening => "🌅",
-                Phase.Night => "🌙",
+                Phase.Day => "Day",
+                Phase.Evening => "Evening",
+                Phase.Night => "Night",
                 Phase.Dawn => "🌄",
                 _ => "·",
             };
@@ -681,7 +693,7 @@ namespace IL6
                 _compassDist = new GUIStyle(GUI.skin.label) { fontSize = 13, fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.MiddleCenter, normal = { textColor = UiTheme.TextCream } };
             }
-            GUI.Label(new Rect(r.x + 36, r.y, r.width - 36, H), $"{dist:F0}u  →  집", _compassDist);
+            GUI.Label(new Rect(r.x + 36, r.y, r.width - 36, H), $"{dist:F0}u to home", _compassDist);
         }
 
         private const string TutorialPrefKey = "il6_tutorial_seen_v2"; // v2 = 세계관/목표 페이지 추가
@@ -726,30 +738,30 @@ namespace IL6
                 GUI.Label(new Rect(x, y, w, 28), "한때 푸르렀던 이 땅에 끝없는 겨울이 내려앉았다.", _tutLore); y += 30;
                 GUI.Label(new Rect(x, y, w, 28), "사람들은 떠났고, 남은 자들은 얼어죽거나 — 더 끔찍한 운명을 맞았다.", _tutLore); y += 30;
                 GUI.Label(new Rect(x, y, w, 28), "밤이 되면 죽은 자들이 마을의 모닥불을 향해 일어선다.", _tutLore); y += 36;
-                GUI.Label(new Rect(x, y, w, 24), "당신은 이 작은 마을의 마지막 수호자.", _tutTitle); y += 28;
+                GUI.Label(new Rect(x, y, w, 24), "Evening: gather resources and return to the village.", _tutTitle); y += 28;
                 GUI.Label(new Rect(x, y, w, 28), "눈보라 너머에는 두려움도, 희망도 함께 살고 있다.", _tutLore); y += 30;
             }
             else if (_tutPage == 1)
             {
-                GUI.Label(new Rect(x, y, w, 24), "🌅  낮 — 자원을 모으고 마을을 키워라", _tutTitle); y += 28;
+                GUI.Label(new Rect(x, y, w, 24), "Evening: gather resources and return to the village.", _tutTitle); y += 28;
                 GUI.Label(new Rect(x, y, w, 22), "·  나무·돌을 캐고 동물을 사냥해 식량 확보", _tutBody); y += 22;
                 GUI.Label(new Rect(x, y, w, 22), "·  문 밖에서 떠도는 방랑자(NPC)를 만나 영입", _tutBody); y += 22;
                 GUI.Label(new Rect(x, y, w, 22), "·  마을에 모닥불·울타리·망루를 지어 방어 강화", _tutBody); y += 30;
 
-                GUI.Label(new Rect(x, y, w, 24), "🌙  밤 — 마을을 사수하라", _tutTitle); y += 28;
+                GUI.Label(new Rect(x, y, w, 24), "Evening: gather resources and return to the village.", _tutTitle); y += 28;
                 GUI.Label(new Rect(x, y, w, 22), "·  좀비 웨이브가 사방에서 몰려온다", _tutBody); y += 22;
                 GUI.Label(new Rect(x, y, w, 22), "·  5일·10일·15일째 밤에는 보스가 출현", _tutBody); y += 22;
                 GUI.Label(new Rect(x, y, w, 22), "·  레벨이 오를수록 낮과 밤이 길어진다 — 더 많은 시간, 더 큰 위협", _tutBody); y += 30;
             }
             else // page 2
             {
-                GUI.Label(new Rect(x, y, w, 24), "🎮  조작", _tutTitle); y += 28;
+                GUI.Label(new Rect(x, y, w, 24), "Evening: gather resources and return to the village.", _tutTitle); y += 28;
                 GUI.Label(new Rect(x, y, w, 22), "·  WASD / 방향키 — 이동 (W = 위)", _tutBody); y += 22;
                 GUI.Label(new Rect(x, y, w, 22), "·  E — 근처 자원 채집  ·  F — 방랑자 영입", _tutBody); y += 22;
                 GUI.Label(new Rect(x, y, w, 22), "·  공격은 자동 — 사거리 안 적을 즉시 공격", _tutBody); y += 22;
-                GUI.Label(new Rect(x, y, w, 22), "·  ESC — 일시정지 / 저장 / 처음부터", _tutBody); y += 30;
+                GUI.Label(new Rect(x, y, w, 22), "- ESC pauses / saves / restarts", _tutBody); y += 30;
 
-                GUI.Label(new Rect(x, y, w, 24), "📈  성장", _tutTitle); y += 28;
+                GUI.Label(new Rect(x, y, w, 24), "Evening: gather resources and return to the village.", _tutTitle); y += 28;
                 GUI.Label(new Rect(x, y, w, 22), "·  좀비 처치 → XP → 레벨업 시 룬 3종 중 1개 선택 (최대 3중첩)", _tutBody); y += 22;
                 GUI.Label(new Rect(x, y, w, 22), "·  같은 원소 룬 마스터 시 시너지 발동 (독·얼음·번개)", _tutBody); y += 22;
             }
@@ -770,7 +782,7 @@ namespace IL6
             {
                 if (UiTheme.Button(new Rect(r.x + 28, btnY, btnW, 28), "◀ 이전", _smallBtn)) _tutPage--;
             }
-            string nextLabel = _tutPage < 2 ? "다음 ▶" : "시작하기";
+            string nextLabel = _tutPage < 2 ? "Next" : "Start";
             if (UiTheme.Button(new Rect(r.xMax - btnW - 28, btnY, btnW, 28), nextLabel, _btn))
             {
                 if (_tutPage < 2) _tutPage++;
@@ -874,8 +886,11 @@ namespace IL6
         // ====================================================================
         private void DrawStatCard()
         {
-            const int W = 220;
-            int x = 12, y = 12;
+            var panel = HudLayout.TopLeftStatus();
+            UiTheme.Panel(panel);
+            int x = (int)panel.x + 10;
+            int y = (int)panel.y + 10;
+            int W = (int)panel.width - 20;
 
             if (Player != null)
             {
@@ -884,11 +899,12 @@ namespace IL6
                 DrawHudIcon(new Rect(x, y - 4, 18, 18), "hp");
                 int barX = x + 22;
                 int barW = W - 22;
-                // HP 배경
                 UiTheme.Rect(new Rect(barX - 1, y - 1, barW + 2, 14), UiTheme.PanelBorderDim);
                 UiTheme.Bar(new Rect(barX, y, barW, 12), hpPct, hpFill);
-                var hpStyle = new GUIStyle(GUI.skin.label) {
-                    fontSize = 10, fontStyle = FontStyle.Bold,
+                var hpStyle = new GUIStyle(GUI.skin.label)
+                {
+                    fontSize = 10,
+                    fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.MiddleCenter,
                     normal = { textColor = Color.white }
                 };
@@ -907,24 +923,24 @@ namespace IL6
                 y += 9;
             }
 
-            // 채집 진행 (활성일 때만)
             if (Gather != null && Gather.IsActive)
             {
                 UiTheme.Rect(new Rect(x - 1, y + 1, W + 2, 9), UiTheme.PanelBorderDim);
                 UiTheme.Bar(new Rect(x, y + 2, W, 7), Gather.Progress, new Color(0.6f, 0.85f, 0.4f));
-                var gStyle = new GUIStyle(GUI.skin.label) {
-                    fontSize = 9, alignment = TextAnchor.MiddleCenter,
+                var gStyle = new GUIStyle(GUI.skin.label)
+                {
+                    fontSize = 9,
+                    alignment = TextAnchor.MiddleCenter,
                     normal = { textColor = UiTheme.TextCream }
                 };
-                GUI.Label(new Rect(x, y + 2, W, 7), $"채집 {(Gather.Progress * 100):F0}%", gStyle);
+                GUI.Label(new Rect(x, y + 2, W, 7), $"\uCC44\uC9D1 {(Gather.Progress * 100):F0}%", gStyle);
             }
 
-            // 모드 탭 — HP/XP 아래 작게
-            int tabY = 12 + 14 + 9 + 6;
+            int tabY = (int)panel.y + 14 + 9 + 24;
             int tabW = (W - 8) / 3;
-            DrawModeTab(new Rect(x,             tabY, tabW, 22), HudMode.Melee,  "⚔[1]");
-            DrawModeTab(new Rect(x + tabW + 4,  tabY, tabW, 22), HudMode.Ranged, "🏹[2]");
-            DrawModeTab(new Rect(x + (tabW+4)*2, tabY, tabW, 22), HudMode.Build,  "🏠[3]");
+            DrawModeTab(new Rect(x, tabY, tabW, 22), HudMode.Melee, "\uB3C4\uB07C [1]");
+            DrawModeTab(new Rect(x + tabW + 4, tabY, tabW, 22), HudMode.Ranged, "\uD65C [2]");
+            DrawModeTab(new Rect(x + (tabW + 4) * 2, tabY, tabW, 22), HudMode.Build, "\uAC74\uC124 [3]");
         }
 
         private void DrawModeTab(Rect r, HudMode mode, string label)
@@ -1011,7 +1027,7 @@ namespace IL6
             }
             string sLabel = majority switch
             {
-                Companion.Stance.Follow => "👣 따르기",
+                Companion.Stance.Follow => "Follow",
                 Companion.Stance.Hold => "🛡 사수",
                 Companion.Stance.Aggressive => "⚔ 공세",
                 _ => "",
@@ -1042,38 +1058,48 @@ namespace IL6
             if (_resStyle == null)
                 _resStyle = new GUIStyle(GUI.skin.label)
                 {
-                    fontSize = 13, fontStyle = FontStyle.Bold,
+                    fontSize = 13,
+                    fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.MiddleLeft,
                     normal = { textColor = UiTheme.TextCream }
                 };
 
-            // StatCard(12+14+9+22+4=61) 아래
-            const int W = 300, H = 30;
-            var panel = new Rect(Mathf.Max(12, Screen.width - W - 12), 12, W, H);
-            UiTheme.Rect(panel, new Color(0.05f, 0.07f, 0.12f, 0.90f));
-            UiTheme.Rect(new Rect(panel.x - 1, panel.y - 1, panel.width + 2, panel.height + 2), UiTheme.PanelBorderDim);
+            ResourceKind[] kinds =
+            {
+                ResourceKind.Wood,
+                ResourceKind.Stone,
+                ResourceKind.Meat,
+                ResourceKind.Food,
+                ResourceKind.Frostbloom
+            };
 
-            // 4 자원 수평 배치
-            ResourceKind[] kinds  = { ResourceKind.Wood, ResourceKind.Stone, ResourceKind.Meat, ResourceKind.Food };
-            int itemW = W / 4;
+            var panel = HudLayout.TopRightResources(kinds.Length);
+            UiTheme.Panel(panel);
+
+            float x = panel.x + HudStyleConfig.PanelPadding;
+            float y = panel.y + HudStyleConfig.PanelPadding;
+            float rowH = HudStyleConfig.ResourceCellHeight;
+            float textX = x + HudStyleConfig.IconMedium + 7f;
+            float textW = panel.width - HudStyleConfig.PanelPadding * 2f - HudStyleConfig.IconMedium - 7f;
+
             for (int i = 0; i < kinds.Length; i++)
             {
                 var k = kinds[i];
                 int cur = session.Resources.Get(k);
                 int cap = session.Resources.GetCap(k);
-                int x = (int)panel.x + i * itemW + 8;
+                float rowY = y + i * rowH;
 
-                DrawHudIcon(new Rect(x, (int)panel.y + 5, 20, 20), ResourceIconKey(k));
+                DrawHudIcon(new Rect(x, rowY + 4f, HudStyleConfig.IconMedium, HudStyleConfig.IconMedium), ResourceIconKey(k));
 
                 var oldC = GUI.contentColor;
                 GUI.contentColor = cur >= cap ? UiTheme.TextDanger : UiTheme.TextCream;
-                GUI.Label(new Rect(x + 26, (int)panel.y + 7, itemW - 30, 22),
-                    $"{cur}", _resStyle);
+                GUI.Label(new Rect(textX, rowY + 5f, textW, rowH - 4f), $"{cur}/{cap}", _resStyle);
                 GUI.contentColor = oldC;
 
-                // 구분선 (마지막 제외)
                 if (i < kinds.Length - 1)
-                    UiTheme.Rect(new Rect(panel.x + (i + 1) * itemW, panel.y + 7, 1, H - 14), UiTheme.PanelBorderDim);
+                {
+                    UiTheme.Rect(new Rect(panel.x + 6f, rowY + rowH, panel.width - 12f, 1f), UiTheme.PanelBorderDim);
+                }
             }
         }
 
@@ -1145,7 +1171,7 @@ namespace IL6
                 var oldC = GUI.contentColor;
                 GUI.contentColor = new Color(0.95f, 0.5f, 0.5f);
                 DrawHudIcon(new Rect(innerX, y + 1, 18, 18), "wave");
-                GUI.Label(new Rect(innerX + 24, y, innerW - 24, 22),
+                GUI.Label(new Rect(innerX + 24, y, innerW - 24, 22), "Village stable", _labelSubtle);
                     $"활성 {Night.ActiveZombies}  ·  대기 {Night.WavePending}", _section);
                 GUI.contentColor = oldC;
                 y += 24;
@@ -1153,7 +1179,7 @@ namespace IL6
                 {
                     GUI.contentColor = new Color(0.55f, 0.85f, 1f);
                     DrawHudIcon(new Rect(innerX, y + 1, 18, 18), "blizzard");
-                    GUI.Label(new Rect(innerX + 24, y, innerW - 24, 22), "눈보라", _section);
+                    GUI.Label(new Rect(innerX + 24, y, innerW - 24, 22), "Blizzard", _section);
                     GUI.contentColor = oldC;
                     y += 24;
                 }
@@ -1170,7 +1196,7 @@ namespace IL6
             else
             {
                 DrawHudIcon(new Rect(innerX, y + 1, 18, 18), "home");
-                GUI.Label(new Rect(innerX + 24, y, innerW - 24, 22), "평온한 낮", _labelSubtle);
+                GUI.Label(new Rect(innerX + 24, y, innerW - 24, 22), "Village stable", _labelSubtle);
                 y += 24;
             }
 
@@ -1222,7 +1248,7 @@ namespace IL6
             }
             string sLabel = majority switch
             {
-                Companion.Stance.Follow => "👣 따르기",
+                Companion.Stance.Follow => "Follow",
                 Companion.Stance.Hold => "🛡 사수",
                 Companion.Stance.Aggressive => "⚔ 공세",
                 _ => "",
@@ -1280,83 +1306,83 @@ namespace IL6
             bool farmAllowed = FarmBuilding.CurrentFarmCount() < FarmBuilding.MaxFarmsAllowed();
 
             BuildSlot[] slots = {
-                new BuildSlot { Icon = "🔥", Name = "모닥불",
+                new BuildSlot { Icon = "F", Name = "Campfire",
                     CostWood = BuildCost(BuildingKind.Campfire).Wood,
                     CostStone = BuildCost(BuildingKind.Campfire).Stone,
                     Kind = BuildingKind.Campfire, Available = true,
                     Color = new Color(1f, 0.55f, 0.2f) },
-                new BuildSlot { Icon = "🔥", Name = "화로",
+                new BuildSlot { Icon = "B", Name = "Brazier",
                     CostWood = BuildCost(BuildingKind.Brazier).Wood,
                     CostStone = BuildCost(BuildingKind.Brazier).Stone,
                     Kind = BuildingKind.Brazier, Available = true,
                     Color = new Color(1f, 0.72f, 0.22f) },
-                new BuildSlot { Icon = "🏠", Name = "집 (+4)",
+                new BuildSlot { Icon = "H", Name = "House(+4)",
                     CostWood = BuildCost(BuildingKind.House).Wood,
                     CostStone = BuildCost(BuildingKind.House).Stone,
                     Kind = BuildingKind.House, Available = true,
                     Color = new Color(0.85f, 0.6f, 0.4f) },
-                new BuildSlot { Icon = "🥕", Name = "울타리",
+                new BuildSlot { Icon = "W", Name = "Fence",
                     CostWood = BuildCost(BuildingKind.Fence).Wood,
                     CostStone = BuildCost(BuildingKind.Fence).Stone,
                     Kind = BuildingKind.Fence, Available = true,
                     Color = new Color(0.78f, 0.62f, 0.30f) },
-                new BuildSlot { Icon = "📦", Name = "창고",
+                new BuildSlot { Icon = "S", Name = "Storage",
                     CostWood = BuildCost(BuildingKind.Storage).Wood,
                     CostStone = BuildCost(BuildingKind.Storage).Stone,
                     Kind = BuildingKind.Storage, Available = true,
                     Color = new Color(0.55f, 0.45f, 0.3f) },
-                new BuildSlot { Icon = "🌱", Name = "씨앗고",
+                new BuildSlot { Icon = "G", Name = "Seed Store",
                     CostWood = BuildCost(BuildingKind.SeedStorage).Wood,
                     CostStone = BuildCost(BuildingKind.SeedStorage).Stone,
                     Kind = BuildingKind.SeedStorage, Available = true,
                     Color = new Color(0.62f, 0.52f, 0.28f) },
-                new BuildSlot { Icon = farmAllowed ? "🌾" : "🌾✖",
-                    Name = farmAllowed ? "농장" : "씨앗고 필요",
+                new BuildSlot { Icon = farmAllowed ? "P" : "!",
+                    Name = farmAllowed ? "Farm" : "Need Seed Store",
                     CostWood = BuildCost(BuildingKind.Farm).Wood,
                     CostStone = BuildCost(BuildingKind.Farm).Stone,
                     Kind = BuildingKind.Farm, Available = farmAllowed,
                     Color = new Color(0.5f, 0.85f, 0.35f) },
-                new BuildSlot { Icon = "🏹", Name = "망루",
+                new BuildSlot { Icon = "T", Name = "Watchtower",
                     CostWood = BuildCost(BuildingKind.Watchtower).Wood,
                     CostStone = BuildCost(BuildingKind.Watchtower).Stone,
                     Kind = BuildingKind.Watchtower, Available = true,
                     Color = new Color(0.6f, 0.85f, 0.55f) },
-                new BuildSlot { Icon = "🏥", Name = "의무실",
+                new BuildSlot { Icon = "+", Name = "Infirmary",
                     CostWood = BuildCost(BuildingKind.Infirmary).Wood,
                     CostStone = BuildCost(BuildingKind.Infirmary).Stone,
                     Kind = BuildingKind.Infirmary, Available = true,
                     Color = new Color(0.9f, 0.95f, 0.95f) },
-                new BuildSlot { Icon = "🪤", Name = "사냥꾼 오두막",
+                new BuildSlot { Icon = "M", Name = "Hunter Hut",
                     CostWood = BuildCost(BuildingKind.HuntersHut).Wood,
                     CostStone = BuildCost(BuildingKind.HuntersHut).Stone,
                     Kind = BuildingKind.HuntersHut, Available = true,
                     Color = new Color(0.55f, 0.4f, 0.25f) },
-                new BuildSlot { Icon = "🪚", Name = "목공소",
+                new BuildSlot { Icon = "C", Name = "Carpenter",
                     CostWood = BuildCost(BuildingKind.Carpenter).Wood,
                     CostStone = BuildCost(BuildingKind.Carpenter).Stone,
                     Kind = BuildingKind.Carpenter, Available = true,
                     Color = new Color(0.58f, 0.38f, 0.18f) },
-                new BuildSlot { Icon = "⚒", Name = "대장간",
+                new BuildSlot { Icon = "A", Name = "Blacksmith",
                     CostWood = BuildCost(BuildingKind.Blacksmith).Wood,
                     CostStone = BuildCost(BuildingKind.Blacksmith).Stone,
                     Kind = BuildingKind.Blacksmith, Available = true,
                     Color = new Color(0.9f, 0.3f, 0.15f) },
-                new BuildSlot { Icon = "⚔", Name = "훈련소",
+                new BuildSlot { Icon = "R", Name = "Training",
                     CostWood = BuildCost(BuildingKind.TrainingCamp).Wood,
                     CostStone = BuildCost(BuildingKind.TrainingCamp).Stone,
                     Kind = BuildingKind.TrainingCamp, Available = true,
                     Color = new Color(0.9f, 0.42f, 0.22f) },
-                new BuildSlot { Icon = "🍖", Name = "식량고",
+                new BuildSlot { Icon = "O", Name = "Food Store",
                     CostWood = BuildCost(BuildingKind.FoodStorage).Wood,
                     CostStone = BuildCost(BuildingKind.FoodStorage).Stone,
                     Kind = BuildingKind.FoodStorage, Available = true,
                     Color = new Color(0.95f, 0.78f, 0.4f) },
-                new BuildSlot { Icon = "👁", Name = "감시초소",
+                new BuildSlot { Icon = "L", Name = "Lookout",
                     CostWood = BuildCost(BuildingKind.LookoutPost).Wood,
                     CostStone = BuildCost(BuildingKind.LookoutPost).Stone,
                     Kind = BuildingKind.LookoutPost, Available = true,
                     Color = new Color(0.55f, 0.8f, 1f) },
-                new BuildSlot { Icon = "🪵", Name = "제재소",
+                new BuildSlot { Icon = "Y", Name = "Sawmill",
                     CostWood = BuildCost(BuildingKind.Sawmill).Wood,
                     CostStone = BuildCost(BuildingKind.Sawmill).Stone,
                     Kind = BuildingKind.Sawmill, Available = true,
@@ -1435,19 +1461,19 @@ namespace IL6
             int innerW = W - 20;
             int y = (int)panel.y + 10;
 
-            GUI.Label(new Rect(innerX, y, innerW, 16), "디버그", _labelSubtle);
+            GUI.Label(new Rect(innerX, y, innerW, 16), "Debug", _labelSubtle);
             y += 18;
 
             int half = (innerW - 6) / 2;
             if (UiTheme.Button(new Rect(innerX, y, half, 24), "▶ 페이즈+1", _smallBtn))
                 session.Cycle.Update(session.Cycle.PhaseDurationSec + 0.1f);
-            if (UiTheme.Button(new Rect(innerX + half + 6, y, half, 24), "🌙 강제 밤", _smallBtn))
+            if (UiTheme.Button(new Rect(innerX + half + 6, y, half, 24), "Force Night", _smallBtn))
                 if (Night != null) Night.StartNight(session.Cycle.Day);
             y += 28;
 
             if (UiTheme.Button(new Rect(innerX, y, half, 24), "🧟 좀비+1", _smallBtn))
                 if (Night != null) Night.SpawnDebugZombie();
-            if (UiTheme.Button(new Rect(innerX + half + 6, y, half, 24), "☀ 낮으로", _smallBtn))
+            if (UiTheme.Button(new Rect(innerX + half + 6, y, half, 24), "To Day", _smallBtn))
                 for (int i = 0; i < 4 && session.Cycle.Phase != Phase.Day; i++)
                     session.Cycle.Update(session.Cycle.PhaseDurationSec + 0.1f);
             y += 28;
@@ -1539,7 +1565,7 @@ namespace IL6
             // ──── 디버그 버튼 ────
             UiTheme.Separator(new Rect(innerX, y + 4, innerW, 1));
             y += 10;
-            GUI.Label(new Rect(innerX, y, innerW, 18), "디버그", _labelSubtle);
+            GUI.Label(new Rect(innerX, y, innerW, 18), "Debug", _labelSubtle);
             y += 18;
 
             int half = (innerW - 8) / 2;
@@ -1547,7 +1573,7 @@ namespace IL6
             {
                 session.Cycle.Update(session.Cycle.PhaseDurationSec + 0.1f);
             }
-            if (UiTheme.Button(new Rect(innerX + half + 8, y, half, 26), "🌙 강제 밤", _smallBtn))
+            if (UiTheme.Button(new Rect(innerX + half + 8, y, half, 26), "Force Night", _smallBtn))
             {
                 if (Night != null) Night.StartNight(session.Cycle.Day);
             }
@@ -1557,7 +1583,7 @@ namespace IL6
             {
                 if (Night != null) Night.SpawnDebugZombie();
             }
-            if (UiTheme.Button(new Rect(innerX + half + 8, y, half, 26), "☀ 낮으로", _smallBtn))
+            if (UiTheme.Button(new Rect(innerX + half + 8, y, half, 26), "To Day", _smallBtn))
             {
                 for (int i = 0; i < 4 && session.Cycle.Phase != Phase.Day; i++)
                 {
@@ -1579,6 +1605,270 @@ namespace IL6
         // ====================================================================
         // 손상된 건물 근처에 수리 버튼 — 클릭당 wood 1 소모, MaxHp 의 20% 회복.
         // 플레이어 또는 동료가 3.5u 안에 있어야 표시.
+        private void DrawContextActionPanel()
+        {
+            if (_hudMode == HudMode.Build) return;
+            if (Player == null) return;
+            var session = GameSession.Instance;
+            if (session == null) return;
+
+            var actions = new System.Collections.Generic.List<ContextAction>();
+            AddRepairAction(actions, session);
+            AddRefuelAction(actions, session);
+            AddUpgradeAction(actions, session);
+            AddFenceActions(actions, session);
+            AddFarmActions(actions);
+            AddGatherAction(actions, ResourceKind.Wood, "Chop wood");
+            AddGatherAction(actions, ResourceKind.Stone, "Mine stone");
+            DrawContextActions(actions);
+        }
+
+        private void DrawContextActions(System.Collections.Generic.List<ContextAction> actions)
+        {
+            if (actions == null || actions.Count == 0) return;
+            actions.Sort((a, b) => a.Priority.CompareTo(b.Priority));
+            int count = Mathf.Min(actions.Count, HudStyleConfig.ContextActionLimit);
+            var panel = HudLayout.BottomCenterContext(count);
+            UiTheme.Panel(panel);
+
+            float x = panel.x + HudStyleConfig.PanelPadding;
+            float y = panel.y + HudStyleConfig.PanelPadding;
+            float w = panel.width - HudStyleConfig.PanelPadding * 2f;
+            for (int i = 0; i < count; i++)
+            {
+                var action = actions[i];
+                var rect = new Rect(x, y, w, HudStyleConfig.ContextButtonHeight);
+                if (UiTheme.Button(rect, action.Label, _smallBtn, action.Enabled))
+                {
+                    action.Callback?.Invoke();
+                }
+                y += HudStyleConfig.ContextButtonHeight + HudStyleConfig.PanelGap;
+            }
+        }
+
+        private void AddRepairAction(System.Collections.Generic.List<ContextAction> actions, GameSession session)
+        {
+            Building best = FindNearbyDamagedBuilding(3.5f);
+            if (best == null) return;
+            const int Cost = 1;
+            int healAmount = Mathf.Max(1, best.MaxHp / 5);
+            bool canAfford = session.Resources.Get(ResourceKind.Wood) >= Cost;
+            string label = canAfford ? $"Repair +{healAmount} HP ({Cost} Wood)" : "Need Wood to repair";
+            actions.Add(new ContextAction(20, label, canAfford, () =>
+            {
+                if (session.Resources.Spend(ResourceKind.Wood, Cost))
+                {
+                    best.RepairHp(healAmount);
+                    Sfx.Build();
+                }
+            }));
+        }
+
+        private void AddUpgradeAction(System.Collections.Generic.List<ContextAction> actions, GameSession session)
+        {
+            Building best = FindNearbyUpgradeableBuilding(3.5f);
+            if (best == null) return;
+            ResourceCost cost = best.NextUpgradeCost();
+            bool ok = cost.CanPay(session.Resources);
+            string effect = BuildingUpgradeRules.UpgradeSummary(best.Kind, best.Level + 1);
+            string label = ok ? $"Upgrade Lv.{best.Level + 1} {effect} ({cost})" : $"Need resources for Lv.{best.Level + 1} ({cost})";
+            actions.Add(new ContextAction(30, label, ok, () =>
+            {
+                if (best.TryUpgrade(session.Resources)) Sfx.Build();
+            }));
+        }
+
+        private void AddRefuelAction(System.Collections.Generic.List<ContextAction> actions, GameSession session)
+        {
+            CampfireAura best = FindNearbyCampfireNeedingFuel(3.5f);
+            if (best == null) return;
+            const int Cost = 1;
+            const float FuelAdd = 30f;
+            bool ok = session.Resources.Get(ResourceKind.Wood) >= Cost;
+            int fuelPct = Mathf.RoundToInt(best.Fuel / best.MaxFuel * 100f);
+            string label = ok ? $"Refuel +{(int)FuelAdd} ({Cost} Wood) {fuelPct}%" : $"Need Wood to refuel {fuelPct}%";
+            actions.Add(new ContextAction(20, label, ok, () =>
+            {
+                if (session.Resources.Spend(ResourceKind.Wood, Cost))
+                {
+                    best.AddFuel(FuelAdd);
+                    Sfx.Build();
+                }
+            }));
+        }
+
+        private void AddFenceActions(System.Collections.Generic.List<ContextAction> actions, GameSession session)
+        {
+            if (session.Cycle == null || session.Cycle.Phase != Phase.Day) return;
+            Vector3 center = new Vector3(GameConstants.VillageCenterX, GameConstants.VillageCenterY, 0f);
+            if (Vector2.Distance(Player.transform.position, center) > VillageStarter.CurrentHalfSize + 2.5f) return;
+            if (FenceWorkCrew.IsActive)
+            {
+                actions.Add(new ContextAction(40, "Fence crew working", false, null));
+                return;
+            }
+
+            int damaged = VillageStarter.CountDamagedFences();
+            int missing = VillageStarter.CountMissingOuterFences(center);
+            int wood = session.Resources.Get(ResourceKind.Wood);
+            int healAmount = Mathf.Max(10, BuildingUpgradeRules.BaseHp(BuildingKind.Fence, BalanceConfig.Instance) * 3);
+
+            if (damaged > 0)
+            {
+                int repairCost = Mathf.Max(4, Mathf.CeilToInt(damaged * 0.35f));
+                bool ok = wood >= repairCost;
+                actions.Add(new ContextAction(40, ok ? $"Repair fences x{damaged} ({repairCost} Wood)" : $"Need {repairCost} Wood for fences", ok, () =>
+                {
+                    if (!session.Resources.Spend(ResourceKind.Wood, repairCost)) return;
+                    int crew = FenceWorkCrew.Begin(FenceWorkCrew.JobKind.Repair, center, healAmount);
+                    if (crew <= 0)
+                    {
+                        int repaired = VillageStarter.RepairAllFences(healAmount);
+                        GameFeel.FloatText(center, $"Fences repaired x{repaired}", new Color(0.65f, 1f, 0.65f));
+                        Sfx.Build();
+                    }
+                }));
+            }
+
+            if (missing > 0)
+            {
+                int rebuildCost = Mathf.Max(6, missing);
+                bool ok = wood >= rebuildCost;
+                actions.Add(new ContextAction(40, ok ? $"Rebuild fence x{missing} ({rebuildCost} Wood)" : $"Need {rebuildCost} Wood to rebuild", ok, () =>
+                {
+                    if (!session.Resources.Spend(ResourceKind.Wood, rebuildCost)) return;
+                    int crew = FenceWorkCrew.Begin(FenceWorkCrew.JobKind.Rebuild, center, healAmount);
+                    if (crew <= 0)
+                    {
+                        int built = VillageStarter.RebuildMissingOuterFences(center);
+                        GameFeel.FloatText(center, $"Fences rebuilt x{built}", new Color(0.8f, 0.95f, 1f));
+                        Sfx.Build();
+                    }
+                }));
+            }
+        }
+
+        private void AddFarmActions(System.Collections.Generic.List<ContextAction> actions)
+        {
+            var farms = Object.FindObjectsByType<FarmBuilding>(FindObjectsSortMode.None);
+            FarmBuilding best = null;
+            float bestDist = 3f;
+            foreach (var farm in farms)
+            {
+                if (farm == null || Player == null) continue;
+                float d = Vector2.Distance(Player.transform.position, farm.transform.position);
+                if (d < bestDist)
+                {
+                    bestDist = d;
+                    best = farm;
+                }
+            }
+            if (best == null) return;
+
+            if (best.HarvestReady)
+            {
+                int yield = best.BaseYield + best.Workers.Count * best.PerWorkerBonus;
+                actions.Add(new ContextAction(50, $"Harvest +{yield}", true, best.Harvest));
+            }
+            else if (best.Workers.Count < best.MaxWorkers)
+            {
+                actions.Add(new ContextAction(50, $"Assign farmer {best.Workers.Count}/{best.MaxWorkers}", true, () =>
+                {
+                    var c = FindNearestFreeCompanion(best.transform.position);
+                    if (c != null) best.TryAssignWorker(c);
+                }));
+            }
+        }
+
+        private void AddGatherAction(System.Collections.Generic.List<ContextAction> actions, ResourceKind kind, string label)
+        {
+            if (Player == null) return;
+            var companions = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
+            var node = FindGatherableWithUnitsNearby(kind, 3.5f, companions);
+            if (node == null) return;
+            float playerDist = Vector2.Distance(Player.transform.position, node.transform.position);
+            bool playerNear = playerDist <= 3.5f;
+            var nearbyCompanions = new System.Collections.Generic.List<Companion>();
+            foreach (var c in companions)
+            {
+                if (c == null || c.CurrentMode == Companion.Mode.Hiding || c.CurrentMode == Companion.Mode.Farming) continue;
+                if (Vector2.Distance(c.transform.position, node.transform.position) <= 3.5f) nearbyCompanions.Add(c);
+            }
+            int totalWorkers = (playerNear ? 1 : 0) + nearbyCompanions.Count;
+            if (totalWorkers == 0) return;
+            actions.Add(new ContextAction(60, $"{label} ({totalWorkers})", true, () => StartGatherContext(node, playerNear, nearbyCompanions)));
+        }
+
+        private void StartGatherContext(Gatherable node, bool playerNear, System.Collections.Generic.List<Companion> nearbyCompanions)
+        {
+            nearbyCompanions.Sort((a, b) =>
+                Vector2.Distance(a.transform.position, node.transform.position)
+                .CompareTo(Vector2.Distance(b.transform.position, node.transform.position)));
+            int compCap = Mathf.Min(nearbyCompanions.Count, 2);
+            if (playerNear && Gather != null) Gather.StartGathering(node);
+            for (int i = 0; i < compCap; i++) nearbyCompanions[i].AssignGather(node);
+        }
+
+        private Building FindNearbyDamagedBuilding(float range)
+        {
+            var companions = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
+            var bs = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
+            Building best = null;
+            float bestDist = float.MaxValue;
+            Vector3 ppos = Player.transform.position;
+            foreach (var b in bs)
+            {
+                if (b == null || b.CurrentHp <= 0 || b.CurrentHp >= b.MaxHp) continue;
+                if (!IsAnyUnitNear(b.transform.position, range, companions)) continue;
+                float d = Vector2.Distance(ppos, b.transform.position);
+                if (d < bestDist) { bestDist = d; best = b; }
+            }
+            return best;
+        }
+
+        private Building FindNearbyUpgradeableBuilding(float range)
+        {
+            var companions = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
+            var bs = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
+            Building best = null;
+            float bestDist = float.MaxValue;
+            Vector3 ppos = Player.transform.position;
+            foreach (var b in bs)
+            {
+                if (b == null || b.CurrentHp <= 0 || b.Level >= BuildingUpgradeRules.MaxLevel) continue;
+                if (!IsAnyUnitNear(b.transform.position, range, companions)) continue;
+                float d = Vector2.Distance(ppos, b.transform.position);
+                if (d < bestDist) { bestDist = d; best = b; }
+            }
+            return best;
+        }
+
+        private CampfireAura FindNearbyCampfireNeedingFuel(float range)
+        {
+            var auras = Object.FindObjectsByType<CampfireAura>(FindObjectsSortMode.None);
+            CampfireAura best = null;
+            float bestDist = range;
+            Vector3 ppos = Player.transform.position;
+            foreach (var a in auras)
+            {
+                if (a == null || a.Fuel >= a.MaxFuel - 0.5f) continue;
+                float d = Vector2.Distance(ppos, a.transform.position);
+                if (d < bestDist) { bestDist = d; best = a; }
+            }
+            return best;
+        }
+
+        private bool IsAnyUnitNear(Vector3 pos, float range, Companion[] companions)
+        {
+            if (Player != null && Vector2.Distance(Player.transform.position, pos) <= range) return true;
+            foreach (var c in companions)
+            {
+                if (c == null || c.IsDead) continue;
+                if (Vector2.Distance(c.transform.position, pos) <= range) return true;
+            }
+            return false;
+        }
+
         private void DrawWorldRepairButton()
         {
             if (Player == null) return;
@@ -1626,7 +1916,7 @@ namespace IL6
 
             string label = canAfford
                 ? $"🔨 수리  +{healAmount} HP  ({Cost} Wood)"
-                : $"🔨 수리  Wood 부족";
+                : "Need Wood to repair";
             var rect = new Rect(sp.x - 80, guiY - 14, 160, 28);
             var bigBtn = new GUIStyle(_btn) { fontSize = 12, fontStyle = FontStyle.Bold };
             if (UiTheme.Button(rect, label, bigBtn, canAfford))
@@ -1639,11 +1929,97 @@ namespace IL6
             }
         }
 
+        private void DrawVillageFenceMaintenance(GameSession session)
+        {
+            if (Player == null || session == null || session.Resources == null || session.Cycle == null) return;
+            if (session.Cycle.Phase != Phase.Day) return;
+
+            Vector3 center = new Vector3(GameConstants.VillageCenterX, GameConstants.VillageCenterY, 0f);
+            float dist = Vector2.Distance(Player.transform.position, center);
+            if (dist > VillageStarter.CurrentHalfSize + 2.5f) return;
+
+            int damaged = VillageStarter.CountDamagedFences();
+            int missing = VillageStarter.CountMissingOuterFences(center);
+            if (damaged <= 0 && missing <= 0) return;
+
+            int wood = session.Resources.Get(ResourceKind.Wood);
+            int repairCost = Mathf.Max(4, Mathf.CeilToInt(damaged * 0.35f));
+            int rebuildCost = Mathf.Max(6, missing);
+            int healAmount = Mathf.Max(10, BuildingUpgradeRules.BaseHp(BuildingKind.Fence, BalanceConfig.Instance) * 3);
+
+            const int W = 300;
+            int H = 30 + (damaged > 0 ? 26 : 0) + (missing > 0 ? 26 : 0);
+            var panel = new Rect(Screen.width / 2f - W / 2f, 112, W, H);
+            UiTheme.Panel(panel);
+
+            var titleStyle = new GUIStyle(_section) { fontSize = 13, alignment = TextAnchor.MiddleCenter };
+            GUI.Label(new Rect(panel.x + 8, panel.y + 6, panel.width - 16, 18), "Fence Works", titleStyle);
+
+            if (FenceWorkCrew.IsActive)
+            {
+                GUI.Label(new Rect(panel.x + 10, panel.y + 30, panel.width - 20, 18), "Crew is repairing the fence", _labelSubtle);
+                return;
+            }
+
+            int y = (int)panel.y + 28;
+            if (damaged > 0)
+            {
+                bool ok = wood >= repairCost;
+                string label = ok
+                    ? $"Bulk repair {damaged} fences ({repairCost} Wood)"
+                    : $"Need {repairCost} Wood for bulk repair";
+                if (UiTheme.Button(new Rect(panel.x + 10, y, panel.width - 20, 22), label, _smallBtn, ok))
+                {
+                    if (session.Resources.Spend(ResourceKind.Wood, repairCost))
+                    {
+                        int crew = FenceWorkCrew.Begin(FenceWorkCrew.JobKind.Repair, center, healAmount);
+                        if (crew > 0)
+                        {
+                            GameFeel.FloatText(center, $"Fence crew x{crew}", new Color(0.75f, 1f, 0.75f));
+                        }
+                        else
+                        {
+                            int repaired = VillageStarter.RepairAllFences(healAmount);
+                            GameFeel.FloatText(center, $"Fences repaired x{repaired}", new Color(0.65f, 1f, 0.65f));
+                            Sfx.Build();
+                        }
+                    }
+                }
+                y += 26;
+            }
+
+            if (missing > 0)
+            {
+                bool ok = wood >= rebuildCost;
+                string label = ok
+                    ? $"Rebuild outer fence x{missing} ({rebuildCost} Wood)"
+                    : $"Need {rebuildCost} Wood to rebuild fence";
+                if (UiTheme.Button(new Rect(panel.x + 10, y, panel.width - 20, 22), label, _smallBtn, ok))
+                {
+                    if (session.Resources.Spend(ResourceKind.Wood, rebuildCost))
+                    {
+                        int crew = FenceWorkCrew.Begin(FenceWorkCrew.JobKind.Rebuild, center, healAmount);
+                        if (crew > 0)
+                        {
+                            GameFeel.FloatText(center, $"Fence crew x{crew}", new Color(0.8f, 0.95f, 1f));
+                        }
+                        else
+                        {
+                            int built = VillageStarter.RebuildMissingOuterFences(center);
+                            GameFeel.FloatText(center, $"Fences rebuilt x{built}", new Color(0.8f, 0.95f, 1f));
+                            Sfx.Build();
+                        }
+                    }
+                }
+            }
+        }
+
         private void DrawWorldUpgradeButton()
         {
             if (Player == null) return;
             var session = GameSession.Instance;
             if (session == null) return;
+            DrawVillageFenceMaintenance(session);
 
             const float Range = 3.5f;
             var companions = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
@@ -1777,7 +2153,7 @@ namespace IL6
             if (totalWorkers == 0) return;
 
             string who = playerNear
-                ? (nearbyCompanions.Count > 0 ? $"나 + 동료 {nearbyCompanions.Count}" : "나")
+                ? (nearbyCompanions.Count > 0 ? $"Player + companions {nearbyCompanions.Count}" : "Player")
                 : $"동료 {nearbyCompanions.Count}";
             string label = $"{verb} ({who})";
             var rect = new Rect(sp.x - 80, guiY - 14, 160, 28);
@@ -1876,21 +2252,23 @@ namespace IL6
         // ====================================================================
         private void DrawRecruitDialog()
         {
-            if (Player == null) return;
-            var npc = FindNearestRecruitable(Player.transform.position, 2.2f);
+            var npc = NearestRecruitable();
             if (npc == null) return;
 
-            const int W = 380;
-            const int H = 110;
-            var panel = new Rect(Screen.width / 2 - W / 2, Screen.height - H - 16, W, H);
+            var panel = HudLayout.RecruitDialog();
+            float W = panel.width;
+            float H = panel.height;
             UiTheme.Panel(panel);
 
-            // 초상 (스프라이트 색 사각형)
             var sr = npc.GetComponent<SpriteRenderer>();
             var col = sr != null ? sr.color : Color.white;
             var portrait = new Rect(panel.x + 10, panel.y + 10, 88, 88);
             UiTheme.Rect(new Rect(portrait.x - 1, portrait.y - 1, portrait.width + 2, portrait.height + 2), UiTheme.PanelBorder);
             UiTheme.Rect(portrait, col);
+            if (sr != null && sr.sprite != null)
+            {
+                DrawSpriteInRect(sr.sprite, InnerRect(portrait, 6f));
+            }
 
             int tx = (int)panel.x + 106;
             int tw = (int)panel.width - 116;
@@ -1898,7 +2276,7 @@ namespace IL6
             GUI.Label(new Rect(tx, panel.y + 8, tw, 20), $"{npc.DisplayNamePublic}  ({npc.Role})", _section);
             GUI.Label(new Rect(tx, panel.y + 28, tw, 32), $"\"{npc.DialogText}\"", _labelSubtle);
             GUI.Label(new Rect(tx, panel.y + 60, tw, 16),
-                $"전투 {Stars(npc.CombatRating)}  농사 {Stars(npc.FarmRating)}", _labelSubtle);
+                $"\uC804\uD22C {Stars(npc.CombatRating)}  \uB18D\uC0AC {Stars(npc.FarmRating)}", _labelSubtle);
 
             int cap = RecruitableNpc.VillageCapacity();
             int have = RecruitableNpc.CurrentCompanionCount();
@@ -1906,35 +2284,21 @@ namespace IL6
 
             var oldC = GUI.contentColor;
             GUI.contentColor = canRecruit ? UiTheme.TextSubtle : UiTheme.TextDanger;
-            GUI.Label(new Rect(tx, panel.y + H - 36, 120, 14), $"수용 {have}/{cap}", _labelSubtle);
+            GUI.Label(new Rect(tx, panel.y + H - 36, 120, 14), $"\uC218\uC6A9 {have}/{cap}", _labelSubtle);
             GUI.contentColor = oldC;
 
-            string label = canRecruit ? "영입 (F)" : "건물 부족";
+            string label = canRecruit ? "\uC601\uC785 (F)" : "\uAC70\uCC98 \uBD80\uC871";
             if (UiTheme.Button(new Rect(panel.x + W - 180, panel.y + H - 34, 84, 24), label, _smallBtn, canRecruit))
                 npc.Recruit();
-            if (UiTheme.Button(new Rect(panel.x + W - 90, panel.y + H - 34, 76, 24), "거절", _smallBtn))
+            if (UiTheme.Button(new Rect(panel.x + W - 90, panel.y + H - 34, 76, 24), "\uAC70\uC808", _smallBtn))
             {
-                // 범위 벗어나면 자동 닫힘
+                // Ignore for now; walking away hides the panel.
             }
         }
 
-        private static string Stars(int n)
-        {
-            n = Mathf.Clamp(n, 0, 5);
-            return new string('★', n) + new string('☆', 5 - n);
-        }
-
-        private string _recruitCutName;
-        private string _recruitCutRole;
-        private string _recruitCutDialog;
-        private Texture2D _recruitCutPortrait;
-        private float _recruitCutLeft;
-        private bool _recruitCutPaused;
-        private float _recruitCutPrevTimeScale = 1f;
-
         private void ShowRecruitCutscene(string displayName, string role, string dialogText)
         {
-            _recruitCutName = string.IsNullOrEmpty(displayName) ? "방랑자" : displayName;
+            _recruitCutName = string.IsNullOrEmpty(displayName) ? "Visitor" : displayName;
             _recruitCutRole = string.IsNullOrEmpty(role) ? "동료" : role;
             _recruitCutDialog = string.IsNullOrEmpty(dialogText) ? "함께하겠습니다." : dialogText;
             _recruitCutPortrait = PortraitForRole(_recruitCutRole);
@@ -2019,6 +2383,9 @@ namespace IL6
                 _ => "companion-uncle-bust",
             };
 
+            if (SpriteBank.IsChildRole(role)) key = "companion-child-bust";
+            else if (SpriteBank.IsFemaleRole(role)) key = "companion-aunt-bust";
+
             if (_portraitCache.TryGetValue(key, out var cached)) return cached;
             var tex = Resources.Load<Texture2D>($"UI/portraits/{key}");
             _portraitCache[key] = tex;
@@ -2042,11 +2409,11 @@ namespace IL6
 
             UiTheme.Rect(new Rect(0, 0, Screen.width, Screen.height), new Color(0, 0, 0, 0.65f));
 
-            const int W = 920;
-            const int H = 380;
-            var modal = new Rect(Screen.width / 2 - W / 2, Screen.height / 2 - H / 2, W, H);
+            var modal = HudLayout.CenterModal(920f, 380f);
+            int W = (int)modal.width;
+
             UiTheme.Panel(modal);
-            UiTheme.TitleBar(modal, $"  LEVEL {Progression.Level} — 룬 선택  ", _title);
+            UiTheme.TitleBar(modal, $"  LEVEL {Progression.Level} RUNE SELECT  ", _title);
 
             int btnW = 280, btnH = 270, gap = 20;
             int total = btnW * 3 + gap * 2;
@@ -2152,10 +2519,10 @@ namespace IL6
 
             UiTheme.Rect(new Rect(0, 0, Screen.width, Screen.height), new Color(0, 0, 0, 0.7f));
 
-            int W = 360, H = 260;
-            var modal = new Rect(Screen.width / 2 - W / 2, Screen.height / 2 - H / 2, W, H);
+            var modal = HudLayout.CenterModal(360f, 260f);
+            int W = (int)modal.width;
             UiTheme.Panel(modal);
-            UiTheme.TitleBar(modal, "  일시정지  ", _title);
+            UiTheme.TitleBar(modal, "  PAUSED  ", _title);
 
             if (_pauseTitle == null)
             {
@@ -2169,20 +2536,20 @@ namespace IL6
             int by = (int)modal.y + 60;
             int bw = W - 120;
 
-            if (UiTheme.Button(new Rect(bx, by, bw, 38), "▶ 계속하기", _btn))
+            if (UiTheme.Button(new Rect(bx, by, bw, 38), "Continue", _btn))
             {
                 _paused = false;
                 Time.timeScale = _preTimeScale > 0f ? _preTimeScale : 1f;
                 Sfx.Click();
             }
             by += 46;
-            if (UiTheme.Button(new Rect(bx, by, bw, 38), "💾 즉시 저장", _btn))
+            if (UiTheme.Button(new Rect(bx, by, bw, 38), "Save Now", _btn))
             {
                 if (GameSession.Instance != null) GameSession.Instance.SaveNow();
                 Sfx.Click();
             }
             by += 46;
-            if (UiTheme.Button(new Rect(bx, by, bw, 38), "🔄 처음부터 (저장 삭제)", _btn))
+            if (UiTheme.Button(new Rect(bx, by, bw, 38), "Restart", _btn))
             {
                 Sfx.Click();
                 _paused = false;
@@ -2208,10 +2575,10 @@ namespace IL6
                     s.MarkPlayerDied(deathDay);
                 }
 
-                const int W = 360;
-                int sx = Screen.width / 2 - W / 2;
-                int sy = Screen.height / 2 - 30;
-                var statPanel = new Rect(sx, sy, W, 130);
+                var statPanel = HudLayout.CenterModal(360f, 130f);
+
+
+
                 UiTheme.Panel(statPanel);
 
                 int row = sy + 12;
@@ -2267,6 +2634,18 @@ namespace IL6
         {
             float p = Mathf.Min(pad, rect.width * 0.25f, rect.height * 0.25f);
             return new Rect(rect.x + p, rect.y + p, Mathf.Max(1f, rect.width - p * 2f), Mathf.Max(1f, rect.height - p * 2f));
+        }
+
+        private static void DrawSpriteInRect(Sprite sprite, Rect rect)
+        {
+            if (sprite == null || sprite.texture == null) return;
+            Rect tr = sprite.textureRect;
+            Rect uv = new Rect(
+                tr.x / sprite.texture.width,
+                tr.y / sprite.texture.height,
+                tr.width / sprite.texture.width,
+                tr.height / sprite.texture.height);
+            GUI.DrawTextureWithTexCoords(rect, sprite.texture, uv, true);
         }
 
         private static string ResourceIconKey(ResourceKind kind)

@@ -60,13 +60,9 @@ namespace IL6
 
         public static Sex SexForRole(string role)
         {
-            return role switch
-            {
-                "농부" => Sex.Female,
-                "노인" => Sex.Female,
-                "아이" => Sex.Unknown,
-                _ => Sex.Male,
-            };
+            if (SpriteBank.IsChildRole(role)) return Sex.Unknown;
+            if (SpriteBank.IsFemaleRole(role)) return Sex.Female;
+            return Sex.Male;
         }
     }
 }

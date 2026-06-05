@@ -94,6 +94,93 @@ namespace IL6
             return false;
         }
 
+        public static int CountDamagedFences()
+        {
+            int count = 0;
+            var bs = UnityEngine.Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
+            foreach (var b in bs)
+            {
+                if (b == null || b.Kind != BuildingKind.Fence || b.CurrentHp <= 0) continue;
+                if (b.CurrentHp < b.MaxHp) count++;
+            }
+            return count;
+        }
+
+        public static int RepairAllFences(int amount)
+        {
+            int repaired = 0;
+            var bs = UnityEngine.Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
+            foreach (var b in bs)
+            {
+                if (b == null || b.Kind != BuildingKind.Fence || b.CurrentHp <= 0) continue;
+                if (b.CurrentHp >= b.MaxHp) continue;
+                b.RepairHp(amount);
+                repaired++;
+            }
+            return repaired;
+        }
+
+        public static int CountMissingOuterFences(Vector3 center, float spacing = 1.0f)
+        {
+            int missing = 0;
+            foreach (var slot in OuterFenceSlots(center, CurrentHalfSize, spacing))
+            {
+                if (!TooCloseToFence(slot.Position, 0.4f)) missing++;
+            }
+            return missing;
+        }
+
+        public static int RebuildMissingOuterFences(Vector3 center, float spacing = 1.0f)
+        {
+            int built = 0;
+            foreach (var slot in OuterFenceSlots(center, CurrentHalfSize, spacing))
+            {
+                if (TooCloseToFence(slot.Position, 0.4f)) continue;
+                SpawnFence(slot.Position, slot.RotationDeg);
+                built++;
+            }
+            return built;
+        }
+
+        private readonly struct FenceSlot
+        {
+            public readonly Vector3 Position;
+            public readonly float RotationDeg;
+
+            public FenceSlot(Vector3 position, float rotationDeg)
+            {
+                Position = position;
+                RotationDeg = rotationDeg;
+            }
+        }
+
+        private static System.Collections.Generic.IEnumerable<FenceSlot> OuterFenceSlots(Vector3 center, float halfSize, float spacing)
+        {
+            int slots = Mathf.Max(3, Mathf.RoundToInt((halfSize * 2f) / spacing) + 1);
+            int gateSlot = slots / 2;
+            float startOffset = -halfSize;
+
+            for (int i = 0; i < slots; i++)
+            {
+                if (Mathf.Abs(i - gateSlot) <= 1) continue;
+                float lx = startOffset + i * spacing;
+                yield return new FenceSlot(center + new Vector3(lx, -halfSize, 0f), 0f);
+            }
+
+            for (int i = 0; i < slots; i++)
+            {
+                float lx = startOffset + i * spacing;
+                yield return new FenceSlot(center + new Vector3(lx, halfSize, 0f), 0f);
+            }
+
+            for (int i = 0; i < slots; i++)
+            {
+                float ly = startOffset + i * spacing;
+                yield return new FenceSlot(center + new Vector3(-halfSize, ly, 0f), 90f);
+                yield return new FenceSlot(center + new Vector3(halfSize, ly, 0f), 90f);
+            }
+        }
+
         public static void SpawnStarterVillage(Vector3 center, float halfSize = 5f, float spacing = 1.0f)
         {
             CurrentHalfSize = halfSize;

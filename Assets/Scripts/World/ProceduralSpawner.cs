@@ -647,7 +647,7 @@ namespace IL6
             go.transform.position = pos;
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 7;
-            var spr = SpriteBank.CompanionByRole(arch.Role);
+            var spr = SpriteBank.CompanionSpriteForRole(arch.Role);
             if (spr != null) sr.sprite = spr;
             var npc = go.AddComponent<RecruitableNpc>();
             npc.DisplayName = displayName;
@@ -682,7 +682,7 @@ namespace IL6
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 7;
-            var spr = SpriteBank.CompanionByRole(arch.Role);
+            var spr = SpriteBank.CompanionSpriteForRole(arch.Role);
             if (spr != null) sr.sprite = spr;
 
             var npc = go.AddComponent<RecruitableNpc>();

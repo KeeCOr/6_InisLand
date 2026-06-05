@@ -3,10 +3,6 @@ using IL6.Events;
 
 namespace IL6
 {
-    /// <summary>
-    /// 영입 가능한 NPC. SimpleHud 가 근처 NPC 를 감지해 하단 대화 패널을 띄우고,
-    /// 플레이어가 "영입" 버튼 (또는 F 키) 을 누르면 Recruit() 으로 Companion 전환.
-    /// </summary>
     public sealed class RecruitableNpc : MonoBehaviour
     {
         public Transform Player;
@@ -16,7 +12,7 @@ namespace IL6
         [Header("Profile")]
         public string DisplayName = "Stranger";
         public string Role = "Hunter";
-        [TextArea(1, 3)] public string DialogText = "함께 가고 싶습니다.";
+        [TextArea(1, 3)] public string DialogText = "\uD568\uAED8 \uAC00\uACE0 \uC2F6\uC2B5\uB2C8\uB2E4.";
         [Range(0, 5)] public int CombatRating = 3;
         [Range(0, 5)] public int FarmRating = 3;
 
@@ -32,6 +28,7 @@ namespace IL6
         public string DisplayNamePublic => DisplayName;
 
         private Vector3 _baseScale;
+        private bool _recruited;
 
         private void Awake()
         {
@@ -39,7 +36,6 @@ namespace IL6
             if (rb == null) rb = gameObject.AddComponent<Rigidbody2D>();
             rb.gravityScale = 0f;
             rb.freezeRotation = true;
-            // 영입 전에는 Kinematic — 좀비/플레이어 충돌에 밀려나지 않고 제자리에 고정.
             rb.bodyType = RigidbodyType2D.Kinematic;
 
             var col = GetComponent<CircleCollider2D>();
@@ -52,7 +48,8 @@ namespace IL6
 
         private void Start()
         {
-            _baseScale = transform.localScale;
+            _baseScale = Vector3.Scale(transform.localScale, SpriteBank.CompanionScaleForRole(Role));
+            transform.localScale = _baseScale;
             if (Player == null)
             {
                 var p = GameObject.FindWithTag("Player");
@@ -62,7 +59,12 @@ namespace IL6
 
         private void Update()
         {
-            if (Player == null) { IsPlayerInRange = false; return; }
+            if (Player == null)
+            {
+                IsPlayerInRange = false;
+                return;
+            }
+
             float d = Vector2.Distance(transform.position, Player.position);
             IsPlayerInRange = d <= RecruitRange;
 
@@ -78,12 +80,9 @@ namespace IL6
             }
         }
 
-        /// <summary>초반 그레이스 — 집이 0채여도 항상 허용되는 최저 수용 인원.</summary>
         public const int FreeCapacity = 12;
-        /// <summary>집(House) 1채당 추가 인구.</summary>
         public const int CapacityPerHouse = 4;
 
-        /// <summary>현재 마을이 수용 가능한 동료 수 — FreeCapacity + 집 수 × CapacityPerHouse.</summary>
         public static int VillageCapacity()
         {
             int houses = 0;
@@ -100,29 +99,29 @@ namespace IL6
         {
             int n = 0;
             var cs = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
-            foreach (var c in cs) if (c != null && !c.IsDead) n++;
+            foreach (var c in cs)
+            {
+                if (c != null && !c.IsDead) n++;
+            }
             return n;
         }
 
-        // 일일 영입 한도는 제거 — MaxAliveNpcs (월드 동시 NPC 캡) 으로 자연스럽게 빈도 제한.
         public bool CanRecruit() => CurrentCompanionCount() < VillageCapacity();
 
-        // 호환용 stub — 외부 호출자가 있어서 유지 (no-op).
         public static void ResetDailyRecruits(int day) { }
 
         public void Recruit()
         {
-            // 마을 수용 한도만 — 일일 한도 없음 (스폰 빈도로 자연 제한)
             if (!CanRecruit()) return;
+            if (_recruited) return;
+            _recruited = true;
 
             uint traitSeed = unchecked((uint)DisplayName.GetHashCode() ^ (uint)Role.GetHashCode() ^ (uint)Time.frameCount);
             var trait = CompanionTrait.AssignRandom(gameObject, Role, new SeededRng(traitSeed));
             string dialog = trait != null && trait.Kind != CompanionTraitKind.None
                 ? $"{DialogText}\nTrait: {trait.DisplayName} - {trait.Description}"
                 : DialogText;
-            EventBus.Instance.Emit(new CompanionRecruitedPayload(DisplayName, Role, dialog));
 
-            // 영입되면 Dynamic 으로 전환 — Companion 이 velocity 로 이동해야 하고 다른 유닛과 물리적 상호작용도 가능.
             var rb = GetComponent<Rigidbody2D>();
             if (rb != null) rb.bodyType = RigidbodyType2D.Dynamic;
 
@@ -139,15 +138,20 @@ namespace IL6
             var family = gameObject.GetComponent<CompanionFamily>();
             if (family == null) family = gameObject.AddComponent<CompanionFamily>();
             family.BiologicalSex = CompanionFamily.SexForRole(Role);
-            family.IsChild = Role == "아이";
+            family.IsChild = SpriteBank.IsChildRole(Role);
 
             var sr = GetComponent<SpriteRenderer>();
             if (sr != null)
             {
-                sr.color = Color.Lerp(sr.color, new Color(0.55f, 0.85f, 0.5f), 0.45f);
+                var spr = SpriteBank.CompanionSpriteForRole(Role);
+                if (spr != null) sr.sprite = spr;
+                sr.color = Color.white;
             }
+
             transform.localScale = _baseScale;
             gameObject.name = $"{DisplayName}(Recruited)";
+
+            EventBus.Instance.Emit(new CompanionRecruitedPayload(DisplayName, Role, dialog));
             Destroy(this);
         }
     }
