@@ -39,13 +39,15 @@ namespace IL6
             public readonly string Label;
             public readonly bool Enabled;
             public readonly System.Action Callback;
+            public readonly string IconKey;
 
-            public ContextAction(int priority, string label, bool enabled, System.Action callback)
+            public ContextAction(int priority, string label, bool enabled, System.Action callback, string iconKey = null)
             {
                 Priority = priority;
                 Label = label;
                 Enabled = enabled;
                 Callback = callback;
+                IconKey = iconKey;
             }
         }
 
@@ -1636,6 +1638,10 @@ namespace IL6
                 {
                     action.Callback?.Invoke();
                 }
+                if (!string.IsNullOrEmpty(action.IconKey))
+                {
+                    DrawHudIcon(new Rect(rect.x + 6f, rect.y + 2f, 18f, 18f), action.IconKey);
+                }
                 y += HudStyleConfig.ContextButtonHeight + HudStyleConfig.PanelGap;
             }
         }
@@ -1655,7 +1661,7 @@ namespace IL6
                     best.RepairHp(healAmount);
                     Sfx.Build();
                 }
-            }));
+            }, "wood"));
         }
 
         private void AddUpgradeAction(System.Collections.Generic.List<ContextAction> actions, GameSession session)
@@ -1669,7 +1675,7 @@ namespace IL6
             actions.Add(new ContextAction(30, label, ok, () =>
             {
                 if (best.TryUpgrade(session.Resources)) Sfx.Build();
-            }));
+            }, "upgrade"));
         }
 
         private void AddRefuelAction(System.Collections.Generic.List<ContextAction> actions, GameSession session)
@@ -1688,7 +1694,7 @@ namespace IL6
                     best.AddFuel(FuelAdd);
                     Sfx.Build();
                 }
-            }));
+            }, "wood"));
         }
 
         private void AddFenceActions(System.Collections.Generic.List<ContextAction> actions, GameSession session)
@@ -1698,7 +1704,7 @@ namespace IL6
             if (Vector2.Distance(Player.transform.position, center) > VillageStarter.CurrentHalfSize + 2.5f) return;
             if (FenceWorkCrew.IsActive)
             {
-                actions.Add(new ContextAction(40, "Fence crew working", false, null));
+                actions.Add(new ContextAction(40, "Fence crew working", false, null, "wood"));
                 return;
             }
 
@@ -1721,7 +1727,7 @@ namespace IL6
                         GameFeel.FloatText(center, $"Fences repaired x{repaired}", new Color(0.65f, 1f, 0.65f));
                         Sfx.Build();
                     }
-                }));
+                }, "wood"));
             }
 
             if (missing > 0)
@@ -1738,7 +1744,7 @@ namespace IL6
                         GameFeel.FloatText(center, $"Fences rebuilt x{built}", new Color(0.8f, 0.95f, 1f));
                         Sfx.Build();
                     }
-                }));
+                }, "wood"));
             }
         }
 
@@ -1761,13 +1767,13 @@ namespace IL6
 
             if (best.CanChangeCrop())
             {
-                actions.Add(new ContextAction(48, $"Crop: {best.CropLabel()}", true, () => best.CycleCrop()));
+                actions.Add(new ContextAction(48, $"Crop: {best.CropLabel()}", true, () => best.CycleCrop(), CropIconKey(best.CurrentCrop)));
             }
 
             if (best.HarvestReady)
             {
                 int yield = best.EstimatedYield();
-                actions.Add(new ContextAction(50, $"Harvest +{yield}", true, () => best.Harvest()));
+                actions.Add(new ContextAction(50, $"Harvest +{yield}", true, () => best.Harvest(), "crop-harvest"));
             }
             else if (best.Workers.Count < best.MaxWorkers)
             {
@@ -1775,9 +1781,16 @@ namespace IL6
                 {
                     var c = FindNearestFreeCompanion(best.transform.position);
                     if (c != null) best.TryAssignWorker(c);
-                }));
+                }, "farmer"));
             }
         }
+
+        private static string CropIconKey(FarmBuilding.CropKind crop) => crop switch
+        {
+            FarmBuilding.CropKind.Turnip => "crop-turnip",
+            FarmBuilding.CropKind.Wheat => "crop-wheat",
+            _ => "crop-potato"
+        };
 
         private void AddGatherAction(System.Collections.Generic.List<ContextAction> actions, ResourceKind kind, string label)
         {
@@ -1795,7 +1808,7 @@ namespace IL6
             }
             int totalWorkers = (playerNear ? 1 : 0) + nearbyCompanions.Count;
             if (totalWorkers == 0) return;
-            actions.Add(new ContextAction(60, $"{label} ({totalWorkers})", true, () => StartGatherContext(node, playerNear, nearbyCompanions)));
+            actions.Add(new ContextAction(60, $"{label} ({totalWorkers})", true, () => StartGatherContext(node, playerNear, nearbyCompanions), ResourceIconKey(kind)));
         }
 
         private void StartGatherContext(Gatherable node, bool playerNear, System.Collections.Generic.List<Companion> nearbyCompanions)
@@ -2070,6 +2083,7 @@ namespace IL6
                     Sfx.Build();
                 }
             }
+            DrawHudIcon(new Rect(rect.x + 7f, rect.y + 5f, 18f, 18f), "upgrade");
         }
 
         // 모닥불 연료 보충 — 플레이어 3.5u 안의 모닥불에 1 Wood 마다 +30 fuel.
