@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace IL6
 {
@@ -183,7 +183,7 @@ namespace IL6
                 {
                     case BuildingKind.Campfire: SpawnCampfire(p); break;
                     case BuildingKind.House: SpawnHouse(p); break;
-                    case BuildingKind.Fence: VillageStarter.SpawnFence(p, 0f); break;
+                    case BuildingKind.Fence: VillageStarter.SpawnFence(p, 0f, FencePieceType.Center); break;
                     case BuildingKind.Storage:
                         SpawnStorage(p);
                         var ses = GameSession.Instance;

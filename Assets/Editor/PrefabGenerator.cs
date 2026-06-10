@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -31,7 +31,7 @@ namespace IL6.EditorBuild
 
             // === 건물 ===
             n += SaveOne(VillageStarter.SpawnCampfire(Vector3.zero), $"{BuildingsDir}/Campfire.prefab");
-            n += SaveOne(VillageStarter.SpawnFence(Vector3.zero, 0f), $"{BuildingsDir}/Fence.prefab");
+            n += SaveOne(VillageStarter.SpawnFence(Vector3.zero, 0f, FencePieceType.Center), $"{BuildingsDir}/Fence.prefab");
             n += SaveOne(VillageStarter.SpawnGate(Vector3.zero), $"{BuildingsDir}/Gate.prefab");
             n += SaveOne(BuildingFactory.SpawnBarricade(Vector3.zero), $"{BuildingsDir}/Barricade.prefab");
             n += SaveOne(BuildingFactory.SpawnHouse(Vector3.zero), $"{BuildingsDir}/House.prefab");
