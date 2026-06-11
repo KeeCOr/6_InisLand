@@ -1,7 +1,15 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace IL6
 {
+    // 울타리 스프라이트 좌/우/센터
+    public enum FencePieceType
+    {
+        Left,
+        Center,
+        Right
+    }
+
     /// <summary>
     /// 게임 시작 시 마을 자리에 모닥불 + 울타리 링을 자동 스폰.
     /// SnowfieldController 가 Start 에서 1회 호출. 이미 마을이 있으면(저장 데이터로 복귀 등) 스킵.
@@ -54,7 +62,11 @@ namespace IL6
                 Vector3 pos = center + new Vector3(lx, -halfSize, 0f);
                 if (TooCloseToFence(pos, 0.4f)) continue;
                 if (i == gateSlot && !HasGateNear(pos, 1.2f)) SpawnGate(pos);
-                else if (i != gateSlot) SpawnFence(pos, 0f);
+                else if (i != gateSlot)
+                {
+                    var piece = GetFencePieceTypeWithGate(i, slots - 1, gateSlot);
+                    SpawnFence(pos, 0f, piece);
+                }
             }
             // 북쪽
             for (int i = 0; i < slots; i++)
@@ -62,7 +74,8 @@ namespace IL6
                 float lx = startOffset + i * spacing;
                 Vector3 pos = center + new Vector3(lx, halfSize, 0f);
                 if (TooCloseToFence(pos, 0.4f)) continue;
-                SpawnFence(pos, 0f);
+                var piece = GetFencePieceType(i, slots - 1);
+                SpawnFence(pos, 0f, piece);
             }
             // 동/서
             for (int i = 0; i < slots; i++)
@@ -70,8 +83,9 @@ namespace IL6
                 float ly = startOffset + i * spacing;
                 Vector3 wpos = center + new Vector3(-halfSize, ly, 0f);
                 Vector3 epos = center + new Vector3(halfSize, ly, 0f);
-                if (!TooCloseToFence(wpos, 0.4f)) SpawnFence(wpos, 90f);
-                if (!TooCloseToFence(epos, 0.4f)) SpawnFence(epos, 90f);
+                var piece = GetFencePieceType(i, slots - 1);
+                if (!TooCloseToFence(wpos, 0.4f)) SpawnFence(wpos, 90f, piece);
+                if (!TooCloseToFence(epos, 0.4f)) SpawnFence(epos, 90f, piece);
             }
         }
 
@@ -118,15 +132,23 @@ namespace IL6
             {
                 float lx = startOffset + i * spacing;
                 Vector3 pos = center + new Vector3(lx, -halfSize, 0f);
-                if (i == gateSlot) SpawnGate(pos);
-                else SpawnFence(pos, 0f);
+                if (i == gateSlot)
+                {
+                    SpawnGate(pos);
+                }
+                else
+                {
+                    var piece = GetFencePieceTypeWithGate(i, slotsPerSide - 1, gateSlot);
+                    SpawnFence(pos, 0f, piece);
+                }
             }
             // 북쪽 변
             for (int i = 0; i < slotsPerSide; i++)
             {
                 float lx = startOffset + i * spacing;
                 Vector3 pos = center + new Vector3(lx, halfSize, 0f);
-                SpawnFence(pos, 0f);
+                var piece = GetFencePieceType(i, slotsPerSide - 1);
+                SpawnFence(pos, 0f, piece);
             }
             // 서쪽/동쪽 — 코너 포함 전 구간. 모서리에서 가로 펜스와 시각적으로 겹치지만 빈틈 없음.
             for (int i = 0; i < slotsPerSide; i++)
@@ -134,8 +156,9 @@ namespace IL6
                 float ly = startOffset + i * spacing;
                 Vector3 wpos = center + new Vector3(-halfSize, ly, 0f);
                 Vector3 epos = center + new Vector3(halfSize, ly, 0f);
-                SpawnFence(wpos, 90f);
-                SpawnFence(epos, 90f);
+                var piece = GetFencePieceType(i, slotsPerSide - 1);
+                SpawnFence(wpos, 90f, piece);
+                SpawnFence(epos, 90f, piece);
             }
         }
 
@@ -182,21 +205,40 @@ namespace IL6
             return go;
         }
 
-        public static GameObject SpawnFence(Vector3 pos, float rotDeg)
+        public static GameObject SpawnFence(Vector3 pos, float rotDeg, FencePieceType pieceType)
         {
             var go = new GameObject("Fence");
             go.transform.position = pos;
             go.transform.rotation = Quaternion.Euler(0, 0, rotDeg);
+
             // 수평 펜스 스프라이트(64px@64PPU=1unit) 기준: 1.0u 폭 × 0.4u 높이
             go.transform.localScale = new Vector3(1.0f, 0.4f, 1f);
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
+
             // 수평 방향 스프라이트 사용 — 폭이 넓은 판자 형태
-            var fSpr = SpriteBank.SnowFenceH();
+            // 울타리 스프라이트가 좌/중앙/우 조각으로 나뉘어 있으므로 위치에 따라 다른 조각을 사용.
+            Sprite fSpr = null;
+            switch (pieceType)
+            {
+                case FencePieceType.Left:
+                    fSpr = SpriteBank.SnowFenceLeft();
+                    break;
+
+                case FencePieceType.Center:
+                    fSpr = SpriteBank.SnowFenceCenter();
+                    break;
+
+                case FencePieceType.Right:
+                    fSpr = SpriteBank.SnowFenceRight();
+                    break;
+            }
+
             if (fSpr != null) sr.sprite = fSpr;
 
             var col = go.AddComponent<BoxCollider2D>();
+
             // 시각 크기보다 살짝 작게 — 플레이어가 문 옆에서 걸리지 않도록
             col.size = new Vector2(0.9f, 0.8f);
 
@@ -211,6 +253,38 @@ namespace IL6
             var b = go.AddComponent<Building>();
             b.Kind = BuildingKind.Fence;
             return go;
+        }
+
+        // 울타리 한 줄에서 현재 슬롯이 좌/중앙/우 중 어느 조각인지 계산
+        private static FencePieceType GetFencePieceType(int index, int lastIndex)
+        {
+            if (index <= 0) return FencePieceType.Left;
+            if (index >= lastIndex) return FencePieceType.Right;
+            return FencePieceType.Center;
+        }
+
+        // 게이트 때문에 한 줄이 좌/우로 끊기는 경우의 울타리 조각 계산
+        // 게이트 왼쪽 구간과 오른쪽 구간을 각각 좌/중앙/우 구조로 계산.
+        private static FencePieceType GetFencePieceTypeWithGate(int index, int lastIndex, int gateSlot)
+        {
+            // 게이트 왼쪽 구간
+            if (index < gateSlot)
+            {
+                int localIndex = index;
+                int localLastIndex = gateSlot - 1;
+                return GetFencePieceType(localIndex, localLastIndex);
+            }
+
+            // 게이트 오른쪽 구간
+            if (index > gateSlot)
+            {
+                int localIndex = index - gateSlot - 1;
+                int localLastIndex = lastIndex - gateSlot - 1;
+                return GetFencePieceType(localIndex, localLastIndex);
+            }
+
+            // 실제로 gateSlot은 SpawnGate가 처리하므로 여기로 오면 안 됨.
+            return FencePieceType.Center;
         }
 
         public static GameObject SpawnCampfire(Vector3 pos)

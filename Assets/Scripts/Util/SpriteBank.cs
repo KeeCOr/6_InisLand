@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace IL6
 {
@@ -8,11 +8,27 @@ namespace IL6
     /// </summary>
     public static class SpriteBank
     {
+        // single sprite PNG 로드. 실패 시 null 반환 (폴백 없음).
         public static Sprite Load(string path)
         {
             var s = Resources.Load<Sprite>($"Sprites/{path}");
             if (s == null) Debug.LogWarning($"[SpriteBank] 스프라이트 없음: Sprites/{path}");
             return s;
+        }
+
+        // multisprite PNG 에서 이름으로 서브 스프라이트 로드. 실패 시 null 반환 (폴백 없음).
+        public static Sprite LoadSubSprite(string path, string spriteName)
+        {
+            var sprites = Resources.LoadAll<Sprite>($"Sprites/{path}");
+
+            foreach (var s in sprites)
+            {
+                if (s != null && s.name == spriteName)
+                    return s;
+            }
+
+            Debug.LogWarning($"[SpriteBank] 서브 스프라이트 없음: Sprites/{path}/{spriteName}");
+            return null;
         }
 
         // ── 동물 ─────────────────────────────────────────────────────────────────
@@ -67,6 +83,12 @@ namespace IL6
         public static Sprite WoodBarricade()  => Load("Props/wood_barricade");
         public static Sprite StoneWall()      => Load("Props/stone_wall");
         public static Sprite SpikeBarricade() => Load("Props/spike_barricade");
+
+        public static Sprite SnowFenceLeft() => LoadSubSprite("Props/Fence", "wooden_fence_Left");
+
+        public static Sprite SnowFenceCenter() => LoadSubSprite("Props/Fence", "wooden_fence_Center");
+
+        public static Sprite SnowFenceRight() => LoadSubSprite("Props/Fence", "wooden_fence_Right");
 
         // ── BuildingKind → 스프라이트 ─────────────────────────────────────────────
         public static Sprite BuildingByKind(BuildingKind k) => k switch
