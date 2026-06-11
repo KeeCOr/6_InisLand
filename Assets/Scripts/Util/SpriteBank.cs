@@ -23,6 +23,13 @@ namespace IL6
             return null;
         }
 
+        public static Sprite LoadUiSprite(string path)
+        {
+            var s = Resources.Load<Sprite>($"UI/{path}");
+            if (s == null) Debug.LogWarning($"[SpriteBank] Missing UI sprite: UI/{path}");
+            return s;
+        }
+
         public static Sprite Deer() => Load("Animals/deer");
         public static Sprite Wolf() => Load("Animals/wolf");
         public static Sprite Rabbit() => Load("Animals/rabbit");
@@ -104,6 +111,13 @@ namespace IL6
         public static Sprite Stump() => Load("Props/stump");
         public static Sprite SnowBush() => Load("Props/snow_bush");
         public static Sprite Logs() => Load("Props/logs");
+
+        public static Sprite CropPotatoIcon() => LoadUiSprite("hud/hud-crop-potato");
+        public static Sprite CropTurnipIcon() => LoadUiSprite("hud/hud-crop-turnip");
+        public static Sprite CropWheatIcon() => LoadUiSprite("hud/hud-crop-wheat");
+        public static Sprite CropHarvestIcon() => LoadUiSprite("hud/hud-crop-harvest");
+        public static Sprite FoodIcon() => LoadUiSprite("hud/hud-food");
+        public static Sprite UpgradeIcon() => LoadUiSprite("hud/hud-upgrade");
 
         public static Sprite Campfire() => Load("Props/campfire");
         public static Sprite Cabin() => Load("Props/cabin");

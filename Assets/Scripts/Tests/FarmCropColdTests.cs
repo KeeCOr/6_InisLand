@@ -41,6 +41,24 @@ namespace IL6.Tests
             Assert.AreEqual(1f, FarmBuilding.CropColdYieldMultiplier(FarmBuilding.CropKind.Potato, temp), 0.001f);
             Assert.AreEqual(1f, FarmBuilding.CropColdYieldMultiplier(FarmBuilding.CropKind.Wheat, temp), 0.001f);
         }
+
+        [Test]
+        public void CropColorForVisual_Withered_IsDarkerThanGrowing()
+        {
+            var growing = FarmBuilding.CropColorForVisual(FarmBuilding.CropKind.Potato, harvestReady: false, withered: false, growth01: 0.5f);
+            var withered = FarmBuilding.CropColorForVisual(FarmBuilding.CropKind.Potato, harvestReady: false, withered: true, growth01: 0.5f);
+
+            Assert.Less(withered.grayscale, growing.grayscale);
+        }
+
+        [Test]
+        public void CropColorForVisual_HarvestReady_IsBrighterThanGrowing()
+        {
+            var growing = FarmBuilding.CropColorForVisual(FarmBuilding.CropKind.Wheat, harvestReady: false, withered: false, growth01: 0.5f);
+            var ready = FarmBuilding.CropColorForVisual(FarmBuilding.CropKind.Wheat, harvestReady: true, withered: false, growth01: 1f);
+
+            Assert.Greater(ready.grayscale, growing.grayscale);
+        }
     }
 }
 #endif

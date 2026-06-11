@@ -119,8 +119,8 @@ namespace IL6
                 if (c == null || c.IsDead) continue;
                 if (c.CurrentMode != Companion.Mode.Working || c.Target != target) continue;
                 var trait = c.GetComponent<CompanionTrait>();
-                if (trait == null) continue;
-                bonus += Mathf.Max(0f, trait.GatherSpeedMultiplier - 1f);
+                if (trait != null) bonus += Mathf.Max(0f, trait.GatherSpeedMultiplier - 1f);
+                if (c.Equipped == Companion.Equip.ToolKit) bonus += 0.25f;
             }
             return 1f + Mathf.Min(0.75f, bonus);
         }

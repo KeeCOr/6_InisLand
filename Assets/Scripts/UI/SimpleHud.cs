@@ -1613,6 +1613,7 @@ namespace IL6
             AddRepairAction(actions, session);
             AddRefuelAction(actions, session);
             AddUpgradeAction(actions, session);
+            AddBlacksmithActions(actions, session);
             AddFenceActions(actions, session);
             AddFarmActions(actions);
             AddGatherAction(actions, ResourceKind.Wood, "Chop wood");
@@ -1678,6 +1679,32 @@ namespace IL6
             }, "upgrade"));
         }
 
+        private void AddBlacksmithActions(System.Collections.Generic.List<ContextAction> actions, GameSession session)
+        {
+            Building smith = FindNearbyBuilding(BuildingKind.Blacksmith, 3.5f);
+            if (smith == null) return;
+            Companion target = FindNearestCompanionNeedingEquipment(smith.transform.position, 4.5f);
+            if (target == null)
+            {
+                actions.Add(new ContextAction(35, "All nearby companions equipped", false, null, "upgrade"));
+                return;
+            }
+
+            Companion.Equip equip = NextEquipmentFor(target);
+            ResourceCost cost = EquipmentCost(equip, smith.Level);
+            bool ok = cost.CanPay(session.Resources);
+            string label = ok
+                ? $"Forge {EquipmentLabel(equip)} for {CleanCompanionName(target)} ({cost})"
+                : $"Need resources for {EquipmentLabel(equip)} ({cost})";
+            actions.Add(new ContextAction(35, label, ok, () =>
+            {
+                if (!cost.Pay(session.Resources)) return;
+                target.Equipped = equip;
+                GameFeel.FloatText(target.transform.position, EquipmentLabel(equip), new Color(1f, 0.72f, 0.28f));
+                Sfx.Build();
+            }, "upgrade"));
+        }
+
         private void AddRefuelAction(System.Collections.Generic.List<ContextAction> actions, GameSession session)
         {
             CampfireAura best = FindNearbyCampfireNeedingFuel(3.5f);
@@ -1695,6 +1722,85 @@ namespace IL6
                     Sfx.Build();
                 }
             }, "wood"));
+        }
+
+        private Building FindNearbyBuilding(BuildingKind kind, float range)
+        {
+            if (Player == null) return null;
+            var bs = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
+            Building best = null;
+            float bestDist = range;
+            foreach (var b in bs)
+            {
+                if (b == null || b.CurrentHp <= 0 || b.Kind != kind) continue;
+                float d = Vector2.Distance(Player.transform.position, b.transform.position);
+                if (d < bestDist) { best = b; bestDist = d; }
+            }
+            return best;
+        }
+
+        private static Companion FindNearestCompanionNeedingEquipment(Vector3 center, float range)
+        {
+            var companions = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
+            Companion best = null;
+            float bestDist = range;
+            foreach (var c in companions)
+            {
+                if (c == null || c.IsDead || c.Equipped != Companion.Equip.None) continue;
+                float d = Vector2.Distance(center, c.transform.position);
+                if (d < bestDist) { best = c; bestDist = d; }
+            }
+            return best;
+        }
+
+        private static Companion.Equip NextEquipmentFor(Companion c)
+        {
+            if (c != null && !c.IsCombat) return Companion.Equip.ToolKit;
+            int count = 0;
+            var companions = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
+            foreach (var other in companions)
+            {
+                if (other == null || other.Equipped == Companion.Equip.None) continue;
+                count++;
+            }
+            return (count % 3) switch
+            {
+                0 => Companion.Equip.SharpenedBlade,
+                1 => Companion.Equip.Crossbow,
+                _ => Companion.Equip.ThickFur,
+            };
+        }
+
+        private static ResourceCost EquipmentCost(Companion.Equip equip, int smithLevel)
+        {
+            int levelDiscount = Mathf.Max(0, smithLevel - 1);
+            return equip switch
+            {
+                Companion.Equip.Crossbow => new ResourceCost(Mathf.Max(3, 6 - levelDiscount), Mathf.Max(2, 4 - levelDiscount)),
+                Companion.Equip.ThickFur => new ResourceCost(Mathf.Max(2, 5 - levelDiscount), 1, food: 2),
+                Companion.Equip.ToolKit => new ResourceCost(Mathf.Max(2, 4 - levelDiscount), Mathf.Max(1, 2 - levelDiscount)),
+                _ => new ResourceCost(Mathf.Max(2, 4 - levelDiscount), Mathf.Max(1, 3 - levelDiscount)),
+            };
+        }
+
+        private static string EquipmentLabel(Companion.Equip equip) => equip switch
+        {
+            Companion.Equip.Crossbow => "Crossbow",
+            Companion.Equip.ThickFur => "Thick Fur",
+            Companion.Equip.ToolKit => "Tool Kit",
+            Companion.Equip.SharpenedBlade => "Sharpened Blade",
+            _ => "Gear",
+        };
+
+        private static string CleanCompanionName(Companion c)
+        {
+            if (c == null) return "companion";
+            string n = c.gameObject.name;
+            int marker = n.IndexOf("(Recruited)", System.StringComparison.Ordinal);
+            if (marker >= 0) n = n.Substring(0, marker);
+            marker = n.IndexOf("(Born)", System.StringComparison.Ordinal);
+            if (marker >= 0) n = n.Substring(0, marker);
+            return string.IsNullOrWhiteSpace(n) ? "companion" : n;
         }
 
         private void AddFenceActions(System.Collections.Generic.List<ContextAction> actions, GameSession session)
@@ -1764,6 +1870,12 @@ namespace IL6
                 }
             }
             if (best == null) return;
+
+            if (best.IsWithered)
+            {
+                actions.Add(new ContextAction(48, $"Clear withered {best.CropLabel()}", true, () => best.ClearWithered(), "crop-harvest"));
+                return;
+            }
 
             if (best.CanChangeCrop())
             {

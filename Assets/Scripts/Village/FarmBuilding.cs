@@ -43,6 +43,7 @@ namespace IL6
         }
 
         public bool HarvestReady { get; private set; }
+        public bool IsWithered { get; private set; }
         public int NightsPassed { get; private set; }
         public readonly List<Companion> Workers = new();
 
@@ -60,6 +61,7 @@ namespace IL6
         private void Start()
         {
             _unsub = EventBus.Instance.Subscribe<NightStartedPayload>(_ => OnNight());
+            RefreshVisual();
         }
 
         private void OnDestroy()
@@ -71,15 +73,19 @@ namespace IL6
         private void OnNight()
         {
             if (HarvestReady) return;
+            if (IsWithered) return;
             float coldTempC = CurrentFarmTemperatureCelsius();
             float protectedTempC = FarmProtectedTemperature(coldTempC);
             if (!SurvivesColdNight(protectedTempC))
             {
                 NightsPassed = 0;
+                IsWithered = true;
+                HarvestReady = false;
                 _coldYieldMultiplier = 1f;
                 foreach (var w in Workers) if (w != null) w.ReleaseFarm();
                 Workers.Clear();
                 GameFeel.FloatText(transform.position, $"{CropDisplayName(CurrentCrop)} withered", new Color(0.95f, 0.55f, 0.45f));
+                RefreshVisual();
                 return;
             }
 
@@ -93,6 +99,7 @@ namespace IL6
 
             NightsPassed++;
             if (NightsPassed >= NightsToRipe) HarvestReady = true;
+            RefreshVisual();
         }
 
         public bool TryAssignWorker(Companion c)
@@ -117,7 +124,9 @@ namespace IL6
             Workers.Clear();
             NightsPassed = 0;
             HarvestReady = false;
+            IsWithered = false;
             _coldYieldMultiplier = 1f;
+            RefreshVisual();
             return yield;
         }
 
@@ -140,8 +149,22 @@ namespace IL6
             if (crops.Count <= 1) return false;
             int current = crops.IndexOf(CurrentCrop);
             CurrentCrop = crops[(current + 1 + crops.Count) % crops.Count];
+            IsWithered = false;
             _coldYieldMultiplier = 1f;
             GameFeel.FloatText(transform.position, CropDisplayName(CurrentCrop), new Color(0.95f, 0.9f, 0.45f));
+            RefreshVisual();
+            return true;
+        }
+
+        public bool ClearWithered()
+        {
+            if (!IsWithered) return false;
+            IsWithered = false;
+            NightsPassed = 0;
+            HarvestReady = false;
+            _coldYieldMultiplier = 1f;
+            RefreshVisual();
+            GameFeel.FloatText(transform.position, "Field cleared", new Color(0.8f, 0.95f, 1f));
             return true;
         }
 
@@ -264,6 +287,49 @@ namespace IL6
         private float FarmProtectedTemperature(float temperatureCelsius)
         {
             return temperatureCelsius + Mathf.Max(0, FarmLevel - 1) * 2f;
+        }
+
+        private void RefreshVisual()
+        {
+            var sr = GetComponent<SpriteRenderer>();
+            if (sr == null) return;
+
+            sr.sprite = CropSpriteForVisual(CurrentCrop, HarvestReady, IsWithered);
+            sr.color = CropColorForVisual(CurrentCrop, HarvestReady, IsWithered, Growth01());
+            sr.sortingOrder = HarvestReady ? 5 : 2;
+        }
+
+        private float Growth01()
+        {
+            if (HarvestReady) return 1f;
+            if (IsWithered) return 0f;
+            return NightsToRipe <= 0 ? 0f : Mathf.Clamp01(NightsPassed / (float)NightsToRipe);
+        }
+
+        public static Sprite CropSpriteForVisual(CropKind crop, bool harvestReady, bool withered)
+        {
+            if (harvestReady) return SpriteBank.CropHarvestIcon();
+            return crop switch
+            {
+                CropKind.Turnip => SpriteBank.CropTurnipIcon(),
+                CropKind.Wheat => SpriteBank.CropWheatIcon(),
+                _ => SpriteBank.CropPotatoIcon(),
+            };
+        }
+
+        public static Color CropColorForVisual(CropKind crop, bool harvestReady, bool withered, float growth01)
+        {
+            if (withered) return new Color(0.36f, 0.31f, 0.27f, 0.95f);
+            if (harvestReady) return new Color(1f, 0.92f, 0.52f, 1f);
+
+            Color sprout = new Color(0.42f, 0.62f, 0.34f, 0.82f);
+            Color mature = crop switch
+            {
+                CropKind.Turnip => new Color(0.66f, 0.82f, 0.48f, 1f),
+                CropKind.Wheat => new Color(0.92f, 0.76f, 0.34f, 1f),
+                _ => new Color(0.54f, 0.78f, 0.42f, 1f),
+            };
+            return Color.Lerp(sprout, mature, Mathf.Clamp01(growth01));
         }
 
         private static float CurrentFarmTemperatureCelsius()

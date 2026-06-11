@@ -146,3 +146,5 @@
 - Runtime character, animal, enemy, and prop sprites were re-extracted as single 64x64 transparent frames with safe padding so applied Resources sprites no longer show clipped edges or full animation sheets.
 - Always-on HUD frames were removed or made translucent so status, resources, phase, mode tabs, build slots, and context actions block less of the game view.
 - Crop farming was expanded with Potato, Turnip, and Wheat crop choices. Seed Storage levels unlock advanced crops, blizzards stall vulnerable crops unless farms are upgraded, and Farm levels improve yield, worker slots, and late-stage growth speed.
+- Crop fields now show runtime visual states for growing, harvest-ready, and withered crops using the applied HUD crop sprites and distinct state colors. Withered fields can be cleared from the context action panel.
+- Blacksmiths now provide a village action to forge companion gear. Combat companions receive blade/crossbow/fur upgrades, while non-combat companions can receive tool kits that improve gathering support.
