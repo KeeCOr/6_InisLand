@@ -90,6 +90,15 @@ namespace IL6
 
         public static Sprite SnowFenceRight() => LoadSubSprite("Props/Fence", "wooden_fence_Right");
 
+        public static Sprite VerticalStoneWallBottom()
+    => LoadSubSprite("Props/verticalStoneWall", "verticalStoneWall_Bottom");
+
+        public static Sprite VerticalStoneWallCenter()
+            => LoadSubSprite("Props/verticalStoneWall", "verticalStoneWall_Center");
+
+        public static Sprite VerticalStoneWallTop()
+            => LoadSubSprite("Props/verticalStoneWall", "verticalStoneWall_Top");
+
         // ── BuildingKind → 스프라이트 ─────────────────────────────────────────────
         public static Sprite BuildingByKind(BuildingKind k) => k switch
         {

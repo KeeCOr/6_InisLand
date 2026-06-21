@@ -10,6 +10,14 @@ namespace IL6
         Right
     }
 
+    // 울타리 스프라이트 세로 버전 위/중앙/아래
+    public enum VerticalFencePieceType
+    {
+        Bottom,
+        Center,
+        Top
+    }
+
     /// <summary>
     /// 게임 시작 시 마을 자리에 모닥불 + 울타리 링을 자동 스폰.
     /// SnowfieldController 가 Start 에서 1회 호출. 이미 마을이 있으면(저장 데이터로 복귀 등) 스킵.
@@ -77,15 +85,17 @@ namespace IL6
                 var piece = GetFencePieceType(i, slots - 1);
                 SpawnFence(pos, 0f, piece);
             }
-            // 동/서
+            // 동/서 — 세로 울타리. 아래/중앙/위 조각 사용.
             for (int i = 0; i < slots; i++)
             {
                 float ly = startOffset + i * spacing;
                 Vector3 wpos = center + new Vector3(-halfSize, ly, 0f);
                 Vector3 epos = center + new Vector3(halfSize, ly, 0f);
-                var piece = GetFencePieceType(i, slots - 1);
-                if (!TooCloseToFence(wpos, 0.4f)) SpawnFence(wpos, 90f, piece);
-                if (!TooCloseToFence(epos, 0.4f)) SpawnFence(epos, 90f, piece);
+
+                var piece = GetVerticalFencePieceType(i, slots - 1);
+
+                if (!TooCloseToFence(wpos, 0.4f)) SpawnVerticalFence(wpos, piece);
+                if (!TooCloseToFence(epos, 0.4f)) SpawnVerticalFence(epos, piece);
             }
         }
 
@@ -150,15 +160,17 @@ namespace IL6
                 var piece = GetFencePieceType(i, slotsPerSide - 1);
                 SpawnFence(pos, 0f, piece);
             }
-            // 서쪽/동쪽 — 코너 포함 전 구간. 모서리에서 가로 펜스와 시각적으로 겹치지만 빈틈 없음.
+            // 서쪽/동쪽 — 세로 울타리. 아래/중앙/위 조각 사용.
             for (int i = 0; i < slotsPerSide; i++)
             {
                 float ly = startOffset + i * spacing;
                 Vector3 wpos = center + new Vector3(-halfSize, ly, 0f);
                 Vector3 epos = center + new Vector3(halfSize, ly, 0f);
-                var piece = GetFencePieceType(i, slotsPerSide - 1);
-                SpawnFence(wpos, 90f, piece);
-                SpawnFence(epos, 90f, piece);
+
+                var piece = GetVerticalFencePieceType(i, slotsPerSide - 1);
+
+                SpawnVerticalFence(wpos, piece);
+                SpawnVerticalFence(epos, piece);
             }
         }
 
@@ -205,6 +217,7 @@ namespace IL6
             return go;
         }
 
+        // 가로 울타리 스폰
         public static GameObject SpawnFence(Vector3 pos, float rotDeg, FencePieceType pieceType)
         {
             var go = new GameObject("Fence");
@@ -255,12 +268,73 @@ namespace IL6
             return go;
         }
 
+        // 세로 울타리 스폰
+        public static GameObject SpawnVerticalFence(Vector3 pos, VerticalFencePieceType pieceType)
+        {
+            var go = new GameObject("Fence");
+            go.transform.position = pos;
+
+            // verticalStoneWall은 이미 세로 스프라이트라서 회전하지 않음
+            go.transform.rotation = Quaternion.identity;
+
+            // 세로 조각 기준 스케일
+            go.transform.localScale = new Vector3(0.4f, 1.0f, 1f);
+
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 3;
+
+            Sprite fSpr = null;
+            switch (pieceType)
+            {
+                case VerticalFencePieceType.Bottom:
+                    fSpr = SpriteBank.VerticalStoneWallBottom();
+                    break;
+
+                case VerticalFencePieceType.Center:
+                    fSpr = SpriteBank.VerticalStoneWallCenter();
+                    break;
+
+                case VerticalFencePieceType.Top:
+                    fSpr = SpriteBank.VerticalStoneWallTop();
+                    break;
+            }
+
+            if (fSpr != null) sr.sprite = fSpr;
+
+            var col = go.AddComponent<BoxCollider2D>();
+
+            // 세로 울타리니까 x는 좁고 y는 길게
+            col.size = new Vector2(0.8f, 0.9f);
+
+            var cf = go.AddComponent<ColorFallback>();
+            cf.Tint = new Color(0.45f, 0.45f, 0.48f);
+            cf.Shape = FallbackShape.Square;
+            cf.Circle = false;
+            cf.PixelSize = 32;
+            cf.OutlineWidth = 2;
+            cf.OutlineColor = new Color(0.18f, 0.18f, 0.20f, 1f);
+
+            var b = go.AddComponent<Building>();
+            b.Kind = BuildingKind.Fence;
+
+            return go;
+        }
+
         // 울타리 한 줄에서 현재 슬롯이 좌/중앙/우 중 어느 조각인지 계산
         private static FencePieceType GetFencePieceType(int index, int lastIndex)
         {
             if (index <= 0) return FencePieceType.Left;
             if (index >= lastIndex) return FencePieceType.Right;
             return FencePieceType.Center;
+        }
+
+        // 울타리 세로 버전에서 현재 슬롯이 아래/중앙/위 중 어느 조각인지 계산
+
+        private static VerticalFencePieceType GetVerticalFencePieceType(int index, int lastIndex)
+        {
+            if (index <= 0) return VerticalFencePieceType.Bottom;
+            if (index >= lastIndex) return VerticalFencePieceType.Top;
+            return VerticalFencePieceType.Center;
         }
 
         // 게이트 때문에 한 줄이 좌/우로 끊기는 경우의 울타리 조각 계산
