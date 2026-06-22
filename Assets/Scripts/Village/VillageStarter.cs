@@ -228,7 +228,8 @@ namespace IL6
             go.transform.localScale = Vector3.one;
 
             var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 3;
+            var ySort = go.AddComponent<YSort>();
+            ySort.SetUpdateEveryFrame(false);
 
             // 수평 방향 스프라이트 사용 — 폭이 넓은 판자 형태
             // 울타리 스프라이트가 좌/중앙/우 조각으로 나뉘어 있으므로 위치에 따라 다른 조각을 사용.
@@ -281,7 +282,8 @@ namespace IL6
             go.transform.localScale = Vector3.one;
 
             var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 3;
+            var ySort = go.AddComponent<YSort>();
+            ySort.SetUpdateEveryFrame(false);
 
             Sprite fSpr = null;
             switch (pieceType)
