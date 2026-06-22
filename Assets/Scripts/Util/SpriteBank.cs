@@ -84,14 +84,43 @@ namespace IL6
         public static Sprite StoneWall()      => Load("Props/stone_wall");
         public static Sprite SpikeBarricade() => Load("Props/spike_barricade");
 
-        public static Sprite SnowFenceLeft() => LoadSubSprite("Props/Fence", "wooden_fence_Left");
+        // 나무 울타리 유닛
+        public static Sprite WoodenFenceUnit() => LoadSubSprite("Props/Fence", "wooden_fence_unit");
 
-        public static Sprite SnowFenceCenter() => LoadSubSprite("Props/Fence", "wooden_fence_Center");
+        // 나무 울타리 가로 버전
+        public static Sprite WoodenFenceLeft() => LoadSubSprite("Props/Fence", "wooden_fence_Left");
 
-        public static Sprite SnowFenceRight() => LoadSubSprite("Props/Fence", "wooden_fence_Right");
+        public static Sprite WoodenFenceCenter() => LoadSubSprite("Props/Fence", "wooden_fence_Center");
 
+        public static Sprite WoodenFenceRight() => LoadSubSprite("Props/Fence", "wooden_fence_Right");
+
+        // 나무 울타리 세로 버전
+        public static Sprite VerticalWoodenFenceBottom()
+            => LoadSubSprite("Props/verticalFence_Wood", "verticalFence_Wood_Bottom");
+
+        public static Sprite VerticalWoodenFenceCenter()
+            => LoadSubSprite("Props/verticalFence_Wood", "verticalFence_Wood_Center");
+
+        public static Sprite VerticalWoodenFenceTop()
+            => LoadSubSprite("Props/verticalFence_Wood", "verticalFence_Wood_Top");
+
+        // 돌담 유닛
+        public static Sprite StoneWallUnit()
+            => LoadSubSprite("Props/Fence", "stone_wall_unit");
+
+        // 돌담 가로 버전
+        public static Sprite StoneWallLeft()
+            => LoadSubSprite("Props/Fence", "stone_wall_Left");
+
+        public static Sprite StoneWallRight()
+            => LoadSubSprite("Props/Fence", "stone_wall_Right");
+
+        public static Sprite StoneWallCenter()
+            => LoadSubSprite("Props/Fence", "stone_wall_Center");
+
+        // 돌담 세로 버전
         public static Sprite VerticalStoneWallBottom()
-    => LoadSubSprite("Props/verticalStoneWall", "verticalStoneWall_Bottom");
+            => LoadSubSprite("Props/verticalStoneWall", "verticalStoneWall_Bottom");
 
         public static Sprite VerticalStoneWallCenter()
             => LoadSubSprite("Props/verticalStoneWall", "verticalStoneWall_Center");

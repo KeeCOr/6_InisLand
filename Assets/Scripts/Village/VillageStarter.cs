@@ -236,15 +236,15 @@ namespace IL6
             switch (pieceType)
             {
                 case FencePieceType.Left:
-                    fSpr = SpriteBank.SnowFenceLeft();
+                    fSpr = SpriteBank.WoodenFenceLeft();
                     break;
 
                 case FencePieceType.Center:
-                    fSpr = SpriteBank.SnowFenceCenter();
+                    fSpr = SpriteBank.WoodenFenceCenter();
                     break;
 
                 case FencePieceType.Right:
-                    fSpr = SpriteBank.SnowFenceRight();
+                    fSpr = SpriteBank.WoodenFenceRight();
                     break;
             }
 
@@ -287,15 +287,15 @@ namespace IL6
             switch (pieceType)
             {
                 case VerticalFencePieceType.Bottom:
-                    fSpr = SpriteBank.VerticalStoneWallBottom();
+                    fSpr = SpriteBank.VerticalWoodenFenceBottom();
                     break;
 
                 case VerticalFencePieceType.Center:
-                    fSpr = SpriteBank.VerticalStoneWallCenter();
+                    fSpr = SpriteBank.VerticalWoodenFenceCenter();
                     break;
 
                 case VerticalFencePieceType.Top:
-                    fSpr = SpriteBank.VerticalStoneWallTop();
+                    fSpr = SpriteBank.VerticalWoodenFenceTop();
                     break;
             }
 
