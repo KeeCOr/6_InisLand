@@ -285,6 +285,16 @@ namespace IL6
             var ySort = go.AddComponent<YSort>();
             ySort.SetUpdateEveryFrame(false);
 
+            // 위쪽 세로 울타리는 같은 y 좌표 일때 가로 울타리보다 더 위에 그려져야 함
+            if (pieceType == VerticalFencePieceType.Top)
+            {
+                ySort.SetOrderOffset(10);
+            }
+            else
+            {
+                ySort.SetOrderOffset(0);
+            }
+
             Sprite fSpr = null;
             switch (pieceType)
             {

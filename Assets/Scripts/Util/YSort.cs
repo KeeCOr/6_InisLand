@@ -45,5 +45,11 @@ namespace IL6
                 renderer.sortingOrder = order;
             }
         }
+
+        public void SetOrderOffset(int offset)
+        {
+            orderOffset = offset;
+            UpdateSortingOrder();
+        }
     }
 }
