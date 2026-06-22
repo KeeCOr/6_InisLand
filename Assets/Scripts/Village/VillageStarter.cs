@@ -225,7 +225,7 @@ namespace IL6
             go.transform.rotation = Quaternion.Euler(0, 0, rotDeg);
 
             // 수평 펜스 스프라이트(64px@64PPU=1unit) 기준: 1.0u 폭 × 0.4u 높이
-            go.transform.localScale = new Vector3(1.0f, 0.4f, 1f);
+            go.transform.localScale = Vector3.one;
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
@@ -278,7 +278,7 @@ namespace IL6
             go.transform.rotation = Quaternion.identity;
 
             // 세로 조각 기준 스케일
-            go.transform.localScale = new Vector3(0.4f, 1.0f, 1f);
+            go.transform.localScale = Vector3.one;
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;

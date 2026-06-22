@@ -66,9 +66,9 @@ namespace IL6
         };
 
         // ── 프랍 (나무 / 바위 / 장식물) ──────────────────────────────────────────
-        public static Sprite PineTree()       => Load("Props/pine_tree");
+        public static Sprite SnowPineTree()       => Load("Props/snowPineTree");
         public static Sprite BareTree()       => Load("Props/bare_tree");
-        public static Sprite SnowRocks()      => Load("Props/snow_rocks");
+        public static Sprite SnowRock()      => Load("Props/snowRock");
         public static Sprite SmallRocks()     => Load("Props/small_rocks");
         public static Sprite Stump()          => Load("Props/stump");
         public static Sprite SnowBush()       => Load("Props/snow_bush");
