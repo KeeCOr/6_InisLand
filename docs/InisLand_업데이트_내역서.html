@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>InisLand 업데이트 내역서</title>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65;max-width:980px;margin:0 auto;padding:40px 24px;color:#20242a;background:#fafafa}
+    h1{font-size:34px;margin:0 0 20px} h2{font-size:24px;margin-top:34px;border-bottom:1px solid #ddd;padding-bottom:6px} h3{font-size:18px;margin-top:24px}
+    p,li,pre{font-size:15px} li{margin:5px 0} pre{white-space:pre-wrap;background:#fff;border:1px solid #ddd;border-radius:8px;padding:8px 10px}
+  </style>
+</head>
+<body>
+<h1>InisLand 업데이트 내역서</h1>
+
+<h2>2026-06-24 문서 구조 정리</h2>
+<li>기획서와 업데이트 내역서를 분리했다.</li>
+<li>기획서는 게임 소개, 핵심 루프, MVP 가설, KPI, UX 원칙 중심으로 재작성했다.</li>
+<li>변경 이력, 구현 로그, 검증 기록은 이 문서에서 관리한다.</li>
+
+<h2>기존 문서에서 분리한 이력 후보</h2>
+<li>v0.2.0</li>
+<li>6IL_v0.2.0_portable.exe</li>
+<li>구현된 주요 시스템</li>
+<li>현재 Unity 구현 기준 건물은 18종이며, 모든 건물은 레벨 5까지 업그레이드된다.</li>
+<li>최신 변경 이력</li>
+<li>v0.2.0-parity2026-06-11기획서의 Unity 기준 정리, 발견물/건물 식별 리소스 연결, 누락 프랍 fallback 정리</li>
+<li>v0.2.0-crops2026-06-10작물 선택, 성장/수확/시듦 상태, 저온 생존률/수확량 차등, 대장간 동료 장비 액션</li>
+<li>v0.2.0-village2026-06-08교회, 건물 다양화, 중기 목표, 울타리 수리/확장, 동료 스폰 보정</li>
+<li>v0.2.0-build-refresh2026-06-05Unity 단독 개발 기준과 프로젝트 번호 기반 Windows 실행파일 정리</li>
+<li>**현재 버전:** v0.2.0</li>
+<li>**권위 구현:** Unity 2022.3.62f3 LTS, C#, Unity 2D/URP</li>
+<li>3. 구현된 주요 시스템</li>
+<li>**출력:** `Build/Windows/IL6.exe`, 루트 배포용 `6IL_v0.2.0_portable.exe`</li>
+<li>**검증:** Unity batch compile/build logs, 런타임 실행 확인, git diff/status 확인</li>
+<li>9. 최신 변경 이력</li>
+<li>| v0.2.0-parity | 2026-06-11 | 기획서의 Unity 기준 정리, 발견물/건물 식별 리소스 연결, 누락 프랍 fallback 정리 |</li>
+<li>| v0.2.0-crops | 2026-06-10 | 작물 선택, 성장/수확/시듦 상태, 저온 생존률/수확량 차등, 대장간 동료 장비 액션 |</li>
+<li>| v0.2.0-hud | 2026-06-09 | HUD 리소스와 레이아웃 정리, 상단 자원 UI, 프레임 축소 |</li>
+
+<h2>작성 규칙</h2>
+<li>기능 추가, 밸런스 변경, UI/UX 수정, 리소스 교체, 빌드/배포 변경은 날짜와 버전을 함께 기록한다.</li>
+<li>기획서에는 최신 소개와 현재 설계 의도만 남기고, 과거 작업 로그는 이 문서로 이동한다.</li>
+<li>MD와 HTML은 항상 함께 갱신한다.</li>
+
+</body>
+</html>
