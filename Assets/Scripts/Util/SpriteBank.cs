@@ -84,6 +84,14 @@ namespace IL6
         public static Sprite StoneWall()      => Load("Props/stone_wall");
         public static Sprite SpikeBarricade() => Load("Props/spike_barricade");
 
+        // 나무 울타리 문 (가로)
+        public static Sprite GateOpen() => LoadSubSprite("Props/gate", "gate_open");
+        public static Sprite GateClosed() => LoadSubSprite("Props/gate", "gate_closed");
+
+        // 나무 울타리 문 (세로)
+        public static Sprite VerticalGateOpen() => LoadSubSprite("Props/gate", "gate_vertical_open");
+        public static Sprite VerticalGateClosed() => LoadSubSprite("Props/gate", "gate_vertical_closed");
+
         // 나무 울타리 유닛
         public static Sprite WoodenFenceUnit() => LoadSubSprite("Props/Fence", "wooden_fence_unit");
 

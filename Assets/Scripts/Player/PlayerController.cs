@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace IL6
 {
@@ -9,6 +9,7 @@ namespace IL6
     [RequireComponent(typeof(InputReader))]
     public sealed class PlayerController : MonoBehaviour
     {
+        [SerializeField] private float doorInteractDistance = 1.5f;
         public int CurrentHp { get; private set; }
         public int MaxHp { get; private set; }
         public bool IsDead => CurrentHp <= 0;
@@ -37,9 +38,9 @@ namespace IL6
                 var spr = SpriteBank.Player();
                 if (spr != null) sr.sprite = spr;
             }
-            // Phaser player: ~30px = 0.94 Unity units → scale 1.47
+
             if (transform.localScale == Vector3.one)
-                transform.localScale = Vector3.one * 1.5f;
+                transform.localScale = new Vector3(0.9f, 1.0f, 1.0f);
             _rb.gravityScale = 0f;
             _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             _rb.freezeRotation = true;
@@ -76,6 +77,11 @@ namespace IL6
             {
                 _regenTimer = 0f;
                 if (CurrentHp < MaxHp) Heal(1);
+            }
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                TryInteractDoor();
             }
         }
 
@@ -130,6 +136,20 @@ namespace IL6
             CurrentHp = MaxHp;
             transform.position = spawnPosition;
             _rb.velocity = Vector2.zero;
+        }
+
+        // 문 열고 닫는 함수
+        private void TryInteractDoor()
+        {
+            Door nearestDoor = Door.FindNearest(transform.position);
+
+            if (nearestDoor == null)
+                return;
+
+            if (!nearestDoor.IsNear(transform.position, doorInteractDistance))
+                return;
+
+            nearestDoor.Toggle();
         }
     }
 }

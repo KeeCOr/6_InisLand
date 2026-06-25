@@ -69,10 +69,14 @@ namespace IL6
                 float lx = startOffset + i * spacing;
                 Vector3 pos = center + new Vector3(lx, -halfSize, 0f);
                 if (TooCloseToFence(pos, 0.4f)) continue;
-                if (i == gateSlot && !HasGateNear(pos, 1.2f)) SpawnGate(pos);
+                if (i == gateSlot && !HasGateNear(pos, 1.2f))
+                {
+                    SpawnGate(pos);
+                }
                 else if (i != gateSlot)
                 {
-                    var piece = GetFencePieceTypeWithGate(i, slots - 1, gateSlot);
+                    // 게이트로 줄을 끊어서 계산하지 않고, 전체 남쪽 변 기준으로 계산
+                    var piece = GetFencePieceType(i, slots - 1);
                     SpawnFence(pos, 0f, piece);
                 }
             }
@@ -142,13 +146,15 @@ namespace IL6
             {
                 float lx = startOffset + i * spacing;
                 Vector3 pos = center + new Vector3(lx, -halfSize, 0f);
+
                 if (i == gateSlot)
                 {
                     SpawnGate(pos);
                 }
                 else
                 {
-                    var piece = GetFencePieceTypeWithGate(i, slotsPerSide - 1, gateSlot);
+                    // 게이트 옆도 끝 조각이 아니라 Center가 오도록 전체 줄 기준으로 계산
+                    var piece = GetFencePieceType(i, slotsPerSide - 1);
                     SpawnFence(pos, 0f, piece);
                 }
             }
@@ -176,44 +182,57 @@ namespace IL6
 
         public static GameObject SpawnGate(Vector3 pos)
         {
-            // 문 — 플레이어/동료는 통과(Door.IgnoreCollision), 좀비는 차단
             var go = new GameObject("Gate");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(1.0f, 0.4f, 1f);
+            go.transform.localScale = Vector3.one;
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 4;
 
+            var gateSpr = SpriteBank.GateOpen();
+            if (gateSpr != null)
+            {
+                sr.sprite = gateSpr;
+                sr.color = Color.white;
+            }
+
+            // YSort 적용
+            var ySort = go.AddComponent<YSort>();
+            ySort.SetUpdateEveryFrame(false);
+
+            // 아래쪽 문은 남쪽 가로 울타리와 같은 라인이라,
+            // 가로 울타리보다 살짝 위에 두고 싶으면 offset 추가
+            ySort.SetOrderOffset(5);
+
             var col = go.AddComponent<BoxCollider2D>();
             col.size = new Vector2(0.95f, 0.8f);
 
-            var cf = go.AddComponent<ColorFallback>();
-            cf.Tint = new Color(0.78f, 0.62f, 0.30f); // 골드 — 입구임을 표시
-            cf.Shape = FallbackShape.Square;
-            cf.Circle = false;
-            cf.PixelSize = 32;
-            cf.OutlineWidth = 2;
-            cf.OutlineColor = new Color(0.35f, 0.25f, 0.1f, 1f);
-
-            go.AddComponent<Door>();
-
-            // 좌우 기둥 (시각용 스프라이트)
-            for (int s = -1; s <= 1; s += 2)
+            // 스프라이트 없을 때만 fallback용
+            if (gateSpr != null)
             {
-                var post = new GameObject("GatePost");
-                post.transform.SetParent(go.transform, false);
-                post.transform.localPosition = new Vector3(s * 0.5f, 0.7f, 0f);
-                post.transform.localScale = new Vector3(0.18f, 4.5f, 1f); // 부모 스케일 0.95×0.18 보정
-                var psr = post.AddComponent<SpriteRenderer>();
-                psr.sortingOrder = 4;
-                var pcf = post.AddComponent<ColorFallback>();
-                pcf.Tint = new Color(0.55f, 0.4f, 0.22f);
-                pcf.Shape = FallbackShape.Square;
-                pcf.Circle = false;
-                pcf.PixelSize = 16;
-                pcf.OutlineWidth = 1;
-                pcf.OutlineColor = new Color(0.2f, 0.13f, 0.05f, 1f);
+                sr.sprite = gateSpr;
+                sr.color = Color.white;
             }
+            else
+            {
+                var cf = go.AddComponent<ColorFallback>();
+                cf.Tint = new Color(0.78f, 0.62f, 0.30f);
+                cf.Shape = FallbackShape.Square;
+                cf.Circle = false;
+                cf.PixelSize = 32;
+                cf.OutlineWidth = 2;
+                cf.OutlineColor = new Color(0.35f, 0.25f, 0.1f, 1f);
+            }
+
+            // 플레이어, 동료만 통과 가능
+            var door = go.AddComponent<Door>();
+            // TODO
+            // 나중에 건축 기능 추가되고, 세로 문 만들면 door.Init(true, false);
+            door.Init(false, false);
+
+            var b = go.AddComponent<Building>();
+            b.Kind = BuildingKind.Fence;
+
             return go;
         }
 
@@ -289,6 +308,10 @@ namespace IL6
             if (pieceType == VerticalFencePieceType.Top)
             {
                 ySort.SetOrderOffset(10);
+            }
+            else if(pieceType == VerticalFencePieceType.Bottom)
+            {
+                ySort.SetOrderOffset(-10);
             }
             else
             {
