@@ -10,7 +10,7 @@ namespace IL6
     public sealed class BalanceConfig : ScriptableObject
     {
         [Header("Day/Night Cycle (seconds)")]
-        public float DayDurationSec = 540f;
+        public float DayDurationSec = 40f;   // 540f→40f: 기획 의도 1사이클 약 2분
         public float NightDurationSec = 360f;
         public float EveningTransitionSec = 30f;
         public float DawnTransitionSec = 30f;
@@ -64,7 +64,7 @@ namespace IL6
         public int BarricadeCost = 5;
 
         [Header("Campfire Aura")]
-        public float BonfireDamagePerSec = 5f;
+        public float BonfireDamagePerSec = 2.5f;  // 5f→2.5f: 밤 난이도 회복
         public float BonfireRadius = 128f;
         public float BonfireAttackBuff = 0.15f;
         /// <summary>밤마다 모닥불 HP가 소모되는 초당 속도. MaxHp=280 기준 약 9분마다 재충전 필요.</summary>

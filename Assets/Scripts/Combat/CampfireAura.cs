@@ -9,7 +9,8 @@ namespace IL6
     public sealed class CampfireAura : MonoBehaviour
     {
         public float Radius = 2.5f;
-        public float DamagePerSecond = 6f;
+        [Tooltip("런타임에 BalanceConfig.BonfireDamagePerSec으로 덮어씀")]
+        public float DamagePerSecond = 2.5f;
         public float TickInterval = 0.5f;
 
         // 연료 — 100 단위, 초당 1 씩 감소 (약 100초 지속). 0 되면 꺼짐.
@@ -38,6 +39,7 @@ namespace IL6
             _sr = GetComponent<SpriteRenderer>();
             if (_sr != null) _baseColor = _sr.color;
             VisionRadius = BaseVisionRadius;
+            DamagePerSecond = BalanceConfig.Instance.BonfireDamagePerSec;
         }
 
         private void Start()
