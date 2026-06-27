@@ -10,8 +10,8 @@ namespace IL6
     public sealed class BalanceConfig : ScriptableObject
     {
         [Header("Day/Night Cycle (seconds)")]
-        public float DayDurationSec = 40f;   // 540f→40f: 기획 의도 1사이클 약 2분
-        public float NightDurationSec = 360f;
+        public float DayDurationSec = 180f;  // 3분
+        public float NightDurationSec = 180f; // 3분
         public float EveningTransitionSec = 30f;
         public float DawnTransitionSec = 30f;
 
