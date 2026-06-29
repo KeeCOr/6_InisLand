@@ -4,7 +4,7 @@
 
 **장르:** 뱀서바이벌 + 낮/밤 베이스 디펜스 + 탑다운 생존  
 **버전:** v0.2.0 · 2026-05-29  
-**스택:** Phaser 3 + TypeScript + bitecs(ECS) + Electron
+**스택:** Unity 2D + C# + Resources SpriteBank + Windows Standalone
 
 ---
 
@@ -47,6 +47,7 @@
 
 ### 밤 페이즈
 - **좀비 웨이브**: 무한 증가, 25킬마다 보스 등장
+- **보스 스프라이트**: `Assets/Resources/Sprites/Enemies/boss_frost_zombie.png`는 64x64 RGBA 단일 스프라이트로, 첫 보스 밤의 서리 좀비 보스에 사용
 - **모닥불**: 2.5u DPS 화상 오라 + 마을 온도 유지 (연료 100s)
 - **바리케이드**: 건물 HP 소진 시 마을 함락
 
@@ -75,10 +76,10 @@
 
 ## 6. 기술 스택
 
-- **렌더링**: Phaser 3.60 (Canvas)
-- **ECS**: bitecs — 유닛/자원/이펙트 컴포넌트 분리
-- **패키징**: Electron 35 + electron-builder (Windows Portable)
-- **테스트**: Vitest 72개 단위 테스트
+- **엔진**: Unity 2D
+- **런타임 리소스**: `Resources/Sprites/...` + `SpriteBank`
+- **패키징**: Windows Standalone BuildScript
+- **테스트**: Unity EditMode/PlayMode 또는 가장 가까운 런타임 검증
 
 ---
 
@@ -86,5 +87,6 @@
 
 | 버전 | 날짜 | 내용 |
 |-----|------|------|
+| v0.2.0 | 2026-06-29 | Unity 런타임 경로의 첫 보스용 `boss_frost_zombie.png`를 같은 경로에서 교체하고 `.meta` 보존 |
 | v0.2.0 | 2026-05-29 | UX 온보딩 씬 추가 (낮/밤 페이즈 설명) |
 | v0.1.0 | 2026-05-20 | 초기 ECS 기반 프로토타입 |

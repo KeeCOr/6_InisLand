@@ -77,10 +77,10 @@
   <p class="quote">"끝없는 겨울. 마지막 마을의 마지막 수호자."</p>
   <p class="subtitle">뱀서바이벌 × 낮/밤 베이스 디펜스 × 탑다운 설원 생존</p>
   <div class="badges">
-    <span class="badge badge-blue">⚡ Phaser 3 + TypeScript</span>
-    <span class="badge badge-purple">🧬 bitecs ECS</span>
-    <span class="badge badge-green">🧪 Vitest 72 tests</span>
-    <span class="badge badge-orange">📦 Electron Portable</span>
+    <span class="badge badge-blue">⚡ Unity 2D</span>
+    <span class="badge badge-purple">🧊 SpriteBank Resources</span>
+    <span class="badge badge-green">🧪 Unity validation</span>
+    <span class="badge badge-orange">📦 Windows Standalone</span>
   </div>
 </div>
 
@@ -111,7 +111,7 @@
     <div class="loop-flow">
       <div class="loop-step"><span class="phase">☀ 낮 (40s+)</span> — 설원 탐험 · 나무/돌/고기 채집 · 동물 사냥 · 동료 영입 · 건물 건설</div>
       <div class="loop-arrow">↓ 저녁 — 자동 텔레포트 (플레이어+동료+펫 마을로)</div>
-      <div class="loop-step"><span class="phase night">🌙 밤 (40s+)</span> — 좀비 웨이브 격퇴 · 모닥불 방어 · 바리케이드 사수 · 25킬마다 보스 등장</div>
+      <div class="loop-step"><span class="phase night">🌙 밤 (40s+)</span> — 좀비 웨이브 격퇴 · 모닥불 방어 · 바리케이드 사수 · 25킬마다 보스 등장 · 첫 보스는 <code>boss_frost_zombie.png</code> 사용</div>
       <div class="loop-arrow">↓ 새벽 — HP 전회복 · 건물 +25%HP · NPC 1명 스폰 · 자동 저장</div>
       <div class="loop-step"><span class="phase dawn">🌅 다음 낮</span> — 레벨 업 (페이즈 길이 ×1.25), 반복</div>
     </div>
@@ -159,11 +159,11 @@
   <div class="section">
     <h2>🛠️ 기술 스택</h2>
     <ul>
-      <li><strong>렌더링</strong>: Phaser 3.60 (Canvas 2D)</li>
-      <li><strong>ECS</strong>: bitecs — 유닛/자원/이펙트 컴포넌트 분리</li>
-      <li><strong>언어</strong>: TypeScript 5.x + Vite 번들러</li>
-      <li><strong>패키징</strong>: Electron 35 + electron-builder (Windows Portable)</li>
-      <li><strong>테스트</strong>: Vitest</li>
+      <li><strong>엔진</strong>: Unity 2D</li>
+      <li><strong>런타임 리소스</strong>: <code>Resources/Sprites/...</code> + <code>SpriteBank</code></li>
+      <li><strong>보스 스프라이트</strong>: <code>Assets/Resources/Sprites/Enemies/boss_frost_zombie.png</code> (64x64 RGBA, 단일 스프라이트)</li>
+      <li><strong>패키징</strong>: Windows Standalone BuildScript</li>
+      <li><strong>테스트</strong>: Unity EditMode/PlayMode 또는 가장 가까운 런타임 검증</li>
     </ul>
   </div>
 
@@ -172,6 +172,7 @@
     <table class="changelog">
       <thead><tr><th>버전</th><th>날짜</th><th>내용</th></tr></thead>
       <tbody>
+        <tr><td>v0.2.0</td><td>2026-06-29</td><td>Unity 런타임 경로의 첫 보스용 <code>boss_frost_zombie.png</code>를 같은 경로에서 교체하고 <code>.meta</code> 보존</td></tr>
         <tr><td>v0.2.0</td><td>2026-05-29</td><td>UX 온보딩 씬 추가 (낮/밤 페이즈 2슬라이드 설명)</td></tr>
         <tr><td>v0.1.0</td><td>2026-05-20</td><td>ECS 기반 프로토타입 — 낮/밤 사이클, 자원 수집, 좀비 웨이브</td></tr>
       </tbody>
@@ -180,6 +181,6 @@
 
 </div>
 
-<div class="footer">InisLand — 눈보라 마을 기획서 v0.2.0 · 2026-05-29 · 오진우</div>
+<div class="footer">InisLand — 눈보라 마을 기획서 v0.2.0 · 2026-06-29 · 오진우</div>
 </body>
 </html>
