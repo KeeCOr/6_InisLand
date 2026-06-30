@@ -51,7 +51,7 @@ namespace IL6
             _unsubDawn = EventBus.Instance.Subscribe<DawnStartedPayload>(_ =>
             {
                 _session.SaveNow();
-                SceneManager.LoadScene(SnowfieldSceneName);
+                StartCoroutine(LoadSceneAfterDelay(4f, SnowfieldSceneName));
             });
             _unsubBuild = EventBus.Instance.Subscribe<BuildRequestPayload>(p =>
             {
@@ -79,6 +79,12 @@ namespace IL6
                 var pt = plan.SpawnPoints[i % plan.SpawnPoints.Count];
                 Instantiate(ZombiePrefab, new Vector3(pt.x + Random.Range(-20f, 20f), pt.y + Random.Range(-20f, 20f), 0), Quaternion.identity);
             }
+        }
+
+        private System.Collections.IEnumerator LoadSceneAfterDelay(float sec, string sceneName)
+        {
+            yield return new WaitForSecondsRealtime(sec);
+            SceneManager.LoadScene(sceneName);
         }
 
         private void OnDestroy()

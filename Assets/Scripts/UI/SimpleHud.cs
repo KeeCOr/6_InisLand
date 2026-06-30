@@ -16,6 +16,13 @@ namespace IL6
 
         private System.Collections.Generic.List<RuneKind> _runeOffer;
 
+        // P1-4: 마스터 시너지 토스트
+        private float _synergyToastTimer;
+        // P2-6: 밤 결산 토스트
+        private float _nightSummaryTimer;
+        private int _nightSummaryKills;
+        private int _nightSummaryDay;
+
         private GUIStyle _label, _labelSubtle, _title, _section, _weapon, _bigDeath, _btn, _smallBtn;
 
         // 장비 모드: 근접 / 원거리 / 건축. BuildHotbar 는 건축에서만, 무기는 모드 따라 자동 전환.
@@ -43,7 +50,10 @@ namespace IL6
             DrawResourceBar();     // 상단 우측: 자원 세로 카드
             DrawWaveStanceBar();   // 하단 좌측: 동료 스탠스 + 웨이브 정보
             if (_hudMode == HudMode.Build) DrawBuildHotbar(); // 건축 모드에서만
-            DrawDebugCorner();     // 하단 우측: 디버그 + SFX
+            DrawSfxCorner();       // 하단 우측: 볼륨 슬라이더 (항상)
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            DrawDebugButtons();    // 디버그 버튼 (에디터/개발 빌드만)
+#endif
             DrawWorldChopButton();
             DrawWorldRepairButton();
             DrawWorldRefuelButton();
@@ -64,6 +74,8 @@ namespace IL6
             DrawDamageFlash();
             DrawNightIntroFade();
             DrawDawnFlare();
+            DrawNightSummary();    // P2-6: 밤 결산 패널 (새벽 4초간)
+            DrawSynergyToast();    // P1-4: 원소 마스터 시너지 토스트
             DrawPlacementPreview();
             HandlePlacementInput();
         }
@@ -399,17 +411,31 @@ namespace IL6
             _unsubN = EventBus.Instance.Subscribe<NightStartedPayload>(p =>
                 { ShowBanner($"Day {p.Day}  🌙  밤이 찾아옵니다"); Music.PlayForPhase(Phase.Night); });
             _unsubD = EventBus.Instance.Subscribe<DawnStartedPayload>(p =>
-                { ShowBanner($"Day {p.Day}  🌄  새벽"); Music.PlayForPhase(Phase.Dawn); });
+            {
+                ShowBanner($"Day {p.Day}  🌄  새벽"); Music.PlayForPhase(Phase.Dawn);
+                // P2-6: 밤 결산 데이터 스냅샷
+                var night = Object.FindFirstObjectByType<NightController>();
+                _nightSummaryKills = night != null ? night.KillsThisNight : 0;
+                _nightSummaryDay = p.Day;
+                _nightSummaryTimer = 3.5f;
+            });
             _unsubA = EventBus.Instance.Subscribe<DayStartedPayload>(p =>
                 { ShowBanner($"Day {p.Day}  ☀  새 날"); Music.PlayForPhase(Phase.Day); });
+            // P1-4: 마스터 시너지 발동 구독
+            if (Progression != null)
+                Progression.OnElementalSynergyAchieved += OnSynergyAchieved;
             HookFadeEvents();
         }
 
         private void OnDisable()
         {
             _unsubE?.Invoke(); _unsubN?.Invoke(); _unsubD?.Invoke(); _unsubA?.Invoke();
+            if (Progression != null)
+                Progression.OnElementalSynergyAchieved -= OnSynergyAchieved;
             UnhookFadeEvents();
         }
+
+        private void OnSynergyAchieved() => _synergyToastTimer = 3f;
 
         private bool _initialBannerShown;
 
@@ -840,6 +866,9 @@ namespace IL6
             else if (Input.GetKeyDown(KeyCode.Alpha2)) SetHudMode(HudMode.Ranged);
             else if (Input.GetKeyDown(KeyCode.Alpha3)) SetHudMode(HudMode.Build);
 
+            if (_synergyToastTimer > 0f) _synergyToastTimer -= Time.unscaledDeltaTime;
+            if (_nightSummaryTimer > 0f) _nightSummaryTimer -= Time.unscaledDeltaTime;
+
             if (Player == null) return;
             if (_lastPlayerHp == -1) _lastPlayerHp = Player.CurrentHp;
             if (Player.CurrentHp < _lastPlayerHp) _damageFlashAmount = 0.55f;
@@ -928,92 +957,6 @@ namespace IL6
         }
 
         // ====================================================================
-        // (REMOVED) InfoCard — 점수/킬/손실 제거 요청. 사망 화면에는 여전히 점수 표시됨.
-        // ====================================================================
-        private void DrawInfoCard_DEPRECATED()
-        {
-            const int W = 280, H = 152;
-            var panel = new Rect(Screen.width - W - 12, 12, W, H);
-            UiTheme.Panel(panel);
-
-            var session = GameSession.Instance;
-            if (session == null) return;
-            int innerX = (int)panel.x + 12;
-            int innerW = W - 24;
-            int y = (int)panel.y + 10;
-
-            // 점수 (큰 골드)
-            var scoreStyle = new GUIStyle(_title) {
-                fontSize = 28, alignment = TextAnchor.MiddleLeft,
-                normal = { textColor = UiTheme.TextGold }
-            };
-            GUI.Label(new Rect(innerX, y, innerW, 32), $"점수  {session.Score}", scoreStyle);
-            y += 32;
-
-            // 킬 / 손실
-            GUI.Label(new Rect(innerX, y, innerW, 18),
-                $"킬 {session.TotalKills}  ·  동료 손실 {session.CompanionsLost}  ·  최대 {session.MaxCompanionsAtOnce}",
-                _labelSubtle);
-            y += 22;
-
-            // 웨이브 + 블리자드
-            if (Night != null && Night.CurrentPhase == Phase.Night)
-            {
-                var nightOldC = GUI.contentColor;
-                GUI.contentColor = new Color(0.95f, 0.5f, 0.5f);
-                GUI.Label(new Rect(innerX, y, innerW, 20),
-                    $"🧟 활성 {Night.ActiveZombies}  ·  대기 {Night.WavePending}", _section);
-                GUI.contentColor = nightOldC;
-                y += 22;
-                if (Night.IsBlizzard)
-                {
-                    GUI.contentColor = new Color(0.55f, 0.85f, 1f);
-                    GUI.Label(new Rect(innerX, y, innerW, 20), "❄ 눈보라!", _section);
-                    GUI.contentColor = nightOldC;
-                    y += 22;
-                }
-            }
-            else if (session.LastFoodShortage > 0)
-            {
-                var oldC = GUI.contentColor;
-                GUI.contentColor = UiTheme.TextDanger;
-                GUI.Label(new Rect(innerX, y, innerW, 20),
-                    $"⚠ 식량 부족 {session.LastFoodShortage}", _section);
-                GUI.contentColor = oldC;
-                y += 22;
-            }
-
-            // 동료 스탠스 (밑쪽 줄, 컴팩트)
-            var allComps = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
-            int liveCount = 0;
-            Companion.Stance majority = Companion.Stance.Follow;
-            foreach (var c in allComps)
-            {
-                if (c == null || c.IsDead || c.CurrentMode == Companion.Mode.Hiding) continue;
-                liveCount++;
-                majority = c.CurrentStance;
-            }
-            string sLabel = majority switch
-            {
-                Companion.Stance.Follow => "👣 따르기",
-                Companion.Stance.Hold => "🛡 사수",
-                Companion.Stance.Aggressive => "⚔ 공세",
-                _ => "",
-            };
-            int btnY = (int)panel.yMax - 32;
-            if (UiTheme.Button(new Rect(innerX, btnY, innerW, 26), $"동료 {sLabel}  ({liveCount})", _smallBtn, liveCount > 0))
-            {
-                var next = majority switch
-                {
-                    Companion.Stance.Follow => Companion.Stance.Hold,
-                    Companion.Stance.Hold => Companion.Stance.Aggressive,
-                    _ => Companion.Stance.Follow,
-                };
-                foreach (var c in allComps) if (c != null) c.SetStance(next);
-            }
-        }
-
-        // ====================================================================
         // RESOURCE BAR (좌상단 수평 스트립): Wood / Stone / Meat / Food
         // ====================================================================
         private GUIStyle _resStyle;
@@ -1071,7 +1014,14 @@ namespace IL6
             var session = GameSession.Instance;
             if (session == null) return;
 
-            const int W = 300, H = 118;
+            var allCompsForHeight = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
+            int liveForHeight = 0;
+            foreach (var c in allCompsForHeight)
+                if (c != null && !c.IsDead && c.CurrentMode != Companion.Mode.Hiding) liveForHeight++;
+            int companionRowsH = liveForHeight > 0 ? Mathf.Min(liveForHeight, 6) * 20 + 8 : 0;
+
+            const int W = 300;
+            int H = 118 + companionRowsH;
             // ResourceBar(63+24+4=91) below; fixed rows keep guidance, population, and stance from overlapping.
             var panel = new Rect(12, 91, W, H);
             UiTheme.Panel(panel);
@@ -1108,7 +1058,7 @@ namespace IL6
                 y += 22;
             }
 
-            // 동료 스탠스 토글 (하단 줄)
+            // 동료 스탠스 토글
             var allComps = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
             int liveCount = 0;
             Companion.Stance majority = Companion.Stance.Follow;
@@ -1125,8 +1075,7 @@ namespace IL6
                 Companion.Stance.Aggressive => "⚔ 공세",
                 _ => "",
             };
-            int btnY = (int)panel.yMax - 22;
-            if (UiTheme.Button(new Rect(innerX, btnY, innerW, 18), $"동료 {sLabel} ({liveCount})", _smallBtn, liveCount > 0))
+            if (UiTheme.Button(new Rect(innerX, y, innerW, 18), $"동료 {sLabel} ({liveCount})", _smallBtn, liveCount > 0))
             {
                 var next = majority switch
                 {
@@ -1135,6 +1084,40 @@ namespace IL6
                     _ => Companion.Stance.Follow,
                 };
                 foreach (var c in allComps) if (c != null) c.SetStance(next);
+            }
+            y += 22;
+
+            // P2-7: 동료 개별 HP 바
+            if (liveCount > 0)
+            {
+                UiTheme.Separator(new Rect(innerX, y, innerW, 1));
+                y += 6;
+                int shown = 0;
+                foreach (var c in allComps)
+                {
+                    if (c == null || c.IsDead || c.CurrentMode == Companion.Mode.Hiding) continue;
+                    if (shown >= 6) break;
+
+                    int maxHp = c.EffectiveMaxHp();
+                    float ratio = maxHp > 0 ? Mathf.Clamp01((float)c.CurrentHp / maxHp) : 0f;
+                    Color barColor = ratio > 0.5f ? new Color(0.3f, 0.85f, 0.4f) :
+                                     ratio > 0.25f ? new Color(0.95f, 0.75f, 0.2f) :
+                                                     new Color(0.9f, 0.25f, 0.25f);
+
+                    int barW = innerW - 60;
+                    UiTheme.Rect(new Rect(innerX, y + 4, barW, 10), new Color(0.15f, 0.15f, 0.2f));
+                    UiTheme.Rect(new Rect(innerX, y + 4, (int)(barW * ratio), 10), barColor);
+
+                    var hpStyle = new GUIStyle(_labelSubtle) { fontSize = 11, alignment = TextAnchor.MiddleRight };
+                    GUI.Label(new Rect(innerX + barW + 4, y, 52, 18), $"{c.CurrentHp}/{maxHp}", hpStyle);
+                    y += 20;
+                    shown++;
+                }
+                if (liveCount > 6)
+                {
+                    var moreStyle = new GUIStyle(_labelSubtle) { fontSize = 11 };
+                    GUI.Label(new Rect(innerX, y, innerW, 16), $"+{liveCount - 6}명 더", moreStyle);
+                }
             }
         }
 
@@ -1259,159 +1242,56 @@ namespace IL6
         }
 
         // ====================================================================
-        // DEBUG CORNER (bottom-right): 디버그 + SFX
+        // SFX 코너 (항상 표시) + 디버그 버튼 (에디터/개발 빌드만)
         // ====================================================================
-        private void DrawDebugCorner()
+        private void DrawSfxCorner()
         {
-            var session = GameSession.Instance;
-            if (session == null) return;
-
-            const int W = 220, H = 100;
+            const int W = 220, H = 34;
             var panel = new Rect(Screen.width - W - 12, Screen.height - H - 12, W, H);
             UiTheme.Panel(panel);
 
             int innerX = (int)panel.x + 10;
             int innerW = W - 20;
-            int y = (int)panel.y + 10;
+            int y = (int)panel.y + 8;
 
-            GUI.Label(new Rect(innerX, y, innerW, 16), "디버그", _labelSubtle);
-            y += 18;
-
-            int half = (innerW - 6) / 2;
-            if (UiTheme.Button(new Rect(innerX, y, half, 24), "▶ 페이즈+1", _smallBtn))
-                session.Cycle.Update(session.Cycle.PhaseDurationSec + 0.1f);
-            if (UiTheme.Button(new Rect(innerX + half + 6, y, half, 24), "🌙 강제 밤", _smallBtn))
-                if (Night != null) Night.StartNight(session.Cycle.Day);
-            y += 28;
-
-            if (UiTheme.Button(new Rect(innerX, y, half, 24), "🧟 좀비+1", _smallBtn))
-                if (Night != null) Night.SpawnDebugZombie();
-            if (UiTheme.Button(new Rect(innerX + half + 6, y, half, 24), "☀ 낮으로", _smallBtn))
-                for (int i = 0; i < 4 && session.Cycle.Phase != Phase.Day; i++)
-                    session.Cycle.Update(session.Cycle.PhaseDurationSec + 0.1f);
-            y += 28;
-
-            // SFX 슬라이더
-            GUI.Label(new Rect(innerX, y, 50, 18), "🔊", _label);
+            GUI.Label(new Rect(innerX, y, 28, 18), "🔊", _label);
             float vol = Sfx.Volume;
-            float newVol = GUI.HorizontalSlider(new Rect(innerX + 40, y + 5, innerW - 90, 12), vol, 0f, 1f);
+            float newVol = GUI.HorizontalSlider(new Rect(innerX + 28, y + 5, innerW - 76, 12), vol, 0f, 1f);
             if (Mathf.Abs(newVol - vol) > 0.005f) Sfx.Volume = newVol;
             GUI.Label(new Rect(innerX + innerW - 40, y, 40, 18), $"{(newVol * 100):F0}%", _labelSubtle);
         }
 
-        // ====================================================================
-        // 우측: 자원 / 사이클 / 디버그
-        // ====================================================================
-        private void DrawRightPanel()
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        private void DrawDebugButtons()
         {
-            const int W = 270;
-            var panel = new Rect(Screen.width - W - 12, 90, W, 440);
-            UiTheme.Panel(panel);
-            UiTheme.TitleBar(panel, "  자원  ", _title);
-
-            int y = (int)panel.y + 36;
-            int innerX = (int)panel.x + 14;
-            int innerW = (int)panel.width - 28;
-
             var session = GameSession.Instance;
-            if (session == null)
-            {
-                GUI.Label(new Rect(innerX, y, innerW, 22), "GameSession NOT FOUND", _label);
-                return;
-            }
+            if (session == null) return;
 
-            void DrawRes(ResourceKind k, string name)
-            {
-                UiTheme.Icon(new Rect(innerX, y + 4, 16, 16), UiTheme.ResColor(k));
-                GUI.Label(new Rect(innerX + 24, y, 110, 22), name, _label);
-                int cur = session.Resources.Get(k);
-                int cap = session.Resources.GetCap(k);
-                var color = cur >= cap ? UiTheme.TextDanger : UiTheme.TextCream;
-                var oldC = GUI.contentColor;
-                GUI.contentColor = color;
-                GUI.Label(new Rect(innerX + 134, y, innerW - 134, 22), $"{cur} / {cap}", _label);
-                GUI.contentColor = oldC;
-                y += 22;
-            }
+            const int W = 220, H = 68;
+            var panel = new Rect(Screen.width - W - 12, Screen.height - H - 58, W, H);
+            UiTheme.Panel(panel);
 
-            DrawRes(ResourceKind.Wood, "Wood");
-            DrawRes(ResourceKind.Stone, "Stone");
-            DrawRes(ResourceKind.Meat, "Meat");
-            DrawRes(ResourceKind.Food, "Food");
+            int innerX = (int)panel.x + 10;
+            int innerW = W - 20;
+            int y = (int)panel.y + 8;
 
-            UiTheme.Separator(new Rect(innerX, y + 4, innerW, 1));
-            y += 10;
-
-            // 라이브 점수 / 처치 (페이즈 정보는 상단 시계 위젯에서 표시)
-            var scoreOldC = GUI.contentColor;
-            GUI.contentColor = UiTheme.TextGold;
-            GUI.Label(new Rect(innerX, y, 110, 22), $"점수 {session.Score}", _section);
-            GUI.contentColor = UiTheme.TextSubtle;
-            GUI.Label(new Rect(innerX + 120, y + 2, innerW - 120, 20), $"킬 {session.TotalKills}  ·  손실 {session.CompanionsLost}", _labelSubtle);
-            GUI.contentColor = scoreOldC;
-            y += 26;
-
-            if (session.LastFoodShortage > 0)
-            {
-                var oldC = GUI.contentColor;
-                GUI.contentColor = UiTheme.TextDanger;
-                GUI.Label(new Rect(innerX, y, innerW, 20), $"⚠ 식량 부족 {session.LastFoodShortage}", _section);
-                GUI.contentColor = oldC;
-                y += 22;
-            }
-
-            if (Night != null)
-            {
-                GUI.Label(new Rect(innerX, y, innerW, 18),
-                    $"좀비 {Night.ActiveZombies}  대기 {Night.WavePending}", _labelSubtle);
-                y += 20;
-                if (Night.IsBlizzard)
-                {
-                    var oldC = GUI.contentColor;
-                    GUI.contentColor = new Color(0.55f, 0.85f, 1f);
-                    GUI.Label(new Rect(innerX, y, innerW, 20), "❄ BLIZZARD", _section);
-                    GUI.contentColor = oldC;
-                    y += 22;
-                }
-            }
-
-            // ──── 디버그 버튼 ────
-            UiTheme.Separator(new Rect(innerX, y + 4, innerW, 1));
-            y += 10;
-            GUI.Label(new Rect(innerX, y, innerW, 18), "디버그", _labelSubtle);
+            GUI.Label(new Rect(innerX, y, innerW, 16), "DEV", _labelSubtle);
             y += 18;
 
-            int half = (innerW - 8) / 2;
-            if (UiTheme.Button(new Rect(innerX, y, half, 26), "▶ 페이즈 +1", _smallBtn))
-            {
+            int half = (innerW - 6) / 2;
+            if (UiTheme.Button(new Rect(innerX, y, half, 22), "▶ 페이즈+1", _smallBtn))
                 session.Cycle.Update(session.Cycle.PhaseDurationSec + 0.1f);
-            }
-            if (UiTheme.Button(new Rect(innerX + half + 8, y, half, 26), "🌙 강제 밤", _smallBtn))
-            {
+            if (UiTheme.Button(new Rect(innerX + half + 6, y, half, 22), "🌙 강제 밤", _smallBtn))
                 if (Night != null) Night.StartNight(session.Cycle.Day);
-            }
-            y += 30;
+            y += 26;
 
-            if (UiTheme.Button(new Rect(innerX, y, half, 26), "🧟 좀비 +1", _smallBtn))
-            {
+            if (UiTheme.Button(new Rect(innerX, y, half, 22), "🧟 좀비+1", _smallBtn))
                 if (Night != null) Night.SpawnDebugZombie();
-            }
-            if (UiTheme.Button(new Rect(innerX + half + 8, y, half, 26), "☀ 낮으로", _smallBtn))
-            {
+            if (UiTheme.Button(new Rect(innerX + half + 6, y, half, 22), "☀ 낮으로", _smallBtn))
                 for (int i = 0; i < 4 && session.Cycle.Phase != Phase.Day; i++)
-                {
                     session.Cycle.Update(session.Cycle.PhaseDurationSec + 0.1f);
-                }
-            }
-            y += 30;
-
-            // SFX 볼륨 슬라이더
-            GUI.Label(new Rect(innerX, y, 70, 20), $"🔊 SFX", _label);
-            float vol = Sfx.Volume;
-            float newVol = GUI.HorizontalSlider(new Rect(innerX + 70, y + 6, innerW - 110, 12), vol, 0f, 1f);
-            if (Mathf.Abs(newVol - vol) > 0.005f) Sfx.Volume = newVol;
-            GUI.Label(new Rect(innerX + innerW - 36, y, 36, 20), $"{(newVol * 100):F0}%", _labelSubtle);
         }
+#endif
 
         // ====================================================================
         // 월드 공간 버튼들
@@ -1755,12 +1635,106 @@ namespace IL6
                 string title = PlayerProgression.Title(rune) + suffix;
 
                 GUI.Label(new Rect(rect.x + 16, rect.y + 18, rect.width - 32, 32), title, titleStyle);
-                GUI.Label(new Rect(rect.x + 16, rect.y + 56, rect.width - 32, 22),
+
+                // P1-3: 원소 태그 배지
+                string elemTag = RuneElementTag(rune);
+                if (elemTag.Length > 0)
+                {
+                    var tagStyle = new GUIStyle(_labelSubtle) { fontSize = 13, alignment = TextAnchor.MiddleLeft };
+                    var oldC = GUI.contentColor;
+                    GUI.contentColor = RuneElementColor(rune);
+                    GUI.Label(new Rect(rect.x + 16, rect.y + 48, rect.width - 32, 20), elemTag, tagStyle);
+                    GUI.contentColor = oldC;
+                }
+
+                int stackY = elemTag.Length > 0 ? 72 : 56;
+                GUI.Label(new Rect(rect.x + 16, rect.y + stackY, rect.width - 32, 22),
                     $"진행 {curStacks}/{PlayerProgression.MaxStacks} → {next}/{PlayerProgression.MaxStacks}", subStyle);
-                UiTheme.Separator(new Rect(rect.x + 16, rect.y + 86, rect.width - 32, 1));
-                GUI.Label(new Rect(rect.x + 16, rect.y + 100, rect.width - 32, btnH - 110),
+                UiTheme.Separator(new Rect(rect.x + 16, rect.y + stackY + 28, rect.width - 32, 1));
+                GUI.Label(new Rect(rect.x + 16, rect.y + stackY + 40, rect.width - 32, btnH - (stackY + 50)),
                     PlayerProgression.DescribeAt(rune, next), bodyStyle);
             }
+        }
+
+        private static string RuneElementTag(RuneKind k) => k switch
+        {
+            RuneKind.PoisonBlade => "☠ 독 원소 — 시너지 가능",
+            RuneKind.IceArrow => "❄ 얼음 원소 — 시너지 가능",
+            RuneKind.LightningStrike => "⚡ 번개 원소 — 시너지 가능",
+            _ => ""
+        };
+
+        private static Color RuneElementColor(RuneKind k) => k switch
+        {
+            RuneKind.PoisonBlade => new Color(0.4f, 1f, 0.5f),
+            RuneKind.IceArrow => new Color(0.5f, 0.9f, 1f),
+            RuneKind.LightningStrike => new Color(1f, 0.95f, 0.3f),
+            _ => Color.white
+        };
+
+        // ====================================================================
+        // P1-4: 원소 마스터 시너지 토스트
+        // ====================================================================
+        private void DrawSynergyToast()
+        {
+            if (_synergyToastTimer <= 0f) return;
+            float alpha = Mathf.Clamp01(_synergyToastTimer);
+
+            const int W = 420, H = 54;
+            var toastRect = new Rect(Screen.width / 2 - W / 2, Screen.height / 2 - 130, W, H);
+            UiTheme.Rect(toastRect, new Color(0.05f, 0.1f, 0.22f, 0.92f * alpha));
+
+            var toastStyle = new GUIStyle(GUI.skin.label)
+            {
+                fontSize = 22, fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = new Color(1f, 0.95f, 0.3f, alpha) }
+            };
+            GUI.Label(toastRect, "⚡ 원소 마스터 시너지 발동! 공격력 +50%", toastStyle);
+        }
+
+        // ====================================================================
+        // P2-6: 밤 결산 패널
+        // ====================================================================
+        private void DrawNightSummary()
+        {
+            if (_nightSummaryTimer <= 0f) return;
+            float alpha = Mathf.Clamp01(_nightSummaryTimer);
+
+            var session = GameSession.Instance;
+
+            const int W = 360, H = 110;
+            var panel = new Rect(Screen.width / 2 - W / 2, Screen.height / 2 - 80, W, H);
+            UiTheme.Rect(panel, new Color(0.04f, 0.06f, 0.14f, 0.93f * alpha));
+
+            int innerX = (int)panel.x + 20;
+            int innerW = W - 40;
+            int y = (int)panel.y + 14;
+
+            var dayStyle = new GUIStyle(GUI.skin.label) {
+                fontSize = 22, fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = new Color(1f, 0.85f, 0.3f, alpha) }
+            };
+            GUI.Label(new Rect(innerX, y, innerW, 26), $"✅ Day {_nightSummaryDay} 생존!", dayStyle);
+            y += 30;
+
+            var infoStyle = new GUIStyle(GUI.skin.label) {
+                fontSize = 16,
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = new Color(0.85f, 0.85f, 0.85f, alpha) }
+            };
+            int score = session != null ? session.Score : 0;
+            GUI.Label(new Rect(innerX, y, innerW, 22),
+                $"처치 {_nightSummaryKills}  |  총 점수 {score}", infoStyle);
+            y += 26;
+
+            var subStyle = new GUIStyle(GUI.skin.label) {
+                fontSize = 13,
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = new Color(0.6f, 0.7f, 0.8f, alpha * 0.8f) }
+            };
+            GUI.Label(new Rect(innerX, y, innerW, 18), "잠시 후 탐험 구역으로 이동합니다...", subStyle);
         }
 
         private bool _paused;

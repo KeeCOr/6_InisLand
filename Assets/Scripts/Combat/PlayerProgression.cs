@@ -98,6 +98,7 @@ namespace IL6
 
         public readonly List<RuneKind> Applied = new();
         public event Action<RuneKind> OnRuneApplied;
+        public event Action OnElementalSynergyAchieved;
 
         public void GrantXp(int amount)
         {
@@ -149,7 +150,9 @@ namespace IL6
                 }
             }
 
+            bool wasSynergy = ElementalMasterSynergy;
             Recompute();
+            if (!wasSynergy && ElementalMasterSynergy) OnElementalSynergyAchieved?.Invoke();
             LevelUpPending = false;
             OnRuneApplied?.Invoke(kind);
         }
