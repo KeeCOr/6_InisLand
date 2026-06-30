@@ -1071,8 +1071,8 @@ namespace IL6
             var session = GameSession.Instance;
             if (session == null) return;
 
-            const int W = 280, H = 70;
-            // ResourceBar(63+24+4=91) 아래
+            const int W = 300, H = 118;
+            // ResourceBar(63+24+4=91) below; fixed rows keep guidance, population, and stance from overlapping.
             var panel = new Rect(12, 91, W, H);
             UiTheme.Panel(panel);
 
@@ -1080,39 +1080,24 @@ namespace IL6
             int innerW = W - 20;
             int y = (int)panel.y + 6;
 
-            // 페이즈별 컨텍스트 라인
-            if (Night != null && Night.CurrentPhase == Phase.Night)
-            {
-                var oldC = GUI.contentColor;
-                GUI.contentColor = new Color(0.95f, 0.5f, 0.5f);
-                GUI.Label(new Rect(innerX, y, innerW, 22),
-                    $"🧟 활성 {Night.ActiveZombies}  ·  대기 {Night.WavePending}", _section);
-                GUI.contentColor = oldC;
-                y += 24;
-                if (Night.IsBlizzard)
-                {
-                    GUI.contentColor = new Color(0.55f, 0.85f, 1f);
-                    GUI.Label(new Rect(innerX, y, innerW, 22), "❄ 눈보라", _section);
-                    GUI.contentColor = oldC;
-                    y += 24;
-                }
-            }
-            else if (session.LastFoodShortage > 0)
-            {
-                var oldC = GUI.contentColor;
-                GUI.contentColor = UiTheme.TextDanger;
-                GUI.Label(new Rect(innerX, y, innerW, 22),
-                    $"⚠ 식량 부족 {session.LastFoodShortage}", _section);
-                GUI.contentColor = oldC;
-                y += 24;
-            }
-            else
-            {
-                GUI.Label(new Rect(innerX, y, innerW, 22), "☀ 평온한 낮", _labelSubtle);
-                y += 24;
-            }
+            Phase phase = Night != null ? Night.CurrentPhase : (session.Cycle != null ? session.Cycle.Phase : Phase.Day);
+            int activeZombies = Night != null ? Night.ActiveZombies : 0;
+            int wavePending = Night != null ? Night.WavePending : 0;
+            bool isBlizzard = Night != null && Night.IsBlizzard;
+            var guidance = HudGuidanceText.Build(phase, activeZombies, wavePending, isBlizzard, session.LastFoodShortage);
 
-            // 인구 표시 (현재 동료 수 / 최대 수용)
+            var guidanceOldC = GUI.contentColor;
+            GUI.contentColor = phase == Phase.Night ? new Color(0.95f, 0.5f, 0.5f) : UiTheme.TextGold;
+            GUI.Label(new Rect(innerX, y, innerW, 18), guidance.Status, _section);
+            y += 19;
+            GUI.contentColor = isBlizzard || session.LastFoodShortage > 0 ? UiTheme.TextDanger : UiTheme.TextSubtle;
+            GUI.Label(new Rect(innerX, y, innerW, 18), guidance.Risk, _labelSubtle);
+            y += 18;
+            GUI.contentColor = UiTheme.TextCream;
+            GUI.Label(new Rect(innerX, y, innerW, 20), guidance.NextAction, _labelSubtle);
+            GUI.contentColor = guidanceOldC;
+            y += 22;
+
             {
                 int have = RecruitableNpc.CurrentCompanionCount();
                 int cap  = RecruitableNpc.VillageCapacity();
