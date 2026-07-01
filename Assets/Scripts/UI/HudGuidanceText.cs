@@ -1,16 +1,42 @@
 namespace IL6
 {
-    public readonly struct HudGuidance
+    public sealed class HudGuidanceSlot
     {
-        public readonly string Status;
-        public readonly string Risk;
-        public readonly string NextAction;
+        public string Id { get; }
+        public string Label { get; }
+        public string Text { get; }
+        public int Priority { get; }
+        public string Tone { get; }
 
-        public HudGuidance(string status, string risk, string nextAction)
+        public HudGuidanceSlot(string id, string label, string text, int priority, string tone)
         {
-            Status = status;
-            Risk = risk;
-            NextAction = nextAction;
+            Id = id;
+            Label = label;
+            Text = text;
+            Priority = priority;
+            Tone = tone;
+        }
+
+        public string DisplayText => $"{Label}: {Text}";
+    }
+
+    public sealed class HudGuidance
+    {
+        public HudGuidanceSlot Objective { get; }
+        public HudGuidanceSlot ImmediateRisk { get; }
+        public HudGuidanceSlot RecommendedAction { get; }
+        public HudGuidanceSlot[] TopPrioritySlots { get; }
+
+        public string Status => Objective.DisplayText;
+        public string Risk => ImmediateRisk.DisplayText;
+        public string NextAction => RecommendedAction.DisplayText;
+
+        public HudGuidance(HudGuidanceSlot objective, HudGuidanceSlot immediateRisk, HudGuidanceSlot recommendedAction)
+        {
+            Objective = objective;
+            ImmediateRisk = immediateRisk;
+            RecommendedAction = recommendedAction;
+            TopPrioritySlots = new[] { objective, immediateRisk, recommendedAction };
         }
     }
 
@@ -21,31 +47,46 @@ namespace IL6
             if (phase == Phase.Night && isBlizzard)
             {
                 return new HudGuidance(
-                    "상태: 눈보라 밤",
-                    $"위험: 시야 저하 · 좀비 {activeZombies} · 대기 {wavePending}",
-                    "다음: 모닥불/마을 안쪽으로 모여 버티기");
+                    Objective("Survive the blizzard night"),
+                    Risk($"visibility low · {activeZombies} active · {wavePending} pending", "danger"),
+                    Action("Return to the campfire and group villagers inside the safe zone"));
             }
 
             if (phase == Phase.Night)
             {
                 return new HudGuidance(
-                    "상태: 밤 방어 중",
-                    $"위험: 좀비 {activeZombies} · 대기 {wavePending}",
-                    "다음: 동료를 사수로 두고 마을 입구 방어");
+                    Objective("Hold the village line"),
+                    Risk($"{activeZombies} active zombies · {wavePending} pending", "danger"),
+                    Action("Keep companions near the gate and defend the village entrance"));
             }
 
             if (foodShortage > 0)
             {
                 return new HudGuidance(
-                    "상태: 보급 부족",
-                    $"위험: 식량 -{foodShortage} · 밤 전 허기 누적",
-                    "다음: 가까운 열매/사냥감 채집 후 귀환");
+                    Objective("Restore food supplies"),
+                    Risk($"food -{foodShortage} · hunger will slow the next night", "warning"),
+                    Action("Gather berries or hunt before scouting deeper"));
             }
 
             return new HudGuidance(
-                "상태: 탐험 가능",
-                "위험: 즉시 위협 낮음",
-                "다음: 나무/돌 확보 또는 새 거점 정찰");
+                Objective("Explore and stockpile"),
+                Risk("No immediate threat", "safe"),
+                Action("Gather wood, stone, or scout the next shelter"));
+        }
+
+        private static HudGuidanceSlot Objective(string text)
+        {
+            return new HudGuidanceSlot("objective", "OBJECTIVE", text, 0, "primary");
+        }
+
+        private static HudGuidanceSlot Risk(string text, string tone)
+        {
+            return new HudGuidanceSlot("risk", "RISK", text, 1, tone);
+        }
+
+        private static HudGuidanceSlot Action(string text)
+        {
+            return new HudGuidanceSlot("action", "ACTION", text, 2, "action");
         }
     }
 }

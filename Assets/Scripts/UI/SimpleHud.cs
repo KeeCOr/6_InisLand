@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace IL6
 {
@@ -1037,14 +1037,14 @@ namespace IL6
             var guidance = HudGuidanceText.Build(phase, activeZombies, wavePending, isBlizzard, session.LastFoodShortage);
 
             var guidanceOldC = GUI.contentColor;
-            GUI.contentColor = phase == Phase.Night ? new Color(0.95f, 0.5f, 0.5f) : UiTheme.TextGold;
-            GUI.Label(new Rect(innerX, y, innerW, 18), guidance.Status, _section);
+            GUI.contentColor = UiTheme.TextGold;
+            GUI.Label(new Rect(innerX, y, innerW, 18), guidance.Objective.DisplayText, _section);
             y += 19;
-            GUI.contentColor = isBlizzard || session.LastFoodShortage > 0 ? UiTheme.TextDanger : UiTheme.TextSubtle;
-            GUI.Label(new Rect(innerX, y, innerW, 18), guidance.Risk, _labelSubtle);
+            GUI.contentColor = GuidanceToneColor(guidance.ImmediateRisk.Tone);
+            GUI.Label(new Rect(innerX, y, innerW, 18), guidance.ImmediateRisk.DisplayText, _labelSubtle);
             y += 18;
             GUI.contentColor = UiTheme.TextCream;
-            GUI.Label(new Rect(innerX, y, innerW, 20), guidance.NextAction, _labelSubtle);
+            GUI.Label(new Rect(innerX, y, innerW, 20), guidance.RecommendedAction.DisplayText, _labelSubtle);
             GUI.contentColor = guidanceOldC;
             y += 22;
 
@@ -1662,6 +1662,14 @@ namespace IL6
             RuneKind.IceArrow => "❄ 얼음 원소 — 시너지 가능",
             RuneKind.LightningStrike => "⚡ 번개 원소 — 시너지 가능",
             _ => ""
+        };
+
+        private static Color GuidanceToneColor(string tone) => tone switch
+        {
+            "danger" => UiTheme.TextDanger,
+            "warning" => new Color(1f, 0.74f, 0.28f),
+            "safe" => UiTheme.TextSubtle,
+            _ => UiTheme.TextSubtle
         };
 
         private static Color RuneElementColor(RuneKind k) => k switch
