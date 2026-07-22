@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 625163d564a5efd44b75aabda73cb4ca
+guid: 8dfe981bd41594847b6a9744d22d6684
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,7 +97,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: verticalFence_Wood_Center
+      name: bonFire_original
       rect:
         serializedVersion: 2
         x: 0
@@ -111,14 +111,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d70b50b38c5a76e46b7d858132afe1a6
-      internalID: 1329584972
+      spriteID: 2834914a94811cb40a43d5e54e3db19f
+      internalID: 1680472783
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: verticalFence_Wood_Bottom
+      name: bonFire_scorched
       rect:
         serializedVersion: 2
         x: 64
@@ -132,29 +132,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a0790cc0167cb504595944f45353e5a7
-      internalID: -16700577
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: verticalFence_Wood_Top
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5dc5e6423682c184285893b239716c5f
-      internalID: 2047884795
+      spriteID: 3c0259bbc7b8a764189089af13bc078e
+      internalID: -508685321
       vertices: []
       indices: 
       edges: []
@@ -162,7 +141,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: c13a992ffa499c841bdb0fda1bb4ad69
+    spriteID: 4fecef9852f9fc045bb7e3a1d00f35f5
     internalID: 0
     vertices: []
     indices: 
@@ -170,9 +149,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      verticalFence_Wood_Bottom: -16700577
-      verticalFence_Wood_Center: 1329584972
-      verticalFence_Wood_Top: 2047884795
+      bonFire_original: 1680472783
+      bonFire_scorched: -508685321
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
