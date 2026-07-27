@@ -18,6 +18,15 @@ namespace IL6
         Top
     }
 
+    // 울타리 스프라이트 코너 4방향
+    public enum FenceCornerPieceType
+    {
+        TopLeft,
+        TopRight,
+        BottomLeft,
+        BottomRight
+    }
+
     /// <summary>
     /// 게임 시작 시 마을 자리에 모닥불 + 울타리 링을 자동 스폰.
     /// SnowfieldController 가 Start 에서 1회 호출. 이미 마을이 있으면(저장 데이터로 복귀 등) 스킵.
@@ -63,43 +72,68 @@ namespace IL6
             int gateSlot = slots / 2;
             float startOffset = -halfSize;
 
+            int lastIndex = slots - 1;
+
             // 남쪽 — 가운데는 게이트
             for (int i = 0; i < slots; i++)
             {
                 float lx = startOffset + i * spacing;
                 Vector3 pos = center + new Vector3(lx, -halfSize, 0f);
+
                 if (TooCloseToFence(pos, 0.4f)) continue;
-                if (i == gateSlot && !HasGateNear(pos, 1.2f))
+
+                if (i == 0)
+                {
+                    SpawnFenceCorner(pos, FenceCornerPieceType.BottomLeft);
+                }
+                else if (i == lastIndex)
+                {
+                    SpawnFenceCorner(pos, FenceCornerPieceType.BottomRight);
+                }
+                else if (i == gateSlot && !HasGateNear(pos, 1.2f))
                 {
                     SpawnGate(pos);
                 }
                 else if (i != gateSlot)
                 {
-                    // 게이트로 줄을 끊어서 계산하지 않고, 전체 남쪽 변 기준으로 계산
-                    var piece = GetFencePieceType(i, slots - 1);
-                    SpawnFence(pos, 0f, piece);
+                    SpawnFence(pos, 0f, FencePieceType.Center);
                 }
             }
+
             // 북쪽
             for (int i = 0; i < slots; i++)
             {
                 float lx = startOffset + i * spacing;
                 Vector3 pos = center + new Vector3(lx, halfSize, 0f);
+
                 if (TooCloseToFence(pos, 0.4f)) continue;
-                var piece = GetFencePieceType(i, slots - 1);
-                SpawnFence(pos, 0f, piece);
+
+                if (i == 0)
+                {
+                    SpawnFenceCorner(pos, FenceCornerPieceType.TopLeft);
+                }
+                else if (i == lastIndex)
+                {
+                    SpawnFenceCorner(pos, FenceCornerPieceType.TopRight);
+                }
+                else
+                {
+                    SpawnFence(pos, 0f, FencePieceType.Center);
+                }
             }
-            // 동/서 — 세로 울타리. 아래/중앙/위 조각 사용.
-            for (int i = 0; i < slots; i++)
+
+            // 동/서
+            for (int i = 1; i < lastIndex; i++)
             {
                 float ly = startOffset + i * spacing;
                 Vector3 wpos = center + new Vector3(-halfSize, ly, 0f);
                 Vector3 epos = center + new Vector3(halfSize, ly, 0f);
 
-                var piece = GetVerticalFencePieceType(i, slots - 1);
+                if (!TooCloseToFence(wpos, 0.4f))
+                    SpawnVerticalFence(wpos, VerticalFencePieceType.Center);
 
-                if (!TooCloseToFence(wpos, 0.4f)) SpawnVerticalFence(wpos, piece);
-                if (!TooCloseToFence(epos, 0.4f)) SpawnVerticalFence(epos, piece);
+                if (!TooCloseToFence(epos, 0.4f))
+                    SpawnVerticalFence(epos, VerticalFencePieceType.Center);
             }
         }
 
@@ -141,44 +175,66 @@ namespace IL6
             int gateSlot = slotsPerSide / 2; // 가운데
             float startOffset = -halfSize;
 
-            // 남쪽 변 (y = center.y - halfSize) — 가운데 한 칸은 문
+            int lastIndex = slotsPerSide - 1;
+
+            // 남쪽 변
             for (int i = 0; i < slotsPerSide; i++)
             {
                 float lx = startOffset + i * spacing;
                 Vector3 pos = center + new Vector3(lx, -halfSize, 0f);
 
-                if (i == gateSlot)
+                if (i == 0)
+                {
+                    SpawnFenceCorner(pos, FenceCornerPieceType.BottomLeft);
+                }
+                else if (i == lastIndex)
+                {
+                    SpawnFenceCorner(pos, FenceCornerPieceType.BottomRight);
+                }
+                else if (i == gateSlot)
                 {
                     SpawnGate(pos);
                 }
                 else
                 {
-                    // 게이트 옆도 끝 조각이 아니라 Center가 오도록 전체 줄 기준으로 계산
-                    var piece = GetFencePieceType(i, slotsPerSide - 1);
-                    SpawnFence(pos, 0f, piece);
+                    SpawnFence(pos, 0f, FencePieceType.Center);
                 }
             }
+
             // 북쪽 변
             for (int i = 0; i < slotsPerSide; i++)
             {
                 float lx = startOffset + i * spacing;
                 Vector3 pos = center + new Vector3(lx, halfSize, 0f);
-                var piece = GetFencePieceType(i, slotsPerSide - 1);
-                SpawnFence(pos, 0f, piece);
+
+                if (i == 0)
+                {
+                    SpawnFenceCorner(pos, FenceCornerPieceType.TopLeft);
+                }
+                else if (i == lastIndex)
+                {
+                    SpawnFenceCorner(pos, FenceCornerPieceType.TopRight);
+                }
+                else
+                {
+                    SpawnFence(pos, 0f, FencePieceType.Center);
+                }
             }
-            // 서쪽/동쪽 — 세로 울타리. 아래/중앙/위 조각 사용.
-            for (int i = 0; i < slotsPerSide; i++)
+
+            // 서쪽/동쪽 변
+            // 코너는 이미 위/아래에서 만들었으므로 i = 1 ~ lastIndex - 1만 생성
+            for (int i = 1; i < lastIndex; i++)
             {
                 float ly = startOffset + i * spacing;
                 Vector3 wpos = center + new Vector3(-halfSize, ly, 0f);
                 Vector3 epos = center + new Vector3(halfSize, ly, 0f);
 
-                var piece = GetVerticalFencePieceType(i, slotsPerSide - 1);
-
-                SpawnVerticalFence(wpos, piece);
-                SpawnVerticalFence(epos, piece);
+                SpawnVerticalFence(wpos, VerticalFencePieceType.Center);
+                SpawnVerticalFence(epos, VerticalFencePieceType.Center);
             }
         }
+
+        #region 울타리/게이트 스폰 유틸 - 돌담으로 갈아끼우기 쉽게 Adapter 패턴으로 추후 변경 예정
 
         public static GameObject SpawnGate(Vector3 pos)
         {
@@ -355,6 +411,74 @@ namespace IL6
             return go;
         }
 
+        // 울타리 코너 스폰
+        public static GameObject SpawnFenceCorner(Vector3 pos, FenceCornerPieceType cornerType)
+        {
+            var go = new GameObject("Fence_Corner");
+            go.transform.position = pos;
+            go.transform.rotation = Quaternion.identity;
+            go.transform.localScale = Vector3.one;
+
+            var sr = go.AddComponent<SpriteRenderer>();
+
+            Sprite fSpr = null;
+
+            switch (cornerType)
+            {
+                case FenceCornerPieceType.TopLeft:
+                    fSpr = SpriteBank.WoodenFenceTopLeftCorner();
+                    break;
+
+                case FenceCornerPieceType.TopRight:
+                    fSpr = SpriteBank.WoodenFenceTopRightCorner();
+                    break;
+
+                case FenceCornerPieceType.BottomLeft:
+                    fSpr = SpriteBank.WoodenFenceBottomLeftCorner();
+                    break;
+
+                case FenceCornerPieceType.BottomRight:
+                    fSpr = SpriteBank.WoodenFenceBottomRightCorner();
+                    break;
+            }
+
+            if (fSpr != null)
+            {
+                sr.sprite = fSpr;
+                sr.color = Color.white;
+            }
+
+            var ySort = go.AddComponent<YSort>();
+            ySort.SetUpdateEveryFrame(false);
+
+            // 위쪽 코너는 같은 y에서 세로/가로 겹침이 자연스럽게 보이도록 살짝 올림
+            if (cornerType == FenceCornerPieceType.TopLeft ||
+                cornerType == FenceCornerPieceType.TopRight)
+            {
+                ySort.SetOrderOffset(10);
+            }
+            else
+            {
+                ySort.SetOrderOffset(0);
+            }
+
+            var col = go.AddComponent<BoxCollider2D>();
+            col.size = new Vector2(0.9f, 0.9f);
+
+            var cf = go.AddComponent<ColorFallback>();
+            cf.Tint = new Color(0.55f, 0.4f, 0.22f);
+            cf.Shape = FallbackShape.Square;
+            cf.Circle = false;
+            cf.PixelSize = 32;
+            cf.OutlineWidth = 2;
+            cf.OutlineColor = new Color(0.2f, 0.13f, 0.05f, 1f);
+
+            var b = go.AddComponent<Building>();
+            b.Kind = BuildingKind.Fence;
+
+            return go;
+        }
+
         // 울타리 한 줄에서 현재 슬롯이 좌/중앙/우 중 어느 조각인지 계산
         private static FencePieceType GetFencePieceType(int index, int lastIndex)
         {
@@ -396,24 +520,16 @@ namespace IL6
             return FencePieceType.Center;
         }
 
+        #endregion
+
         public static GameObject SpawnCampfire(Vector3 pos)
         {
             var go = new GameObject("Campfire");
             go.transform.position = pos;
             go.transform.localScale = Vector3.one * 0.9f;
 
-            var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 4;
-            var cSpr = SpriteBank.Campfire();
-            if (cSpr != null) sr.sprite = cSpr;
-
-            var cf = go.AddComponent<ColorFallback>();
-            cf.Tint = new Color(1f, 0.5f, 0.1f);
-            cf.Shape = FallbackShape.Rounded;
-            cf.Circle = false;
-            cf.PixelSize = 64;
-            cf.OutlineWidth = 2;
-            cf.OutlineColor = new Color(0.3f, 0.1f, 0f, 1f);
+            // 보이는 캠프파이어 이미지는 자식 애니메이션이 담당
+            SpawnCampfireSmoke(go.transform);
 
             var col = go.AddComponent<CircleCollider2D>();
             col.radius = 0.45f;
@@ -432,7 +548,38 @@ namespace IL6
             hp.Size = new Vector2(1.0f, 0.12f);
             hp.BgColor = new Color(0.05f, 0.05f, 0.08f, 0.9f);
             hp.FillColor = new Color(1f, 0.55f, 0.2f);
+
             return go;
+        }
+
+        // 캠프파이어 연기 스프라이트 + 애니메이션 스폰
+        private static GameObject SpawnCampfireSmoke(Transform parent)
+        {
+            var smoke = new GameObject("BonFireSmoke");
+            smoke.transform.SetParent(parent, false);
+
+            smoke.transform.localPosition = Vector3.zero;
+            smoke.transform.localScale = Vector3.one;
+
+            var sr = smoke.AddComponent<SpriteRenderer>();
+            sr.color = Color.white;
+            sr.sortingOrder = 6;
+
+            var animator = smoke.AddComponent<Animator>();
+            animator.applyRootMotion = false;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+
+            var controller = Resources.Load<RuntimeAnimatorController>("Animations/AC_BonFireSmoke");
+            if (controller != null)
+            {
+                animator.runtimeAnimatorController = controller;
+            }
+            else
+            {
+                Debug.LogWarning("[VillageStarter] AC_BonFireSmoke controller not found: Resources/Animations/AC_BonFireSmoke");
+            }
+
+            return smoke;
         }
     }
 }

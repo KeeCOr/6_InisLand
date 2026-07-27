@@ -75,7 +75,7 @@ namespace IL6
         public static Sprite Logs()           => Load("Props/logs");
 
         // ── 건물 ─────────────────────────────────────────────────────────────────
-        public static Sprite Campfire()       => Load("Props/campfire");
+        public static Sprite Campfire()       => LoadSubSprite("Props/BonFire/bonfire", "bonFire_original");
         public static Sprite Cabin()          => Load("Props/cabin");
         public static Sprite Watchtower()     => Load("Props/watchtower");
         public static Sprite FenceVertical()  => Load("Props/fence_vertical");
@@ -96,45 +96,65 @@ namespace IL6
         public static Sprite WoodenFenceUnit() => LoadSubSprite("Props/Fence", "wooden_fence_unit");
 
         // 나무 울타리 가로 버전
-        public static Sprite WoodenFenceLeft() => LoadSubSprite("Props/Fence", "wooden_fence_Left");
+        public static Sprite WoodenFenceLeft() => LoadSubSprite("Props/Fence/fenceArchive", "wooden_fence_Left");
 
-        public static Sprite WoodenFenceCenter() => LoadSubSprite("Props/Fence", "wooden_fence_Center");
+        public static Sprite WoodenFenceCenter() => LoadSubSprite("Props/Fence/fenceArchive", "wooden_fence_Center");
 
-        public static Sprite WoodenFenceRight() => LoadSubSprite("Props/Fence", "wooden_fence_Right");
+        public static Sprite WoodenFenceRight() => LoadSubSprite("Props/Fence/fenceArchive", "wooden_fence_Right");
 
         // 나무 울타리 세로 버전
         public static Sprite VerticalWoodenFenceBottom()
-            => LoadSubSprite("Props/verticalFence_Wood", "verticalFence_Wood_Bottom");
+            => LoadSubSprite("Props/Fence/fenceArchive", "verticalFence_Wood_Bottom");
 
         public static Sprite VerticalWoodenFenceCenter()
-            => LoadSubSprite("Props/verticalFence_Wood", "verticalFence_Wood_Center");
+            => LoadSubSprite("Props/Fence/fenceArchive", "verticalFence_Wood_Center");
 
         public static Sprite VerticalWoodenFenceTop()
-            => LoadSubSprite("Props/verticalFence_Wood", "verticalFence_Wood_Top");
+            => LoadSubSprite("Props/Fence/fenceArchive", "verticalFence_Wood_Top");
+
+        // 나무 울타리 코너 버전
+        public static Sprite WoodenFenceTopRightCorner()
+            => LoadSubSprite("Props/Fence/fenceArchive", "Fence_Wood_TopRightCorner");
+        public static Sprite WoodenFenceTopLeftCorner()
+            => LoadSubSprite("Props/Fence/fenceArchive", "Fence_Wood_TopLeftCorner");
+        public static Sprite WoodenFenceBottomRightCorner()
+            => LoadSubSprite("Props/Fence/fenceArchive", "Fence_Wood_BottomRightCorner");
+        public static Sprite WoodenFenceBottomLeftCorner()
+            => LoadSubSprite("Props/Fence/fenceArchive", "Fence_Wood_BottomLeftCorner");
 
         // 돌담 유닛
         public static Sprite StoneWallUnit()
-            => LoadSubSprite("Props/Fence", "stone_wall_unit");
+            => LoadSubSprite("Props/Fence/fenceArchive", "stone_wall_unit");
 
         // 돌담 가로 버전
         public static Sprite StoneWallLeft()
-            => LoadSubSprite("Props/Fence", "stone_wall_Left");
+            => LoadSubSprite("Props/Fence/fenceArchive", "stone_wall_Left");
 
         public static Sprite StoneWallRight()
-            => LoadSubSprite("Props/Fence", "stone_wall_Right");
+            => LoadSubSprite("Props/Fence/fenceArchive", "stone_wall_Right");
 
         public static Sprite StoneWallCenter()
-            => LoadSubSprite("Props/Fence", "stone_wall_Center");
+            => LoadSubSprite("Props/Fence/fenceArchive", "stone_wall_Center");
 
         // 돌담 세로 버전
         public static Sprite VerticalStoneWallBottom()
-            => LoadSubSprite("Props/verticalStoneWall", "verticalStoneWall_Bottom");
+            => LoadSubSprite("Props/Fence/fenceArchive", "verticalStoneWall_Bottom");
 
         public static Sprite VerticalStoneWallCenter()
-            => LoadSubSprite("Props/verticalStoneWall", "verticalStoneWall_Center");
+            => LoadSubSprite("Props/Fence/fenceArchive", "verticalStoneWall_Center");
 
         public static Sprite VerticalStoneWallTop()
-            => LoadSubSprite("Props/verticalStoneWall", "verticalStoneWall_Top");
+            => LoadSubSprite("Props/Fence/fenceArchive", "verticalStoneWall_Top");
+
+        // 돌담 코너 버전
+        public static Sprite StoneWallTopRightCorner()
+            => LoadSubSprite("Props/Fence/fenceArchive", "StoneWall_TopRightCorner");
+        public static Sprite StoneWallTopLeftCorner()
+            => LoadSubSprite("Props/Fence/fenceArchive", "StoneWall_TopLeftCorner");
+        public static Sprite StoneWallBottomRightCorner()
+            => LoadSubSprite("Props/Fence/fenceArchive", "StoneWall_BottomRightCorner");
+        public static Sprite StoneWallBottomLeftCorner()
+            => LoadSubSprite("Props/Fence/fenceArchive", "StoneWall_BottomLeftCorner");
 
         // ── BuildingKind → 스프라이트 ─────────────────────────────────────────────
         public static Sprite BuildingByKind(BuildingKind k) => k switch

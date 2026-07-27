@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 971d4baa43baab24dbad934256eb141e
+guid: 9839bbf54715ced4d86727fbce99dfbc
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,7 +97,70 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: wooden_fence_Left
+      name: bonFireSmoke_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b65388ecc7b6ac745b8d4d805fa638ec
+      internalID: -1043967825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bonFireSmoke_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87beedf3837955b4db46e183bdc8770a
+      internalID: 840978210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bonFireSmoke_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4354d2da1c2480842a6e11799871cd98
+      internalID: -165223890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bonFireSmoke_3
       rect:
         serializedVersion: 2
         x: 0
@@ -111,14 +174,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c7e0e79346ef9be4aba498fcae5afdbc
-      internalID: 1908291040
+      spriteID: 52a61275567d9fb4aa807386238cb385
+      internalID: 1997938484
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wooden_fence_Right
+      name: bonFireSmoke_4
       rect:
         serializedVersion: 2
         x: 64
@@ -132,14 +195,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f4acfa6397e29cc4081f1cd237d7b723
-      internalID: -18365191
+      spriteID: 5367e791680acb64a804db9774f55010
+      internalID: 1352739978
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wooden_fence_Center
+      name: bonFireSmoke_5
       rect:
         serializedVersion: 2
         x: 128
@@ -153,35 +216,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f7a65fb4c3c54024da92ac3446f9aedf
-      internalID: -1007943502
+      spriteID: 2201f0c0aa5936244af975bf3bf7547d
+      internalID: 333212247
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wooden_fence_unit
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 64
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4efd2a892677d4346a0b781e64363e62
-      internalID: 1109094846
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: stone_wall_Left
+      name: bonFireSmoke_6
       rect:
         serializedVersion: 2
         x: 0
@@ -195,14 +237,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 18d7127914c192746974038a16bbb8a8
-      internalID: 676633763
+      spriteID: 498d83a87d92b4a46a2656574c618b07
+      internalID: 2105474713
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: stone_wall_Right
+      name: bonFireSmoke_7
       rect:
         serializedVersion: 2
         x: 64
@@ -216,14 +258,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9012483505d7f0845b31bf20987b70b8
-      internalID: -429014835
+      spriteID: 6bdbd12fe94899f40a4f947207ebd9d2
+      internalID: 612413424
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: stone_wall_Center
+      name: bonFireSmoke_8
       rect:
         serializedVersion: 2
         x: 128
@@ -237,29 +279,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e91d9151e55ea7240b473ccae6614c62
-      internalID: -274241722
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: stone_wall_unit
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4021544a954500d43b8d4e7a7e053bbe
-      internalID: 314823061
+      spriteID: 614d0753d9669b84daf987bbaca82028
+      internalID: -1673064248
       vertices: []
       indices: 
       edges: []
@@ -267,7 +288,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 6fdb94e39c2677d4392f1feef74d2ae3
+    spriteID: eb7d0ee20c18c24448b8bde2068d731b
     internalID: 0
     vertices: []
     indices: 
@@ -275,14 +296,15 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      stone_wall_Center: -274241722
-      stone_wall_Left: 676633763
-      stone_wall_Right: -429014835
-      stone_wall_unit: 314823061
-      wooden_fence_Center: -1007943502
-      wooden_fence_Left: 1908291040
-      wooden_fence_Right: -18365191
-      wooden_fence_unit: 1109094846
+      bonFireSmoke_0: -1043967825
+      bonFireSmoke_1: 840978210
+      bonFireSmoke_2: -165223890
+      bonFireSmoke_3: 1997938484
+      bonFireSmoke_4: 1352739978
+      bonFireSmoke_5: 333212247
+      bonFireSmoke_6: 2105474713
+      bonFireSmoke_7: 612413424
+      bonFireSmoke_8: -1673064248
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
