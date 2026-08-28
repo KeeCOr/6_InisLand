@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace IL6
 {
@@ -18,7 +18,7 @@ namespace IL6
 
         private void Awake()
         {
-            var pivot = new GameObject("WeaponPivot");
+/*            var pivot = new GameObject("WeaponPivot");
             pivot.transform.SetParent(transform, false);
             pivot.transform.localPosition = Vector3.zero;
             _blade = pivot.transform;
@@ -51,7 +51,7 @@ namespace IL6
             hCf.Circle = false;
             hCf.PixelSize = 16;
             hCf.OutlineWidth = 1;
-            hCf.OutlineColor = new Color(0.1f, 0.1f, 0.1f, 1f);
+            hCf.OutlineColor = new Color(0.1f, 0.1f, 0.1f, 1f);*/
 
             _attacker = GetComponent<PlayerAttackController>();
         }
@@ -65,10 +65,10 @@ namespace IL6
                 if (dir.sqrMagnitude > 0.0001f)
                 {
                     float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                    _blade.localRotation = Quaternion.Slerp(
+                    /*_blade.localRotation = Quaternion.Slerp(
                         _blade.localRotation,
                         Quaternion.Euler(0f, 0f, angle),
-                        Time.deltaTime * 12f);
+                        Time.deltaTime * 12f);*/
                 }
             }
 
@@ -78,7 +78,7 @@ namespace IL6
                 float cd = _attacker.CurrentCooldown;
                 float freshness = Mathf.Clamp01(cd / Mathf.Max(0.01f, _attacker.Weapon.CooldownSec));
                 float scale = 1f + freshness * 0.3f;
-                _blade.localScale = new Vector3(scale, scale, 1f);
+                //_blade.localScale = new Vector3(scale, scale, 1f);
             }
         }
 
