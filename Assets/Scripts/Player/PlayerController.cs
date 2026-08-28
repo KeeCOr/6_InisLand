@@ -19,6 +19,11 @@ namespace IL6
         private BalanceConfig _balance;
         private PlayerProgression _progression;
 
+        // 플레이어 애니메이션
+        private Animator _animator;
+        private SpriteRenderer _spriteRenderer;
+        private bool _facingLeft;
+
         private void Awake()
         {
             // Door.TryHookPlayer() 이 FindWithTag("Player") 를 사용하므로 반드시 설정
@@ -32,11 +37,14 @@ namespace IL6
             MaxHp = _balance.PlayerMaxHp;
             CurrentHp = MaxHp;
 
-            var sr = GetComponent<SpriteRenderer>();
-            if (sr != null && sr.sprite == null)
+            // 애니메이터 가져오기
+            _animator = GetComponent<Animator>();
+
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+            if (_spriteRenderer != null && _spriteRenderer.sprite == null)
             {
-                var spr = SpriteBank.Player();
-                if (spr != null) sr.sprite = spr;
+                var playerSprite = SpriteBank.PlayerIdle();
+                if (playerSprite != null) _spriteRenderer.sprite = playerSprite;
             }
 
             if (transform.localScale == Vector3.one)
@@ -87,8 +95,17 @@ namespace IL6
 
         private void FixedUpdate()
         {
-            if (IsDead) { _rb.velocity = Vector2.zero; return; }
-            _rb.velocity = _input.MoveAxis * _balance.PlayerMoveSpeed;
+            if (IsDead)
+            {
+                _rb.velocity = Vector2.zero;
+                UpdateMoveAnimation(Vector2.zero);
+                return;
+            }
+
+            Vector2 moveDirection = _input.MoveAxis;
+            _rb.velocity = moveDirection * _balance.PlayerMoveSpeed;
+
+            UpdateMoveAnimation(moveDirection);
 
             if (_rb.velocity.sqrMagnitude > 0.05f)
             {
@@ -151,5 +168,25 @@ namespace IL6
 
             nearestDoor.Toggle();
         }
+
+        private void UpdateMoveAnimation(Vector2 moveDirection)
+        {
+            bool isMoving = moveDirection.sqrMagnitude > 0.001f ? true : false;
+
+            if (_animator != null)
+                _animator.SetBool("isMove", isMoving);
+
+            if (!isMoving || _spriteRenderer == null)
+                return;
+
+            if (moveDirection.x < -0.01f)
+                _facingLeft = true;
+            else if (moveDirection.x > 0.01f)
+                _facingLeft = false;
+
+            // 왼쪽 입력이면 이미지 반전
+            _spriteRenderer.flipX = _facingLeft;
+        }
+
     }
 }

@@ -52,7 +52,7 @@ namespace IL6
         public static Sprite CompanionChild()  => Load("Companions/child");
 
         // ── 플레이어 ──────────────────────────────────────────────────────────────
-        public static Sprite Player()       => Load("Player/player");
+        public static Sprite PlayerIdle(int index = 0) => LoadSubSprite("Player/playerIdle", $"playerIdle_{index}");
 
         // ── 역할명 → 동료 스프라이트 ─────────────────────────────────────────────
         public static Sprite CompanionByRole(string role) => role switch
