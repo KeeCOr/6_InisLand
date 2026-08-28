@@ -1,17 +1,56 @@
-# InisLand Next Improvement Instruction
+﻿# 다음 개선 지시
+최신화: 2026-06-30 KST
 
-Date: 2026-06-24
+## 목표
 
-## Goal
-Turn the current biggest project issue into a small, executable improvement batch. This file is intentionally scoped so the next worker can start without rereading the whole workspace audit.
+InisLand의 현재 플레이 장면에서 플레이어가 지금 어디에 있고, 무엇을 해야 하며, 다음 목표가 무엇인지 Unity 기준으로 분명히 읽히게 한다.
 
-## Instructions
-1. Treat Unity as authoritative and choose one playable island scene as the source of truth for the next milestone.
-2. Clarify the exploration loop: current objective, survival pressure, discovered reward, and next route should be visible in play.
-3. Move any planning/reference image paths needed for shared docs into docs assets or document the exact Unity asset source.
+## 보여줄 핵심 플레이 순간
 
-## Completion Rules
-- Do not include discarded projects in this batch.
-- If gameplay, UI, systems, content, controls, build behavior, or project scope changes, update the project planning document and update log before build/release.
-- If runtime source changes, run the nearest available validation and then perform the required build/package step from the project instructions.
-- If a folder or asset looks ambiguous, document the decision instead of deleting it.
+플레이어가 섬에서 이동하거나 생존 행동을 수행한 직후, HUD와 화면 피드백을 통해 현재 상태와 다음 목표를 5초 안에 이해하는 순간.
+
+## 작업 범위
+
+- Unity 씬/HUD 기준으로 현재 목표 표시 위치와 문구 확인
+- 생존 상태, 위험 신호, 다음 행동 안내의 우선순위 정리
+- 대표 플레이 장면과 GDD 설명의 일치 여부 확인
+
+## 병렬화 가능 작업
+
+- HUD/목표 표시 코드 조사
+- docs/GDD의 현재 목표 설명 조사
+- 대표 이미지와 실제 Unity 장면의 차이 확인
+
+## 구현 지시
+
+1. Unity `Assets/Scripts/UI`와 관련 HUD/목표 표시 스크립트를 먼저 확인한다.
+2. 현재 목표, 위험, 상태 변화가 같은 레이어에서 겹치지 않는지 확인한다.
+3. 목표 안내 문구는 플레이어 행동으로 이어지는 짧은 문장으로 정리한다.
+4. 필요하면 HUD 상태 presenter 또는 목표 텍스트 갱신 로직만 좁게 수정한다.
+5. 리소스나 프리팹을 바꾸면 Unity 참조와 `.meta`를 함께 확인한다.
+
+## 검증 기준
+
+- Unity 테스트 또는 가장 가까운 EditMode/PlayMode 검증을 실행한다.
+- 대표 씬에서 현재 목표와 위험 신호가 동시에 읽히는지 확인한다.
+- 같은 HUD 레이어 요소가 겹치지 않는지 확인한다.
+- `docs/InisLand_기획서.md`와 HTML이 실제 변경과 맞는지 확인한다.
+
+## 완료 후 문서 반영
+
+- 변경된 목표 표시, HUD 규칙, 플레이 예시를 GDD MD/HTML에 반영한다.
+- 현황 문서의 핵심 과제가 바뀔 정도로 개선되면 `00_내_프로젝트_현황.md`도 양식 유지 규칙에 맞춰 갱신한다.
+
+## 보류 범위
+
+- 신규 대형 시스템 추가
+- Vite/npm 앱을 권위 구현으로 전환
+- 전체 아트 리소스 교체
+- 최종 실행파일 빌드. 모든 변경과 문서 갱신 후 마지막에 한 번만 수행한다.
+
+## Completed 2026-06-30 v0.2.0
+- Unity 권위 경로의 `SimpleHud.DrawWaveStanceBar()`에 상태/위험/다음 행동 3줄 HUD 안내를 적용했다.
+- `HudGuidanceText` presenter와 EditMode 테스트 3개를 추가해 밤 위협, 눈보라 밤, 낮 식량 부족 문구를 검증 대상으로 분리했다.
+- Unity 스크립트 컴파일은 통과했고 Windows BuildScript는 Bee 캐시 잠금 제거 후 성공 로그(`Windows build complete. errors=0`)를 남겼다.
+- Unity `-runTests` 명령은 테스트 XML을 생성하지 않아 빌드 컴파일/Windows 빌드 성공으로 최종 검증을 보완했다.
+- Release target: `InisLand_v0.2.0_portable.exe`.

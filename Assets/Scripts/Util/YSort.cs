@@ -31,6 +31,11 @@ namespace IL6
             }
         }
 
+        public void SetUpdateEveryFrame(bool value)
+        {
+            updateEveryFrame = value;
+        }
+
         public void UpdateSortingOrder()
         {
             int order = ComputeOrder(transform.position.y) + orderOffset;
@@ -39,6 +44,12 @@ namespace IL6
             {
                 renderer.sortingOrder = order;
             }
+        }
+
+        public void SetOrderOffset(int offset)
+        {
+            orderOffset = offset;
+            UpdateSortingOrder();
         }
     }
 }

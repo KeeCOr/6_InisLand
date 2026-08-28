@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace IL6
@@ -276,8 +276,11 @@ namespace IL6
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 4;
-            var rockSpr = SpriteBank.SnowRocks();
+            var rockSpr = SpriteBank.SnowRock();
             if (rockSpr != null) sr.sprite = rockSpr;
+
+            var ySort = go.AddComponent<YSort>();
+            ySort.SetUpdateEveryFrame(false);
 
             var col = go.AddComponent<CircleCollider2D>();
             col.radius = 0.35f;
@@ -314,8 +317,11 @@ namespace IL6
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 5;
-            var treeSpr = SpriteBank.TreeVariant(variant);
+            var treeSpr = SpriteBank.SnowPineTree();
             if (treeSpr != null) sr.sprite = treeSpr;
+
+            var ySort = go.AddComponent<YSort>();
+            ySort.SetUpdateEveryFrame(false);
 
             var col = go.AddComponent<CircleCollider2D>();
             col.radius = 0.16f;

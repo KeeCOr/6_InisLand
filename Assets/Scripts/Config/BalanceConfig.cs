@@ -9,8 +9,8 @@ namespace IL6
     public sealed class BalanceConfig : ScriptableObject
     {
         [Header("Day/Night Cycle (seconds)")]
-        public float DayDurationSec = 540f;
-        public float NightDurationSec = 360f;
+        public float DayDurationSec = 180f;  // 3분
+        public float NightDurationSec = 180f; // 3분
         public float EveningTransitionSec = 30f;
         public float DawnTransitionSec = 30f;
 
@@ -79,7 +79,7 @@ namespace IL6
         public int SawmillCost = 14;
 
         [Header("Campfire Aura")]
-        public float BonfireDamagePerSec = 5f;
+        public float BonfireDamagePerSec = 2.5f;  // 5f→2.5f: 밤 난이도 회복
         public float BonfireRadius = 128f;
         public float BonfireAttackBuff = 0.15f;
         public float CampfireHpDrainPerSec = 0.5f;

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace IL6
 {
@@ -9,6 +9,7 @@ namespace IL6
     [RequireComponent(typeof(InputReader))]
     public sealed class PlayerController : MonoBehaviour
     {
+        [SerializeField] private float doorInteractDistance = 1.5f;
         public int CurrentHp { get; private set; }
         public int MaxHp { get; private set; }
         public bool IsDead => CurrentHp <= 0;
@@ -17,6 +18,11 @@ namespace IL6
         private InputReader _input;
         private BalanceConfig _balance;
         private PlayerProgression _progression;
+
+        // 플레이어 애니메이션
+        private Animator _animator;
+        private SpriteRenderer _spriteRenderer;
+        private bool _facingLeft;
 
         private void Awake()
         {
@@ -31,15 +37,18 @@ namespace IL6
             MaxHp = _balance.PlayerMaxHp;
             CurrentHp = MaxHp;
 
-            var sr = GetComponent<SpriteRenderer>();
-            if (sr != null && sr.sprite == null)
+            // 애니메이터 가져오기
+            _animator = GetComponent<Animator>();
+
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+            if (_spriteRenderer != null && _spriteRenderer.sprite == null)
             {
-                var spr = SpriteBank.Player();
-                if (spr != null) sr.sprite = spr;
+                var playerSprite = SpriteBank.PlayerIdle();
+                if (playerSprite != null) _spriteRenderer.sprite = playerSprite;
             }
-            // Phaser player: ~30px = 0.94 Unity units → scale 1.47
+
             if (transform.localScale == Vector3.one)
-                transform.localScale = Vector3.one * 1.5f;
+                transform.localScale = new Vector3(0.9f, 1.0f, 1.0f);
             _rb.gravityScale = 0f;
             _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             _rb.freezeRotation = true;
@@ -77,12 +86,26 @@ namespace IL6
                 _regenTimer = 0f;
                 if (CurrentHp < MaxHp) Heal(1);
             }
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                TryInteractDoor();
+            }
         }
 
         private void FixedUpdate()
         {
-            if (IsDead) { _rb.velocity = Vector2.zero; return; }
-            _rb.velocity = _input.MoveAxis * _balance.PlayerMoveSpeed;
+            if (IsDead)
+            {
+                _rb.velocity = Vector2.zero;
+                UpdateMoveAnimation(Vector2.zero);
+                return;
+            }
+
+            Vector2 moveDirection = _input.MoveAxis;
+            _rb.velocity = moveDirection * _balance.PlayerMoveSpeed;
+
+            UpdateMoveAnimation(moveDirection);
 
             if (_rb.velocity.sqrMagnitude > 0.05f)
             {
@@ -131,5 +154,39 @@ namespace IL6
             transform.position = spawnPosition;
             _rb.velocity = Vector2.zero;
         }
+
+        // 문 열고 닫는 함수
+        private void TryInteractDoor()
+        {
+            Door nearestDoor = Door.FindNearest(transform.position);
+
+            if (nearestDoor == null)
+                return;
+
+            if (!nearestDoor.IsNear(transform.position, doorInteractDistance))
+                return;
+
+            nearestDoor.Toggle();
+        }
+
+        private void UpdateMoveAnimation(Vector2 moveDirection)
+        {
+            bool isMoving = moveDirection.sqrMagnitude > 0.001f ? true : false;
+
+            if (_animator != null)
+                _animator.SetBool("isMove", isMoving);
+
+            if (!isMoving || _spriteRenderer == null)
+                return;
+
+            if (moveDirection.x < -0.01f)
+                _facingLeft = true;
+            else if (moveDirection.x > 0.01f)
+                _facingLeft = false;
+
+            // 왼쪽 입력이면 이미지 반전
+            _spriteRenderer.flipX = _facingLeft;
+        }
+
     }
 }

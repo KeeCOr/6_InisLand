@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace IL6
 {
@@ -34,11 +34,11 @@ namespace IL6
                 Vector3 autoScale = Vector3.zero; // 0 = 스케일 유지
 
                 if (n.Contains("pine") || (n.Contains("tree") && !n.Contains("bare")))
-                    { auto = SpriteBank.PineTree();      autoScale = Vector3.one * 2.2f; }
+                    { auto = SpriteBank.SnowPineTree();      autoScale = Vector3.one; }
                 else if (n.Contains("bare"))
                     { auto = SpriteBank.BareTree();      autoScale = Vector3.one * 1.8f; }
                 else if (n.Contains("rock") || n.Contains("snow_rock"))
-                    { auto = SpriteBank.SnowRocks();     autoScale = new Vector3(2.0f, 1.5f, 1f); }
+                    { auto = SpriteBank.SnowRock();     autoScale = Vector3.one; }
                 else if (n.Contains("small_rock"))
                     { auto = SpriteBank.SmallRocks();    autoScale = Vector3.one * 1.2f; }
                 else if (n.Contains("campfire"))
