@@ -64,3 +64,11 @@ Assets/StreamingAssets/aa/*
 
 # OS
 Thumbs.db
+
+# Capacitor native projects (generated — run 'npx cap add android/ios' to regenerate)
+android/
+ios/
+
+# Steam App ID — 480 = Spacewar (test). Replace with real ID before release.
+# Uncomment to exclude from version control once real App ID is assigned:
+# steam_appid.txt
