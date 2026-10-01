@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+release/
+coverage/
+Library/
+Temp/
+Logs/
+obj/
+.vs/
+*.log
+.env
