@@ -1,0 +1,32 @@
+{
+  "name": "6il",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Snowfield colony survival + auto-battler. Fantasy medieval VS-like.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@types/node": "^25.6.0",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.3",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.58.2",
+    "vite": "^5.4.21",
+    "vitest": "^1.6.1"
+  },
+  "dependencies": {
+    "bitecs": "^0.3.40",
+    "phaser": "^3.90.0"
+  }
+}
