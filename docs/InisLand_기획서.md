@@ -17,6 +17,8 @@
 **버전:** v0.3.0 · 2026-07-01
 **스택:** Unity 2D + C# + Resources SpriteBank + Windows Standalone
 
+**리소스 현황 (2026-10-06):** 설원 지면 4종 아틀라스 초안을 `Assets/art/generated/environment/snowfield-ground-atlas-v1.png`에 보관했다. 후보 검수 단계이며 SpriteBank 연결과 Unity 씬 확인 전에는 출시 에셋으로 간주하지 않는다.
+
 ---
 
 ## 1. 문제 정의
