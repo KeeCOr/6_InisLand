@@ -8,7 +8,7 @@
 
 이 파일은 원본 게임이나 브랜드를 참조하지 않은 독자 제작 후보이며, 아직 Unity SpriteBank·Resources에 연결하지 않았다. 런타임 적용 또는 출시 완료로 표시하지 않는다.
 
-최신화: 2026-10-06 KST  
+최신화: 2026-10-06 KST
 기준: `Assets/Resources`, `Assets/art`, 기획서와 Unity 설정 문서
 
 ## 감사 결과
