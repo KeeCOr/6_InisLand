@@ -1,5 +1,9 @@
 # InisLand — 눈보라 마을 기획서
 
+## 2026-10-06 타이틀 로고
+
+- `Assets/Resources/Brand/title-logo.png`의 투명 INISLAND 로고를 온보딩 씬의 `OnboardingController`가 `Resources.Load`로 표시한다.
+
 ## 2026-09-21 확정 핵심 방향
 
 **한 줄 정의:** 눈 벌판을 탐사해 생존자와 자원을 데려오고, 난방권과 마을을 확장하며 끝없는 겨울을 버티는 설원 생존 경영 게임.
