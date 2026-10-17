@@ -1,0 +1,5 @@
+{
+  "name": "IL6.Recovery.PlayMode.Tests",
+  "references": ["IL6"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

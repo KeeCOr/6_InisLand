@@ -89,15 +89,35 @@ namespace IL6.EditorBuild
                 string repoRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
                 string dest = Path.Combine(repoRoot, PortableExeName);
 
-                // 이전 portable exe 삭제
-                foreach (var old in Directory.GetFiles(repoRoot, "InisLand_v*_portable.exe"))
-                    File.Delete(old);
-
                 File.Copy(exe, dest, overwrite: true);
+                // A Unity executable needs its matching data and runtime files.
+                CopyBuildFile(outDir, repoRoot, "UnityPlayer.dll");
+                CopyBuildFile(outDir, repoRoot, "UnityCrashHandler64.exe");
+                CopyBuildDirectory(Path.Combine(outDir, "MonoBleedingEdge"), Path.Combine(repoRoot, "MonoBleedingEdge"));
+                CopyBuildDirectory(Path.Combine(outDir, "IL6_Data"), Path.Combine(repoRoot, Path.GetFileNameWithoutExtension(PortableExeName) + "_Data"));
                 Debug.Log($"[BuildScript] Portable exe → {dest}");
             }
 
             if (Application.isBatchMode) EditorApplication.Exit(code);
+        }
+
+        private static void CopyBuildFile(string sourceDir, string destDir, string fileName)
+        {
+            string source = Path.Combine(sourceDir, fileName);
+            if (File.Exists(source)) File.Copy(source, Path.Combine(destDir, fileName), overwrite: true);
+        }
+
+        private static void CopyBuildDirectory(string sourceDir, string destDir)
+        {
+            if (!Directory.Exists(sourceDir)) return;
+            Directory.CreateDirectory(destDir);
+            foreach (string source in Directory.GetFiles(sourceDir, "*", SearchOption.AllDirectories))
+            {
+                string relative = source.Substring(sourceDir.TrimEnd(Path.DirectorySeparatorChar).Length + 1);
+                string dest = Path.Combine(destDir, relative);
+                Directory.CreateDirectory(Path.GetDirectoryName(dest));
+                File.Copy(source, dest, overwrite: true);
+            }
         }
 
         private static string[] GetScenePaths()

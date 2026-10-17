@@ -10,3 +10,11 @@ obj/
 .vs/
 *.log
 .env
+
+# Local Unity output and editor preferences
+/UserSettings/
+/InisLand_v*_portable.exe
+/InisLand_v*_portable_Data/
+/MonoBleedingEdge/
+/UnityPlayer.dll
+/UnityCrashHandler64.exe

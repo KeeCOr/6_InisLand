@@ -94,7 +94,9 @@ namespace IL6
 
             if (Player != null && Player.IsDead && !_diedEmitted)
             {
-                EventBus.Instance.Emit(new PlayerDiedPayload(_session.Cycle.Day));
+                int deathDay = _session.Cycle.Day;
+                _session.MarkPlayerDied(deathDay);
+                EventBus.Instance.Emit(new PlayerDiedPayload(deathDay));
                 _diedEmitted = true;
             }
 

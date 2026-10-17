@@ -1,0 +1,6 @@
+{
+  "name": "IL6.Recovery.Tests",
+  "references": ["IL6"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}
