@@ -11,7 +11,7 @@ public class MaterialLootGameplayTests {
 Time.timeScale=1;yield return SceneManager.LoadSceneAsync("BootScene");yield return null;yield return null;
 yield return SceneManager.LoadSceneAsync("SnowfieldScene");yield return new WaitForSeconds(2);
 var hud=Object.FindFirstObjectByType<SimpleHud>();typeof(SimpleHud).GetMethod("PrepareHudPreview",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(hud,null);
-hud.Attacker.AutoAttackEnabled=false;var player=hud.Player;player.transform.position=new Vector3(1000,1000,0);
+var player=hud.Player;player.transform.position=new Vector3(1000,1000,0);
 foreach(var s in Object.FindObjectsByType<ProceduralSpawner>(FindObjectsSortMode.None)) s.enabled=false;
 var store=GameSession.Instance.Resources;var snapshot=store.Snapshot();var researchSnapshot=GameSession.Instance.Research.Snapshot();GameSession.Instance.Research.Restore(null);float chance=BalanceConfig.Instance.RockOreDropChance;
 var rock=new GameObject("Ore rock test");var deer=new GameObject("Meat prey test");var noOre=new GameObject("Ordinary rock test");

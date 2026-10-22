@@ -22,6 +22,7 @@ namespace IL6
 
         protected virtual void Awake()
         {
+            YSort.Ensure(gameObject);
             _rb = GetComponent<Rigidbody2D>();
             if (_rb != null)
             {
@@ -79,6 +80,7 @@ namespace IL6
         protected virtual void FixedUpdate()
         {
             if (IsDead) { if (_rb != null) _rb.velocity = Vector2.zero; return; }
+            if (MeleeKnockback.IsActive(gameObject)) return;
             if (_player == null) { if (_rb != null) _rb.velocity = Vector2.zero; return; }
             DoBehavior();
         }

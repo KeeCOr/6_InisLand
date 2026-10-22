@@ -8,34 +8,28 @@ namespace IL6
     /// </summary>
     public static class Music
     {
-        private static AudioSource _src;
+        private static MusicPlayback _playback;
         private static AudioClip _day, _night, _evening, _dawn;
-        private static Phase? _currentPhase;
 
-        private static AudioSource Source()
+        private static MusicPlayback Source()
         {
-            if (_src != null) return _src;
+            if (_playback != null) return _playback;
             var go = new GameObject("__MusicRunner");
             Object.DontDestroyOnLoad(go);
-            _src = go.AddComponent<AudioSource>();
-            _src.loop = true;
-            _src.spatialBlend = 0f;
-            _src.volume = Volume * 0.5f; // BGM 은 SFX 의 절반
-            return _src;
+            _playback = go.AddComponent<MusicPlayback>();
+            _playback.SetVolume(Volume * 0.5f);
+            return _playback;
         }
 
         public static float Volume
         {
             get => PlayerPrefs.GetFloat("il6_bgm_vol", 0.5f);
             set { PlayerPrefs.SetFloat("il6_bgm_vol", Mathf.Clamp01(value)); PlayerPrefs.Save();
-                if (_src != null) _src.volume = Mathf.Clamp01(value) * 0.5f; }
+                if (_playback != null) _playback.SetVolume(Mathf.Clamp01(value) * 0.5f); }
         }
 
         public static void PlayForPhase(Phase phase)
         {
-            if (_currentPhase == phase) return;
-            _currentPhase = phase;
-            var src = Source();
             AudioClip target = phase switch
             {
                 Phase.Day => _day ??= MakeLoop(new[] { 196f, 247f, 294f }, peaceful: true, seed: 11),  // G major
@@ -45,14 +39,12 @@ namespace IL6
                 _ => null,
             };
             if (target == null) return;
-            src.clip = target;
-            src.Play();
+            Source().Play(target);
         }
 
         public static void Stop()
         {
-            if (_src != null) _src.Stop();
-            _currentPhase = null;
+            if (_playback != null) _playback.Stop();
         }
 
         /// <summary>
@@ -77,11 +69,9 @@ namespace IL6
                 {
                     v += Mathf.Sin(twoPi * hz * t) * 0.18f;
                 }
-                // 부드러운 풀 페이드 인/아웃 + 진폭 변조 (호흡감)
-                float breathe = 0.85f + 0.15f * Mathf.Sin(twoPi * (peaceful ? 0.13f : 0.08f) * t);
-                float fade = Mathf.Min(t / 0.6f, (dur - t) / 0.6f);
-                fade = Mathf.Clamp01(fade);
-                data[i] = v * breathe * fade * 0.45f;
+                // Periodic breathing keeps the same level and slope across the loop boundary.
+                float breathe = 0.85f + 0.15f * Mathf.Sin(twoPi * (peaceful ? 1f : 2f) * t / dur);
+                data[i] = v * breathe * 0.45f;
             }
 
             // 가벼운 멜로디 — peaceful 이면 밝은 ping, 아니면 묵직한 hit
@@ -96,11 +86,13 @@ namespace IL6
 
                 int startI = (int)(startSec * sr);
                 int noteN = (int)(noteDur * sr);
-                for (int i = 0; i < noteN && startI + i < n; i++)
+                for (int i = 0; i < noteN; i++)
                 {
                     float lt = i / (float)sr;
-                    float env = Mathf.Exp(-lt / decay);
-                    data[startI + i] += Mathf.Sin(twoPi * pitch * lt) * env * volume;
+                    float attack = 1f - Mathf.Exp(-lt / .015f);
+                    float release = Mathf.SmoothStep(0f,1f,Mathf.Clamp01((noteDur-lt)/.08f));
+                    float env = attack * Mathf.Exp(-lt / decay) * release;
+                    data[(startI + i) % n] += Mathf.Sin(twoPi * pitch * lt) * env * volume;
                 }
             }
 

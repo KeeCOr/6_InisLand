@@ -42,6 +42,7 @@ namespace IL6
 
         private void Start()
         {
+            YSort.Ensure(gameObject);
             _started = true;
             if (MaxHp <= 0) RecalculateStats(true);
             EnsureHpBar();
@@ -50,6 +51,7 @@ namespace IL6
 
         public void Initialize(BuildingKind kind)
         {
+            YSort.Ensure(gameObject);
             Kind = kind;
             Level = Mathf.Max(1, Level);
             RecalculateStats(true);

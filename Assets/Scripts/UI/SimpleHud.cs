@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using IL6.Events;
 
 namespace IL6
@@ -39,6 +39,7 @@ namespace IL6
         // 장비 모드: 근접 / 원거리 / 건축. BuildHotbar 는 건축에서만, 무기는 모드 따라 자동 전환.
         public enum HudMode { Melee, Ranged, Build }
         private HudMode _hudMode = HudMode.Melee;
+        private int _previousCombatWeaponIndex;
 
         private readonly struct ContextAction
         {
@@ -63,6 +64,10 @@ namespace IL6
 
         private void SetHudMode(HudMode m)
         {
+            if (Player != null && Player.Actions != null && Player.Actions.IsBusy) return;
+            if (m == HudMode.Build && _hudMode != HudMode.Build && Attacker != null && !Attacker.IsConstructionHammer)
+                _previousCombatWeaponIndex = Attacker.WeaponIndex == 1 ? 1 : 0;
+            _buildRepairMode = false;
             _hudMode = m;
             _buildCatalogOpen = m == HudMode.Build;
             _pendingBuildKind = null;
@@ -72,29 +77,38 @@ namespace IL6
             {
                 if (m == HudMode.Melee) Attacker.SwitchToWeapon(0);
                 else if (m == HudMode.Ranged) Attacker.SwitchToWeapon(1);
-                // Build 모드는 무기 변경 안 함 — 직전 무기 유지
+                else if (m == HudMode.Build) Attacker.SwitchToWeapon(2);
             }
         }
 
         private void OnGUI()
         {
             var oldMatrix = GUI.matrix;
+            int oldDepth = GUI.depth;
             var oldFont = GUI.skin.font;
             GUI.skin.font = UiTheme.HudFont;
             GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one * MobileHudLayout.Scale);
             try
             {
             EnsureStyles();
+            if (UpdateDeathScreenState()) { GUI.depth=-1000; DrawDeathOverlay(); return; }
+            if (Progression != null && Progression.LevelUpPending) { GUI.depth=-900; DrawRuneModal(); return; }
             if (_researchOpen) { DrawResearchCatalog(); return; }
+            if (_workMenuOpen) { DrawNearbyWorkMenu(); return; }
+            if (_paused) { DrawPauseMenu(); if (_paused) DrawSfxCorner(); return; }
             if (_buildPaused && Event.current.type==EventType.KeyDown && Event.current.keyCode==KeyCode.Escape)
             { CloseBuildCatalog(); Event.current.Use(); }
+            if (BuildUiAvailable && Event.current.type==EventType.KeyDown
+                && (Event.current.keyCode==KeyCode.Alpha1 || Event.current.keyCode==KeyCode.Alpha2))
+            { SetHudMode(Event.current.keyCode==KeyCode.Alpha1 ? HudMode.Melee : HudMode.Ranged); Event.current.Use(); }
+            if (_buildPaused)
+            {
+                DrawBuildHotbar();DrawPlacementPreview();DrawBuildPlacementControls();HandlePlacementInput();return;
+            }
             DrawStatCard();        // 상단 좌측: HP/XP/모드 탭/무기
             DrawResourceBar();     // 상단 우측: 자원 세로 카드
             DrawWaveStanceBar();   // 하단 좌측: 동료 스탠스 + 웨이브 정보
             DrawMobileControls();       // 하단 우측: 볼륨 슬라이더 (항상)
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            DrawDebugButtons();    // 디버그 버튼 (에디터/개발 빌드만)
-#endif
             DrawContextActionPanel();
             if (_hudMode == HudMode.Build) DrawBuildHotbar();
             DrawRecruitDialog();
@@ -112,7 +126,6 @@ namespace IL6
             HandlePlacementInput();
             DrawPauseMenu();
             if (_paused) DrawSfxCorner();
-            DrawDeathOverlay();
             DrawDamageFlash();
             DrawNightIntroFade();
             DrawDawnFlare();
@@ -124,7 +137,7 @@ namespace IL6
             if(!ControlsBlocked) WoodPickup.DrawHud();
             DrawResearchCatalog();
             }
-            finally { GUI.matrix = oldMatrix; GUI.skin.font = oldFont; }
+            finally { GUI.matrix = oldMatrix; GUI.skin.font = oldFont; GUI.depth=oldDepth; }
         }
 
         // ====================================================================
@@ -135,7 +148,9 @@ namespace IL6
             if (_pendingBuildKind == null) return;
             var cam = Camera.main;
             if (cam == null) return;
-            Vector3 wp = MouseWorldPos(cam);
+            Vector3 wp = ConstructionPlacement.Snap(MouseWorldPos(cam));
+            DrawConstructionGrid(cam, wp);
+            bool available = ConstructionPlacement.IsAvailable(_pendingBuildKind.Value, wp);
 
             // 화면 가운데 안내 텍스트
             var bannerStyle = new GUIStyle(GUI.skin.label) {
@@ -143,7 +158,9 @@ namespace IL6
                 alignment = TextAnchor.MiddleCenter,
                 normal = { textColor = UiTheme.TextGold }
             };
-            string label = $"게임 정지 · {BuildingName(_pendingBuildKind.Value)} | 땅을 눌러 설치 · ESC 취소";
+            string label = available
+                ? $"{BuildingName(_pendingBuildKind.Value)} · 격자 배치 | 땅을 눌러 설치 · ESC 취소"
+                : "다른 건물과 겹칩니다 · 빈 격자로 이동하세요";
             UiTheme.Rect(new Rect(MobileHudLayout.Width/2-280, 96, 560, 40), new Color(0.05f, 0.07f, 0.12f, 0.85f));
             HudText.Label(new Rect(MobileHudLayout.Width/2-272, 103, 544, 26), label, bannerStyle);
 
@@ -151,20 +168,38 @@ namespace IL6
             Vector3 sp = cam.WorldToScreenPoint(wp);
             sp.x /= MobileHudLayout.Scale; sp.y /= MobileHudLayout.Scale;
             float gx = sp.x, gy = MobileHudLayout.Height - sp.y;
-            var sprite = SpriteBank.BuildingByKind(_pendingBuildKind.Value);
+            var sprite = ConstructionPlacement.Sprite(_pendingBuildKind.Value);
+            Vector3 size = ConstructionPlacement.Scale(_pendingBuildKind.Value);
+            float worldUnit = (cam.WorldToScreenPoint(wp + Vector3.right).x-cam.WorldToScreenPoint(wp).x)/MobileHudLayout.Scale;
+            var footprint = new Rect(gx-size.x*worldUnit/2f, gy-size.y*worldUnit/2f, size.x*worldUnit, size.y*worldUnit);
+            UiTheme.Rect(footprint, available ? new Color(.3f,.9f,.6f,.18f) : new Color(1f,.2f,.15f,.25f));
             if (sprite != null)
             {
                 float pixelsPerUnit = (cam.WorldToScreenPoint(wp + Vector3.right).x - cam.WorldToScreenPoint(wp).x) / MobileHudLayout.Scale;
-                float width = sprite.rect.width / sprite.pixelsPerUnit * pixelsPerUnit;
-                float height = sprite.rect.height / sprite.pixelsPerUnit * pixelsPerUnit;
+                float width = sprite.rect.width / sprite.pixelsPerUnit * pixelsPerUnit * size.x;
+                float height = sprite.rect.height / sprite.pixelsPerUnit * pixelsPerUnit * size.y;
                 var rect = new Rect(gx - sprite.pivot.x / sprite.rect.width * width,
                     gy - (1f - sprite.pivot.y / sprite.rect.height) * height, width, height);
-                var color = GUI.color; GUI.color = new Color(.8f, 1f, .9f, .65f);
+                var color = GUI.color; GUI.color = available ? new Color(.8f, 1f, .9f, .65f) : new Color(1f, .35f, .3f, .65f);
                 DrawSpriteInRect(sprite, rect);
                 GUI.color = color;
             }
             UiTheme.Rect(new Rect(gx - 1, gy - 12, 2, 24), UiTheme.TextGold);
             UiTheme.Rect(new Rect(gx - 12, gy - 1, 24, 2), UiTheme.TextGold);
+        }
+
+        private static void DrawConstructionGrid(Camera cam, Vector3 cursor)
+        {
+            float unit = (cam.WorldToScreenPoint(cursor + Vector3.right).x-cam.WorldToScreenPoint(cursor).x)/MobileHudLayout.Scale;
+            if (unit < 4f) return;
+            Vector3 screen = cam.WorldToScreenPoint(cursor);
+            float cx=screen.x/MobileHudLayout.Scale, cy=MobileHudLayout.Height-screen.y/MobileHudLayout.Scale;
+            var lineColor = new Color(.85f,.95f,1f,.16f);
+            float spacing=unit*ConstructionPlacement.CellSize;
+            for (float x=cx-spacing/2f-Mathf.Ceil(cx/spacing)*spacing;x<MobileHudLayout.Width;x+=spacing)
+                if(x>=0) UiTheme.Rect(new Rect(x,0,1,MobileHudLayout.Height),lineColor);
+            for (float y=cy-spacing/2f-Mathf.Ceil(cy/spacing)*spacing;y<MobileHudLayout.Height;y+=spacing)
+                if(y>=0) UiTheme.Rect(new Rect(0,y,MobileHudLayout.Width,1),lineColor);
         }
 
         private void HandlePlacementInput()
@@ -212,9 +247,10 @@ namespace IL6
         {
             var go = new GameObject($"Construction_{kind}");
             go.transform.position = pos;
-            go.transform.localScale = Vector3.one * 0.9f;
+            go.transform.localScale = ConstructionPlacement.Scale(kind);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
+            sr.sprite = ConstructionPlacement.Sprite(kind);
             sr.color = new Color(0.7f, 0.78f, 0.85f, 0.5f);
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.7f, 0.78f, 0.85f, 0.5f);
@@ -254,13 +290,6 @@ namespace IL6
                     case BuildingKind.Barricade: SpawnBarricade(p); break;
                     case BuildingKind.Infirmary: SpawnInfirmary(p); break;
                     case BuildingKind.HuntersHut: SpawnHuntersHut(p); break;
-                }
-                // 비-펜스 건물 추가 시 마을 펜스 자동 확장
-                if (k != BuildingKind.Fence)
-                {
-                    var s = GameSession.Instance;
-                    Vector3 center = new Vector3(GameConstants.VillageCenterX, GameConstants.VillageCenterY, 0f);
-                    VillageStarter.OnBuildingAdded(center);
                 }
             };
         }
@@ -478,6 +507,8 @@ namespace IL6
 
         private void OnDisable()
         {
+            _buildRepairMode=false;
+            CloseNearbyWorkMenu();
             CloseResearchCatalog();
             _buildCatalogOpen = false;
             _pendingBuildKind = null;
@@ -601,6 +632,7 @@ namespace IL6
             int mm = Mathf.FloorToInt(rem / 60f);
             int ss = Mathf.FloorToInt(rem % 60f);
             string clock = $"{mm:00}:{ss:00}";
+            if (rem <= 0f && s.Cycle.Phase == Phase.Night && s.Cycle.NightEndBlocked != null && s.Cycle.NightEndBlocked()) clock = "보스전";
 
             int W = 130, H = 62;
             var r = MobileHudLayout.Clock;
@@ -810,8 +842,8 @@ namespace IL6
             {
                 HudText.Label(new Rect(x, y, w, 24), "낮에는 준비하고, 밤에는 마을을 지키세요.", _tutTitle); y += 28;
                 HudText.Label(new Rect(x, y, w, 22), "·  WASD / 방향키 — 이동 (W = 위)", _tutBody); y += 22;
-                HudText.Label(new Rect(x, y, w, 22), "·  E — 주변 작업  ·  문 — 접근 시 자동 열림  ·  V — 동료 영입", _tutBody); y += 22;
-                HudText.Label(new Rect(x, y, w, 22), "·  Space — 공격  ·  R — 자동공격 전환", _tutBody); y += 22;
+                HudText.Label(new Rect(x, y, w, 22), "·  Space — 공격·벌목·채굴·영입·수리·주변 작업", _tutBody); y += 22;
+                HudText.Label(new Rect(x, y, w, 22), "·  이동 — 작업 중단", _tutBody); y += 22;
                 HudText.Label(new Rect(x, y, w, 22), "·  B / 3 — 건설  ·  1 / 2 — 무기 전환  ·  ESC — 메뉴", _tutBody); y += 30;
 
                 HudText.Label(new Rect(x, y, w, 24), "낮에는 준비하고, 밤에는 마을을 지키세요.", _tutTitle); y += 28;
@@ -853,7 +885,7 @@ namespace IL6
 
         private void DrawControlsHint()
         {
-            const string hint = "WASD 이동 · E 작업 · 문 자동 출입 · V 영입 · Space 공격 · ESC 메뉴";
+            const string hint = "WASD 이동 · Space 공격/작업 · ESC 메뉴";
             const int W = 480, H = 24;
             var r = new Rect(MobileHudLayout.Width / 2 - W / 2, MobileHudLayout.Height - H - 8, W, H);
             UiTheme.Rect(r, new Color(0.05f, 0.07f, 0.12f, 0.55f));
@@ -909,15 +941,15 @@ namespace IL6
 
         private void Update()
         {
+            if (UpdateDeathScreenState()) return;
             TryShowInitialBanner();
             InputReader.HudBlocked = ControlsBlocked;
             HandleSecondaryTouch();
             if (!ControlsBlocked)
             {
-                if (Input.GetKeyDown(KeyCode.Space) && Attacker != null && _hudMode != HudMode.Build) Attacker.TryManualAction();
-                if (Input.GetKeyDown(KeyCode.R) && Attacker != null) Attacker.AutoAttackEnabled = !Attacker.AutoAttackEnabled;
+                if (Attacker != null && Attacker.IsConstructionHammer && _hudMode != HudMode.Build) SetHudMode(HudMode.Build);
+                if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.E)) UseUnifiedAction();
                 if (Input.GetKeyDown(KeyCode.B)) SetHudMode(HudMode.Build);
-                if (Input.GetKeyDown(KeyCode.E)) UsePrimaryAction();
                 if (Input.GetKeyDown(KeyCode.G)) _showCompanions = !_showCompanions;
             }
 
@@ -1001,50 +1033,6 @@ namespace IL6
         // ====================================================================
         // WAVE / STANCE BAR: 웨이브 정보 + 동료 스탠스 (좌상단, 자원 아래)
         // ====================================================================
-        private void DrawSettlementGoals()
-        {
-            var gm = SettlementGoalManager.Instance;
-            if (gm == null || gm.Goals == null || gm.Goals.Count == 0) return;
-
-            const int W = 330;
-            const int H = 122;
-            var panel = MobileHudLayout.Goals;
-            UiTheme.Panel(panel);
-
-            var titleStyle = new GUIStyle(_section)
-            {
-                fontSize = 14,
-                alignment = TextAnchor.MiddleLeft,
-                normal = { textColor = UiTheme.TextGold }
-            };
-            var lineStyle = new GUIStyle(_labelSubtle)
-            {
-                fontSize = 12,
-                alignment = TextAnchor.MiddleLeft,
-                wordWrap = false,
-                clipping = TextClipping.Clip,
-            };
-
-            HudText.Label(new Rect(panel.x+12,panel.y+6,panel.width-24,20),"현재 목표",titleStyle);
-
-            int shown = 0;
-            float y = panel.y + 26;
-            foreach (var g in gm.Goals)
-            {
-                if (g.Completed) continue;
-                HudText.Label(new Rect(panel.x+12,y,panel.width-24,18),g.Title,new GUIStyle(_label){fontSize=13});
-                HudText.Label(new Rect(panel.x+12,y+18,panel.width-24,16),g.Progress,lineStyle);
-                y += 34;
-                shown++;
-                if (shown >= 3) break;
-            }
-
-            if (shown == 0)
-            {
-                HudText.Label(new Rect(panel.x + 12, panel.y + 42, panel.width - 24, 22), "목표 달성 완료", _labelSubtle);
-            }
-        }
-
         // ====================================================================
         // BUILD HOTBAR (bottom-center): 6개 빌드 아이콘 버튼
         // ====================================================================
@@ -1132,47 +1120,18 @@ namespace IL6
             var session = GameSession.Instance;
             if (session == null) return;
 
-            var actions = new System.Collections.Generic.List<ContextAction>();
-            AddRepairAction(actions, session);
-            AddRefuelAction(actions, session);
-            AddUpgradeAction(actions, session);
-            AddResearchAction(actions);
-            AddBlacksmithActions(actions, session);
-            AddFenceActions(actions, session);
-            AddFarmActions(actions);
-            AddGatherAction(actions, ResourceKind.Wood, "벌목");
-            AddGatherAction(actions, ResourceKind.Stone, "채굴");
-            DrawContextActions(actions);
+            DrawContextActions(NearbyActions());
         }
 
         private void DrawContextActions(System.Collections.Generic.List<ContextAction> actions)
         {
             if (actions == null || actions.Count == 0) return;
-            actions.Sort((a, b) => a.Priority.CompareTo(b.Priority));
-            int count = Mathf.Min(actions.Count, HudStyleConfig.ContextActionLimit);
-            var panel = HudLayout.BottomCenterContext(count);
-
-            float x = panel.x + HudStyleConfig.PanelPadding;
-            float y = panel.y + HudStyleConfig.PanelPadding;
-            float w = panel.width - HudStyleConfig.PanelPadding * 2f;
-            for (int i = 0; i < count; i++)
-            {
-                var action = actions[i];
-                var rect = new Rect(x, y, w, HudStyleConfig.ContextButtonHeight);
-                if (UiTheme.Button(rect, action.Label, _smallBtn, action.Enabled))
-                {
-                    action.Callback?.Invoke();
-                }
-                if (!string.IsNullOrEmpty(action.IconKey))
-                {
-                    DrawHudIcon(new Rect(rect.x + 6f, rect.y + 2f, 18f, 18f), action.IconKey);
-                }
-                y += HudStyleConfig.ContextButtonHeight + HudStyleConfig.PanelGap;
-            }
+            if (UiTheme.Button(HudLayout.WorkLauncher(),$"주변 작업 · {actions.Count}",_smallBtn)) OpenNearbyWorkMenu();
         }
 
         private void AddRepairAction(System.Collections.Generic.List<ContextAction> actions, GameSession session)
         {
+            if (!ManualWorldInteraction.CanRepair(Player)) return;
             Building best = FindNearbyDamagedBuilding(3.5f);
             if (best == null) return;
             const int Cost = 1;
@@ -1181,6 +1140,7 @@ namespace IL6
             string label = canAfford ? $"수리 +{healAmount} HP (목재 {Cost})" : "수리: 목재 부족";
             actions.Add(new ContextAction(20, label, canAfford, () =>
             {
+                if (!ManualWorldInteraction.CanRepair(Player) || best==null) return;
                 if (session.Resources.Spend(ResourceKind.Wood, Cost))
                 {
                     best.RepairHp(healAmount);
@@ -1329,6 +1289,7 @@ namespace IL6
 
         private void AddFenceActions(System.Collections.Generic.List<ContextAction> actions, GameSession session)
         {
+            if (!ManualWorldInteraction.CanRepair(Player)) return;
             if (session.Cycle == null || session.Cycle.Phase != Phase.Day) return;
             Vector3 center = new Vector3(GameConstants.VillageCenterX, GameConstants.VillageCenterY, 0f);
             if (Vector2.Distance(Player.transform.position, center) > VillageStarter.CurrentHalfSize + 2.5f) return;
@@ -1349,6 +1310,7 @@ namespace IL6
                 bool ok = wood >= repairCost;
                 actions.Add(new ContextAction(40, ok ? $"Repair fences x{damaged} ({repairCost} Wood)" : $"Need {repairCost} Wood for fences", ok, () =>
                 {
+                    if (!ManualWorldInteraction.CanRepair(Player)) return;
                     if (!session.Resources.Spend(ResourceKind.Wood, repairCost)) return;
                     int crew = FenceWorkCrew.Begin(FenceWorkCrew.JobKind.Repair, center, healAmount);
                     if (crew <= 0)
@@ -1366,6 +1328,7 @@ namespace IL6
                 bool ok = wood >= rebuildCost;
                 actions.Add(new ContextAction(40, ok ? $"Rebuild fence x{missing} ({rebuildCost} Wood)" : $"Need {rebuildCost} Wood to rebuild", ok, () =>
                 {
+                    if (!ManualWorldInteraction.CanRepair(Player)) return;
                     if (!session.Resources.Spend(ResourceKind.Wood, rebuildCost)) return;
                     int crew = FenceWorkCrew.Begin(FenceWorkCrew.JobKind.Rebuild, center, healAmount);
                     if (crew <= 0)
@@ -2007,68 +1970,17 @@ namespace IL6
         {
             if (Progression == null || !Progression.LevelUpPending)
             {
-                _runeOffer = null;
+                _runeOffer = null; _runeDetailIndex=-1;
                 if (Time.timeScale == 0f && !_researchOpen && !_buildPaused && !_paused && !_recruitCutPaused && !_tutorialPaused && (Player == null || !Player.IsDead)) Time.timeScale = 1f;
                 return;
             }
             if (_runeOffer == null)
-                _runeOffer = Progression.PickThreeOffer((uint)(Time.frameCount + Progression.Level * 113));
-            Time.timeScale = 0f;
-
-            UiTheme.Rect(new Rect(0, 0, MobileHudLayout.Width, MobileHudLayout.Height), new Color(0, 0, 0, 0.65f));
-
-            var modal = HudLayout.CenterModal(920f, 420f);
-            int W = (int)modal.width;
-
-            UiTheme.Panel(modal);
-            UiTheme.TitleBar(modal, $"레벨 {Progression.Level} · 새로운 룬을 선택하세요", _title);
-
-            int btnW = 280, btnH = 310, gap = 20;
-            int total = btnW * 3 + gap * 2;
-            int bx = (int)modal.x + (W - total) / 2;
-            int by = (int)modal.y + 76;
-
-            var titleStyle = new GUIStyle(_weapon) { fontSize = 22, alignment = TextAnchor.MiddleCenter };
-            var bodyStyle = new GUIStyle(_label) { fontSize = 18, wordWrap = true };
-            var subStyle = new GUIStyle(_labelSubtle) { fontSize = 15, alignment = TextAnchor.MiddleCenter };
-
-            for (int i = 0; i < _runeOffer.Count; i++)
             {
-                var rune = _runeOffer[i];
-                var rect = new Rect(bx + i * (btnW + gap), by, btnW, btnH);
-                if (UiTheme.Button(rect, "", _btn))
-                {
-                    Sfx.Click();
-                    Progression.ApplyRune(rune);
-                    _runeOffer = null;
-                    return;
-                }
-                int curStacks = Progression.GetStacks(rune);
-                int next = curStacks + 1;
-                bool willMaster = next == PlayerProgression.MaxStacks;
-                string suffix = willMaster ? "  완성" : (next == 2 ? "  +" : "");
-                string title = PlayerProgression.Title(rune) + suffix;
-
-                HudText.Label(new Rect(rect.x + 16, rect.y + 18, rect.width - 32, 32), title, titleStyle);
-
-                // P1-3: 원소 태그 배지
-                string elemTag = RuneElementTag(rune);
-                if (elemTag.Length > 0)
-                {
-                    var tagStyle = new GUIStyle(_labelSubtle) { fontSize = 13, alignment = TextAnchor.MiddleLeft };
-                    var oldC = GUI.contentColor;
-                    GUI.contentColor = RuneElementColor(rune);
-                    HudText.Label(new Rect(rect.x + 16, rect.y + 48, rect.width - 32, 20), elemTag, tagStyle);
-                    GUI.contentColor = oldC;
-                }
-
-                int stackY = elemTag.Length > 0 ? 72 : 56;
-                HudText.Label(new Rect(rect.x + 16, rect.y + stackY, rect.width - 32, 22),
-                    $"진행 {curStacks}/{PlayerProgression.MaxStacks} → {next}/{PlayerProgression.MaxStacks}", subStyle);
-                UiTheme.Separator(new Rect(rect.x + 16, rect.y + stackY + 28, rect.width - 32, 1));
-                HudText.Label(new Rect(rect.x + 16, rect.y + stackY + 40, rect.width - 32, btnH - (stackY + 50)),
-                    PlayerProgression.DescribeAt(rune, next), bodyStyle);
+                _runeOffer = Progression.PickThreeOffer((uint)(Time.frameCount + Progression.Level * 113));
+                _runeDetailIndex=-1;
             }
+            Time.timeScale=0f;InputReader.HudBlocked=true;
+            DrawRuneChoiceCards();
         }
 
         private static string RuneElementTag(RuneKind k) => k switch
@@ -2228,49 +2140,6 @@ namespace IL6
             {
                 Sfx.Click();
                 _paused = false;
-                Time.timeScale = 1f;
-                if (GameSession.Instance != null) GameSession.Instance.HardReset();
-            }
-        }
-
-        private void DrawDeathOverlay()
-        {
-            if (Player == null || !Player.IsDead) return;
-            Time.timeScale = 0f;
-            UiTheme.Rect(new Rect(0, 0, MobileHudLayout.Width, MobileHudLayout.Height), new Color(0, 0, 0, 0.92f));
-            HudText.Label(new Rect(0, MobileHudLayout.Height / 2 - 150, MobileHudLayout.Width, 100), "모험이 끝났습니다", _bigDeath);
-
-            var s = GameSession.Instance;
-            if (s != null)
-            {
-                int deathDay = s.PlayerDeathDay;
-                if (deathDay <= 0)
-                {
-                    deathDay = s.Cycle != null ? s.Cycle.Day : 1;
-                    s.MarkPlayerDied(deathDay);
-                }
-
-                var statPanel = HudLayout.CenterModal(400f, 180f);
-                UiTheme.Panel(statPanel);
-
-                int sx = (int)statPanel.x;
-                int sy = (int)statPanel.y;
-                int W = (int)statPanel.width;
-                int row = sy + 12;
-                int lineH = 22;
-                HudText.Label(new Rect(sx + 24, row, W - 48, lineH), $"생존 일수      Day {deathDay}", _section); row += lineH;
-                HudText.Label(new Rect(sx + 24, row, W - 48, lineH), $"좀비 처치      {s.TotalKills}", _section); row += lineH;
-                HudText.Label(new Rect(sx + 24, row, W - 48, lineH), $"동료 최대      {s.MaxCompanionsAtOnce}", _section); row += lineH;
-                HudText.Label(new Rect(sx + 24, row, W - 48, lineH), $"동료 손실      {s.CompanionsLost}", _section); row += lineH + 4;
-
-                var titleStyle = new GUIStyle(_title) { fontSize = 22, normal = { textColor = UiTheme.TextGold } };
-                HudText.Label(new Rect(sx, row, W, 28), $"점수  {s.Score}", titleStyle);
-            }
-
-            int bx = MobileHudLayout.Width / 2 - 90;
-            int by = MobileHudLayout.Height / 2 + 130;
-            if (UiTheme.Button(new Rect(bx, by, 180, 46), "다시 시작", _btn))
-            {
                 Time.timeScale = 1f;
                 if (GameSession.Instance != null) GameSession.Instance.HardReset();
             }

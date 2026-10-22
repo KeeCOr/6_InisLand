@@ -37,6 +37,7 @@ namespace IL6
         }
 
         private float _cooldown;
+        private float _interactionCooldown;
         private float _lastAttackAt = -100f;
         private SeededRng _rng;
         private Transform _self;
@@ -44,6 +45,7 @@ namespace IL6
         private void Awake()
         {
             _self = transform;
+            if (GetComponent<MeleeRangeIndicator>() == null) gameObject.AddComponent<MeleeRangeIndicator>();
             _rng = new SeededRng(RngSeed);
             if (Progression == null) Progression = GetComponent<PlayerProgression>();
             if (Weapon == null)
@@ -52,11 +54,18 @@ namespace IL6
             }
         }
 
-        public bool AutoAttackEnabled { get; set; } = true;
+        public bool IsConstructionHammer => Weapon != null && Weapon.Id == "construction_hammer";
         public float ManualTreeInteractRadius = 2.2f;
 
         public bool TryManualAction()
         {
+            if (IsConstructionHammer)
+            {
+                if (_interactionCooldown>0f) return false;
+                bool repaired=ManualWorldInteraction.TryRepair(GetComponent<PlayerController>(),GameSession.Instance!=null?GameSession.Instance.Resources:null);
+                if(repaired) _interactionCooldown=.35f;
+                return repaired;
+            }
             var player = GetComponent<PlayerController>();
             if (InputReader.HudBlocked || Time.timeScale <= 0f || (player != null && player.IsDead) || Weapon == null) return false;
             float range = Weapon.Range + (Progression != null ? Progression.BonusRange : 0f);
@@ -68,16 +77,41 @@ namespace IL6
                 return TryAttack();
             }
             var gather = GetComponent<GatherController>();
-            return gather != null && gather.TryStartNearbyWood(ManualTreeInteractRadius);
+            if(gather!=null && gather.IsActive) return true;
+            var state=GetComponent<PlayerActionState>();if(state!=null && state.IsBusy) return false;
+            if(_interactionCooldown>0) return false;
+            bool handled;
+            if(ManualWorldInteraction.TryUse(player,GameSession.Instance!=null?GameSession.Instance.Resources:null,out handled))
+            {_interactionCooldown=.35f;return true;}
+            if(handled) return false;
+            return gather != null && gather.TryStartNearby(ManualTreeInteractRadius);
+        }
+        public bool HasManualActionTarget => IsConstructionHammer ? ManualWorldInteraction.HasRepairTarget(transform.position)
+            : Weapon != null && FindNearestTarget(Weapon.Range+(Progression!=null?Progression.BonusRange:0)) != null
+            || ManualWorldInteraction.HasRepairTarget(transform.position)
+            || ManualWorldInteraction.Hint(transform.position) != "공격"
+            || GetComponent<GatherController>() is GatherController gather && (gather.IsActive || gather.FindNearbyTarget(ManualTreeInteractRadius) != null);
+        public string ManualActionLabel
+        {
+            get
+            {
+                if (IsConstructionHammer) return "수리";
+                if (Weapon != null && FindNearestTarget(Weapon.Range+(Progression!=null?Progression.BonusRange:0)) != null) return "공격";
+                var gather = GetComponent<GatherController>();
+                if (gather != null && gather.IsActive) return gather.NearbyActionLabel(ManualTreeInteractRadius);
+                string hint = ManualWorldInteraction.Hint(transform.position);
+                return hint != "공격" ? hint : gather != null ? gather.NearbyActionLabel(ManualTreeInteractRadius) : "공격";
+            }
         }
         private void Update()
         {
             _cooldown -= Time.deltaTime;
-            if (AutoAttackEnabled) TryAttack();
+            _interactionCooldown -= Time.deltaTime;
         }
 
         public bool TryAttack()
         {
+            if (IsConstructionHammer) return false;
             var player = GetComponent<PlayerController>();
             if (InputReader.HudBlocked || Time.timeScale <= 0f || (player != null && player.IsDead) || Weapon == null || _cooldown > 0f) return false;
             float effectiveRange = Weapon.Range + (Progression != null ? Progression.BonusRange : 0f);
@@ -136,7 +170,7 @@ namespace IL6
             {
                 if (remaining <= 0) break;
                 var z = h.GetComponent<Zombie>();
-                if (z != null && !z.IsDead && (object)z != primary)
+                if (z != null && !z.IsDead && (object)z != primary && Vector2.Distance(_self.position,z.transform.position) <= range)
                 {
                     DealImmediate(z, dmg);
                     remaining--;
@@ -161,6 +195,7 @@ namespace IL6
                 }
                 if (candidate == null) continue;
                 float dist = Vector2.Distance(_self.position, candidate.transform.position);
+                if (dist > range) continue;
                 if (dist < bestDist) { best = candidate; bestDist = dist; }
             }
             return best;
@@ -193,6 +228,7 @@ namespace IL6
             {
                 GameFeel.Slash(_self.position, target.transform.position, new Color(1f, 0.95f, 0.7f));
                 z.TakeDamage(dmg);
+                if (!z.IsDead) MeleeKnockback.Apply(z, _self.position);
                 if (Progression != null)
                 {
                     if (Progression.GetStacks(RuneKind.PoisonBlade) > 0) z.ApplyPoison(Progression.PoisonDurationCalc, Progression.PoisonDpsCalc);
@@ -216,6 +252,7 @@ namespace IL6
             {
                 GameFeel.Slash(_self.position, target.transform.position, new Color(1f, 0.95f, 0.7f));
                 animal.TakeDamage(dmg);
+                if (!animal.IsDead) MeleeKnockback.Apply(animal, _self.position);
             }
         }
 

@@ -16,6 +16,9 @@ namespace IL6
             for(int i=0;i<ResourceKinds.Length;i++)
             {
                 var r=MobileHudLayout.ResourceChip(i);
+                var backing=new Rect(r.x,r.y+1,r.width-2,30);
+                if(!GeneratedUiSkin.Pill(backing,new Color(.4f,.5f,.48f,.68f)))
+                    MobileButtonTheme.RoundRect(backing,7,new Color(.025f,.06f,.07f,.68f));
                 float pulse=ResourceKinds[i]==WoodPickup.LastPickupKind ? Mathf.Clamp01(1f-(Time.time-WoodPickup.LastPickupTime)/.6f) : 0;
                 var icon=MobileHudLayout.ResourceIcon(i);
                 float grow=Mathf.Sin(pulse*Mathf.PI)*3;

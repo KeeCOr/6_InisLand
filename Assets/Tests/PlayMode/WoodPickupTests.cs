@@ -16,7 +16,7 @@ namespace IL6.Tests
             yield return SceneManager.LoadSceneAsync("SnowfieldScene");yield return new WaitForSeconds(2);
             var hud=Object.FindFirstObjectByType<SimpleHud>();
             typeof(SimpleHud).GetMethod("PrepareHudPreview",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(hud,null);
-            var player=hud.Player;hud.Attacker.AutoAttackEnabled=false;
+            var player=hud.Player;
             player.transform.position=new Vector3(1000,1000,0);
             foreach(var s in Object.FindObjectsByType<ProceduralSpawner>(FindObjectsSortMode.None)) s.enabled=false;
             var tree=new GameObject("Wood drop test");tree.transform.position=player.transform.position+Vector3.right*3;

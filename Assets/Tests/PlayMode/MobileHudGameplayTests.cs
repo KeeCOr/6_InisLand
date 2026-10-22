@@ -29,6 +29,7 @@ namespace IL6.Tests
             var store=GameSession.Instance.Resources;
             store.Add(ResourceKind.Wood,10);
             int wood=store.Get(ResourceKind.Wood), hp=house.CurrentHp;
+            hud.Attacker.SwitchToWeapon(2);
             Time.timeScale=0;
             hud.UsePrimaryAction();
             Assert.That(store.Get(ResourceKind.Wood),Is.EqualTo(wood));
@@ -38,7 +39,7 @@ namespace IL6.Tests
             Assert.That(store.Get(ResourceKind.Wood),Is.EqualTo(wood-1));
             Assert.That(house.CurrentHp,Is.GreaterThan(hp));
             var attack=hud.Attacker;
-            attack.AutoAttackEnabled=false;
+
             attack.SwitchToWeapon(0);
             yield return new WaitForSeconds(2);
             var go=new GameObject("Manual attack target");

@@ -69,7 +69,10 @@ namespace IL6
                 {
                     foreach (var go in kv.Value.Spawned)
                     {
-                        if (go != null) Destroy(go);
+                        if (go == null) continue;
+                        var companion = go.GetComponent<Companion>();
+                        if (companion != null && !companion.IsDead) continue;
+                        Destroy(go);
                     }
                     toRemove.Add(kv.Key);
                 }
@@ -179,7 +182,7 @@ namespace IL6
             go.transform.localScale = Vector3.one * scale;
 
             var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = -1; // 타일맵 아래에 깔림
+            sr.sortingOrder = -9500; // Above the ground, below all Y-sorted world objects.
 
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(1f, 1f, 1f, alpha);

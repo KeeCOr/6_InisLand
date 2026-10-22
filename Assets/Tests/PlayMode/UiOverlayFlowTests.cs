@@ -53,22 +53,35 @@ namespace IL6.Tests
             var cost=BuildingUpgradeRules.BuildCost(BuildingKind.House,multiplier);
             var place=typeof(SimpleHud).GetMethod("TryPlaceBuildingAt");
             Assert.That(place,Is.Not.Null);
-            var position=hud.Player.transform.position+Vector3.right*4;
+            var position=new Vector3(1000.34f,-1000.27f,0);
             Assert.That((bool)place.Invoke(hud,new object[]{position}),Is.True);
             Assert.That(resources.Get(ResourceKind.Wood),Is.EqualTo(wood-cost.Wood));
             Assert.That(resources.Get(ResourceKind.Stone),Is.EqualTo(stone-cost.Stone));
             Assert.That(Time.timeScale,Is.EqualTo(1));
-            Assert.That(Object.FindFirstObjectByType<ConstructionSite>(),Is.Not.Null);
+            var site=Object.FindFirstObjectByType<ConstructionSite>();
+            Assert.That(site,Is.Not.Null);
+            Assert.That(site.transform.position,Is.EqualTo(new Vector3(1000,-1000,0)));
+            Assert.That(site.transform.localScale,Is.EqualTo(ConstructionPlacement.Scale(BuildingKind.House)));
+            Assert.That(site.GetComponent<SpriteRenderer>().sprite,Is.EqualTo(ConstructionPlacement.Sprite(BuildingKind.House)));
             Time.timeScale=.5f;
             typeof(SimpleHud).GetMethod("SetHudMode",flags).Invoke(hud,new object[]{SimpleHud.HudMode.Build});
             Assert.That(Time.timeScale,Is.EqualTo(0));
             Assert.That(hud.TrySelectBuilding(BuildingKind.House),Is.True);
             int beforeCancel=resources.Get(ResourceKind.Wood);
+            Assert.That(hud.TryPlaceBuildingAt(position),Is.False,"An unfinished site must prevent duplicate placement");
+            Assert.That(resources.Get(ResourceKind.Wood),Is.EqualTo(beforeCancel),"Rejected overlap must not charge resources");
+            Assert.That(Time.timeScale,Is.EqualTo(0),"Rejected placement stays in building mode");
             typeof(SimpleHud).GetMethod("CloseBuildCatalog",flags).Invoke(hud,null);
             Assert.That(Time.timeScale,Is.EqualTo(.5f),"Cancel restores the previous game speed");
             Assert.That(resources.Get(ResourceKind.Wood),Is.EqualTo(beforeCancel));
             Assert.That(typeof(SimpleHud).GetField("_pendingBuildKind",flags).GetValue(hud),Is.Null);
             Time.timeScale=1;
+            int beforeFence=resources.Get(ResourceKind.Wood),stoneBeforeFence=resources.Get(ResourceKind.Stone);
+            typeof(SimpleHud).GetMethod("SetHudMode",flags).Invoke(hud,new object[]{SimpleHud.HudMode.Build});
+            Assert.That(hud.TrySelectBuilding(BuildingKind.Fence),Is.True);
+            Assert.That(hud.TryPlaceBuildingAt(position+Vector3.right*5),Is.True);
+            Assert.That(resources.Get(ResourceKind.Wood),Is.EqualTo(beforeFence-1),"Fence placement must cost one wood despite existing village fences");
+            Assert.That(resources.Get(ResourceKind.Stone),Is.EqualTo(stoneBeforeFence));
             yield return SceneManager.LoadSceneAsync("BootScene");
         }
     }

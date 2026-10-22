@@ -20,7 +20,7 @@ namespace IL6.Tests
             var hud=Object.FindFirstObjectByType<SimpleHud>();
             typeof(SimpleHud).GetMethod("PrepareHudPreview",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(hud,null);
             var player=hud.Player;
-            hud.Attacker.AutoAttackEnabled=false;
+
             var gate=Door.FindNearest(player.transform.position);
             Assert.That(gate,Is.Not.Null);
             gate.SetOpen(false);

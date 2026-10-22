@@ -3,7 +3,7 @@ using UnityEngine;
 namespace IL6
 {
     /// <summary>
-    /// 플레이어가 E를 누르면 가장 가까운 Gatherable을 시작.
+    /// 통합 행동 버튼으로 가까운 Gatherable을 시작.
     /// 진행 중에는 다른 채집 차단. 완료되면 자원 적립.
     /// </summary>
     public sealed class GatherController : MonoBehaviour
@@ -134,6 +134,39 @@ namespace IL6
             if (nearest == null) return false;
             if (_active == nearest) return true; // Repeated attack presses keep logging progress.
             return StartGathering(nearest);
+        }
+
+        public Gatherable FindNearbyTarget(float radius)
+        {
+            if (Player == null) return null;
+            Gatherable nearest = null;
+            float nearestDistance = radius;
+            foreach (var hit in Physics2D.OverlapCircleAll(Player.transform.position,radius))
+            {
+                var target = hit.GetComponent<Gatherable>();
+                if (target == null || !target.isActiveAndEnabled || target.GetComponent<AnimalAi>() != null) continue;
+                float distance = Vector2.Distance(Player.transform.position,hit.ClosestPoint(Player.transform.position));
+                if (distance > nearestDistance) continue;
+                nearest = target;
+                nearestDistance = distance;
+            }
+            return nearest;
+        }
+
+        public bool TryStartNearby(float radius)
+        {
+            if (InputReader.HudBlocked || Time.timeScale <= 0f || Player == null || Player.IsDead || Store == null) return false;
+            if (IsActive) return true; // Repeated Space keeps the same task and its progress.
+            var target = FindNearbyTarget(radius);
+            return target != null && StartGathering(target);
+        }
+
+        public string NearbyActionLabel(float radius)
+        {
+            var target = _active != null ? _active : FindNearbyTarget(radius);
+            if (target == null) return "공격";
+            if (target.GetComponent<DiscoverySite>() != null) return "조사";
+            return target.IsTree ? "벌목" : target.YieldKind == ResourceKind.Stone ? "채굴" : "채집";
         }
 
         /// <summary>Start one gathering action; changing targets requires ending the current action.</summary>

@@ -29,6 +29,7 @@ namespace IL6
 
         private void Awake()
         {
+            YSort.Ensure(gameObject);
             _rb = GetComponent<Rigidbody2D>();
             _rb.gravityScale = 0f;
             _rb.freezeRotation = true;
@@ -112,6 +113,7 @@ namespace IL6
         private void FixedUpdate()
         {
             if (IsDead) { _rb.velocity = Vector2.zero; return; }
+            if (MeleeKnockback.IsActive(gameObject)) return;
 
             Transform target = FindNearestTarget();
             if (target == null) { _rb.velocity = Vector2.zero; return; }

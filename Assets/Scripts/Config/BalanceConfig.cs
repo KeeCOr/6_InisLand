@@ -42,7 +42,7 @@ namespace IL6
         public int PlayerArmor = 0;
 
         [Header("Zombie")]
-        public int ZombieMaxHp = 20;
+        public int ZombieMaxHp = 60;
         public float ZombieMoveSpeed = 60f;
         public int ZombieAttackDamage = 8;
         public float ZombieAttackCooldownSec = 1f;
@@ -65,7 +65,7 @@ namespace IL6
         public int LookoutPostHp = 180;
         public int SawmillHp = 260;
         public int BarricadeHp = 280;
-        public int FenceHp = 40;
+        public int FenceHp = 100;
 
         [Header("Building Cost (wood)")]
         public int CampfireCost = 5;
@@ -83,7 +83,7 @@ namespace IL6
         public float BonfireDamagePerSec = 2.5f;  // 5f→2.5f: 밤 난이도 회복
         public float BonfireRadius = 128f;
         public float BonfireAttackBuff = 0.15f;
-        public float CampfireHpDrainPerSec = 0.5f;
+        public float CampfireHpDrainPerSec = 1f;
 
         private static BalanceConfig _instance;
         public static BalanceConfig Instance

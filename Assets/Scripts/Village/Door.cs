@@ -53,6 +53,7 @@ namespace IL6
 
         private void Awake()
         {
+            YSort.Ensure(gameObject);
             _self = GetComponent<Collider2D>();
             _sr = GetComponent<SpriteRenderer>();
 

@@ -9,6 +9,7 @@ namespace IL6
         internal void PrepareHudPreview() { _tutorialDismissed=true; _tutorialPaused=false; InputReader.HudBlocked=false; }
         private void HandleSecondaryTouch()
         {
+            if(_buildPaused) return;
             for (int i=1; i<Input.touchCount; i++)
             {
                 var touch=Input.GetTouch(i);
@@ -18,8 +19,11 @@ namespace IL6
                 if(!ControlsBlocked && MobileHudLayout.ResourceTouchBounds.Contains(p)) { _resourceDetailsOpen=!_resourceDetailsOpen; continue; }
                 if(!ControlsBlocked && MobileButtonTheme.Contains(MobileHudLayout.CompanionButton,p)) { _showCompanions=!_showCompanions; continue; }
                 if(ControlsBlocked && !BuildUiAvailable) continue;
-                for(int slot=0;slot<7;slot++)
+                for(int slot=0;slot<5;slot++)
+                {
+                    if(slot==4 && !_buildPaused && _pendingBuildKind==null) continue;
                     if(MobileButtonTheme.Contains(MobileHudLayout.ActionButton(slot),p)) { InvokeHudAction(slot); break; }
+                }
             }
         }
 
@@ -40,12 +44,11 @@ namespace IL6
                 case 0:SetHudMode(HudMode.Melee);break;
                 case 1:SetHudMode(HudMode.Ranged);break;
                 case 2:SetHudMode(HudMode.Build);break;
-                case 3:if(Attacker!=null && _hudMode!=HudMode.Build) Attacker.TryManualAction();break;
-                case 4:if(_pendingBuildKind!=null) _pendingBuildKind=null;else UsePrimaryAction();break;
-                case 6:if(Attacker!=null) Attacker.AutoAttackEnabled=!Attacker.AutoAttackEnabled;break;
+                case 3:UseUnifiedAction();break;
+                case 4:if(_pendingBuildKind!=null) _pendingBuildKind=null;else UseUnifiedAction();break;
             }
         }
-        private bool ControlsBlocked => _researchOpen || _buildPaused || _paused || _buildCatalogOpen || _tutorialPaused || Time.timeScale <= 0f
+        private bool ControlsBlocked => _workMenuOpen || _researchOpen || _buildPaused || _paused || _buildCatalogOpen || _tutorialPaused || Time.timeScale <= 0f
             || (Player != null && Player.IsDead)
             || (Progression != null && Progression.LevelUpPending)
             || (!_tutorialDismissed && PlayerPrefs.GetInt(TutorialPrefKey, 0) == 0)
@@ -69,6 +72,18 @@ namespace IL6
             return actions;
         }
 
+        public void UseUnifiedAction()
+        {
+            if (ControlsBlocked || _pendingBuildKind != null || (_hudMode == HudMode.Build && !_buildRepairMode)) return;
+            if (_buildRepairMode) { if(Attacker!=null) Attacker.TryManualAction();return; }
+            if (Attacker != null && Attacker.HasManualActionTarget)
+            {
+                Attacker.TryManualAction();
+                return; // A blocked action never falls through into another action or spends resources.
+            }
+            UsePrimaryAction();
+        }
+
         public void UsePrimaryAction()
         {
             if (ControlsBlocked || _pendingBuildKind != null) return;
@@ -80,7 +95,7 @@ namespace IL6
                 action.Callback?.Invoke();
                 return;
             }
-            if (Gather != null && !Gather.IsActive) Gather.TryStart();
+            if (Gather != null && !Gather.IsActive) Gather.TryStartNearby(Attacker != null ? Attacker.ManualTreeInteractRadius : 2.2f);
         }
 
         private void ToggleMenu()
@@ -103,12 +118,14 @@ namespace IL6
         {
             if (ControlsBlocked && !BuildUiAvailable) return true;
             if (_buildCatalogOpen) return true;
+            if (_buildPaused) return BuildPlacementControlsRect.Contains(point) || new Rect(MobileHudLayout.Width/2-280,96,560,40).Contains(point);
             if (_resourceDetailsOpen && ResourceDetailsRect.Contains(point)) return true;
             if (MobileHudLayout.Status.Contains(point) || MobileHudLayout.Resources.Contains(point)
-                || MobileHudLayout.Goals.Contains(point) || MobileHudLayout.Actions.Contains(point)
+                || GoalTrackerBounds.Contains(point) || MobileHudLayout.Actions.Contains(point)
                 || MobileHudLayout.Movement.Contains(point) || MobileHudLayout.Menu.Contains(point)) return true;
             if (MobileHudLayout.CompanionButton.Contains(point)) return true;
-            if (MobileHudLayout.CompanionSummary(_showCompanions).Contains(point)) return true;
+            if (!_resourceDetailsOpen && MobileHudLayout.CompanionSummary(_showCompanions).Contains(point)) return true;
+            if (!_resourceDetailsOpen && _hudMode!=HudMode.Build && HudLayout.WorkLauncher().Contains(point) && NearbyActions().Count>0) return true;
             if (MobileHudLayout.ResourceTouchBounds.Contains(point)) return true;
             // Construction catalog occupies the strip above the movement/action controls.
             return false;
@@ -131,16 +148,19 @@ namespace IL6
             if(Gather!=null && Gather.IsActive) actionName="중단";
             if(_pendingBuildKind!=null) actionName="취소";
             else if(_buildPaused) actionName="건설 종료";
-            var door=Player!=null ? Player.NearbyDoor : null;
-            string[] labels={"근접","활","건설","공격",actionName,door!=null && door.IsOpen ? "출입 가능" : "자동 출입",Attacker!=null && Attacker.AutoAttackEnabled ? "자동 ON":"자동 OFF"};
-            string[] keys={"1","2","B/3","Space","E","접근","R"};
-            HudGlyph[] icons={HudGlyph.Sword,HudGlyph.Bow,HudGlyph.Hammer,HudGlyph.Sword,door!=null ? HudGlyph.Door:HudGlyph.Hand,HudGlyph.Door,HudGlyph.Auto};
-            for(int i=0;i<7;i++)
+            string attackLabel=Attacker!=null?Attacker.ManualActionLabel:"공격";
+            if(attackLabel=="공격" && Attacker!=null && !Attacker.HasManualActionTarget && selected.Callback!=null) attackLabel=actionName;
+            string[] labels={"근접","활","건설",attackLabel,actionName};
+            string[] keys={"1","2","B/3","Space","E"};
+            HudGlyph[] icons={HudGlyph.Sword,HudGlyph.Bow,HudGlyph.Hammer,HudGlyph.Sword,HudGlyph.Hand};
+            if(attackLabel!="공격") icons[3]=attackLabel=="벌목" || attackLabel=="채굴" || attackLabel=="수리" ? HudGlyph.Hammer : HudGlyph.Hand;
+            for(int i=0;i<5;i++)
             {
-                bool active=i==0 && _hudMode==HudMode.Melee || i==1 && _hudMode==HudMode.Ranged || i==2 && _hudMode==HudMode.Build || i==6 && Attacker!=null && Attacker.AutoAttackEnabled;
-                bool enabled=i==3 ? Attacker!=null && _hudMode!=HudMode.Build : i==5 ? false : i==6 ? Attacker!=null : true;
+                if(i==4 && !_buildPaused && _pendingBuildKind==null) continue; // One main action button for desktop and touch.
+                bool active=i==0 && _hudMode==HudMode.Melee || i==1 && _hudMode==HudMode.Ranged || i==2 && _hudMode==HudMode.Build;
+                bool enabled=i==3 ? Attacker!=null && (_hudMode!=HudMode.Build || _buildRepairMode) : true;
                 if (_buildPaused) enabled = BuildUiAvailable && (i == 0 || i == 1 || i == 2 || i == 4);
-                Color tint=i==3 || i==4 ? MobileButtonTheme.Jade : i==2 || i==5 ? MobileButtonTheme.Gold : new Color(.22f,.38f,.38f);
+                Color tint=i==3 || i==4 ? MobileButtonTheme.Jade : i==2 ? MobileButtonTheme.Gold : new Color(.22f,.38f,.38f);
                 if(MobileButtonTheme.Button(MobileHudLayout.ActionButton(i),labels[i],keys[i],icons[i],tint,enabled,active)) InvokeHudAction(i);
             }
             Vector2 axis=Vector2.zero;

@@ -38,7 +38,7 @@ namespace IL6
                 touchMove = MobileHudLayout.MoveAt(MobileHudLayout.GuiPoint(UnityEngine.Input.mousePosition));
             MoveAxis = Vector2.ClampMagnitude(new Vector2(ax, ay) + touchMove, 1f);
 
-            InteractPressed = Input.GetKeyDown(KeyCode.E);
+            InteractPressed = Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.E);
             CancelPressed = Input.GetKeyDown(KeyCode.Escape);
             BuildPressed = Input.GetKeyDown(KeyCode.B);
         }

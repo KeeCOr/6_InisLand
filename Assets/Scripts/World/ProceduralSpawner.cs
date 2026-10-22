@@ -18,10 +18,10 @@ namespace IL6
         public int UnloadRadius = 4;
 
         [Header("Spawn probability (per slot)")]
-        [Range(0, 1)] public float TreeChance = 0.22f;  // 0.5→0.22 — 너무 흔하던 거 다운
+        [Range(0, 1)] public float TreeChance = 0.16f;
         [Range(0, 1)] public float RockChance = 0.08f;  // 0.15→0.08
         [Range(0, 1)] public float DeerChance = 0.10f;
-        [Range(0, 1)] public float NpcChance = 0.04f;
+        [Range(0, 1)] public float NpcChance = 0.08f;
         [Range(0, 1)] public float DiscoveryChance = 0.10f;
         public int SlotsPerChunk = 6;
 
@@ -40,6 +40,9 @@ namespace IL6
 
         private void Start()
         {
+            foreach (var resource in Object.FindObjectsByType<Gatherable>(FindObjectsSortMode.None))
+                if (resource.YieldKind == ResourceKind.Wood && resource.GetComponent<TreeVisibility>() == null)
+                    resource.gameObject.AddComponent<TreeVisibility>();
             if (Player == null)
             {
                 var p = GameObject.FindWithTag("Player");
@@ -48,12 +51,12 @@ namespace IL6
         }
 
         private float _dailyNpcTimer;
-        public float DailyNpcIntervalSec = 30f; // 낮 1분당 ~2명 (마을당 동시 최대 2명까지)
+        public float DailyNpcIntervalSec = 20f;
         public int MaxAliveNpcs = 3;             // 월드에 동시 살아있는 영입 가능 NPC 상한
         public int ScarceCompanionCount = 3;
         public int LowCompanionCount = 6;
-        public float ScarceNpcIntervalSec = 12f;
-        public float LowNpcIntervalSec = 20f;
+        public float ScarceNpcIntervalSec = 6f;
+        public float LowNpcIntervalSec = 12f;
         public int ScarceMaxAliveNpcs = 5;
         private const int WolfSafeCompanionThreshold = 3;
         private const string WolfAnimalName = "Wolf_proc";
@@ -108,9 +111,8 @@ namespace IL6
         private Vector2 DailyNpcSpawnDistanceRange()
         {
             int companions = RecruitableNpc.CurrentCompanionCount();
-            if (companions < ScarceCompanionCount) return new Vector2(4.5f, 7.0f);
-            if (companions < LowCompanionCount) return new Vector2(5.5f, 8.0f);
-            return new Vector2(6.5f, 9.0f);
+            if (companions < ScarceCompanionCount) return new Vector2(3.2f, 4.2f);
+            return new Vector2(3.8f, 4.6f);
         }
 
         private void EnsureLoaded(int pcx, int pcy)
@@ -134,7 +136,13 @@ namespace IL6
                 int ddy = Mathf.Abs(kv.Key.Item2 - pcy);
                 if (Mathf.Max(ddx, ddy) > UnloadRadius)
                 {
-                    foreach (var go in kv.Value.Spawned) if (go != null) Destroy(go);
+                    foreach (var go in kv.Value.Spawned)
+                    {
+                        if (go == null) continue;
+                        var companion = go.GetComponent<Companion>();
+                        if (companion != null && !companion.IsDead) continue;
+                        Destroy(go);
+                    }
                     toRemove.Add(kv.Key);
                 }
             }
@@ -321,6 +329,7 @@ namespace IL6
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 5;
+            go.AddComponent<TreeVisibility>();
             var treeSpr = SpriteBank.SnowPineTree();
             if (treeSpr != null) sr.sprite = treeSpr;
 
@@ -703,17 +712,28 @@ namespace IL6
             if (session.Cycle.Phase != Phase.Day) return;
 
             // 월드에 이미 살아있는 NPC 가 상한 이상이면 스폰 스킵 — 누적 방지
-            int alive = Object.FindObjectsByType<RecruitableNpc>(FindObjectsSortMode.None).Length;
+            int alive = 0;
+            Vector2 village = new Vector2(GameConstants.VillageCenterX,GameConstants.VillageCenterY);
+            foreach (var npc in Object.FindObjectsByType<RecruitableNpc>(FindObjectsSortMode.None))
+                if (npc.enabled && npc.CanRecruit() && Vector2.Distance(npc.transform.position,village) <= 12f) alive++;
             if (alive >= EffectiveMaxAliveNpcs()) return;
 
             uint seed = Seed ^ unchecked((uint)Time.frameCount);
             var rng = new SeededRng(seed);
-            float angle = rng.Next() * Mathf.PI * 2f;
             Vector2 spawnRange = DailyNpcSpawnDistanceRange();
-            float dist = spawnRange.x + rng.Next() * Mathf.Max(0.1f, spawnRange.y - spawnRange.x);
-            float x = GameConstants.VillageCenterX + Mathf.Cos(angle) * dist;
-            float y = GameConstants.VillageCenterY + Mathf.Sin(angle) * dist;
-            CreateNpc(x, y, rng);
+            for (int attempt=0;attempt<24;attempt++)
+            {
+                float angle = rng.Next() * Mathf.PI * 2f;
+                float dist = Mathf.Lerp(spawnRange.x,spawnRange.y,rng.Next());
+                Vector2 position = village + new Vector2(Mathf.Cos(angle),Mathf.Sin(angle))*dist;
+                bool blocked = false;
+                foreach (var hit in Physics2D.OverlapCircleAll(position,.65f))
+                    if (hit.GetComponent<Building>() != null || hit.GetComponent<Gatherable>() != null || hit.GetComponent<RecruitableNpc>() != null)
+                    { blocked = true; break; }
+                if (blocked) continue;
+                CreateNpc(position.x,position.y,rng);
+                return;
+            }
         }
 
         /// <summary>특정 NPC 아키타입을 지정 위치에 직접 스폰 — PrefabGenerator 용.</summary>

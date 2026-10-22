@@ -45,9 +45,28 @@ namespace IL6
         private System.Action _unsubNight;
         private System.Action _unsubDawn;
         private System.Action _unsubDay;
+        private DayNightController _boundCycle;
+        private System.Func<bool> _nightEndGuard;
+        private Zombie _activeBoss;
+        private Coroutine _bossWarningRoutine;
+        private bool _bossWarningPending;
+        public bool BossEncounterActive => CurrentPhase == Phase.Night
+            && (_bossWarningPending || (_activeBoss != null && !_activeBoss.IsDead));
+
+        private void BindCycle()
+        {
+            var cycle = GameSession.Instance != null ? GameSession.Instance.Cycle : null;
+            if (cycle == _boundCycle) return;
+            if (_boundCycle != null && _boundCycle.NightEndBlocked == _nightEndGuard) _boundCycle.NightEndBlocked = null;
+            _boundCycle = cycle;
+            if (_boundCycle == null) return;
+            _nightEndGuard = () => this != null && BossEncounterActive;
+            _boundCycle.NightEndBlocked = _nightEndGuard;
+        }
 
         private void Start()
         {
+            BindCycle();
             if (Player == null)
             {
                 var p = GameObject.FindWithTag("Player");
@@ -61,6 +80,7 @@ namespace IL6
 
         private void OnDestroy()
         {
+            if (_boundCycle != null && _boundCycle.NightEndBlocked == _nightEndGuard) _boundCycle.NightEndBlocked = null;
             _unsubEvening?.Invoke();
             _unsubNight?.Invoke();
             _unsubDawn?.Invoke();
@@ -86,7 +106,7 @@ namespace IL6
             _bossSpawnedThisNight = false;
             Sfx.NightHowl();
             CameraFollow.Shake(0.35f, 0.6f);
-            if (IsBossNight) { Sfx.Boss(); CameraFollow.Shake(0.7f, 1.2f); _bossSpawnedThisNight = true; StartCoroutine(BossWarningThenSpawn(day)); }
+            if (IsBossNight) { Sfx.Boss(); CameraFollow.Shake(0.7f, 1.2f); _bossSpawnedThisNight = true; _bossWarningRoutine = StartCoroutine(BossWarningThenSpawn(day)); }
         }
 
         /// <summary>좀비가 죽을 때 GameSession.OnZombieKilled 와 함께 호출됨.</summary>
@@ -100,12 +120,13 @@ namespace IL6
                 _bossSpawnedThisNight = true;
                 int day = GameSession.Instance != null ? GameSession.Instance.Cycle.Day : 1;
                 Sfx.Boss(); CameraFollow.Shake(0.7f, 1.2f);
-                StartCoroutine(BossWarningThenSpawn(day));
+                _bossWarningRoutine = StartCoroutine(BossWarningThenSpawn(day));
             }
         }
 
         private System.Collections.IEnumerator BossWarningThenSpawn(int day)
         {
+            _bossWarningPending = true;
             BossWarningRemaining = 3f;
             while (BossWarningRemaining > 0f)
             {
@@ -114,11 +135,12 @@ namespace IL6
             }
             BossWarningRemaining = 0f;
             SpawnBoss(day);
+            _bossWarningPending = false;
         }
 
         private void SpawnBoss(int day)
         {
-            if (Player == null) return;
+            if (Player == null || CurrentPhase != Phase.Night) return;
             Vector3 spawnPos = PickOutsideVillageSpawnPos(rngBased: false);
 
             var go = new GameObject($"Boss_d{day}");
@@ -136,6 +158,7 @@ namespace IL6
             col.radius = 0.45f;
 
             var zombie = go.AddComponent<Zombie>();
+            _activeBoss = zombie;
             zombie.InitHp(100 + day * 100);
             zombie.VariantDamageBonus = 18 + (day - 1) * 2;
             zombie.MoveSpeedMul = 1f + Mathf.Min((day - 1) * 0.02f, 0.5f);
@@ -169,6 +192,11 @@ namespace IL6
 
         public void EndNight()
         {
+            if (_bossWarningRoutine != null) StopCoroutine(_bossWarningRoutine);
+            _bossWarningRoutine = null;
+            _bossWarningPending = false;
+            BossWarningRemaining = 0f;
+            _activeBoss = null;
             _pendingSpawns = 0;
             IsBlizzard = false;
             foreach (var z in _tracked)
@@ -187,6 +215,7 @@ namespace IL6
 
         private void Update()
         {
+            BindCycle();
             _tracked.RemoveAll(z => z == null);
             _activeZombies = _tracked.Count;
 

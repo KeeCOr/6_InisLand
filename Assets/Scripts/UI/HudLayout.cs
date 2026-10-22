@@ -4,6 +4,8 @@ namespace IL6
 {
     public static class HudLayout
     {
+        public static Rect WorkLauncher() => WorkLauncher(MobileHudLayout.Width,MobileHudLayout.Height);
+        public static Rect WorkLauncher(float width,float height) => new Rect(width/2-130,height-62,260,48);
         public static Rect TopLeftStatus()
         {
             return new Rect(

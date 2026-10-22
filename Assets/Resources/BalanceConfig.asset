@@ -33,7 +33,7 @@ MonoBehaviour:
   PlayerMoveSpeed: 5
   PlayerRespawnSec: 3
   PlayerArmor: 0
-  ZombieMaxHp: 20
+  ZombieMaxHp: 60
   ZombieMoveSpeed: 2
   ZombieAttackDamage: 8
   ZombieAttackCooldownSec: 1
@@ -52,7 +52,7 @@ MonoBehaviour:
   LookoutPostHp: 180
   SawmillHp: 260
   BarricadeHp: 280
-  FenceHp: 40
+  FenceHp: 100
   CampfireCost: 5
   BrazierCost: 12
   BlacksmithCost: 10

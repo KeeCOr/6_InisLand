@@ -61,7 +61,7 @@ namespace IL6.Tests
         [Test] public void UnrelatedBuildingsDoNotInflateFenceBaseHealth() {
             var fence=new GameObject("Fence test");try {
                 var building=fence.AddComponent<Building>();building.Initialize(BuildingKind.Fence);
-                Assert.That(building.MaxHp,Is.EqualTo(40));
+                Assert.That(building.MaxHp,Is.EqualTo(100));
                 Assert.That(building.TryUpgrade(_store),Is.False,"Fence upgrades belong to carpenter research");
             } finally { Object.DestroyImmediate(fence); }
         }

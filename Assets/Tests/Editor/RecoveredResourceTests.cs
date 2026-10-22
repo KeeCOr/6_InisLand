@@ -62,15 +62,22 @@ namespace IL6.Tests
         }
 
         [Test]
-        public void YSort_SetOffsetBeforeAwake_UpdatesRenderer()
+        public void YSort_SetOffsetBeforeAwake_UpdatesGroupAndPreservesInternalOrder()
         {
             var go = new GameObject("EditorGeneratedObject");
             try
             {
                 var renderer = go.AddComponent<SpriteRenderer>();
+                renderer.sortingOrder = 3;
+                var marker = new GameObject("Marker");marker.transform.SetParent(go.transform);
+                var markerRenderer = marker.AddComponent<SpriteRenderer>();markerRenderer.sortingOrder = 7;
                 var sort = go.AddComponent<YSort>();
                 sort.SetOrderOffset(5);
-                Assert.That(renderer.sortingOrder, Is.EqualTo(5));
+                float cameraY = Camera.main != null ? Camera.main.transform.position.y : 0f;
+                Assert.That(go.GetComponent<UnityEngine.Rendering.SortingGroup>().sortingOrder,
+                    Is.EqualTo(Mathf.Clamp(YSort.ComputeOrder(-cameraY)+5,-9000,9000)));
+                Assert.That(renderer.sortingOrder, Is.EqualTo(3));
+                Assert.That(markerRenderer.sortingOrder, Is.EqualTo(7));
             }
             finally { Object.DestroyImmediate(go); }
         }

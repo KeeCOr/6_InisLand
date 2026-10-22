@@ -25,6 +25,7 @@ namespace IL6
         public int Day { get; private set; } = 1;
         public Phase Phase { get; private set; } = Phase.Day;
         public float ElapsedInPhase { get; private set; }
+        public Func<bool> NightEndBlocked { get; set; }
 
         /// <summary>레벨이 오를수록 낮/밤 길이가 늘어남 — PlayerProgression 가 갱신.
         /// 단, 현재 페이즈 길이는 PhaseLockedDuration 에 진입 시점 값으로 캐시 — 도중 변경되어도 영향 X.</summary>
@@ -46,6 +47,11 @@ namespace IL6
             ElapsedInPhase += dt;
             while (ElapsedInPhase >= _phaseLockedDuration)
             {
+                if (Phase == Phase.Night && NightEndBlocked != null && NightEndBlocked())
+                {
+                    ElapsedInPhase = _phaseLockedDuration;
+                    return;
+                }
                 ElapsedInPhase -= _phaseLockedDuration;
                 Advance();
                 _phaseLockedDuration = ComputeDuration(Phase);

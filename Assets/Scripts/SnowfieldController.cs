@@ -50,6 +50,12 @@ namespace IL6
 
             // 마을 자리에 모닥불 + 울타리 링 자동 스폰 (이미 있으면 스킵)
             VillageStarter.SpawnStarterVillage(villageCenter);
+            var ground=GameObject.Find("Ground");
+            if(ground!=null && ground.GetComponent<SpriteRenderer>()!=null)
+            {
+                var coverage=ground.GetComponent<GroundCoverage>() ?? ground.AddComponent<GroundCoverage>();
+                coverage.View=MainCamera;
+            }
 
             // 매일 아침마다 마을 근처에 영입 가능한 NPC 1명 스폰
             _unsubDailyNpc = EventBus.Instance.Subscribe<DayStartedPayload>(p =>

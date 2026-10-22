@@ -47,7 +47,7 @@ namespace IL6.Tests
         [Test]
         public void CircularButtonsHaveDistinctHitTargetsAndIgnoreCorners()
         {
-            for(int i=0;i<7;i++)
+            for(int i=0;i<5;i++)
             {
                 var r=MobileHudLayout.ActionButton(i);
                 Assert.That(MobileButtonTheme.Contains(r,r.center),Is.True);
@@ -55,7 +55,7 @@ namespace IL6.Tests
                 Assert.That(r.width,Is.GreaterThanOrEqualTo(48));
                 Assert.That(r.xMin,Is.GreaterThanOrEqualTo(MobileHudLayout.Actions.xMin));
                 Assert.That(r.yMax,Is.LessThanOrEqualTo(MobileHudLayout.Actions.yMax));
-                for(int j=i+1;j<7;j++) Assert.That(r.Overlaps(MobileHudLayout.ActionButton(j)),Is.False);
+                for(int j=i+1;j<5;j++) Assert.That(r.Overlaps(MobileHudLayout.ActionButton(j)),Is.False);
             }
         }
     }

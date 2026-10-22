@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace IL6
 {
@@ -37,38 +37,17 @@ namespace IL6
         /// 중심점 주변에 모닥불 + 사각 울타리 + 남쪽 문(플레이어만 통과) 스폰.
         /// 이미 근처에 모닥불 있으면 스킵.
         /// </summary>
-        /// <summary>현재 마을 펜스 사각형 반경 — 건물 추가 시 단계적으로 확장.</summary>
+        /// <summary>초기 외곽 울타리 반경. 시설 완공은 울타리를 재생성하지 않는다.</summary>
+        private static GameObject _outerFenceRoot;
+
         public static float CurrentHalfSize { get; private set; } = 5f;
         public const float MinHalfSize = 5f;
-        public const float MaxHalfSize = 14f;
-        public const float HalfSizePerBuilding = 0.4f; // 비-펜스 건물 1당 +0.4u
-
-        /// <summary>비-펜스 건물 수에 따른 목표 halfSize.</summary>
-        public static float TargetHalfSize()
-        {
-            int built = 0;
-            var bs = UnityEngine.Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
-            foreach (var b in bs)
-            {
-                if (b == null || b.CurrentHp <= 0) continue;
-                if (b.Kind == BuildingKind.Fence) continue;
-                built++;
-            }
-            return Mathf.Min(MaxHalfSize, MinHalfSize + (built - 1) * HalfSizePerBuilding);
-        }
-
-        /// <summary>새 건물 짓고 나면 호출 — 새 외곽 반경에 맞춰 펜스 추가 + 새 게이트.</summary>
-        public static void OnBuildingAdded(Vector3 center)
-        {
-            float target = TargetHalfSize();
-            if (target <= CurrentHalfSize + 0.05f) return;
-            CurrentHalfSize = target;
-            BuildOuterRing(center, target);
-        }
 
         private static void BuildOuterRing(Vector3 center, float halfSize, float spacing = 1.0f)
         {
-            int slots = Mathf.Max(3, Mathf.RoundToInt((halfSize * 2f) / spacing) + 1);
+            if (_outerFenceRoot == null) _outerFenceRoot = new GameObject("VillageOuterFence");
+            int slots = Mathf.Max(3, 2 * Mathf.RoundToInt(halfSize / spacing) + 1);
+            spacing = 2f * halfSize / (slots - 1);
             int gateSlot = slots / 2;
             float startOffset = -halfSize;
 
@@ -84,19 +63,19 @@ namespace IL6
 
                 if (i == 0)
                 {
-                    SpawnFenceCorner(pos, FenceCornerPieceType.BottomLeft);
+                    AttachToRing(SpawnFenceCorner(pos, FenceCornerPieceType.BottomLeft));
                 }
                 else if (i == lastIndex)
                 {
-                    SpawnFenceCorner(pos, FenceCornerPieceType.BottomRight);
+                    AttachToRing(SpawnFenceCorner(pos, FenceCornerPieceType.BottomRight));
                 }
                 else if (i == gateSlot && !HasGateNear(pos, 1.2f))
                 {
-                    SpawnGate(pos);
+                    AttachToRing(SpawnGate(pos));
                 }
                 else if (i != gateSlot)
                 {
-                    SpawnFence(pos, 0f, FencePieceType.Center);
+                    AttachToRing(SpawnFence(pos, 0f, FencePieceType.Center));
                 }
             }
 
@@ -110,15 +89,15 @@ namespace IL6
 
                 if (i == 0)
                 {
-                    SpawnFenceCorner(pos, FenceCornerPieceType.TopLeft);
+                    AttachToRing(SpawnFenceCorner(pos, FenceCornerPieceType.TopLeft));
                 }
                 else if (i == lastIndex)
                 {
-                    SpawnFenceCorner(pos, FenceCornerPieceType.TopRight);
+                    AttachToRing(SpawnFenceCorner(pos, FenceCornerPieceType.TopRight));
                 }
                 else
                 {
-                    SpawnFence(pos, 0f, FencePieceType.Center);
+                    AttachToRing(SpawnFence(pos, 0f, FencePieceType.Center));
                 }
             }
 
@@ -130,11 +109,17 @@ namespace IL6
                 Vector3 epos = center + new Vector3(halfSize, ly, 0f);
 
                 if (!TooCloseToFence(wpos, 0.4f))
-                    SpawnVerticalFence(wpos, VerticalFencePieceType.Center);
+                    AttachToRing(SpawnVerticalFence(wpos, VerticalFencePieceType.Center));
 
                 if (!TooCloseToFence(epos, 0.4f))
-                    SpawnVerticalFence(epos, VerticalFencePieceType.Center);
+                    AttachToRing(SpawnVerticalFence(epos, VerticalFencePieceType.Center));
             }
+        }
+
+        private static void AttachToRing(GameObject piece)
+        {
+            if (_outerFenceRoot != null && piece != null)
+                piece.transform.SetParent(_outerFenceRoot.transform, true);
         }
 
         private static bool TooCloseToFence(Vector3 pos, float radius)
@@ -198,7 +183,7 @@ namespace IL6
             foreach (var slot in OuterFenceSlots(center, CurrentHalfSize, spacing))
             {
                 if (TooCloseToFence(slot.Position, 0.4f)) continue;
-                SpawnFence(slot.Position, slot.RotationDeg, slot.PieceType);
+                AttachToRing(SpawnFence(slot.Position, slot.RotationDeg, slot.PieceType));
                 built++;
             }
             return built;
@@ -220,13 +205,14 @@ namespace IL6
 
         private static System.Collections.Generic.IEnumerable<FenceSlot> OuterFenceSlots(Vector3 center, float halfSize, float spacing)
         {
-            int slots = Mathf.Max(3, Mathf.RoundToInt((halfSize * 2f) / spacing) + 1);
+            int slots = Mathf.Max(3, 2 * Mathf.RoundToInt(halfSize / spacing) + 1);
+            spacing = 2f * halfSize / (slots - 1);
             int gateSlot = slots / 2;
             float startOffset = -halfSize;
 
             for (int i = 0; i < slots; i++)
             {
-                if (Mathf.Abs(i - gateSlot) <= 1) continue;
+                if (i == gateSlot) continue;
                 float lx = startOffset + i * spacing;
                 yield return new FenceSlot(center + new Vector3(lx, -halfSize, 0f), 0f, GetFencePieceTypeWithGate(i, slots - 1, gateSlot));
             }
@@ -237,7 +223,7 @@ namespace IL6
                 yield return new FenceSlot(center + new Vector3(lx, halfSize, 0f), 0f, GetFencePieceType(i, slots - 1));
             }
 
-            for (int i = 0; i < slots; i++)
+            for (int i = 1; i < slots - 1; i++)
             {
                 float ly = startOffset + i * spacing;
                 var piece = GetFencePieceType(i, slots - 1);
@@ -248,7 +234,8 @@ namespace IL6
 
         public static void SpawnStarterVillage(Vector3 center, float halfSize = 5f, float spacing = 1.0f)
         {
-            CurrentHalfSize = halfSize;
+            // A missing campfire or broken fence is gameplay state, not a request to initialize again.
+            if (_outerFenceRoot != null) return;
             // 이미 모닥불이 가까이 있으면 (씬 재진입 등) 추가 스폰 안 함
             var existing = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
             foreach (var b in existing)
@@ -258,70 +245,10 @@ namespace IL6
                 if (Vector2.Distance(center, b.transform.position) < 6f) return;
             }
 
+            CurrentHalfSize = halfSize;
             SpawnCampfire(center);
 
-            // 사각형 울타리 — 4 면. 각 면의 중앙 슬롯은 비워서 (남쪽만) 문으로 대체.
-            int slotsPerSide = Mathf.Max(3, Mathf.RoundToInt((halfSize * 2f) / spacing) + 1);
-            int gateSlot = slotsPerSide / 2; // 가운데
-            float startOffset = -halfSize;
-
-            int lastIndex = slotsPerSide - 1;
-
-            // 남쪽 변
-            for (int i = 0; i < slotsPerSide; i++)
-            {
-                float lx = startOffset + i * spacing;
-                Vector3 pos = center + new Vector3(lx, -halfSize, 0f);
-
-                if (i == 0)
-                {
-                    SpawnFenceCorner(pos, FenceCornerPieceType.BottomLeft);
-                }
-                else if (i == lastIndex)
-                {
-                    SpawnFenceCorner(pos, FenceCornerPieceType.BottomRight);
-                }
-                else if (i == gateSlot)
-                {
-                    SpawnGate(pos);
-                }
-                else
-                {
-                    SpawnFence(pos, 0f, FencePieceType.Center);
-                }
-            }
-
-            // 북쪽 변
-            for (int i = 0; i < slotsPerSide; i++)
-            {
-                float lx = startOffset + i * spacing;
-                Vector3 pos = center + new Vector3(lx, halfSize, 0f);
-
-                if (i == 0)
-                {
-                    SpawnFenceCorner(pos, FenceCornerPieceType.TopLeft);
-                }
-                else if (i == lastIndex)
-                {
-                    SpawnFenceCorner(pos, FenceCornerPieceType.TopRight);
-                }
-                else
-                {
-                    SpawnFence(pos, 0f, FencePieceType.Center);
-                }
-            }
-
-            // 서쪽/동쪽 변
-            // 코너는 이미 위/아래에서 만들었으므로 i = 1 ~ lastIndex - 1만 생성
-            for (int i = 1; i < lastIndex; i++)
-            {
-                float ly = startOffset + i * spacing;
-                Vector3 wpos = center + new Vector3(-halfSize, ly, 0f);
-                Vector3 epos = center + new Vector3(halfSize, ly, 0f);
-
-                SpawnVerticalFence(wpos, VerticalFencePieceType.Center);
-                SpawnVerticalFence(epos, VerticalFencePieceType.Center);
-            }
+            BuildOuterRing(center, halfSize, spacing);
         }
 
         #region 울타리/게이트 스폰 유틸 - 돌담으로 갈아끼우기 쉽게 Adapter 패턴으로 추후 변경 예정
@@ -616,7 +543,7 @@ namespace IL6
         {
             var go = new GameObject("Campfire");
             go.transform.position = pos;
-            go.transform.localScale = Vector3.one * 0.9f;
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.Campfire);
 
             // 보이는 캠프파이어 이미지는 자식 애니메이션이 담당
             SpawnCampfireSmoke(go.transform);

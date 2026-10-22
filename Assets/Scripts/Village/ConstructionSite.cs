@@ -21,6 +21,7 @@ namespace IL6
 
         private void Awake()
         {
+            YSort.Ensure(gameObject);
             _sr = GetComponent<SpriteRenderer>();
         }
 

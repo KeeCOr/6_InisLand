@@ -21,7 +21,7 @@ namespace IL6.Tests
             var hud = Object.FindFirstObjectByType<SimpleHud>();
             typeof(SimpleHud).GetMethod("PrepareHudPreview", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(hud, null);
             var attack = hud.Attacker;
-            attack.AutoAttackEnabled = false;
+
             attack.SwitchToWeapon(0);
             hud.Player.transform.position = new Vector3(1000, 1000, 0);
             var tree = new GameObject("Attack tree test");
@@ -50,7 +50,16 @@ namespace IL6.Tests
             tree.transform.position = hud.Player.transform.position + Vector3.right;
             wood.YieldKind = ResourceKind.Stone;
             Physics2D.SyncTransforms();
-            Assert.That(method.Invoke(attack, null), Is.EqualTo(false));
+            yield return new WaitForSeconds(.6f);
+            Assert.That(attack.ManualActionLabel,Is.EqualTo("채굴"));
+            Assert.That(method.Invoke(attack, null), Is.EqualTo(true),"Space must also start nearby mining");
+            Assert.That(hud.Gather.ActiveTarget,Is.SameAs(wood));
+            yield return new WaitForSeconds(.2f);
+            progress=hud.Gather.Progress;
+            hud.UseUnifiedAction();
+            Assert.That(hud.Gather.Progress,Is.GreaterThanOrEqualTo(progress),"Repeated Space must not reset mining");
+            Assert.That(hud.Gather.ActiveTarget,Is.SameAs(wood),"HUD Space must keep the same mining target");
+            hud.Gather.Cancel();
             wood.YieldKind = ResourceKind.Wood;
             yield return new WaitForSeconds(.6f); // Finish the logging end phase before combat.
             var foe = new GameObject("Logging combat test");

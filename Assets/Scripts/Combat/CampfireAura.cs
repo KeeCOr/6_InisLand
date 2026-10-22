@@ -4,7 +4,7 @@ namespace IL6
 {
     /// <summary>
     /// 주변 반경 내 좀비에게 지속 화염 대미지. 건물을 방어하는 핵심 요소.
-    /// 추가: 시야 반경(VisionMask 에 노출), 황금빛 글로우 이펙트, 밤 시간 HP 자동 소모.
+    /// 추가: 시야 반경, 황금빛 글로우, 모닥불의 지속 HP 소모.
     /// </summary>
     public sealed class CampfireAura : MonoBehaviour
     {
@@ -124,22 +124,21 @@ namespace IL6
                 var c = _baseColor; c.r *= k; c.g *= k; c.b *= k; _sr.color = c;
             }
 
-            // ── 밤 HP Drain ────────────────────────────────────────────────
+            // Campfires decay throughout the day; other heat buildings retain their night drain.
             bool isNight = false;
             var session = GameSession.Instance;
             if (session != null && session.Cycle != null)
                 isNight = session.Cycle.Phase == Phase.Night;
 
             var building = GetComponent<Building>();
-            if (isNight && building != null && building.CurrentHp > 0)
+            if (building != null && building.CurrentHp > 0 && (building.Kind == BuildingKind.Campfire || isNight))
             {
-                float drainPerSec = BalanceConfig.Instance.CampfireHpDrainPerSec;
-                _drainAccum += Time.deltaTime;
-                // 1초마다 정수 단위로 TakeDamage 호출 (스파이크 방지)
-                if (_drainAccum >= 1f)
+                float drainPerSec = Mathf.Max(0f,BalanceConfig.Instance.CampfireHpDrainPerSec);
+                _drainAccum += drainPerSec * Time.deltaTime;
+                int drain = Mathf.FloorToInt(_drainAccum);
+                if (drain > 0)
                 {
-                    int drain = Mathf.Max(1, Mathf.RoundToInt(drainPerSec * _drainAccum));
-                    _drainAccum = 0f;
+                    _drainAccum -= drain; // Keep fractional damage and elapsed time across frames.
                     building.TakeDamage(drain);
                 }
             }

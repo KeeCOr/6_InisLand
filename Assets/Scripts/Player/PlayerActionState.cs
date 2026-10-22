@@ -10,6 +10,7 @@ namespace IL6
         public PlayerAction State { get; private set; } = PlayerAction.Idle;
         public ActionPhase Phase { get; private set; } = ActionPhase.Start;
         public bool IsBusy => State == PlayerAction.Attack || State == PlayerAction.Logging || State == PlayerAction.Gather || State == PlayerAction.Dead;
+        public bool BlocksMovement => State == PlayerAction.Logging || State == PlayerAction.Gather || State == PlayerAction.Dead;
         public event Action LoopImpact;
         private Animator _animator;
         private PlayerAction _next = PlayerAction.Idle;
@@ -24,12 +25,13 @@ namespace IL6
             var body = GetComponent<SpriteRenderer>();
             if (body != null && Mathf.Abs(facing.x) > .01f) body.flipX = facing.x < 0;
             var rb = GetComponent<Rigidbody2D>();
-            if (rb != null) rb.velocity = Vector2.zero;
+            if (rb != null && action != PlayerAction.Attack) rb.velocity = Vector2.zero;
             PlayPhase(ActionPhase.Start);
             return true;
         }
         public void SetMoving(bool moving)
         {
+            if (State == PlayerAction.Attack) { _next = moving ? PlayerAction.Move : PlayerAction.Idle; return; }
             if (IsBusy) return;
             var wanted = moving ? PlayerAction.Move : PlayerAction.Idle;
             if (State == wanted) return;

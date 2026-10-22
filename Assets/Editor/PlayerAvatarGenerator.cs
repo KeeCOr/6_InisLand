@@ -10,6 +10,11 @@ namespace IL6.EditorBuild
         private const string Folder="Assets/Resources/Sprites/Player/RedHairGirl";
         public static void Generate()
         {
+            if (File.Exists("Assets/art/generated/characters/chibi20261018/axe.png"))
+            {
+                ChibiCharacterInstaller.Install();
+                return;
+            }
             Directory.CreateDirectory(Folder);
             foreach(var weapon in new[]{"axe","bow"})
             {

@@ -37,7 +37,7 @@ namespace IL6
         {
             var go = new GameObject("Barricade");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(1.2f, 0.4f, 1f);
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.Barricade);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
             ApplySprite(sr, SpriteBank.WoodBarricade());
@@ -55,7 +55,7 @@ namespace IL6
         {
             var go = new GameObject("House");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(1.1f, 1.0f, 1f);
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.House);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
             ApplySprite(sr, SpriteBank.Cabin());
@@ -73,7 +73,7 @@ namespace IL6
         {
             var go = new GameObject("Storage");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(1.0f, 0.9f, 1f);
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.Storage);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
             ApplySprite(sr, SpriteBank.Logs());
@@ -91,7 +91,7 @@ namespace IL6
         {
             var go = new GameObject("Farm");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.Farm);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 2;
             ApplySprite(sr, SpriteBank.Farm());
@@ -109,7 +109,7 @@ namespace IL6
         {
             var go = new GameObject("Watchtower");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(0.7f, 1.4f, 1f);
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.Watchtower);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 4;
             ApplySprite(sr, SpriteBank.Watchtower());
@@ -128,7 +128,7 @@ namespace IL6
         {
             var go = new GameObject("Infirmary");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(1.0f, 1.0f, 1f);
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.Infirmary);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
             ApplySprite(sr, SpriteBank.Infirmary());
@@ -147,7 +147,7 @@ namespace IL6
         {
             var go = new GameObject("HuntersHut");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(1.0f, 1.0f, 1f);
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.HuntersHut);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
             ApplySprite(sr, SpriteBank.HuntersHut());
@@ -165,10 +165,10 @@ namespace IL6
         {
             var go = new GameObject("SeedStorage");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.SeedStorage);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
-            ApplySprite(sr, SpriteBank.Logs());
+            ApplySprite(sr, ConstructionPlacement.Sprite(BuildingKind.SeedStorage));
             var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.62f, 0.52f, 0.28f);
@@ -183,10 +183,10 @@ namespace IL6
         {
             var go = new GameObject("Carpenter");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(1.0f, 0.9f, 1f);
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.Carpenter);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
-            ApplySprite(sr, SpriteBank.Logs());
+            ApplySprite(sr, ConstructionPlacement.Sprite(BuildingKind.Carpenter));
             var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.58f, 0.38f, 0.18f);
@@ -201,10 +201,10 @@ namespace IL6
         {
             var go = new GameObject("Brazier");
             go.transform.position = pos;
-            go.transform.localScale = Vector3.one;
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.Brazier);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 4;
-            ApplySprite(sr, SpriteBank.Campfire());
+            ApplySprite(sr, ConstructionPlacement.Sprite(BuildingKind.Brazier));
             var col = go.AddComponent<CircleCollider2D>();
             col.radius = 0.5f;
             var cf = go.AddComponent<ColorFallback>();
@@ -222,10 +222,10 @@ namespace IL6
         {
             var go = new GameObject("Blacksmith");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(1.0f, 1.0f, 1f);
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.Blacksmith);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
-            ApplySprite(sr, SpriteBank.Cabin());
+            ApplySprite(sr, ConstructionPlacement.Sprite(BuildingKind.Blacksmith));
             var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.42f, 0.34f, 0.32f);
@@ -242,10 +242,10 @@ namespace IL6
         {
             var go = new GameObject("TrainingCamp");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(1.1f, 0.9f, 1f);
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.TrainingCamp);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
-            ApplySprite(sr, SpriteBank.WoodBarricade());
+            ApplySprite(sr, ConstructionPlacement.Sprite(BuildingKind.TrainingCamp));
             var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.62f, 0.28f, 0.18f);
@@ -260,10 +260,10 @@ namespace IL6
         {
             var go = new GameObject("FoodStorage");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(1.0f, 0.9f, 1f);
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.FoodStorage);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
-            ApplySprite(sr, SpriteBank.Logs());
+            ApplySprite(sr, ConstructionPlacement.Sprite(BuildingKind.FoodStorage));
             var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.82f, 0.62f, 0.28f);
@@ -278,10 +278,10 @@ namespace IL6
         {
             var go = new GameObject("LookoutPost");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(0.65f, 1.25f, 1f);
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.LookoutPost);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 4;
-            ApplySprite(sr, SpriteBank.Watchtower());
+            ApplySprite(sr, ConstructionPlacement.Sprite(BuildingKind.LookoutPost));
             var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.42f, 0.52f, 0.58f);
@@ -296,10 +296,10 @@ namespace IL6
         {
             var go = new GameObject("Sawmill");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(1.15f, 0.9f, 1f);
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.Sawmill);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
-            ApplySprite(sr, SpriteBank.Logs());
+            ApplySprite(sr, ConstructionPlacement.Sprite(BuildingKind.Sawmill));
             var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.5f, 0.32f, 0.16f);
@@ -314,10 +314,10 @@ namespace IL6
         {
             var go = new GameObject("Church");
             go.transform.position = pos;
-            go.transform.localScale = new Vector3(1.05f, 1.15f, 1f);
+            go.transform.localScale = ConstructionPlacement.Scale(BuildingKind.Church);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 3;
-            ApplySprite(sr, SpriteBank.Cabin());
+            ApplySprite(sr, ConstructionPlacement.Sprite(BuildingKind.Church));
             var col = go.AddComponent<BoxCollider2D>(); col.size = Vector2.one;
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.78f, 0.78f, 0.95f);

@@ -34,6 +34,7 @@ namespace IL6
         public static Sprite Boar()         => Load("Animals/boar");
         public static Sprite Mammoth()      => Load("Animals/mammoth");
         public static Sprite Bear()         => Load("Animals/bear");
+        public static Sprite HawkPet()      => Load("Pets/hawk");
 
         // ── 적 ──────────────────────────────────────────────────────────────────
         public static Sprite Zombie()       => Load("Enemies/zombie");
@@ -190,28 +191,25 @@ namespace IL6
             => LoadSubSprite("Props/Fence/fenceArchive", "StoneWall_BottomLeftCorner");
 
         // ── BuildingKind → 스프라이트 ─────────────────────────────────────────────
-        public static Sprite BuildingByKind(BuildingKind k) => k switch
+        public static Sprite Facility(BuildingKind kind)
         {
-            BuildingKind.Campfire => Campfire(),
-            BuildingKind.Brazier => Campfire(),
-            BuildingKind.Blacksmith => TempIcon(),
-            BuildingKind.SeedStorage => CropPotatoIcon(),
-            BuildingKind.Carpenter => WoodIcon(),
-            BuildingKind.TrainingCamp => WoodBarricade(),
-            BuildingKind.FoodStorage => FoodIcon(),
-            BuildingKind.LookoutPost => Watchtower(),
-            BuildingKind.Sawmill => WoodIcon(),
-            BuildingKind.Church => HomeIcon(),
-            BuildingKind.Fence => SnowFenceCenter(),
-            BuildingKind.Barricade => WoodBarricade(),
-            BuildingKind.Watchtower => Watchtower(),
-            BuildingKind.House => Cabin(),
-            BuildingKind.Storage => Logs(),
-            BuildingKind.Farm => Farm(),
-            BuildingKind.Infirmary => Infirmary(),
-            BuildingKind.HuntersHut => HuntersHut(),
-            _ => null,
-        };
+            string name = kind switch
+            {
+                BuildingKind.SeedStorage => "seed_storage",
+                BuildingKind.Carpenter => "carpenter",
+                BuildingKind.Blacksmith => "blacksmith",
+                BuildingKind.TrainingCamp => "training_camp",
+                BuildingKind.FoodStorage => "food_storage",
+                BuildingKind.LookoutPost => "lookout_post",
+                BuildingKind.Sawmill => "sawmill",
+                BuildingKind.Church => "church",
+                BuildingKind.Brazier => "brazier",
+                _ => null
+            };
+            return name != null ? Load("Buildings/Identity20261019/"+name) : null;
+        }
+
+        public static Sprite BuildingByKind(BuildingKind kind) => ConstructionPlacement.Sprite(kind);
 
         public static Sprite DiscoveryByReward(ResourceKind kind) => kind switch
         {

@@ -16,14 +16,14 @@ namespace IL6.Tests
             yield return SceneManager.LoadSceneAsync("SnowfieldScene");yield return new WaitForSeconds(2);
             var hud=Object.FindFirstObjectByType<SimpleHud>();
             typeof(SimpleHud).GetMethod("PrepareHudPreview",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(hud,null);
-            hud.Attacker.AutoAttackEnabled=false;hud.Player.transform.position=new Vector3(1000,1000,0);
+            hud.Player.transform.position=new Vector3(1000,1000,0);
             var session=GameSession.Instance;var previous=session.Research.Snapshot();var resources=session.Resources.Snapshot();
             string path=Path.Combine(Application.persistentDataPath,SaveLoad.FileName);byte[] saved=File.Exists(path)?File.ReadAllBytes(path):null;
             var objects=new List<GameObject>();
             session.Research.Restore(null);session.Resources.IncreaseCap(1000);session.Resources.Add(ResourceKind.Wood,700);session.Resources.Add(ResourceKind.Stone,700);session.Resources.Spend(ResourceKind.Ore,session.Resources.Get(ResourceKind.Ore));session.Resources.Add(ResourceKind.Ore,90);
             try {
                 var fenceGo=new GameObject("Research fence");objects.Add(fenceGo);var fence=fenceGo.AddComponent<Building>();fence.Initialize(BuildingKind.Fence);
-                Assert.That(fence.MaxHp,Is.EqualTo(40));
+                Assert.That(fence.MaxHp,Is.EqualTo(100));
                 Time.timeScale=.5f;Assert.That(hud.OpenResearchCatalog(),Is.True);Assert.That(Time.timeScale,Is.Zero);
                 Assert.That(hud.TryResearch(ResearchId.Fence),Is.False);
                 var spawnProbeGo=new GameObject("Research spawn integration probe");objects.Add(spawnProbeGo);
@@ -37,7 +37,7 @@ namespace IL6.Tests
                     Assert.That(hud.TryResearch(item.Id),Is.True,item.Name);
                     Assert.That(session.Research.Level(item.Id),Is.EqualTo(1));
                     switch(item.Id) {
-                        case ResearchId.Fence:Assert.That(fence.MaxHp,Is.EqualTo(60));break;
+                        case ResearchId.Fence:Assert.That(fence.MaxHp,Is.EqualTo(120));break;
                         case ResearchId.Combat:Assert.That(BuildingUpgradeRules.TrainingDamageMultiplier(),Is.EqualTo(before+.1f).Within(.001f));break;
                         case ResearchId.Lumber:Assert.That(BuildingUpgradeRules.SawmillWoodYieldMultiplier(),Is.EqualTo(before+.15f).Within(.001f));break;
                         case ResearchId.Crops:Assert.That(BuildingUpgradeRules.CropYieldMultiplier(),Is.EqualTo(before+.15f).Within(.001f));break;
@@ -62,7 +62,7 @@ namespace IL6.Tests
                 session.Resources.Add(ResourceKind.Wood,400);session.Resources.Add(ResourceKind.Stone,400);
                 for(int stage=2;stage<=10;stage++) {
                     Assert.That(hud.TryResearch(ResearchId.Fence),Is.True,"Fence stage "+stage);
-                    Assert.That(fence.MaxHp,Is.EqualTo(40+20*stage));
+                    Assert.That(fence.MaxHp,Is.EqualTo(100+20*stage));
                 }
                 int finalWood=session.Resources.Get(ResourceKind.Wood);
                 Assert.That(hud.TryResearch(ResearchId.Fence),Is.False);

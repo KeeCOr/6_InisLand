@@ -7,7 +7,6 @@ namespace IL6
     {
         public Transform Player;
         public float RecruitRange = 1.8f;
-        public KeyCode RecruitKey = KeyCode.V;
 
         [Header("Profile")]
         public string DisplayName = "Stranger";
@@ -28,11 +27,12 @@ namespace IL6
         public string DisplayNamePublic => DisplayName;
 
         private Vector3 _baseScale;
+        private bool _appearanceReady;
         private bool _recruited;
 
         private void Awake()
         {
-            if(RecruitKey==KeyCode.F) RecruitKey=KeyCode.V;
+            YSort.Ensure(gameObject);
             var rb = GetComponent<Rigidbody2D>();
             if (rb == null) rb = gameObject.AddComponent<Rigidbody2D>();
             rb.gravityScale = 0f;
@@ -49,7 +49,16 @@ namespace IL6
 
         private void Start()
         {
-            _baseScale = Vector3.Scale(transform.localScale, SpriteBank.CompanionScaleForRole(Role));
+            EnsureAppearance();
+        }
+
+        private void EnsureAppearance()
+        {
+            if (!_appearanceReady)
+            {
+                _baseScale = Vector3.Scale(transform.localScale, SpriteBank.CompanionScaleForRole(Role));
+                _appearanceReady = true;
+            }
             transform.localScale = _baseScale;
             if (Player == null)
             {
@@ -73,7 +82,6 @@ namespace IL6
             {
                 float pulse = 1f + Mathf.Sin(Time.time * 6f) * 0.08f;
                 transform.localScale = _baseScale * pulse;
-                if (!InputReader.HudBlocked && Input.GetKeyDown(RecruitKey)) Recruit();
             }
             else
             {
@@ -84,6 +92,7 @@ namespace IL6
         public const int FreeCapacity = 12;
         public const int CapacityPerHouse = 4;
 
+        // Family growth uses housing capacity; manual recruitment has no population cap.
         public static int VillageCapacity()
         {
             int houses = 0;
@@ -107,7 +116,7 @@ namespace IL6
             return n;
         }
 
-        public bool CanRecruit() => CurrentCompanionCount() < VillageCapacity();
+        public bool CanRecruit() => !_recruited;
 
         public static void ResetDailyRecruits(int day) { }
 
@@ -115,7 +124,9 @@ namespace IL6
         {
             if (!CanRecruit()) return;
             if (_recruited) return;
+            EnsureAppearance();
             _recruited = true;
+            enabled = false;
 
             uint traitSeed = unchecked((uint)DisplayName.GetHashCode() ^ (uint)Role.GetHashCode() ^ (uint)Time.frameCount);
             var trait = CompanionTrait.AssignRandom(gameObject, Role, new SeededRng(traitSeed));
@@ -147,6 +158,7 @@ namespace IL6
                 var spr = SpriteBank.CompanionSpriteForRole(Role);
                 if (spr != null) sr.sprite = spr;
                 sr.color = Color.white;
+                sr.enabled = true;
             }
 
             transform.localScale = _baseScale;

@@ -19,7 +19,7 @@ namespace IL6
             if (!IsTree) return null;
             return GetComponent<TreeHealth>() ?? gameObject.AddComponent<TreeHealth>();
         }
-        private void Start() { EnsureTreeHealth(); }
+        private void Start() { YSort.Ensure(gameObject); EnsureTreeHealth(); }
 
         public void OnGathered(ResourceStore store)
         {

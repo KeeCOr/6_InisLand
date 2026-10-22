@@ -102,6 +102,8 @@ namespace IL6
 
         public static ResourceCost BuildCost(BuildingKind kind, float duplicateMultiplier)
         {
+            // Fence segments stay affordable even when the starting village already has a full ring.
+            if (kind == BuildingKind.Fence) return new ResourceCost(1,0);
             return new ResourceCost(
                 Mathf.RoundToInt(BaseWoodCost(kind) * duplicateMultiplier),
                 Mathf.RoundToInt(BaseStoneCost(kind) * duplicateMultiplier)
@@ -174,7 +176,8 @@ namespace IL6
 
         public static float FenceHpMultiplier()
         {
-            return 1f + 0.5f * VillageResearch.ActiveLevel(ResearchId.Fence);
+            // Carpenter research still adds 20 HP per tier when base durability changes.
+            return 1f + 20f * VillageResearch.ActiveLevel(ResearchId.Fence) / Mathf.Max(1,BalanceConfig.Instance.FenceHp);
         }
 
         public static float CropYieldMultiplier()

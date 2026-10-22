@@ -26,7 +26,7 @@ namespace IL6
         private void CloseBuildCatalog()
         {
             _buildCatalogOpen=false;
-            SetHudMode(Attacker != null && Attacker.WeaponIndex == 1 ? HudMode.Ranged : HudMode.Melee);
+            SetHudMode(_previousCombatWeaponIndex == 1 ? HudMode.Ranged : HudMode.Melee);
         }
 
         private static string BuildingName(BuildingKind kind)=>kind switch
@@ -55,7 +55,7 @@ namespace IL6
             UiTheme.Rect(new Rect(0,0,MobileHudLayout.Width,MobileHudLayout.Height),new Color(.02f,.055f,.06f,.72f));
             var panel=HudLayout.CenterModal(760,450);
             UiTheme.Panel(panel);
-            UiTheme.TitleBar(panel,"건설 모드 · 게임 정지",_title);
+            UiTheme.TitleBar(panel,"건설 망치 · 건물 선택 · 게임 정지",_title);
             var kinds=(BuildingKind[])System.Enum.GetValues(typeof(BuildingKind));
             var nameStyle=new GUIStyle(_section){fontSize=13};
             var costStyle=new GUIStyle(_labelSubtle){fontSize=12};
@@ -75,6 +75,7 @@ namespace IL6
                 HudText.Label(new Rect(r.x+57,r.y+47,80,20),farmAllowed ? $"석재 {cost.Stone}" : "씨앗창고 필요",costStyle);
                 if(!available) HudText.Label(new Rect(r.x+4,r.yMax-19,48,17),farmAllowed?"부족":"조건",new GUIStyle(costStyle){fontSize=11,fontStyle=FontStyle.Bold,normal={textColor=UiTheme.TextDanger}});
             }
+            if(UiTheme.Button(HudLayout.CatalogCard(kinds.Length),"수리 모드\n이동 · Space 수리",new GUIStyle(_btn){fontSize=14,wordWrap=true})) EnterBuildRepairMode();
             var hint=new GUIStyle(_labelSubtle){fontSize=13};
             HudText.Label(new Rect(panel.x+18,panel.yMax-48,480,24),$"보유 목재 {session.Resources.Get(ResourceKind.Wood):N0} · 석재 {session.Resources.Get(ResourceKind.Stone):N0}  | 선택 후 땅을 눌러 배치",hint);
             if(UiTheme.Button(new Rect(panel.xMax-180,panel.yMax-54,160,44),"닫기 · ESC",_btn)) CloseBuildCatalog();
@@ -82,6 +83,7 @@ namespace IL6
 
         private void DrawRecruitDialog()
         {
+            if(_hudMode==HudMode.Build) return;
             if(ControlsBlocked || _pendingBuildKind!=null) return;
             if(_resourceDetailsOpen) return;
             var npc=NearestRecruitable();
@@ -96,18 +98,26 @@ namespace IL6
             HudText.Label(new Rect(x,panel.y+12,w,28),$"{npc.DisplayNamePublic} · {RoleName(npc.Role)}",new GUIStyle(_section){fontSize=18});
             HudText.Label(new Rect(x,panel.y+46,w,38),npc.DialogText,new GUIStyle(_label){fontSize=15,wordWrap=true});
             HudText.Label(new Rect(x,panel.y+84,w,22),$"전투 {Stars(npc.CombatRating)}   농사 {Stars(npc.FarmRating)}",_labelSubtle);
-            bool canRecruit=npc.CanRecruit();
-            HudText.Label(new Rect(x,panel.y+106,w,22),$"마을 인원 {RecruitableNpc.CurrentCompanionCount()} / {RecruitableNpc.VillageCapacity()}",_labelSubtle);
-            if(UiTheme.Button(new Rect(panel.x+200,panel.yMax-58,164,44),canRecruit?"함께하기 · V":"거처가 부족해요",_btn,canRecruit)) npc.Recruit();
+            bool near=Player!=null && Vector2.Distance(Player.transform.position,npc.transform.position)<=npc.RecruitRange;
+            bool canRecruit=npc.CanRecruit() && near;
+            HudText.Label(new Rect(x,panel.y+106,w,22),$"동료 {RecruitableNpc.CurrentCompanionCount()}명 · 영입 제한 없음",_labelSubtle);
+            if(UiTheme.Button(new Rect(panel.x+200,panel.yMax-58,164,44),canRecruit?"영입 · 공격/Space":!near?"더 가까이 이동하세요":"영입 완료",_btn,canRecruit) && Attacker!=null) Attacker.TryManualAction();
             if(UiTheme.Button(new Rect(panel.x+376,panel.yMax-58,164,44),"나중에",_btn)) _ignoredRecruit=npc;
         }
 
         private void DrawWaveStanceBar()
         {
             DrawSettlementGoals();
+            if (_resourceDetailsOpen) return;
             var session=GameSession.Instance;if(session==null) return;
             var companions=Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
-            int live=0;foreach(var c in companions) if(c!=null && !c.IsDead && c.CurrentMode!=Companion.Mode.Hiding) live++;
+            int live=0, hidden=0;
+            foreach(var c in companions)
+            {
+                if(c==null || c.IsDead) continue;
+                live++;
+                if(c.CurrentMode==Companion.Mode.Hiding) hidden++;
+            }
             var panel=MobileHudLayout.CompanionSummary(_showCompanions);UiTheme.Panel(panel);
             var phase=Night!=null?Night.CurrentPhase:session.Cycle.Phase;
             var guidance=HudGuidanceText.Build(phase,Night!=null?Night.ActiveZombies:0,Night!=null?Night.WavePending:0,Night!=null && Night.IsBlizzard,session.LastFoodShortage);
@@ -117,7 +127,9 @@ namespace IL6
             HudText.Label(new Rect(panel.x+12,panel.y+28,panel.width-24,16),risk,new GUIStyle(_labelSubtle){fontSize=12,normal={textColor=GuidanceToneColor(guidance.ImmediateRisk.Tone)}});
             var stance=Companion.Stance.Follow;foreach(var c in companions) if(c!=null && !c.IsDead) {stance=c.CurrentStance;break;}
             string stanceName=stance==Companion.Stance.Follow?"따라오기":stance==Companion.Stance.Hold?"사수":"공세";
-            if(UiTheme.Button(new Rect(panel.x+12,panel.y+46,panel.width-24,44),$"동료 {live}명 · {stanceName}",_smallBtn,live>0 && !ControlsBlocked))
+            string companionLabel=$"동료 {live}명 · {stanceName}";
+            if(hidden>0) companionLabel+=$"\n건물 대피 {hidden}명";
+            if(UiTheme.Button(new Rect(panel.x+12,panel.y+46,panel.width-24,44),companionLabel,_smallBtn,live>0 && !ControlsBlocked))
             {
                 var next=stance==Companion.Stance.Follow?Companion.Stance.Hold:stance==Companion.Stance.Hold?Companion.Stance.Aggressive:Companion.Stance.Follow;
                 foreach(var c in companions) if(c!=null) c.SetStance(next);
@@ -127,11 +139,11 @@ namespace IL6
             HudText.Label(new Rect(panel.x+12,panel.y+98,panel.width-24,32),recommendation,new GUIStyle(_labelSubtle){fontSize=12,wordWrap=true});
             int shown=0;foreach(var c in companions)
             {
-                if(c==null || c.IsDead || c.CurrentMode==Companion.Mode.Hiding) continue;
+                if(c==null || c.IsDead) continue;
                 if(shown>=4) break;
                 float y=panel.y+140+shown*20;int hp=c.EffectiveMaxHp();
                 UiTheme.Bar(new Rect(panel.x+12,y+3,panel.width-102,10),hp>0?(float)c.CurrentHp/hp:0,UiTheme.BarHpFill);
-                HudText.Label(new Rect(panel.xMax-80,y,68,18),$"{c.CurrentHp}/{hp}",new GUIStyle(_labelSubtle){fontSize=12});shown++;
+                HudText.Label(new Rect(panel.xMax-80,y,68,18),c.CurrentMode==Companion.Mode.Hiding?"대피":$"{c.CurrentHp}/{hp}",new GUIStyle(_labelSubtle){fontSize=12});shown++;
             }
         }
     }

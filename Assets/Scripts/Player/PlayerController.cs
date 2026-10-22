@@ -31,6 +31,7 @@ namespace IL6
 
         private void Awake()
         {
+            YSort.Ensure(gameObject);
             // Door.TryHookPlayer() 이 FindWithTag("Player") 를 사용하므로 반드시 설정
             if (!gameObject.CompareTag("Player"))
                 gameObject.tag = "Player";
@@ -110,12 +111,13 @@ namespace IL6
             }
 
             Vector2 moveDirection = _input.MoveAxis;
-            if (Actions != null && Actions.IsBusy) { _rb.velocity = Vector2.zero; return; }
+            if (Actions != null && Actions.BlocksMovement) { _rb.velocity = Vector2.zero; return; }
             if (Actions != null) Actions.SetMoving(moveDirection.sqrMagnitude > .001f);
             float speedMul = _progression != null ? _progression.MoveSpeedMultiplier : 1f;
             _rb.velocity = moveDirection * _balance.PlayerMoveSpeed * speedMul;
 
-            UpdateMoveAnimation(moveDirection);
+            // Keep the attack facing its target while locomotion remains fully responsive.
+            if (Actions == null || Actions.State != PlayerAction.Attack) UpdateMoveAnimation(moveDirection);
 
             if (_rb.velocity.sqrMagnitude > 0.05f)
             {

@@ -75,7 +75,8 @@ namespace IL6
                 HudText.Label(new Rect(panel.x+32,y+5,160,24),$"{item.Category} · {BuildingName(item.Station)}",_section);
                 HudText.Label(new Rect(panel.x+32,y+31,160,22),$"연구 {level} / {VillageResearch.MaxLevel}단계",_labelSubtle);
                 HudText.Label(new Rect(panel.x+206,y+5,340,24),item.Name,_section);
-                string effect=item.Id==ResearchId.Fence?$"울타리 HP {40+20*level} → {(level<VillageResearch.MaxLevel?40+20*(level+1):40+20*VillageResearch.MaxLevel)}":item.Effect;
+                int fenceBaseHp=BalanceConfig.Instance.FenceHp;
+                string effect=item.Id==ResearchId.Fence?$"울타리 HP {fenceBaseHp+20*level} → {fenceBaseHp+20*Mathf.Min(level+1,VillageResearch.MaxLevel)}":item.Effect;
                 HudText.Label(new Rect(panel.x+206,y+31,340,22),effect,_label);
                 var cost=item.Cost(level);
                 HudText.Label(new Rect(panel.x+552,y+8,150,44),level>=VillageResearch.MaxLevel?"최고 단계":$"목재 {cost.Wood} / 석재 {cost.Stone}\n광석 {cost.Ore}",_labelSubtle);

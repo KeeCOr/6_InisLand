@@ -1,0 +1,173 @@
+[
+  {
+    "key": "carpenter",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-8ac85d8b-5dae-4e07-b5bf-8fe281d90c0a.png",
+    "prompt": "Edit image 1, a snowy pixel-art carpenter workshop sprite. Preserve its identity: teal roof, open workbench with hand tools, planks, timber posts, stone feet. PRIMARY FIX: rebuild the perspective for a 2D overhead survival game. Orthographic camera looking DOWN at 45 degrees above ground, looking due north; front entrance faces screen bottom, horizontal front edge remains horizontal, no isometric yaw. Show a LONG DEEP ROOF extending backwards toward screen top, large visible roof top planes and workbench tabletop, short foreshortened front walls. Building footprint visibly has substantial front-to-back depth, not a flat frontal facade, not an eye-level illustration. Match image 2 GAMEPLAY reference perspective (reference only, don't copy scene). Single complete building isolated on TRUE transparent background, snowy trim only on structure, no scene or rectangular ground tile, no text, full object margins. Pixel art with crisp outlines matching gameplay. Keep teal carpenter personality, change camera strongly.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\carpenter.png",
+    "pixels": [
+      1536,
+      1024
+    ],
+    "opaque_bbox": [
+      292,
+      11,
+      1271,
+      971
+    ],
+    "ppu": 783.2,
+    "visible_height_units": 1.2257405515832482
+  },
+  {
+    "key": "seed_storage",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-ba1e540a-c25d-4c13-af1b-c49e6b914f9e.png",
+    "prompt": "Edit image 1 into an overhead game sprite. Preserve building identity and snowy pixel-art materials: round raised seed granary, sage green conical roof, seed drawers and wheat emblem. PRIMARY CHANGE CAMERA: orthographic camera looking DOWN 45 degrees above ground looking due north, front faces screen bottom, front edge stays horizontal, no isometric yaw. Show substantial front-to-back footprint depth extending toward screen top, large visible TOP surfaces, foreshortened short walls. Roof should occupy much more visible area than front facade; canopy roof recedes far behind front posts; bowl/platform/table tops seen clearly from above. Match image 2 carpenter CAMERA (style and camera reference, don't copy its identity). The old eye-level front facade view is rejected. Keep the distinctive colors and functional props but reposition them naturally in overhead space. Single complete isolated building, generous transparent margin on every side, TRUE transparent background, no floor tile or landscape, no text. Crisp pixel art, top-left lighting.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\seed_storage.png",
+    "pixels": [
+      1312,
+      1199
+    ],
+    "opaque_bbox": [
+      168,
+      23,
+      1144,
+      1182
+    ],
+    "ppu": 780.8,
+    "visible_height_units": 1.484375
+  },
+  {
+    "key": "blacksmith",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-a18dea3c-50f4-48fe-8c81-13f276a40e55.png",
+    "prompt": "Edit image 1 into an overhead game sprite. Preserve building identity and snowy pixel-art materials: stone forge workshop, charcoal roof, large chimney, glowing orange forge, anvil and bellows. PRIMARY CHANGE CAMERA: orthographic camera looking DOWN 45 degrees above ground looking due north, front faces screen bottom, front edge stays horizontal, no isometric yaw. Show substantial front-to-back footprint depth extending toward screen top, large visible TOP surfaces, foreshortened short walls. Roof should occupy much more visible area than front facade; canopy roof recedes far behind front posts; bowl/platform/table tops seen clearly from above. Match image 2 carpenter CAMERA (style and camera reference, don't copy its identity). The old eye-level front facade view is rejected. Keep the distinctive colors and functional props but reposition them naturally in overhead space. Single complete isolated building, generous transparent margin on every side, TRUE transparent background, no floor tile or landscape, no text. Crisp pixel art, top-left lighting.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\blacksmith.png",
+    "pixels": [
+      1374,
+      1145
+    ],
+    "opaque_bbox": [
+      61,
+      23,
+      1313,
+      1113
+    ],
+    "ppu": 1001.6,
+    "visible_height_units": 1.088258785942492
+  },
+  {
+    "key": "training_camp",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-6e9146b4-adec-43f9-a7df-c3be503d1e86.png",
+    "prompt": "Edit image 1 into an overhead game sprite. Preserve building identity and snowy pixel-art materials: red canopy training pavilion, two straw dummies, archery target, spear rack and shields. PRIMARY CHANGE CAMERA: orthographic camera looking DOWN 45 degrees above ground looking due north, front faces screen bottom, front edge stays horizontal, no isometric yaw. Show substantial front-to-back footprint depth extending toward screen top, large visible TOP surfaces, foreshortened short walls. Roof should occupy much more visible area than front facade; canopy roof recedes far behind front posts; bowl/platform/table tops seen clearly from above. Match image 2 carpenter CAMERA (style and camera reference, don't copy its identity). The old eye-level front facade view is rejected. Keep the distinctive colors and functional props but reposition them naturally in overhead space. Single complete isolated building, generous transparent margin on every side, TRUE transparent background, no floor tile or landscape, no text. Crisp pixel art, top-left lighting.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\training_camp.png",
+    "pixels": [
+      1536,
+      1024
+    ],
+    "opaque_bbox": [
+      74,
+      24,
+      1463,
+      982
+    ],
+    "ppu": 1111.2,
+    "visible_height_units": 0.8621310295176385
+  },
+  {
+    "key": "food_storage",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-0a27eea0-3f77-454f-b380-3f805c8250e7.png",
+    "prompt": "Edit image 1 into an overhead game sprite. Preserve building identity and snowy pixel-art materials: blue gray roof food pantry, ventilation shutters, food barrels, vegetable baskets and hanging fish. PRIMARY CHANGE CAMERA: orthographic camera looking DOWN 45 degrees above ground looking due north, front faces screen bottom, front edge stays horizontal, no isometric yaw. Show substantial front-to-back footprint depth extending toward screen top, large visible TOP surfaces, foreshortened short walls. Roof should occupy much more visible area than front facade; canopy roof recedes far behind front posts; bowl/platform/table tops seen clearly from above. Match image 2 carpenter CAMERA (style and camera reference, don't copy its identity). The old eye-level front facade view is rejected. Keep the distinctive colors and functional props but reposition them naturally in overhead space. Single complete isolated building, generous transparent margin on every side, TRUE transparent background, no floor tile or landscape, no text. Crisp pixel art, top-left lighting.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\food_storage.png",
+    "pixels": [
+      1384,
+      1136
+    ],
+    "opaque_bbox": [
+      109,
+      47,
+      1276,
+      1107
+    ],
+    "ppu": 933.6,
+    "visible_height_units": 1.1353898886032563
+  },
+  {
+    "key": "lookout_post",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-db2ac1ec-d413-4921-8495-4aa6312ed646.png",
+    "prompt": "Edit image 1 into an overhead game sprite. Preserve building identity and snowy pixel-art materials: low forest green canopy observation platform, brass telescope and bell, front ladder. PRIMARY CHANGE CAMERA: orthographic camera looking DOWN 45 degrees above ground looking due north, front faces screen bottom, front edge stays horizontal, no isometric yaw. Show substantial front-to-back footprint depth extending toward screen top, large visible TOP surfaces, foreshortened short walls. Roof should occupy much more visible area than front facade; canopy roof recedes far behind front posts; bowl/platform/table tops seen clearly from above. Match image 2 carpenter CAMERA (style and camera reference, don't copy its identity). The old eye-level front facade view is rejected. Keep the distinctive colors and functional props but reposition them naturally in overhead space. Single complete isolated building, generous transparent margin on every side, TRUE transparent background, no floor tile or landscape, no text. Crisp pixel art, top-left lighting.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\lookout_post.png",
+    "pixels": [
+      1312,
+      1199
+    ],
+    "opaque_bbox": [
+      249,
+      25,
+      1064,
+      1134
+    ],
+    "ppu": 652.0,
+    "visible_height_units": 1.700920245398773
+  },
+  {
+    "key": "sawmill",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-e34db630-6351-4c85-9041-d383a3330586.png",
+    "prompt": "Edit image 1 into an overhead game sprite. Preserve building identity and snowy pixel-art materials: ochre roof broad sawmill shed, vertical circular saw, deep log feed rails and cut beams. PRIMARY CHANGE CAMERA: orthographic camera looking DOWN 45 degrees above ground looking due north, front faces screen bottom, front edge stays horizontal, no isometric yaw. Show substantial front-to-back footprint depth extending toward screen top, large visible TOP surfaces, foreshortened short walls. Roof should occupy much more visible area than front facade; canopy roof recedes far behind front posts; bowl/platform/table tops seen clearly from above. Match image 2 carpenter CAMERA (style and camera reference, don't copy its identity). The old eye-level front facade view is rejected. Keep the distinctive colors and functional props but reposition them naturally in overhead space. Single complete isolated building, generous transparent margin on every side, TRUE transparent background, no floor tile or landscape, no text. Crisp pixel art, top-left lighting.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\sawmill.png",
+    "pixels": [
+      1536,
+      1024
+    ],
+    "opaque_bbox": [
+      52,
+      8,
+      1485,
+      978
+    ],
+    "ppu": 1146.4,
+    "visible_height_units": 0.8461270062805303
+  },
+  {
+    "key": "church",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-2a37a16e-b1cb-476d-b8ec-b8aa82e4d834.png",
+    "prompt": "Edit image 1 into an overhead game sprite. Preserve building identity and snowy pixel-art materials: violet blue roof stone chapel, belfry, rose window and arched entrance. PRIMARY CHANGE CAMERA: orthographic camera looking DOWN 45 degrees above ground looking due north, front faces screen bottom, front edge stays horizontal, no isometric yaw. Show substantial front-to-back footprint depth extending toward screen top, large visible TOP surfaces, foreshortened short walls. Roof should occupy much more visible area than front facade; canopy roof recedes far behind front posts; bowl/platform/table tops seen clearly from above. Match image 2 carpenter CAMERA (style and camera reference, don't copy its identity). The old eye-level front facade view is rejected. Keep the distinctive colors and functional props but reposition them naturally in overhead space. Single complete isolated building, generous transparent margin on every side, TRUE transparent background, no floor tile or landscape, no text. Crisp pixel art, top-left lighting.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\church.png",
+    "pixels": [
+      1312,
+      1199
+    ],
+    "opaque_bbox": [
+      258,
+      26,
+      1054,
+      1166
+    ],
+    "ppu": 636.8,
+    "visible_height_units": 1.7902010050251258
+  },
+  {
+    "key": "brazier",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-f1bfed53-3857-43f5-b5c2-f30d5c5fa5a5.png",
+    "prompt": "Edit image 1 into an overhead game sprite. Preserve building identity and snowy pixel-art materials: raised iron fire bowl with burning coals on low stone pedestal. PRIMARY CHANGE CAMERA: orthographic camera looking DOWN 45 degrees above ground looking due north, front faces screen bottom, front edge stays horizontal, no isometric yaw. Show substantial front-to-back footprint depth extending toward screen top, large visible TOP surfaces, foreshortened short walls. Roof should occupy much more visible area than front facade; canopy roof recedes far behind front posts; bowl/platform/table tops seen clearly from above. Match image 2 carpenter CAMERA (style and camera reference, don't copy its identity). The old eye-level front facade view is rejected. Keep the distinctive colors and functional props but reposition them naturally in overhead space. Single complete isolated building, generous transparent margin on every side, TRUE transparent background, no floor tile or landscape, no text. Crisp pixel art, top-left lighting.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\brazier.png",
+    "pixels": [
+      1225,
+      1284
+    ],
+    "opaque_bbox": [
+      215,
+      68,
+      1009,
+      1215
+    ],
+    "ppu": 635.2,
+    "visible_height_units": 1.8057304785894206
+  }
+]

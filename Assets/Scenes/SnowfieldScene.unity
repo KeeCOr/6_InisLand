@@ -2789,16 +2789,16 @@ MonoBehaviour:
   ChunkSize: 10
   LoadRadius: 2
   UnloadRadius: 4
-  TreeChance: 0.5
+  TreeChance: 0.16
   RockChance: 0.15
   DeerChance: 0.08
-  NpcChance: 0.04
+  NpcChance: 0.08
   SlotsPerChunk: 6
   StarterCx: 1
   StarterCy: 1
   StarterRadius: 1
   Seed: 20260425
-  DailyNpcIntervalSec: 30
+  DailyNpcIntervalSec: 20
   MaxAliveNpcs: 3
 --- !u!1 &95100000
 GameObject:

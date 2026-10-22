@@ -29,6 +29,8 @@ namespace IL6
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 9;
+            YSort.Ensure(go);
+            if (kind == Kind.Hawk) sr.sprite = SpriteBank.HawkPet();
 
             var cf = go.AddComponent<ColorFallback>();
             cf.Shape = kind == Kind.Hawk ? FallbackShape.Triangle : FallbackShape.Rounded;
@@ -71,7 +73,7 @@ namespace IL6
                 pet.Tint = new Color(0.95f, 0.92f, 0.78f);
             }
             cf.Tint = pet.Tint;
-            sr.color = pet.Tint;
+            sr.color = sr.sprite != null ? Color.white : pet.Tint;
             return go;
         }
 
@@ -89,6 +91,11 @@ namespace IL6
 
         private void Move(Vector2 dir)
         {
+            if (Type == Kind.Hawk && Mathf.Abs(dir.x) > .01f)
+            {
+                var sprite = GetComponent<SpriteRenderer>();
+                if (sprite != null) sprite.flipX = dir.x < 0f;
+            }
             // Dog 처럼 Rigidbody2D 가 있으면 velocity 로 (충돌 정상 작동)
             if (_rb == null) _rb = GetComponent<Rigidbody2D>();
             if (_rb != null) _rb.velocity = dir * MoveSpeed;

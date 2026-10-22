@@ -4,9 +4,7 @@ using UnityEngine;
 namespace IL6
 {
     /// <summary>
-    /// 6종 기본 무기 풀 (런타임 생성 ScriptableObject). 모두 ProjectileSpeed > 0
-    /// 으로 통일해서 시각 피드백 일관성 유지. 근접류는 빠르고 짧게, 활/지팡이는
-    /// 느리고 길게.
+    /// 근접·활·건설 망치 선택 목록. 건설 망치는 피해를 주지 않는 건설 도구다.
     /// </summary>
     public static class WeaponCatalog
     {
@@ -44,6 +42,7 @@ namespace IL6
                 Make("longsword", "Longsword", dmg: 28, range: 1.8f, cd: 1.0f, projSpd: 0f, crit: 0.10f),
                 // 원거리: 빠르지만 약함 (cd 1.1→0.55, dmg 10→6). 사거리 길고 투사체.
                 Make("bow", "Bow", dmg: 6, range: 7.0f, cd: 0.55f, projSpd: 12f, crit: 0.12f),
+                Make("construction_hammer", "건설 망치", dmg: 0, range: 0f, cd: 0f, projSpd: 0f, crit: 0f),
             };
         }
 

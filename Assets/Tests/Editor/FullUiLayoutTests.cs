@@ -6,6 +6,20 @@ namespace IL6.Tests
 {
     public sealed class FullUiLayoutTests
     {
+        [TestCase(960,540)]
+        [TestCase(1280,720)]
+        [TestCase(1920,1080)]
+        [TestCase(2400,1080)]
+        public void WorkLauncherLeavesMovementAndCombatControlsClear(int width,int height)
+        {
+            float scale=Mathf.Min(width/1280f,height/720f);
+            float w=width/scale,h=height/scale;
+            var launcher=HudLayout.WorkLauncher(w,h);
+            Assert.That(launcher.Overlaps(new Rect(16,h-160,144,144)),Is.False);
+            Assert.That(launcher.Overlaps(new Rect(w-336,h-198,320,182)),Is.False);
+            Assert.That(launcher.yMax,Is.LessThan(h));
+            Assert.That(launcher.xMin,Is.GreaterThan(0));
+        }
         [Test]
         public void ClockDoesNotCoverMenu()
         {
@@ -29,7 +43,7 @@ namespace IL6.Tests
             var method=typeof(HudLayout).GetMethod("CatalogCard");
             Assert.That(method,Is.Not.Null);
             var modal=HudLayout.CenterModal(760,450);
-            for(int i=0;i<18;i++)
+            for(int i=0;i<19;i++)
             {
                 var r=(Rect)method.Invoke(null,new object[]{i});
                 Assert.That(r.xMin,Is.GreaterThanOrEqualTo(modal.xMin));
@@ -37,7 +51,7 @@ namespace IL6.Tests
                 Assert.That(r.yMin,Is.GreaterThanOrEqualTo(modal.y+60));
                 Assert.That(r.yMax,Is.LessThanOrEqualTo(modal.yMax-60));
                 Assert.That(r.height,Is.GreaterThanOrEqualTo(60));
-                for(int j=i+1;j<18;j++) Assert.That(r.Overlaps((Rect)method.Invoke(null,new object[]{j})),Is.False);
+                for(int j=i+1;j<19;j++) Assert.That(r.Overlaps((Rect)method.Invoke(null,new object[]{j})),Is.False);
             }
         }
 

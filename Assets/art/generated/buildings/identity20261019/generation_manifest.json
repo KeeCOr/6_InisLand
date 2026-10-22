@@ -1,0 +1,173 @@
+[
+  {
+    "key": "seed_storage",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-dcda08e4-7771-4ae3-b69f-2a5a5fda2eb4.png",
+    "prompt": "Game sprite asset, single building cutout. A raised seed granary: compact cylindrical timber store on short stone legs, pale sage-green conical shingled roof capped in snow, small seed drawers, two burlap seed sacks and a tiny sprouting grain emblem carved over its little central door. Distinct round silhouette, seed storage not a house. Cozy detailed pixel-painted winter survival RPG art, crisp dark outlines and broad readable shading, dark warm wood and gray stone, snow on roofs. ORTHOGRAPHIC FRONT VIEW with only a slight elevated view showing the roof, straight-on symmetric facade, NO isometric or 3/4 quarter view, no side-wall perspective. Entire building centered with small transparent margin, isolated actual transparent background, no people, no text, no UI, no watermark, no ground tile, no cast shadow, no atmospheric glow. Preserve recognizability at small game size.",
+    "tool": "built-in image_gen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\seed_storage.png",
+    "pixels": [
+      1220,
+      1289
+    ],
+    "opaque_bbox": [
+      85,
+      6,
+      1133,
+      1269
+    ],
+    "ppu": 838.4,
+    "visible_height_units": 1.5064408396946565
+  },
+  {
+    "key": "carpenter",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-6e159c88-1fd5-433a-b80b-3c814628242b.png",
+    "prompt": "Game sprite asset, single building cutout. A woodworker's workshop: open-front rectangular timber shed with muted teal gable roof under snow, clearly visible carpentry workbench, wooden hand plane, mallet, timber plank rack on one side, neat curled shavings. Distinct broad open workshop silhouette, not a log pile. Cozy detailed pixel-painted winter survival RPG art, crisp dark outlines and broad readable shading, dark warm wood and gray stone, snow on roofs. ORTHOGRAPHIC FRONT VIEW with only a slight elevated view showing the roof, straight-on symmetric facade, NO isometric or 3/4 quarter view, no side-wall perspective. Entire building centered with small transparent margin, isolated actual transparent background, no people, no text, no UI, no watermark, no ground tile, no cast shadow, no atmospheric glow. Preserve recognizability at small game size.",
+    "tool": "built-in image_gen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\carpenter.png",
+    "pixels": [
+      1536,
+      1024
+    ],
+    "opaque_bbox": [
+      152,
+      88,
+      1384,
+      917
+    ],
+    "ppu": 985.6,
+    "visible_height_units": 0.841112012987013
+  },
+  {
+    "key": "blacksmith",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-b7d131a4-6f5e-4ee7-a530-e2748e2d7629.png",
+    "prompt": "Game sprite asset, single building cutout. A blacksmith's forge: squat dark stone smithy with steep charcoal slate roof capped in snow, one large square masonry chimney, glowing orange open forge in front, chunky iron anvil, leather bellows and hanging hammer. Distinct heavy stone silhouette and warm forge, not a cabin. Cozy detailed pixel-painted winter survival RPG art, crisp dark outlines and broad readable shading, dark warm wood and gray stone, snow on roofs. ORTHOGRAPHIC FRONT VIEW with only a slight elevated view showing the roof, straight-on symmetric facade, NO isometric or 3/4 quarter view, no side-wall perspective. Entire building centered with small transparent margin, isolated actual transparent background, no people, no text, no UI, no watermark, no ground tile, no cast shadow, no atmospheric glow. Preserve recognizability at small game size.",
+    "tool": "built-in image_gen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\blacksmith.png",
+    "pixels": [
+      1374,
+      1145
+    ],
+    "opaque_bbox": [
+      23,
+      13,
+      1351,
+      1115
+    ],
+    "ppu": 1062.4,
+    "visible_height_units": 1.037274096385542
+  },
+  {
+    "key": "training_camp",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-0d001d56-d692-483b-beae-5da22491f950.png",
+    "prompt": "Game sprite asset, single building cutout. An outdoor training camp building: compact open timber drill pavilion with a red canvas canopy dusted with snow, two clearly visible straw practice dummies, training spear rack, round wooden shields and an archery target. Distinct low open pavilion silhouette, no surrounding fence, no people. Cozy detailed pixel-painted winter survival RPG art, crisp dark outlines and broad readable shading, dark warm wood and gray stone, snow on roofs. ORTHOGRAPHIC FRONT VIEW with only a slight elevated view showing the roof, straight-on facade, NO isometric or 3/4 quarter view, no side-wall perspective. Entire building centered and fully contained with at least 8% empty transparent margin on EVERY edge, isolated actual transparent background, no people, no text, no UI, no watermark, no ground tile, no cast shadow, no atmospheric glow. Preserve recognizability at small game size.",
+    "tool": "built-in image_gen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\training_camp.png",
+    "pixels": [
+      1536,
+      1024
+    ],
+    "opaque_bbox": [
+      71,
+      73,
+      1466,
+      921
+    ],
+    "ppu": 1116.0,
+    "visible_height_units": 0.7598566308243727
+  },
+  {
+    "key": "food_storage",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-986e0dce-66d6-4842-9adc-9f5670b21a43.png",
+    "prompt": "Game sprite asset, single building cutout. An insulated village food pantry: squat raised wooden storehouse with muted blue-gray snow-capped roof, vented front shutters, three food barrels, wicker baskets of red roots and yellow vegetables, hanging smoked fish beneath a small awning. Distinct wide pantry silhouette, NOT a bare log pile, NOT a grain seed granary. Cozy detailed pixel-painted winter survival RPG art, crisp dark outlines and broad readable shading, dark warm wood and gray stone, snow on roofs. ORTHOGRAPHIC FRONT VIEW with only a slight elevated view showing the roof, straight-on facade, NO isometric or 3/4 quarter view, no side-wall perspective. Entire building centered and fully contained with at least 8% empty transparent margin on EVERY edge, isolated actual transparent background, no people, no text, no UI, no watermark, no ground tile, no cast shadow, no atmospheric glow. Preserve recognizability at small game size.",
+    "tool": "built-in image_gen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\food_storage.png",
+    "pixels": [
+      1384,
+      1136
+    ],
+    "opaque_bbox": [
+      115,
+      112,
+      1270,
+      1027
+    ],
+    "ppu": 924.0,
+    "visible_height_units": 0.9902597402597403
+  },
+  {
+    "key": "lookout_post",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-569000fe-d4c3-4d35-851e-f12828a4fc78.png",
+    "prompt": "Game sprite asset, single building cutout. A compact scouting lookout post: low square timber observation platform on four short sturdy legs, a small forest-green canvas snow-capped canopy, one large brass spyglass mounted on its front railing and a hanging warning bell, short wooden ladder. Distinct low scout platform silhouette, not a tall guard tower, no people. Cozy detailed pixel-painted winter survival RPG art, crisp dark outlines and broad readable shading, dark warm wood and gray stone, snow on roofs. ORTHOGRAPHIC FRONT VIEW with only a slight elevated view showing the roof, straight-on facade, NO isometric or 3/4 quarter view, no side-wall perspective. Entire building centered and fully contained with at least 8% empty transparent margin on EVERY edge, isolated actual transparent background, no people, no text, no UI, no watermark, no ground tile, no cast shadow, no atmospheric glow. Preserve recognizability at small game size.",
+    "tool": "built-in image_gen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\lookout_post.png",
+    "pixels": [
+      1312,
+      1199
+    ],
+    "opaque_bbox": [
+      269,
+      92,
+      1049,
+      1111
+    ],
+    "ppu": 624.0,
+    "visible_height_units": 1.6330128205128205
+  },
+  {
+    "key": "sawmill",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-679cca6d-0673-49ef-943f-6e132082cd8a.png",
+    "prompt": "Game sprite asset, single building cutout. A working sawmill building: broad open timber processing shed with ochre-yellow snow-capped roof, one large vertical iron circular saw blade visibly set into a timber sawing table, a log on short feed rails, stacks of freshly cut beams on its side. Distinct industrial wood processing silhouette, NOT a carpenter hand-tool shop, not just a pile of logs. Cozy detailed pixel-painted winter survival RPG art, crisp dark outlines and broad readable shading, dark warm wood and gray stone, snow on roofs where appropriate. ORTHOGRAPHIC FRONT VIEW with only a slight elevated view showing the top, straight-on facade, NO isometric or 3/4 quarter view, no side-wall perspective. Entire building centered and fully contained with at least 8% empty transparent margin on EVERY edge, isolated actual transparent background, no people, no text, no UI, no watermark, no ground tile, no cast shadow, no atmospheric glow or particle smoke. Preserve recognizability at small game size.",
+    "tool": "built-in image_gen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\sawmill.png",
+    "pixels": [
+      1536,
+      1024
+    ],
+    "opaque_bbox": [
+      60,
+      123,
+      1476,
+      834
+    ],
+    "ppu": 1132.8,
+    "visible_height_units": 0.6276483050847458
+  },
+  {
+    "key": "church",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-9b21ff0c-a9d2-4040-b5f2-fea6126e2a3b.png",
+    "prompt": "Game sprite asset, single building cutout. A small village chapel: tall narrow stone-and-timber chapel with steep muted violet-blue snow-capped roof, a little central belfry and bronze bell, large round amber-and-blue rose window, arched double wooden doors, simple stone steps. Distinct elegant vertical chapel silhouette, not a cabin, no people. Cozy detailed pixel-painted winter survival RPG art, crisp dark outlines and broad readable shading, dark warm wood and gray stone, snow on roofs where appropriate. ORTHOGRAPHIC FRONT VIEW with only a slight elevated view showing the top, straight-on facade, NO isometric or 3/4 quarter view, no side-wall perspective. Entire building centered and fully contained with at least 8% empty transparent margin on EVERY edge, isolated actual transparent background, no people, no text, no UI, no watermark, no ground tile, no cast shadow, no atmospheric glow or particle smoke. Preserve recognizability at small game size.",
+    "tool": "built-in image_gen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\church.png",
+    "pixels": [
+      1174,
+      1340
+    ],
+    "opaque_bbox": [
+      195,
+      36,
+      979,
+      1295
+    ],
+    "ppu": 627.2,
+    "visible_height_units": 2.007334183673469
+  },
+  {
+    "key": "brazier",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-538e0883-940c-4a79-a6a4-81679df57d3f.png",
+    "prompt": "Game sprite asset, single building cutout. A standalone village brazier structure: heavy dark iron fire bowl on a short carved stone pedestal with three sturdy iron supports, clear compact orange-yellow flame above charcoal, snow on pedestal rim but not inside the bowl, no roof and no logs on the ground. Distinct raised metal bowl silhouette very different from a ground campfire. Entire small structure only. Cozy detailed pixel-painted winter survival RPG art, crisp dark outlines and broad readable shading, dark warm wood and gray stone, snow on roofs where appropriate. ORTHOGRAPHIC FRONT VIEW with only a slight elevated view showing the top, straight-on facade, NO isometric or 3/4 quarter view, no side-wall perspective. Entire building centered and fully contained with at least 8% empty transparent margin on EVERY edge, isolated actual transparent background, no people, no text, no UI, no watermark, no ground tile, no cast shadow, no atmospheric glow or particle smoke. Preserve recognizability at small game size.",
+    "tool": "built-in image_gen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Buildings\\Identity20261019\\brazier.png",
+    "pixels": [
+      1246,
+      1262
+    ],
+    "opaque_bbox": [
+      261,
+      108,
+      986,
+      1168
+    ],
+    "ppu": 580.0,
+    "visible_height_units": 1.8275862068965518
+  }
+]

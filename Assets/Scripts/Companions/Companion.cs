@@ -193,6 +193,7 @@ namespace IL6
 
         private void Awake()
         {
+            YSort.Ensure(gameObject);
             _rb = GetComponent<Rigidbody2D>();
             if (_rb == null) _rb = gameObject.AddComponent<Rigidbody2D>();
             _rb.gravityScale = 0f;
@@ -263,7 +264,6 @@ namespace IL6
         private void TryAutoHide()
         {
             if (IsDead) return;
-            if (CurrentMode == Mode.Hiding) return;
             if (CurrentMode == Mode.Working) return; // 채집 중인 동료는 우선 일 마저
 
             bool blizzard = false;
@@ -274,7 +274,15 @@ namespace IL6
             if (!IsCombat)
             {
                 if (FindNearestZombie(SightRange) != null) nonCombatThreatened = true;
-                else if (FindNearestAnimal(SightRange) != null) nonCombatThreatened = true;
+                else if (FindNearestAnimal(SightRange, true) != null) nonCombatThreatened = true;
+            }
+
+            if (CurrentMode == Mode.Hiding)
+            {
+                bool isNight = night != null ? night.CurrentPhase == Phase.Night
+                    : GameSession.Instance != null && GameSession.Instance.Cycle.Phase == Phase.Night;
+                if (!isNight && !blizzard && !nonCombatThreatened) OnDawnStarted();
+                return;
             }
 
             if (!blizzard && !nonCombatThreatened) return;
@@ -337,7 +345,7 @@ namespace IL6
             if (Player == null || _col == null) return;
             float d = Vector2.Distance(transform.position, Player.position);
             // 멀면 콜라이더 disabled — 다른 유닛이 동료를 통과 가능 (군집 정체 방지)
-            bool shouldEnable = d <= CollisionDisableDistance;
+            bool shouldEnable = CurrentMode != Mode.Hiding && d <= CollisionDisableDistance;
             if (_col.enabled != shouldEnable) _col.enabled = shouldEnable;
 
             if (!IsDead)
@@ -615,7 +623,7 @@ namespace IL6
             return 1f;
         }
 
-        private MonoBehaviour FindNearestAnimal(float range)
+        private MonoBehaviour FindNearestAnimal(float range, bool hostileOnly = false)
         {
             MonoBehaviour best = null;
             float bestDist = range;
@@ -623,6 +631,7 @@ namespace IL6
             foreach (var a in all)
             {
                 if (a == null || a.IsDead) continue;
+                if (hostileOnly && !(a is WolfAi)) continue;
                 float d = Vector2.Distance(transform.position, a.transform.position);
                 if (d < bestDist) { best = a; bestDist = d; }
             }
