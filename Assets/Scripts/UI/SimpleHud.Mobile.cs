@@ -6,7 +6,7 @@ namespace IL6
     public sealed partial class SimpleHud
     {
         private bool _showCompanions;
-        internal void PrepareHudPreview() { _tutorialDismissed=true; _tutorialPaused=false; InputReader.HudBlocked=false; }
+        internal void PrepareHudPreview() { _tutorialDismissed=true; ReleaseStoryPause(); _storyWaitingForGui=false; InputReader.HudBlocked=false; }
         private void HandleSecondaryTouch()
         {
             if(_buildPaused) return;
@@ -48,10 +48,10 @@ namespace IL6
                 case 4:if(_pendingBuildKind!=null) _pendingBuildKind=null;else UseUnifiedAction();break;
             }
         }
-        private bool ControlsBlocked => _workMenuOpen || _researchOpen || _buildPaused || _paused || _buildCatalogOpen || _tutorialPaused || Time.timeScale <= 0f
+        private bool ControlsBlocked => _villageReturnActive || _morningFenceOpen || _workMenuOpen || _researchOpen || _buildPaused || _paused || _buildCatalogOpen || _tutorialPaused || Time.timeScale <= 0f
             || (Player != null && Player.IsDead)
             || (Progression != null && Progression.LevelUpPending)
-            || (!_tutorialDismissed && PlayerPrefs.GetInt(TutorialPrefKey, 0) == 0)
+            || TutorialDialogueBlocking
             || _recruitCutPaused;
 
         private List<ContextAction> NearbyActions()
@@ -76,12 +76,26 @@ namespace IL6
         {
             if (ControlsBlocked || _pendingBuildKind != null || (_hudMode == HudMode.Build && !_buildRepairMode)) return;
             if (_buildRepairMode) { if(Attacker!=null) Attacker.TryManualAction();return; }
-            if (Attacker != null && Attacker.HasManualActionTarget)
+            if (Attacker != null)
             {
                 Attacker.TryManualAction();
                 return; // A blocked action never falls through into another action or spends resources.
             }
             UsePrimaryAction();
+        }
+
+        public bool TryGetContextAction(out System.Action callback, out string label)
+        {
+            callback=null;label=null;
+            if(ControlsBlocked || _pendingBuildKind!=null || (_hudMode==HudMode.Build && !_buildRepairMode)
+                || (Player!=null && Player.Actions!=null && Player.Actions.IsBusy)) return false;
+            foreach(var action in NearbyActions())
+            {
+                if(!action.Enabled || action.Callback==null) continue;
+                callback=action.Callback;label=action.Label;
+                return true;
+            }
+            return false;
         }
 
         public void UsePrimaryAction()
@@ -118,13 +132,14 @@ namespace IL6
         {
             if (ControlsBlocked && !BuildUiAvailable) return true;
             if (_buildCatalogOpen) return true;
-            if (_buildPaused) return BuildPlacementControlsRect.Contains(point) || new Rect(MobileHudLayout.Width/2-280,96,560,40).Contains(point);
+            if (_buildPaused) return BuildPlacementControlsRect.Contains(point) || BuildPlacementFeedbackRect.Contains(point);
             if (_resourceDetailsOpen && ResourceDetailsRect.Contains(point)) return true;
-            if (MobileHudLayout.Status.Contains(point) || MobileHudLayout.Resources.Contains(point)
+            if (MobileHudLayout.Status.Contains(point) || MobileHudLayout.Resources.Contains(point) || MobileHudLayout.Experience.Contains(point)
                 || GoalTrackerBounds.Contains(point) || MobileHudLayout.Actions.Contains(point)
                 || MobileHudLayout.Movement.Contains(point) || MobileHudLayout.Menu.Contains(point)) return true;
             if (MobileHudLayout.CompanionButton.Contains(point)) return true;
-            if (!_resourceDetailsOpen && MobileHudLayout.CompanionSummary(_showCompanions).Contains(point)) return true;
+            if(SunsetWarningVisible && SunsetWarningRect.Contains(point))return true;
+            if (!_resourceDetailsOpen && _showCompanions && MobileHudLayout.CompanionSummary(true).Contains(point)) return true;
             if (!_resourceDetailsOpen && _hudMode!=HudMode.Build && HudLayout.WorkLauncher().Contains(point) && NearbyActions().Count>0) return true;
             if (MobileHudLayout.ResourceTouchBounds.Contains(point)) return true;
             // Construction catalog occupies the strip above the movement/action controls.
@@ -149,9 +164,8 @@ namespace IL6
             if(_pendingBuildKind!=null) actionName="취소";
             else if(_buildPaused) actionName="건설 종료";
             string attackLabel=Attacker!=null?Attacker.ManualActionLabel:"공격";
-            if(attackLabel=="공격" && Attacker!=null && !Attacker.HasManualActionTarget && selected.Callback!=null) attackLabel=actionName;
-            string[] labels={"근접","활","건설",attackLabel,actionName};
-            string[] keys={"1","2","B/3","Space","E"};
+            string[] labels={"근접","활","건설",CompactActionLabel(attackLabel),actionName};
+            string[] keys=Application.isMobilePlatform ? new[]{"","","","",""} : new[]{"1","2","3","Space","E"};
             HudGlyph[] icons={HudGlyph.Sword,HudGlyph.Bow,HudGlyph.Hammer,HudGlyph.Sword,HudGlyph.Hand};
             if(attackLabel!="공격") icons[3]=attackLabel=="벌목" || attackLabel=="채굴" || attackLabel=="수리" ? HudGlyph.Hammer : HudGlyph.Hand;
             for(int i=0;i<5;i++)
@@ -168,8 +182,17 @@ namespace IL6
             MobileButtonTheme.Pad(MobileHudLayout.Movement,axis);
             HudText.Label(new Rect(MobileHudLayout.Movement.x,MobileHudLayout.Movement.yMax-20,MobileHudLayout.Movement.width,20),"이동 · WASD",new GUIStyle(_label){fontSize=12,alignment=TextAnchor.MiddleCenter});
             var companion=MobileHudLayout.CompanionButton;
-            if(MobileButtonTheme.Button(companion,"동료","G",HudGlyph.People,MobileButtonTheme.Gold,true,_showCompanions)) _showCompanions=!_showCompanions;
+            if(MobileButtonTheme.Button(companion,RecruitableNpc.CurrentCompanionCount().ToString(),Application.isMobilePlatform?"":"G",HudGlyph.People,MobileButtonTheme.Gold,true,_showCompanions)) _showCompanions=!_showCompanions;
             GUI.enabled=oldEnabled;
+        }
+
+        private static string CompactActionLabel(string label)
+        {
+            if(string.IsNullOrEmpty(label)) return "공격";
+            if(label.StartsWith("불 보충")) return "불 보충";
+            if(label.StartsWith("시설 강화")) return "시설 강화";
+            int end=label.IndexOf(' ');
+            return end>0 ? label.Substring(0,end) : label;
         }
     }
 }

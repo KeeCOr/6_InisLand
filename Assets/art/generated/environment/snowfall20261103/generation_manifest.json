@@ -1,0 +1,24 @@
+{
+  "assets": [
+    {
+      "key": "bootprint",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-f556f59e-bf8e-469b-bf1d-02470f488c09.png",
+      "path": "Assets/Resources/Sprites/FX/Snowfall20261103/bootprint.png",
+      "size": [
+        128,
+        256
+      ],
+      "sha256": "35e882f9779a491dbc501f960a5c4b1bda8517f6bc1ed4d9479b4e3109186b66"
+    },
+    {
+      "key": "flake",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-6a910312-61e0-4419-9469-f2cee6e10e85.png",
+      "path": "Assets/Resources/Sprites/FX/Snowfall20261103/flake.png",
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "385d3091d6759ec808e434378bae11ffbfa484ffb97cbd9049092e3b0f010512"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
@@ -17,14 +17,17 @@ namespace IL6.Tests
             var hud=Object.FindFirstObjectByType<SimpleHud>();
             typeof(SimpleHud).GetMethod("PrepareHudPreview",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(hud,null);
         }
-        [UnityTest] public IEnumerator SceneUsesFewerTreesAndDistantCandidatesDoNotBlockVillageArrivals()
+        [UnityTest] public IEnumerator SceneBalancesForestAndWildlifeAndKeepsVillageArrivals()
         {
             yield return Ready();
             GameSession.Instance.Cycle.Restore(new DayNightSnapshot{day=1,phase=Phase.Day,elapsedInPhase=0});
             var spawner=Object.FindFirstObjectByType<ProceduralSpawner>();spawner.enabled=false;
-            Assert.That(spawner.TreeChance,Is.EqualTo(.16f).Within(.001f));
-            Assert.That(spawner.NpcChance,Is.EqualTo(.08f).Within(.001f));
-            Assert.That(spawner.ScarceNpcIntervalSec,Is.EqualTo(6f));
+            Assert.That(spawner.TreeChance,Is.EqualTo(.45f).Within(.001f));
+            Assert.That(spawner.DeerChance,Is.EqualTo(.025f).Within(.001f));
+            Assert.That(spawner.NpcChance,Is.EqualTo(.02f).Within(.001f));
+            Assert.That(spawner.ScarceNpcIntervalSec,Is.EqualTo(20f));
+            foreach(var companion in Object.FindObjectsByType<Companion>(FindObjectsSortMode.None))
+                Assert.That(companion.SeparationRadius,Is.GreaterThanOrEqualTo(1.1f),"Authored followers must match the new spacing");
             Vector2 center=new Vector2(GameConstants.VillageCenterX,GameConstants.VillageCenterY);
             foreach(var npc in Object.FindObjectsByType<RecruitableNpc>(FindObjectsSortMode.None)) Object.Destroy(npc.gameObject);
             yield return null;
@@ -35,10 +38,15 @@ namespace IL6.Tests
             foreach(var npc in Object.FindObjectsByType<RecruitableNpc>(FindObjectsSortMode.None))
                 if(Vector2.Distance(npc.transform.position,center)<=12f){local=npc;count++;}
             Assert.That(count,Is.EqualTo(1),"Remote NPC cap must not prevent a visible village candidate");
-            Assert.That(Vector2.Distance(local.transform.position,center),Is.InRange(3.2f,4.2f));
+            Assert.That(ProceduralSpawner.IsOutsideVillageForNpc(local.transform.position),Is.True);
             Physics2D.SyncTransforms();
             foreach(var hit in Physics2D.OverlapCircleAll(local.transform.position,.65f))
                 Assert.That(hit.GetComponent<Building>(),Is.Null,"Candidate must not arrive inside a fence or building");
+            for(int i=0;i<10;i++)spawner.SpawnDailyVillageNpc();
+            count=0;
+            foreach(var npc in Object.FindObjectsByType<RecruitableNpc>(FindObjectsSortMode.None))
+                if(npc.enabled && npc.CanRecruit() && Vector2.Distance(npc.transform.position,center)<=12f)count++;
+            Assert.That(count,Is.EqualTo(2),"Repeated arrivals must stop at two nearby candidates without limiting recruitment");
             yield return SceneManager.LoadSceneAsync("BootScene");
         }
         [UnityTest] public IEnumerator CanopyFadesForCandidatesAndRecruitedCompanionsThenRestores()

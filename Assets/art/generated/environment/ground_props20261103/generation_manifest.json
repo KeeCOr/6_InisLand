@@ -1,0 +1,196 @@
+{
+  "assets": [
+    {
+      "group": "sites",
+      "key": "wood",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/sites/wood.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-69e58721-e9e7-4752-9666-a3e9f36573a2.png",
+      "source_rect": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "world_size": 1.4,
+      "ppu": 182.85714285714286,
+      "pivot_y": 0.19140625,
+      "sha256": "fb641cb3c7d5d630984447c674d906b5f7b435bd0ef6e09e086771554b007396"
+    },
+    {
+      "group": "sites",
+      "key": "stone",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/sites/stone.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-69e58721-e9e7-4752-9666-a3e9f36573a2.png",
+      "source_rect": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "world_size": 1.15,
+      "ppu": 222.60869565217394,
+      "pivot_y": 0.26171875,
+      "sha256": "0b5f750de5b0b79b26df9bb6148e4fcee6bb72df4644cdbbadfe232580d9710f"
+    },
+    {
+      "group": "sites",
+      "key": "food",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/sites/food.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-69e58721-e9e7-4752-9666-a3e9f36573a2.png",
+      "source_rect": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "world_size": 1.2,
+      "ppu": 213.33333333333334,
+      "pivot_y": 0.1953125,
+      "sha256": "7e6c7539915775cde199e5f4fd410f3fe1dacc7e494ab3ddbcea5400a1d44214"
+    },
+    {
+      "group": "sites",
+      "key": "meat",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/sites/meat.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-69e58721-e9e7-4752-9666-a3e9f36573a2.png",
+      "source_rect": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "world_size": 1.0,
+      "ppu": 256.0,
+      "pivot_y": 0.23046875,
+      "sha256": "4224427d1f596f73f3120aaa32749891122821bd77343be805fee7a8c1008453"
+    },
+    {
+      "group": "sites",
+      "key": "frostbloom",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/sites/frostbloom.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-69e58721-e9e7-4752-9666-a3e9f36573a2.png",
+      "source_rect": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "world_size": 0.75,
+      "ppu": 341.3333333333333,
+      "pivot_y": 0.18359375,
+      "sha256": "bba6d722b40accf7baad79682746b585ee06ed3cb9ae35b3825a81532a2d84b4"
+    },
+    {
+      "group": "sites",
+      "key": "ore",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/sites/ore.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-69e58721-e9e7-4752-9666-a3e9f36573a2.png",
+      "source_rect": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "world_size": 1.1,
+      "ppu": 232.72727272727272,
+      "pivot_y": 0.234375,
+      "sha256": "40dbe7de96f59deefcc6c188b1697ccc30d31817060af43c7d62e8e605cc7202"
+    },
+    {
+      "group": "drops",
+      "key": "wood",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/drops/wood.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-eda4f0b5-89f6-4d37-b7ed-72256661ccb7.png",
+      "source_rect": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "world_size": 0.65,
+      "ppu": 393.8461538461538,
+      "pivot_y": 0.15625,
+      "sha256": "4b8936c5fe24335135168344feeee548febc2f092c8a581763a0e37126951637"
+    },
+    {
+      "group": "drops",
+      "key": "stone",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/drops/stone.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-eda4f0b5-89f6-4d37-b7ed-72256661ccb7.png",
+      "source_rect": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "world_size": 0.65,
+      "ppu": 393.8461538461538,
+      "pivot_y": 0.1640625,
+      "sha256": "ac57d4a797818f383bde796975a44d25aca0d5cbc5014051d0232977eb25ca95"
+    },
+    {
+      "group": "drops",
+      "key": "ore",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/drops/ore.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-eda4f0b5-89f6-4d37-b7ed-72256661ccb7.png",
+      "source_rect": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "world_size": 0.65,
+      "ppu": 393.8461538461538,
+      "pivot_y": 0.18359375,
+      "sha256": "b8d9bb8854b3e5e9bd16df0b45bcba0f49f14e961fbcee341a7959085e63df2c"
+    },
+    {
+      "group": "drops",
+      "key": "meat",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/drops/meat.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-eda4f0b5-89f6-4d37-b7ed-72256661ccb7.png",
+      "source_rect": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "world_size": 0.65,
+      "ppu": 393.8461538461538,
+      "pivot_y": 0.1640625,
+      "sha256": "e9f37668b97e57179f1ee5f118f34ab242ab071f974194bbfc05c1b271b00026"
+    },
+    {
+      "group": "drops",
+      "key": "food",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/drops/food.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-eda4f0b5-89f6-4d37-b7ed-72256661ccb7.png",
+      "source_rect": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "world_size": 0.65,
+      "ppu": 393.8461538461538,
+      "pivot_y": 0.12109375,
+      "sha256": "54dee657f32511bf6b34aa6a6e06916eff3435ce3e9f5eee8cd8c34abec9c5c4"
+    },
+    {
+      "group": "drops",
+      "key": "frostbloom",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/drops/frostbloom.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-eda4f0b5-89f6-4d37-b7ed-72256661ccb7.png",
+      "source_rect": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "world_size": 0.65,
+      "ppu": 393.8461538461538,
+      "pivot_y": 0.12890625,
+      "sha256": "3b0b12fa9f6d6cb6f385c52c6fb803ce266c64b54583c3ae15acfcf91afbe562"
+    }
+  ]
+}

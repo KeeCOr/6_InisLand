@@ -1,0 +1,7 @@
+{
+  "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-cf2371c7-5480-4ee8-953b-167cdbb88b2b.png",
+  "prompt": "Use case: stylized-concept. Asset type: transparent pixel-painted projectile sprite for InisLand, medieval northern European snowy village survival game. Create ONE slender traditional wooden ARROW viewed from directly above in 2D, precisely horizontal pointing RIGHT (east). Long dark brown wood shaft, small forged grey iron pointed arrowhead at right, modest ivory/grey feather fletching at left, simple wrapped cord. Clear dark outline and a few pale steel/wood highlights so readable over white snow, but no magical glow, neon, flare or gradients. Hand-painted crisp game sprite, same warm rustic material language as brown leather winter clothing. Entire single arrow centered on wide transparent canvas, arrow occupies central 70 percent width and 15 percent height, enough clear alpha margin all sides. No bow, character, text, labels, shadow, ground, scenery, icon border or multiple arrows. Real transparent alpha background.",
+  "tool": "built-in image_gen",
+  "sha256": "c52ab21de62bf27d6121cd41f06f15c450d70d676fa55cdfbcb53bfb91f53cbd",
+  "runtime": "Assets\\Resources\\Sprites\\FX\\nordic_arrow.png"
+}

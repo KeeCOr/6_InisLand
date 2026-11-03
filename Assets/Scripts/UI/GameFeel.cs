@@ -23,7 +23,10 @@ namespace IL6
 
         public static void HitFlash(MonoBehaviour owner, SpriteRenderer sr)
         {
-            if (sr == null || owner == null || !owner.gameObject.activeInHierarchy) return;
+            if (owner == null || !owner.gameObject.activeInHierarchy) return;
+            if (sr == null) sr = owner.GetComponentInChildren<SpriteRenderer>();
+            if (sr == null) return;
+            HitImpact.Spawn(sr);
             owner.StartCoroutine(FlashRoutine(sr));
         }
 
@@ -183,6 +186,36 @@ namespace IL6
                 yield return null;
             }
             if (go != null) Object.Destroy(go);
+        }
+
+        // Short local fragments: no camera shake, pause, actor tint or movement lock.
+        public static void MaterialImpact(Vector3 position, ImpactMaterial material)
+        {
+            Color tint = material == ImpactMaterial.Wood ? new Color(.66f,.42f,.19f)
+                : material == ImpactMaterial.Stone ? new Color(.68f,.77f,.82f) : new Color(1f,.78f,.35f);
+            for (int i=0;i<4;i++)
+            {
+                var go = new GameObject("__materialImpact");
+                go.transform.position = position;
+                var sr = go.AddComponent<SpriteRenderer>(); sr.sprite = GetWhiteSquare(); sr.color = tint;
+                sr.sortingOrder = Mathf.Clamp(YSort.ComputeOrder(position.y - (Camera.main != null ? Camera.main.transform.position.y : 0f))+20,-8900,8900);
+                go.transform.localScale = new Vector3(.07f,.035f,1f);
+                float angle = (35f+i*47f)*Mathf.Deg2Rad;
+                Runner().StartCoroutine(ImpactFragment(go,new Vector2(Mathf.Cos(angle),Mathf.Sin(angle))*1.8f,tint));
+            }
+        }
+        private static IEnumerator ImpactFragment(GameObject go, Vector2 velocity, Color tint)
+        {
+            float age=0;
+            while(go!=null && age<.18f)
+            {
+                float dt=Time.deltaTime; age+=dt;
+                go.transform.position += (Vector3)(velocity*dt); velocity += Vector2.down*dt*7f;
+                go.transform.Rotate(0,0,dt*220f);
+                tint.a=Mathf.Clamp01(1f-age/.18f);go.GetComponent<SpriteRenderer>().color=tint;
+                yield return null;
+            }
+            if(go!=null) Object.Destroy(go);
         }
 
         public static void FloatText(Vector3 worldPos, string text, Color color)

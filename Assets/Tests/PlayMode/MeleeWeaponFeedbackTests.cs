@@ -42,8 +42,8 @@ namespace IL6.Tests
             Assert.That(attack.TryAttack(),Is.True);
             Assert.That(target.CurrentHp,Is.LessThan(1000));
             Assert.That(MeleeKnockback.IsActive(target.gameObject),Is.True);
-            yield return new WaitForSeconds(.25f);
-            Assert.That(target.transform.position.x-before,Is.InRange(.6f,.85f));
+            yield return new WaitForSeconds(.4f);
+            Assert.That(target.transform.position.x-before,Is.InRange(1.35f,1.55f));
             Assert.That(MeleeKnockback.IsActive(target.gameObject),Is.False);
 
             attack.SwitchToWeapon(1);
@@ -75,7 +75,7 @@ namespace IL6.Tests
             wall.AddComponent<BoxCollider2D>().size=new Vector2(.2f,3f);
             Physics2D.SyncTransforms();
             MeleeKnockback.Apply(target,new Vector2(1999,2000));
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(.4f);
             Assert.That(target.transform.position.x,Is.LessThanOrEqualTo(2000.32f));
             Assert.That(MeleeKnockback.IsActive(target.gameObject),Is.False);
             Object.Destroy(target.gameObject);Object.Destroy(wall);yield return null;

@@ -9,6 +9,15 @@ namespace IL6
         public ResourceKind RewardKind = ResourceKind.Food;
         public int RewardAmount = 3;
 
+        private void Start()
+        {
+            var renderer=GetComponent<SpriteRenderer>();
+            if(renderer==null)return;
+            var sprite=SpriteFor(RewardKind);
+            if(sprite!=null){renderer.sprite=sprite;renderer.color=Color.white;}
+            YSort.Ensure(gameObject);
+        }
+
         public void Resolve(ResourceStore store)
         {
             if (store == null) return;

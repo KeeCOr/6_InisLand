@@ -13,6 +13,9 @@ namespace IL6
         public static bool HudBlocked { get; set; }
         public bool CancelPressed { get; private set; }
         public bool BuildPressed { get; private set; }
+        private int _interactionConsumedFrame=-1;
+        public void ConsumeInteraction()
+        { _interactionConsumedFrame=Time.frameCount;InteractPressed=false; }
 
         private void Update()
         {
@@ -38,7 +41,8 @@ namespace IL6
                 touchMove = MobileHudLayout.MoveAt(MobileHudLayout.GuiPoint(UnityEngine.Input.mousePosition));
             MoveAxis = Vector2.ClampMagnitude(new Vector2(ax, ay) + touchMove, 1f);
 
-            InteractPressed = Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.E);
+            InteractPressed = Time.frameCount!=_interactionConsumedFrame
+                && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.E));
             CancelPressed = Input.GetKeyDown(KeyCode.Escape);
             BuildPressed = Input.GetKeyDown(KeyCode.B);
         }

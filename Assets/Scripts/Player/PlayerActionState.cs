@@ -9,6 +9,7 @@ namespace IL6
     {
         public PlayerAction State { get; private set; } = PlayerAction.Idle;
         public ActionPhase Phase { get; private set; } = ActionPhase.Start;
+        public float PhaseProgress => Mathf.Clamp01(_elapsed/Mathf.Max(.001f,_duration));
         public bool IsBusy => State == PlayerAction.Attack || State == PlayerAction.Logging || State == PlayerAction.Gather || State == PlayerAction.Dead;
         public bool BlocksMovement => State == PlayerAction.Logging || State == PlayerAction.Gather || State == PlayerAction.Dead;
         public event Action LoopImpact;

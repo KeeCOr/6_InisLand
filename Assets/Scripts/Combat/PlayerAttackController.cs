@@ -3,7 +3,7 @@ using UnityEngine;
 namespace IL6
 {
     /// <summary>
-    /// 사거리 내 가장 가까운 공격 대상(좀비/사슴)을 자동 공격.
+    /// 현재 무기의 사거리 내 대상을 자동 공격. Space는 주변 상호작용에도 사용.
     /// Weapon.ProjectileSpeed > 0 이면 투사체 발사, 아니면 즉시 대미지.
     /// Weapon 미할당 시 기본 Magic Bolt 런타임 생성.
     /// </summary>
@@ -46,6 +46,7 @@ namespace IL6
         {
             _self = transform;
             if (GetComponent<MeleeRangeIndicator>() == null) gameObject.AddComponent<MeleeRangeIndicator>();
+            if (GetComponent<PlayerInteractionPreview>() == null) gameObject.AddComponent<PlayerInteractionPreview>();
             _rng = new SeededRng(RngSeed);
             if (Progression == null) Progression = GetComponent<PlayerProgression>();
             if (Weapon == null)
@@ -59,68 +60,66 @@ namespace IL6
 
         public bool TryManualAction()
         {
-            if (IsConstructionHammer)
-            {
-                if (_interactionCooldown>0f) return false;
-                bool repaired=ManualWorldInteraction.TryRepair(GetComponent<PlayerController>(),GameSession.Instance!=null?GameSession.Instance.Resources:null);
-                if(repaired) _interactionCooldown=.35f;
-                return repaired;
-            }
             var player = GetComponent<PlayerController>();
             if (InputReader.HudBlocked || Time.timeScale <= 0f || (player != null && player.IsDead) || Weapon == null) return false;
-            float range = Weapon.Range + (Progression != null ? Progression.BonusRange : 0f);
-            // A combat target keeps priority even while the weapon is cooling down.
-            if (FindNearestTarget(range) != null)
-            {
-                var logging = GetComponent<GatherController>();
-                if (logging != null && logging.IsActive) { logging.Cancel(); return false; }
-                return TryAttack();
-            }
+            var resolved = ManualWorldInteraction.Resolve(player);
             var gather = GetComponent<GatherController>();
-            if(gather!=null && gather.IsActive) return true;
-            var state=GetComponent<PlayerActionState>();if(state!=null && state.IsBusy) return false;
+            if (resolved.Kind == ManualInteractionKind.Gather)
+                return gather != null && gather.StartGathering(resolved.Target as Gatherable);
+            if (resolved.Kind == ManualInteractionKind.Attack) return TryAttackTarget(resolved.Target);
             if(_interactionCooldown>0) return false;
+            if (resolved.Kind == ManualInteractionKind.Work && resolved.Callback != null)
+            {
+                _interactionCooldown = .35f;
+                resolved.Callback();
+                return true;
+            }
             bool handled;
-            if(ManualWorldInteraction.TryUse(player,GameSession.Instance!=null?GameSession.Instance.Resources:null,out handled))
+            if(ManualWorldInteraction.TryUse(player,GameSession.Instance!=null?GameSession.Instance.Resources:null,resolved,out handled))
             {_interactionCooldown=.35f;return true;}
-            if(handled) return false;
-            return gather != null && gather.TryStartNearby(ManualTreeInteractRadius);
+            return false;
         }
-        public bool HasManualActionTarget => IsConstructionHammer ? ManualWorldInteraction.HasRepairTarget(transform.position)
-            : Weapon != null && FindNearestTarget(Weapon.Range+(Progression!=null?Progression.BonusRange:0)) != null
-            || ManualWorldInteraction.HasRepairTarget(transform.position)
-            || ManualWorldInteraction.Hint(transform.position) != "공격"
-            || GetComponent<GatherController>() is GatherController gather && (gather.IsActive || gather.FindNearbyTarget(ManualTreeInteractRadius) != null);
-        public string ManualActionLabel
+        public bool HasManualActionTarget
         {
             get
             {
-                if (IsConstructionHammer) return "수리";
-                if (Weapon != null && FindNearestTarget(Weapon.Range+(Progression!=null?Progression.BonusRange:0)) != null) return "공격";
-                var gather = GetComponent<GatherController>();
-                if (gather != null && gather.IsActive) return gather.NearbyActionLabel(ManualTreeInteractRadius);
-                string hint = ManualWorldInteraction.Hint(transform.position);
-                return hint != "공격" ? hint : gather != null ? gather.NearbyActionLabel(ManualTreeInteractRadius) : "공격";
+                var resolved = ManualWorldInteraction.Resolve(GetComponent<PlayerController>());
+                return resolved.Target != null || (resolved.Kind == ManualInteractionKind.Work && resolved.Callback != null);
             }
         }
+        public string ManualActionLabel => ManualWorldInteraction.Hint(GetComponent<PlayerController>());
+        public MonoBehaviour FindManualCombatTarget() => Weapon != null ? FindNearestTarget(Weapon.Range + (Progression != null ? Progression.BonusRange : 0f)) : null;
         private void Update()
         {
             _cooldown -= Time.deltaTime;
             _interactionCooldown -= Time.deltaTime;
+            if (_cooldown > 0f || Weapon == null || IsConstructionHammer || InputReader.HudBlocked || Time.timeScale <= 0f) return;
+            var player = GetComponent<PlayerController>();
+            if (player == null || player.IsDead) return;
+            var actions = GetComponent<PlayerActionState>();
+            if (actions != null && actions.IsBusy) return;
+            var gather = GetComponent<GatherController>();
+            if (gather != null && gather.IsActive) return;
+            TryAttack();
         }
 
         public bool TryAttack()
+        {
+            return TryAttackTarget(FindManualCombatTarget());
+        }
+
+        private bool TryAttackTarget(MonoBehaviour nearest)
         {
             if (IsConstructionHammer) return false;
             var player = GetComponent<PlayerController>();
             if (InputReader.HudBlocked || Time.timeScale <= 0f || (player != null && player.IsDead) || Weapon == null || _cooldown > 0f) return false;
             float effectiveRange = Weapon.Range + (Progression != null ? Progression.BonusRange : 0f);
-            MonoBehaviour nearest = FindNearestTarget(effectiveRange);
             if (nearest == null) return false;
             var actions = GetComponent<PlayerActionState>();
             if (actions != null && !actions.TryBegin(PlayerAction.Attack, nearest.transform.position - transform.position)) return false;
+            GetComponent<CharacterActionVisual>()?.PlayAttack(nearest.transform.position-transform.position);
 
-            float dmgMul = Progression != null ? Progression.DamageMultiplier : 1f;
+            float dmgMul = Progression != null ? Progression.DamageMultiplierFor(Weapon.ProjectileSpeed > 0f) : 1f;
             int baseDmg = Mathf.RoundToInt(Weapon.BaseDamage * dmgMul);
             // _rng 가 어떤 경유로든 null 이면 즉석 초기화 (Awake 미실행 케이스 방어)
             if (_rng == null) _rng = new SeededRng(RngSeed);
@@ -214,6 +213,7 @@ namespace IL6
 
             float speedMul = Progression != null ? Progression.ProjectileSpeedMultiplier : 1f;
             var proj = go.AddComponent<Projectile>();
+            if (Weapon.Id == "bow") proj.UseArrowAppearance();
             proj.Speed = Weapon.ProjectileSpeed * speedMul;
             proj.Damage = dmg;
             proj.HitRadius = 0.5f;
@@ -251,7 +251,7 @@ namespace IL6
             else if (target is AnimalAi animal)
             {
                 GameFeel.Slash(_self.position, target.transform.position, new Color(1f, 0.95f, 0.7f));
-                animal.TakeDamage(dmg);
+                animal.TakeDamage(dmg,_self.position);
                 if (!animal.IsDead) MeleeKnockback.Apply(animal, _self.position);
             }
         }

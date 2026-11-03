@@ -58,6 +58,8 @@ namespace IL6
             var attacker = GetComponent<PlayerAttackController>();
             SetWeaponVisual(attacker != null ? attacker.WeaponIndex : 0);
             Actions = GetComponent<PlayerActionState>() ?? gameObject.AddComponent<PlayerActionState>();
+            var directions=GetComponent<DirectionalCharacterVisual>() ?? gameObject.AddComponent<DirectionalCharacterVisual>();
+            directions.Configure("Hero");
 
             if (transform.localScale == Vector3.one)
                 transform.localScale = new Vector3(0.9f, 1.0f, 1.0f);

@@ -1,21 +1,24 @@
-using UnityEngine;
+﻿using UnityEngine;
 namespace IL6
 {
     public sealed partial class SimpleHud
     {
         private bool _resourceDetailsOpen;
+        private int _hoveredResource = -1;
         private static readonly ResourceKind[] ResourceKinds={ResourceKind.Wood,ResourceKind.Stone,ResourceKind.Ore,ResourceKind.Meat,ResourceKind.Food,ResourceKind.Frostbloom};
         private static readonly string[] ResourceNames={"목재","석재","광석","고기","식량","서리꽃"};
-        private Rect ResourceDetailsRect => new Rect(MobileHudLayout.Resources.x+12,MobileHudLayout.Resources.yMax+8,344,270);
+        private Rect ResourceDetailsRect => new Rect(MobileHudLayout.Resources.x+12,MobileHudLayout.Experience.yMax+8,344,270);
         private void DrawResourceBar()
         {
             var session=GameSession.Instance;if(session==null) return;
+            _hoveredResource=-1;
             if(ControlsBlocked) _resourceDetailsOpen=false;
-            var count=new GUIStyle(_label){fontSize=17,fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleLeft,normal={textColor=Color.white}};
+            var count=new GUIStyle(_label){fontSize=16,fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleLeft,normal={textColor=Color.white}};
             var shadow=new GUIStyle(count){normal={textColor=new Color(0,0,0,.95f)}};
             for(int i=0;i<ResourceKinds.Length;i++)
             {
                 var r=MobileHudLayout.ResourceChip(i);
+                if(!Application.isMobilePlatform && r.Contains(Event.current.mousePosition)) _hoveredResource=i;
                 var backing=new Rect(r.x,r.y+1,r.width-2,30);
                 if(!GeneratedUiSkin.Pill(backing,new Color(.4f,.5f,.48f,.68f)))
                     MobileButtonTheme.RoundRect(backing,7,new Color(.025f,.06f,.07f,.68f));
@@ -25,7 +28,7 @@ namespace IL6
                 DrawHudIcon(new Rect(icon.x-grow,icon.y-grow,icon.width+2*grow,icon.height+2*grow),ResourceIconKey(ResourceKinds[i]));
                 int amount=session.Resources.Get(ResourceKinds[i]);
                 string text=ResourceHudFormat.Compact(amount);
-                var label=new Rect(r.x+29,r.y+1,69,30);
+                var label=new Rect(r.x+29,r.y+1,r.width-31,28);
                 HudText.Label(new Rect(label.x-1,label.y,label.width,label.height),text,shadow);
                 HudText.Label(new Rect(label.x+1,label.y+1,label.width,label.height),text,shadow);
                 count.normal.textColor=amount>=session.Resources.GetCap(ResourceKinds[i]) || pulse>0 ? UiTheme.TextGold : Color.white;
@@ -40,6 +43,13 @@ namespace IL6
         }
         private void DrawResourceDetails()
         {
+            if(!_resourceDetailsOpen && _hoveredResource>=0)
+            {
+                var chip=MobileHudLayout.ResourceChip(_hoveredResource);
+                var tooltip=new Rect(chip.x,MobileHudLayout.Experience.yMax+8,160,28);
+                GeneratedUiSkin.Pill(tooltip,Color.white);
+                HudText.Label(tooltip,ResourceNames[_hoveredResource],new GUIStyle(_label){alignment=TextAnchor.MiddleCenter});
+            }
             if(!_resourceDetailsOpen) return;
             var session=GameSession.Instance;if(session==null) return;
             var panel=ResourceDetailsRect;UiTheme.Panel(panel);UiTheme.TitleBar(panel,"자원 · 보유량 / 보관 한도",_section);

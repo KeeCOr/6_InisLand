@@ -17,7 +17,7 @@ namespace IL6.Tests
                 foreach(var b in root.GetComponentsInChildren<Building>()) if(b.GetComponent<Door>()==null) {missing=b;break;}
                 Object.DestroyImmediate(missing.gameObject);
                 foreach(var b in Object.FindObjectsByType<Building>(FindObjectsSortMode.None))
-                    if(b.Kind==BuildingKind.Campfire && Vector2.Distance(b.transform.position,center)<1) Object.DestroyImmediate(b.gameObject);
+                    if(b.Kind==BuildingKind.Campfire && Vector2.Distance(b.transform.position,center)<2) Object.DestroyImmediate(b.gameObject);
                 VillageStarter.SpawnStarterVillage(center);
                 Assert.That(GameObject.Find("VillageOuterFence"),Is.SameAs(root));
                 Assert.That(root.GetComponentsInChildren<Building>().Length,Is.EqualTo(before-1),"Destroyed pieces must not regenerate");

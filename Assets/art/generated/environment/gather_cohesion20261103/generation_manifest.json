@@ -1,0 +1,808 @@
+{
+  "mode": "built-in image_gen",
+  "scope": "24 existing runtime art replacements; physics and gameplay unchanged",
+  "assets": [
+    {
+      "group": "trees",
+      "key": "spruce",
+      "path": "Assets/Resources/Sprites/Props/NordicTrees20261102/spruce.png",
+      "canvas": [
+        724,
+        724
+      ],
+      "alpha_box": [
+        177,
+        30,
+        591,
+        678
+      ],
+      "old_sha256": "09adf1537aa2bea662e95953dc7fcc6be42007561373f1a86ec329870ed75870",
+      "meta_sha256": "f619309a2d207fa719da9b46525a67871231916a4e54af506b3091c7f5bd0544",
+      "ppu": 432.0,
+      "source": "source_trees.png",
+      "source_rect": [
+        0,
+        0,
+        418,
+        627
+      ],
+      "new_alpha_box": [
+        188,
+        30,
+        579,
+        678
+      ],
+      "sha256": "f080108995795d6207c3ca68432d5a50edebe0b5b66cc7e40cee77a021c69773"
+    },
+    {
+      "group": "trees",
+      "key": "pine",
+      "path": "Assets/Resources/Sprites/Props/NordicTrees20261102/pine.png",
+      "canvas": [
+        724,
+        724
+      ],
+      "alpha_box": [
+        113,
+        30,
+        609,
+        676
+      ],
+      "old_sha256": "038a4e9875c9928348df53f10dccbfff04b0ff84bf3c11500415214317f5bda6",
+      "meta_sha256": "482e3a222491c933b2f1698278c77b414b18b8ce5c7214805d9197818454635c",
+      "ppu": 478.51852,
+      "source": "source_pine.png",
+      "source_rect": [
+        0,
+        0,
+        1145,
+        1374
+      ],
+      "new_alpha_box": [
+        122,
+        30,
+        601,
+        676
+      ],
+      "sha256": "5538a91b0260b2c3e46ccb92dc4fabc7ea9602a3f69292eb0d4560caa8d9ff4f"
+    },
+    {
+      "group": "trees",
+      "key": "birch",
+      "path": "Assets/Resources/Sprites/Props/NordicTrees20261102/birch.png",
+      "canvas": [
+        724,
+        724
+      ],
+      "alpha_box": [
+        127,
+        30,
+        563,
+        676
+      ],
+      "old_sha256": "72647fee4e96ecd846124e922fa39308a10de265a38e273f8c15ceb1d71de56d",
+      "meta_sha256": "27e6d126e5ef00871e2b8fa9958d4a8c50734e3cfc996e4733a2257a96942dfc",
+      "ppu": 403.75,
+      "source": "source_trees.png",
+      "source_rect": [
+        418,
+        0,
+        836,
+        627
+      ],
+      "new_alpha_box": [
+        142,
+        30,
+        548,
+        676
+      ],
+      "sha256": "f4633d80ec6d5a62a75b582ff79cd07d4b8a1a3de6810164a3d0598f83140b5e"
+    },
+    {
+      "group": "trees",
+      "key": "fir",
+      "path": "Assets/Resources/Sprites/Props/NordicTrees20261102/fir.png",
+      "canvas": [
+        512,
+        768
+      ],
+      "alpha_box": [
+        73,
+        32,
+        438,
+        736
+      ],
+      "old_sha256": "2d20d5bfd9182c94d822a3f48403707db63607942cf01ef8c83e1b23dd20ad63",
+      "meta_sha256": "bf356f5b8437fc10d196db633ef4a5eb52bfeee8b861f53505a55feee1b430c4",
+      "ppu": 469.33334,
+      "source": "source_trees.png",
+      "source_rect": [
+        836,
+        0,
+        1254,
+        627
+      ],
+      "new_alpha_box": [
+        71,
+        32,
+        440,
+        736
+      ],
+      "sha256": "24b984d19cf5404302528e7c6a6cc976e4e57362e5f15b3ecc70226e4463875d"
+    },
+    {
+      "group": "trees",
+      "key": "sparse_spruce",
+      "path": "Assets/Resources/Sprites/Props/NordicTrees20261102/sparse_spruce.png",
+      "canvas": [
+        512,
+        768
+      ],
+      "alpha_box": [
+        28,
+        91,
+        484,
+        677
+      ],
+      "old_sha256": "66a64b35df580a7fd139e1aca66d22f0e247a0a892499c016685bdcbda549b84",
+      "meta_sha256": "db51e37160cf41281b38fb6e65c078003d4387728a4867a4500db58a572a5db7",
+      "ppu": 390.66666,
+      "source": "source_trees.png",
+      "source_rect": [
+        0,
+        627,
+        418,
+        1254
+      ],
+      "new_alpha_box": [
+        58,
+        91,
+        454,
+        677
+      ],
+      "sha256": "84ddbdc6ce57ccbf21d84bb2daef34eb998060a61b0ab4a1519cd1283a1da597"
+    },
+    {
+      "group": "trees",
+      "key": "birch_cluster",
+      "path": "Assets/Resources/Sprites/Props/NordicTrees20261102/birch_cluster.png",
+      "canvas": [
+        512,
+        768
+      ],
+      "alpha_box": [
+        28,
+        84,
+        484,
+        683
+      ],
+      "old_sha256": "f4633da72289c8785fd8b65ae9e648ad9b1af9f44aeaf917145bf43d0e705ce5",
+      "meta_sha256": "b9c7a86938aefa9dc5ccfe086a076c9c7f15a0be554fca51a512d7659918bc95",
+      "ppu": 399.33334,
+      "source": "source_trees.png",
+      "source_rect": [
+        418,
+        627,
+        836,
+        1254
+      ],
+      "new_alpha_box": [
+        54,
+        84,
+        458,
+        683
+      ],
+      "sha256": "07e177727ec04acced3e65a969f09867457308dfcc95e621f031ed6e8512f9b7"
+    },
+    {
+      "group": "rocks",
+      "key": "split",
+      "path": "Assets/Resources/Sprites/Props/NordicRocks20261103/split.png",
+      "canvas": [
+        1254,
+        1254
+      ],
+      "alpha_box": [
+        220,
+        255,
+        1002,
+        1008
+      ],
+      "old_sha256": "bc6274a141228ae2da20bb7f63e7095869f1fd44d6d2ec23f1feb7eb7a814f53",
+      "meta_sha256": "9a2b7670b7b4996e51134f02116a5184a93d865be47c2b40129fdd9e8f3a4db5",
+      "ppu": 860.68964,
+      "source": "source_rocks.png",
+      "source_rect": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "new_alpha_box": [
+        254,
+        256,
+        967,
+        1008
+      ],
+      "sha256": "54d3cef90f407e883b297be3e3475ea527aa83601bdb5662a87285ec7b92fbc5"
+    },
+    {
+      "group": "rocks",
+      "key": "rounded",
+      "path": "Assets/Resources/Sprites/Props/NordicRocks20261103/rounded.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "alpha_box": [
+        32,
+        54,
+        480,
+        457
+      ],
+      "old_sha256": "fafa3d6f0228e20edcc2d5a73618c4c92526e798141fba9e0530765aca3edf69",
+      "meta_sha256": "ed49ad0e9720e5133f9436b05c45247fb8c7ecb797ba09096c56e09dc8f9ce89",
+      "ppu": 493.75565,
+      "source": "source_rocks.png",
+      "source_rect": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "new_alpha_box": [
+        32,
+        74,
+        480,
+        456
+      ],
+      "sha256": "8d67680ad72509d11b35054c489da47e2ef875fe6015cb5e8fe4b07a56dfb416"
+    },
+    {
+      "group": "rocks",
+      "key": "angular",
+      "path": "Assets/Resources/Sprites/Props/NordicRocks20261103/angular.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "alpha_box": [
+        32,
+        62,
+        480,
+        449
+      ],
+      "old_sha256": "233de920f5b5e3110c3edcbb4bcc63b0cd637e0e68a9f8b5d1a5b54b32014197",
+      "meta_sha256": "b43e190541b0195bf1033f3f3c3a026aa0c467077e848fde7d3a5bbb4567b0f5",
+      "ppu": 493.75565,
+      "source": "source_rocks.png",
+      "source_rect": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "new_alpha_box": [
+        33,
+        62,
+        479,
+        449
+      ],
+      "sha256": "fad465d657e529fcc5affc5af1975640e07e2849d66ae717c6bd352f047fa912"
+    },
+    {
+      "group": "rocks",
+      "key": "cluster",
+      "path": "Assets/Resources/Sprites/Props/NordicRocks20261103/cluster.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "alpha_box": [
+        32,
+        56,
+        480,
+        456
+      ],
+      "old_sha256": "c721fa1e35a15570509ece5fd06b7715e170b0fa2fc42ad0dd8f9e06ac4930e6",
+      "meta_sha256": "05bb427bb2b9820247231f695d36950a2c96ed59d62292f4448687f49d4022e1",
+      "ppu": 493.75565,
+      "source": "source_rocks.png",
+      "source_rect": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "new_alpha_box": [
+        32,
+        97,
+        480,
+        456
+      ],
+      "sha256": "b424ccd93ade2dfb8810b8e51833a6cf0f3046283b680545613010d0b24c9f80"
+    },
+    {
+      "group": "rocks",
+      "key": "weathered",
+      "path": "Assets/Resources/Sprites/Props/NordicRocks20261103/weathered.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "alpha_box": [
+        32,
+        34,
+        480,
+        477
+      ],
+      "old_sha256": "bc36f584fb12a0fd5ded09b6836b590e705540df7c47a0e98fb3fcc6e09ba5af",
+      "meta_sha256": "5499651db9c08fbb3257ed1623379cc8eb55d6b779b8fa16ffaf99577776260a",
+      "ppu": 493.75565,
+      "source": "source_rocks.png",
+      "source_rect": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "new_alpha_box": [
+        42,
+        34,
+        471,
+        477
+      ],
+      "sha256": "e46d702fd495fac0e79a986c655a8d19bdcb96a2c9f313e67eea81de472cf935"
+    },
+    {
+      "group": "sites",
+      "key": "wood",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/sites/wood.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "alpha_box": [
+        12,
+        48,
+        245,
+        208
+      ],
+      "old_sha256": "fb641cb3c7d5d630984447c674d906b5f7b435bd0ef6e09e086771554b007396",
+      "meta_sha256": "c42600b8a8f6bc4dcc724a16b396c66a8436f8e606be41957a2e06dda68d24e1",
+      "ppu": 182.85715,
+      "source": "source_sites.png",
+      "source_rect": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "new_alpha_box": [
+        12,
+        71,
+        245,
+        208
+      ],
+      "sha256": "d4d4b109436ac792d285a58e97a0bf340c0b3e6d55f0a9ad67e6e4306b394f3b"
+    },
+    {
+      "group": "sites",
+      "key": "stone",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/sites/stone.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "alpha_box": [
+        10,
+        66,
+        244,
+        190
+      ],
+      "old_sha256": "0b5f750de5b0b79b26df9bb6148e4fcee6bb72df4644cdbbadfe232580d9710f",
+      "meta_sha256": "1f08593671cda158529a141b2561fcca95339721e76e37daf1e89b3145e49355",
+      "ppu": 222.60869,
+      "source": "source_sites.png",
+      "source_rect": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "new_alpha_box": [
+        30,
+        66,
+        224,
+        190
+      ],
+      "sha256": "770a5994cebc4dcc5a197224da827cccb6d8e66c746cbebec1c5fbd7d67d728c"
+    },
+    {
+      "group": "sites",
+      "key": "ore",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/sites/ore.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "alpha_box": [
+        10,
+        58,
+        245,
+        197
+      ],
+      "old_sha256": "40dbe7de96f59deefcc6c188b1697ccc30d31817060af43c7d62e8e605cc7202",
+      "meta_sha256": "332fa4a7622579369886e6c339b9ed7f917f18f50f55f0b0316fba1b4fe99c31",
+      "ppu": 232.72728,
+      "source": "source_sites.png",
+      "source_rect": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "new_alpha_box": [
+        30,
+        58,
+        224,
+        197
+      ],
+      "sha256": "b3b41da06278106d71d9e1e1fabe3d16f9fbe4c2a0a41387b9ae52e2a47f183c"
+    },
+    {
+      "group": "sites",
+      "key": "meat",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/sites/meat.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "alpha_box": [
+        11,
+        59,
+        248,
+        198
+      ],
+      "old_sha256": "4224427d1f596f73f3120aaa32749891122821bd77343be805fee7a8c1008453",
+      "meta_sha256": "b4c9c4611b6a6f3c15869996e62dbf8b5f2915912d225c4b18c3c25199856b3a",
+      "ppu": 256.0,
+      "source": "source_sites.png",
+      "source_rect": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "new_alpha_box": [
+        46,
+        59,
+        212,
+        198
+      ],
+      "sha256": "bcc1b2cd8b4e0dcbde6d67880137600870c8809a4285cc7543df1851e5c1a833"
+    },
+    {
+      "group": "sites",
+      "key": "food",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/sites/food.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "alpha_box": [
+        11,
+        48,
+        245,
+        207
+      ],
+      "old_sha256": "7e6c7539915775cde199e5f4fd410f3fe1dacc7e494ab3ddbcea5400a1d44214",
+      "meta_sha256": "c913f69e59016d15e1770bc01ffcdd5535cf1e8771f12332b84d49c89d1844a1",
+      "ppu": 213.33333,
+      "source": "source_sites.png",
+      "source_rect": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "new_alpha_box": [
+        22,
+        48,
+        233,
+        207
+      ],
+      "sha256": "e1ac16f56012fb7781abf61d7936942b27418e2342bd84291c1548989c00e400"
+    },
+    {
+      "group": "sites",
+      "key": "frostbloom",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/sites/frostbloom.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "alpha_box": [
+        12,
+        46,
+        244,
+        210
+      ],
+      "old_sha256": "bba6d722b40accf7baad79682746b585ee06ed3cb9ae35b3825a81532a2d84b4",
+      "meta_sha256": "2c07d861ab03f1b8461bde7c791cb6844b31c5153c66348dc25e3b2fe1192a72",
+      "ppu": 341.33334,
+      "source": "source_sites.png",
+      "source_rect": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "new_alpha_box": [
+        22,
+        46,
+        235,
+        210
+      ],
+      "sha256": "e5045a3d4a3f5279815fbee5df3f93858253df05c47adcf8e22e9cd6e549111e"
+    },
+    {
+      "group": "drops",
+      "key": "wood",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/drops/wood.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "alpha_box": [
+        13,
+        39,
+        242,
+        217
+      ],
+      "old_sha256": "4b8936c5fe24335135168344feeee548febc2f092c8a581763a0e37126951637",
+      "meta_sha256": "5b166df2f07e4d90122b8beab7b3cd884d31116a09f7daf655dd88a5d8cf6778",
+      "ppu": 393.84616,
+      "source": "source_drops.png",
+      "source_rect": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "new_alpha_box": [
+        16,
+        39,
+        238,
+        217
+      ],
+      "sha256": "23f1ff3c3c5b84a9b2b435f942f9fd49cfbe6064df8eeeffdcdf2d17a9f1c25a"
+    },
+    {
+      "group": "drops",
+      "key": "stone",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/drops/stone.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "alpha_box": [
+        14,
+        40,
+        242,
+        215
+      ],
+      "old_sha256": "ac57d4a797818f383bde796975a44d25aca0d5cbc5014051d0232977eb25ca95",
+      "meta_sha256": "e22aa627ef96a1d648aa0d45bde8cb4ba7366d9226e1ca17eca94434591f110d",
+      "ppu": 393.84616,
+      "source": "source_drops.png",
+      "source_rect": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "new_alpha_box": [
+        14,
+        54,
+        242,
+        215
+      ],
+      "sha256": "4368f80b3cf034e77d16349b09c9cd3e69ada62bd715039d7411e6f3ca645b03"
+    },
+    {
+      "group": "drops",
+      "key": "ore",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/drops/ore.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "alpha_box": [
+        13,
+        46,
+        243,
+        209
+      ],
+      "old_sha256": "b8d9bb8854b3e5e9bd16df0b45bcba0f49f14e961fbcee341a7959085e63df2c",
+      "meta_sha256": "c1aa9120502f882025710e8472ce57bf2609eae934ba46d42d877777f86bf65c",
+      "ppu": 393.84616,
+      "source": "source_drops.png",
+      "source_rect": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "new_alpha_box": [
+        18,
+        46,
+        239,
+        209
+      ],
+      "sha256": "1a6d67505a92627cc3bb020e12ddb1b241f450d2589ad28fb6031691f0dae177"
+    },
+    {
+      "group": "drops",
+      "key": "meat",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/drops/meat.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "alpha_box": [
+        14,
+        42,
+        242,
+        214
+      ],
+      "old_sha256": "e9f37668b97e57179f1ee5f118f34ab242ab071f974194bbfc05c1b271b00026",
+      "meta_sha256": "28be54830478c4bffa502cc393ce4cb1acb9dff6fe999fa2ff7d01fbe3d33978",
+      "ppu": 393.84616,
+      "source": "source_drops.png",
+      "source_rect": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "new_alpha_box": [
+        14,
+        42,
+        241,
+        214
+      ],
+      "sha256": "7893e3f726f9b86a2b82ca8476ee86cbaa6db12231f8b9a8113d8a64f49cda9e"
+    },
+    {
+      "group": "drops",
+      "key": "food",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/drops/food.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "alpha_box": [
+        13,
+        31,
+        243,
+        225
+      ],
+      "old_sha256": "54dee657f32511bf6b34aa6a6e06916eff3435ce3e9f5eee8cd8c34abec9c5c4",
+      "meta_sha256": "1f3299a7c678ad3c11a1be62c21c0752fc4415266d1171e705e825c6a32b9167",
+      "ppu": 393.84616,
+      "source": "source_drops.png",
+      "source_rect": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "new_alpha_box": [
+        16,
+        31,
+        239,
+        225
+      ],
+      "sha256": "1efb3df4441cda4f205c464dbf33bc338b5b579448cd490885a32b8d68ad3e8f"
+    },
+    {
+      "group": "drops",
+      "key": "frostbloom",
+      "path": "Assets/Resources/Sprites/Environment/GroundProps20261103/drops/frostbloom.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "alpha_box": [
+        14,
+        32,
+        242,
+        223
+      ],
+      "old_sha256": "3b0b12fa9f6d6cb6f385c52c6fb803ce266c64b54583c3ae15acfcf91afbe562",
+      "meta_sha256": "94b3a6f49e2eb4a6fc0351c0a08957d5b688c05b56290707ca4f8d7e6fae2147",
+      "ppu": 393.84616,
+      "source": "source_drops.png",
+      "source_rect": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "new_alpha_box": [
+        14,
+        49,
+        242,
+        223
+      ],
+      "sha256": "2c16cc51bd19993d85a5767924c65451533aecedd05c6ed3117d4ffe434c306a"
+    },
+    {
+      "group": "rocks",
+      "key": "original",
+      "path": "Assets/Resources/Sprites/Props/snowRock.png",
+      "canvas": [
+        1254,
+        1254
+      ],
+      "alpha_box": [
+        205,
+        293,
+        1044,
+        981
+      ],
+      "old_sha256": "37d766d5c70e782c7f1bcd076eeb129190c562d358960616d60c245de2b3ca39",
+      "meta_sha256": "31672bde47f540994ed49823fdd202772ccce576128880b4868d5ae957b92d00",
+      "ppu": 924.6897,
+      "source": "source_rocks.png",
+      "source_rect": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "new_alpha_box": [
+        205,
+        345,
+        1044,
+        980
+      ],
+      "sha256": "2e12c297ea8e50f5f783799d8587ba6c2e5d7cf250f3f3e9bd1c24dcc8939cda"
+    }
+  ],
+  "preserved_gameplay_sha256": {
+    "Assets/Scripts/Animals/AnimalAi.cs": "40ab0c35cee11eca58738fafbe1a860fffd965fc899ba63785c8eecdc96617af",
+    "Assets/Scripts/Animals/AnimalMotionVisual.cs": "98ea896f73a1090ce0520d8ba92298042f0f8f52c23d577930be0bc15ae43375",
+    "Assets/Scripts/Animals/AnimalSizeProfile.cs": "1fe742e3787b2260984133fd71e2b5eb84b440d7d138977cee41ef144e3beb46",
+    "Assets/Scripts/Animals/DeerAi.cs": "896fe3f45edc362760fb636fc5bd1757a9def33cb116ae4376b34cc8af2bbffc",
+    "Assets/Scripts/Animals/WolfAi.cs": "915763aa2cc45df4073fcf7e89f4ef4cf41473525bfdd8243fb85b96afbbf2eb",
+    "Assets/Scripts/Gather/BonusYieldOnGather.cs": "d99cb9a836d349339ab1e0ce3147b086e309811836b4b820ba41e6080153ffc3",
+    "Assets/Scripts/Gather/Gatherable.cs": "a15fc3f63ebe32d0d45e6da5fcdb18acdf89f308f8d0c531f808d4bfcaafa77a",
+    "Assets/Scripts/Gather/GatherCompletionFx.cs": "c9dfd84b63be84c0f4140138518ea3405b6d0e32cc24d1ef71b6dc77ddedde17",
+    "Assets/Scripts/Gather/GatherController.cs": "65b70c0ae8f733b3f295c99a087a327e973631912f531db8f2384d6e4ce08978",
+    "Assets/Scripts/Gather/LootRules.cs": "52fb027975a71284b9c60928230324d54a27db4acaf9fdcd276fbe12d6019f83",
+    "Assets/Scripts/Gather/RockHealth.cs": "fdfe4e565ceb45622f3ce1609654b1c8d38cc6b3a3ab3e9021ab07e932a04fea",
+    "Assets/Scripts/Gather/TreeHealth.cs": "67c0458c52e24c47ed0a02debdea8e42796feb3320a7a5ceb175d02a8584c325",
+    "Assets/Scripts/Gather/WoodPickup.cs": "5c825c7df5031c1877cc092a566fa52924879278851f5b8a690bc59a95d2a786",
+    "Assets/Scripts/World/ActorSnowPresentation.cs": "e1b815a366425a209ade567df08d7ac984aaaef18b302bfd406d94930295f894",
+    "Assets/Scripts/World/ChunkManager.cs": "959882f3d99f80fbe7d55e2fa56b3bec83febea2e20441809e225e5200136dbf",
+    "Assets/Scripts/World/DiscoverySite.cs": "6dcc667611c1476ce7c0478ad8de16e0a9019d1375a1e5263630bb831ad4d37c",
+    "Assets/Scripts/World/GroundCoverage.cs": "abdd8f2564344137e53e79d3990ab95a98aac1fff6eccdbc7fd52743626d0f61",
+    "Assets/Scripts/World/GroundResourceArt.cs": "a9b9d06000015c46e4f1f04e9435d8841690d6b65f99c351467c9821da4047ab",
+    "Assets/Scripts/World/ProceduralSpawner.cs": "bf86ad3ace4103ab996a79f6efd5c06be3c60540d6809ff68d20bcdb3b24c718",
+    "Assets/Scripts/World/RockVisualStyle.cs": "c0da128880a99033d0e4f11f5a23f80d47fa0f97b17525edae77012f7797953e",
+    "Assets/Scripts/World/SnowContact.cs": "c8e96fe3f879530a1068e111930f1fa91fee867a515e720e73ac88f558dfe0d1",
+    "Assets/Scripts/World/SpawnResearchRules.cs": "71f5825362f54a0b90e53df2faf6cb018683cb5cf09e2a22a2147939d939b4ab",
+    "Assets/Scripts/World/StoryVillageRuins.cs": "9ccd8c568cff149c36cc48fbe49a593bb2461cfad744e343e5a33553c42de029",
+    "Assets/Scripts/World/TreeVisibility.cs": "b115739baa51df609284022ded611e144218bb928601e99de3bfa5cf65376dd6",
+    "Assets/Scripts/World/TreeVisualStyle.cs": "8c4ba7f4022d439e4fbd6d95e33d983167d2cac2119aac735bd67a982c0abbd0",
+    "Assets/Scripts/Companions/Companion.cs": "b5e52dbc7c6a8c7e53081091e88800ce7ccd8492177b6c3a0c0a20c7c1e19cee",
+    "Assets/Scripts/Companions/CompanionFamily.cs": "ed5a567baca7f01870d638731556d0143da571c8ebee44b228d54ad59238b5a7",
+    "Assets/Scripts/Companions/CompanionNameGenerator.cs": "ea234cf1609ca15311239e918a49fef01a8f7df9c22bfe525086527ad0dfb669",
+    "Assets/Scripts/Companions/CompanionTrait.cs": "3dcafc96342364cd99a13325754f6283c1deadba55fb675d4b1a5bddf4a132aa",
+    "Assets/Scripts/Companions/RecruitableNpc.cs": "4257b995eef8e0a27ad57e4e7a42c054e6641f20b3d850c35509926052348a91",
+    "Assets/Scripts/Companions/VillageChildGrowth.cs": "ae007b01a37e63baf9a43001a73cbe967519bf15528e95848dd563e5b9a78986",
+    "Assets/Resources/BalanceConfig.asset": "294651efe10e24fd62285b420588095c6f49dde9999dc0fe3fdac2d2816a4af2"
+  }
+}

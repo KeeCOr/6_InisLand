@@ -1,0 +1,50 @@
+{
+  "assets": [
+    {
+      "key": "snowGroundStyle",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-5de15f32-0804-4a7d-ba3a-7f7303c22dc4.png",
+      "prompt": "Production seamless repeating snow GROUND texture for InisLand, a medieval Nordic snowy village, orthographic top-down game camera, no horizon, flat 2D surface. SQUARE seamless tile, edges match on all four sides. Reference the subdued painterly snow on the spruce and cabin, but make this ground much quieter and lower contrast so chibi characters, arrows and buildings read clearly. Muted ivory-white and pale blue grey snow, very subtle broad irregular wind-smoothed snow swells and shallow compressed patches, a little soft brush texture, matte hand painted anime game background, no photoreal grain, no glitter, no pixel noise. Broad organic variation over a mostly calm light surface; no obvious repeating diagonal stripes, no puddles or cliffs, no hard outlines. NO trees, rocks, grass, footprints, paths, flowers, objects, shadows from objects, border, labels or text. Entire image opaque snow, no transparency. Beautiful cold Nordic winter palette, soft overcast daylight, keep the darkest value still pale enough for dark outlines on top.",
+      "runtime": "Assets/Resources/Sprites/Environment/Snowfield/snow_ground.png",
+      "sha256": "9fe425d1dc548971e70c356536ee9a72b907f88d7a32da50184b6b20a1f5fe7f",
+      "width": 1254,
+      "height": 1254,
+      "opaque_bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ]
+    },
+    {
+      "key": "snowRockStyle",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-d0e4df60-9018-4355-b864-92bb4edf1a3a.png",
+      "prompt": "Replace the first reference's tiny pixel-art snowy rock with ONE cohesive hand-painted 2D snowy granite outcrop sprite for the same medieval Nordic winter game as reference 2 spruce. Same compact rounded natural rock identity, approximately as wide as it is tall but visibly a low rock from a gently top-down orthographic camera, upper surfaces visible. Match the spruce's soft matte brush shading, muted slate grey and desaturated blue shadow palette, restrained warm-dark thin outline; broad rock planes, soft edges, no bright blue crystal or jewel facets, no shiny 3D rendering, no black pixel outlines, no photoreal noise. Irregular thin ivory snow rests on the upper ledges and melts visually into a few tiny white snow lips at the base, NOT a thick pillow cap. Fully isolated complete rock, centered with 12 percent clear margins, no background, no scenery, no cast shadow/glow/halo, no ground tile, no text, no other objects. Actual transparent RGBA outside the rock.",
+      "runtime": "Assets/Resources/Sprites/Props/snowRock.png",
+      "sha256": "37d766d5c70e782c7f1bcd076eeb129190c562d358960616d60c245de2b3ca39",
+      "width": 1254,
+      "height": 1254,
+      "opaque_bounds": [
+        206,
+        294,
+        1044,
+        980
+      ]
+    },
+    {
+      "key": "snowContactStyle",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-1df5ac03-a189-430c-b4d2-986895c7bc45.png",
+      "prompt": "Production 2D game environment DECAL, ONE small flat irregular oval patch of slightly compressed SNOW at the foot of a tree or rock. Viewed orthographic from directly above, horizontal oval about 3 times wider than tall. Pale ivory snow lip at edge, faint desaturated blue grey contact shade in center, subtle matte hand-painted brushwork matching the attached snowy spruce. EXTREMELY LOW relief, NOT an ice slab, NOT a rock, NOT a raised pillow, NOT a ring, NO holes. Asymmetric soft broken outline gradually becoming transparent at outer edge, no thick black line. Isolated actual transparent RGBA cutout with clear margin. No tree, trunk, object, grass, dirt, footprints, text, labels, tile background, cast shadow or glow. This will sit quietly under existing objects to embed their bases into a snowy ground.",
+      "runtime": "Assets/Resources/Sprites/Environment/Snowfield/snow_contact.png",
+      "sha256": "9aac0bdaf3a34775d3bcb86410fe6fe2a72ef0deb8e3f9fb45b6416ecb76000f",
+      "width": 2172,
+      "height": 724,
+      "opaque_bounds": [
+        451,
+        243,
+        1670,
+        535
+      ]
+    }
+  ],
+  "storage": "One runtime PNG per asset. Original generated master retained in .codex; no duplicate raw copy in Unity."
+}

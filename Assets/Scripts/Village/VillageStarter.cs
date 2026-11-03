@@ -183,7 +183,17 @@ namespace IL6
             foreach (var slot in OuterFenceSlots(center, CurrentHalfSize, spacing))
             {
                 if (TooCloseToFence(slot.Position, 0.4f)) continue;
-                AttachToRing(SpawnFence(slot.Position, slot.RotationDeg, slot.PieceType));
+                var delta=slot.Position-center;
+                bool edgeX=Mathf.Abs(Mathf.Abs(delta.x)-CurrentHalfSize)<.05f;
+                bool edgeY=Mathf.Abs(Mathf.Abs(delta.y)-CurrentHalfSize)<.05f;
+                GameObject piece;
+                if(edgeX && edgeY)
+                    piece=SpawnFenceCorner(slot.Position,delta.y>0
+                        ?(delta.x<0?FenceCornerPieceType.TopLeft:FenceCornerPieceType.TopRight)
+                        :(delta.x<0?FenceCornerPieceType.BottomLeft:FenceCornerPieceType.BottomRight));
+                else if(edgeX)piece=SpawnVerticalFence(slot.Position,VerticalFencePieceType.Center);
+                else piece=SpawnFence(slot.Position,0,FencePieceType.Center);
+                AttachToRing(piece);
                 built++;
             }
             return built;
@@ -246,7 +256,9 @@ namespace IL6
             }
 
             CurrentHalfSize = halfSize;
-            SpawnCampfire(center);
+            SpawnCampfire(center + Vector3.right);
+            // One finished home supplies starting housing; only initialize with the village.
+            BuildingFactory.SpawnHouse(ConstructionPlacement.Snap(center + new Vector3(-2f, -2f, 0f)));
 
             BuildOuterRing(center, halfSize, spacing);
         }
@@ -342,6 +354,7 @@ namespace IL6
             }
 
             if (fSpr != null) sr.sprite = fSpr;
+            FenceVisual.Apply(go);
 
             var col = go.AddComponent<BoxCollider2D>();
 
@@ -408,6 +421,7 @@ namespace IL6
             }
 
             if (fSpr != null) sr.sprite = fSpr;
+            FenceVisual.Apply(go,true);
 
             var col = go.AddComponent<BoxCollider2D>();
 
@@ -481,6 +495,7 @@ namespace IL6
 
             var col = go.AddComponent<BoxCollider2D>();
             col.size = new Vector2(0.9f, 0.9f);
+            FenceVisual.Apply(go,false,cornerType);
 
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.55f, 0.4f, 0.22f);

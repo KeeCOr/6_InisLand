@@ -26,6 +26,7 @@ MonoBehaviour:
   StartingFrostbloom: 0
   TreeDurationSec: 9
   RockDurationSec: 6
+  RockMaxHp: 200
   DeerDurationSec: 3
   TreeWoodYield: 4
   DeerMeatYield: 2

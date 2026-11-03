@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1 &8937996477642306142
 GameObject:
@@ -182,8 +182,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHp: 480
   RegenIntervalSec: 6
-  FleeRadius: 2.5
-  FleeSpeed: 2.2
+  FleeRadius: 2.2
+  FleeSpeed: 1.9
 --- !u!114 &5910860292884113131
 MonoBehaviour:
   m_ObjectHideFlags: 0

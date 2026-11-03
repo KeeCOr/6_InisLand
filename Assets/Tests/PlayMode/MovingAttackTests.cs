@@ -11,11 +11,15 @@ namespace IL6.Tests
     {
         [UnityTest] public IEnumerator BothWeaponsAllowFullSpeedMovementAndDirectionChangesDuringAttack()
         {
+            Time.timeScale=1;InputReader.HudBlocked=false;
             yield return SceneManager.LoadSceneAsync("BootScene");yield return null;
             yield return SceneManager.LoadSceneAsync("SnowfieldScene");yield return new WaitForSeconds(2);
             var hud=Object.FindFirstObjectByType<SimpleHud>();
             typeof(SimpleHud).GetMethod("PrepareHudPreview",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(hud,null);
             foreach(var spawner in Object.FindObjectsByType<ProceduralSpawner>(FindObjectsSortMode.None)) spawner.enabled=false;
+            // Day transitions clean up all zombies, including this stationary combat probe.
+            foreach(var night in Object.FindObjectsByType<NightController>(FindObjectsSortMode.None)) Object.Destroy(night);
+            yield return null; // OnDestroy unsubscribes cycle events; disabling alone leaves handlers active.
             var player=hud.Player;var actions=player.Actions;var rb=player.GetComponent<Rigidbody2D>();
             var input=player.GetComponent<InputReader>();input.enabled=false;
             var axis=typeof(InputReader).GetField("<MoveAxis>k__BackingField",BindingFlags.Instance|BindingFlags.NonPublic);

@@ -1,0 +1,36 @@
+[
+  {
+    "key": "father",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-901dfcf6-988e-4f76-8858-5838b7b0c83c.png",
+    "prompt": "Create a NEW character portrait: the father of the red-haired girl in reference image. Reference is daughter's identity and painterly anime storybook style ONLY; do NOT draw the girl. One warm caring rugged man age 40-45 with reddish auburn hair, short auburn beard, amber brown eyes, kind reassuring slight smile. Simple brown leather winter travel coat with cream fur trim, dark scarf, worn shoulder travel pack strap. Face and torso straight FRONT, looking directly at viewer, centered waist-up including hands, entire head and shoulders inside frame with clear margins. Match warm detailed painterly anime illustration style of reference, natural adult proportions. TRUE transparent background, no snow or scenery, no text, no border. He appears only in daughter's memory before leaving village.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\father.png",
+    "size": [
+      1213,
+      1296
+    ]
+  },
+  {
+    "key": "ruins",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-dbe84b6c-f4a8-4ac7-a301-dbe4431f1f2f.png",
+    "prompt": "Game asset sheet, transparent alpha background. EXACTLY FOUR separate snowstorm-destroyed village debris props in clean equal 2x2 cells with 12% transparent gaps and margins. Top left: collapsed small wooden cabin, broken roof sunk low into snow, no standing walls. Top right: shattered wooden fence sections piled flat. Bottom left: broken wooden village signpost and loose planks with NO writing. Bottom right: a second low heap of cabin roof beams and snow-covered stones. Detailed chunky pixel-art fantasy survival RPG matching snowy world. Elevated orthographic approximately 45 degree DOWNWARD camera, clearly visible TOPS of fallen roof and lumber, horizontal front axis, no isometric diagonal yaw, no horizon. All debris low to ground. Each object fully visible, individually isolated, same camera and pixel density. No people, no fire, no ground tile, no intact building, no letters, no watermarks. This is destroyed hometown of red-haired girl after a blizzard.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Story20261026\\village_ruins.png",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "key": "hero",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-d7d7e1cb-2d20-4439-b5c9-42af35b5d9b9.png",
+    "prompt": "Edit IMAGE 1, the existing red-haired fantasy heroine illustration. IMAGE 2 is a real person's facial appearance reference ONLY. Bring the heroine's face closer to that reference through her large dark brown almond eyes with rounded lower contours, delicate softly tapered oval face, small natural nose, soft full lips and fine wispy center-part bangs. Keep stylized painterly anime rendering rather than photorealism. Keep ALL existing vivid RED hair color and long hair, winter fur-trimmed brown leather outfit, axe, pose, body proportions, transparent background and warm detailed rendering from image 1. Face and torso remain FRONT-facing looking at viewer; do not copy selfie head tilt, camera angle, makeup/filter, clothing or setting from image 2. One waist-up portrait, no text or UI. True transparent background.",
+    "refinement": "Refine ONLY face rendering and orientation in this edited fantasy heroine. Preserve the recognizable facial structure and facial features, RED hair, fine bangs, brown eyes, lips, costume, axe and exact framing. Make face FULLY hand-painted anime storybook illustration matching the surrounding hand-painted fur and hair, not photorealistic or photo pasted: clean illustrated outlines, gently simplified nose and lips, softly painted cel shading and NO photographic skin texture. Face level and straight FRONT with eyes at same horizontal height, nose centered, no head tilt. Keep her individual soft oval face and almond eyes; do not revert to a generic large-eyed doll. Transparent background remains, no text.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\hero.png",
+    "size": [
+      1213,
+      1296
+    ]
+  }
+]

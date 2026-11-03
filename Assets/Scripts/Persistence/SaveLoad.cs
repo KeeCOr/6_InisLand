@@ -8,6 +8,10 @@ namespace IL6
     public class SaveFileV1
     {
         public int version = 1;
+        public bool storyTutorialEnabled;
+        public bool storyTutorialComplete;
+        public int storyTutorialStage;
+        public bool storyVillageRuined;
         public int[] researchLevels;
         public int currentDay = 1;
         public ResourceSnapshot resources = new();
@@ -21,8 +25,21 @@ namespace IL6
     public static class SaveLoad
     {
         public const string FileName = "save_v1.json";
+        public static string StoragePath => FilePath;
 
-        private static string FilePath => Path.Combine(Application.persistentDataPath, FileName);
+        private static string FilePath
+        {
+            get
+            {
+#if UNITY_EDITOR
+                // Batch validation must never overwrite the player's actual save.
+                string testDirectory=Environment.GetEnvironmentVariable("IL6_TEST_SAVE_DIRECTORY");
+                if(!string.IsNullOrEmpty(testDirectory) && Path.IsPathRooted(testDirectory))
+                {Directory.CreateDirectory(testDirectory);return Path.Combine(testDirectory,FileName);}
+#endif
+                return Path.Combine(Application.persistentDataPath,FileName);
+            }
+        }
 
         public static void Save(SaveFileV1 data)
         {

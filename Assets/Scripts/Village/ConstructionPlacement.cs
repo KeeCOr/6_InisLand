@@ -5,6 +5,13 @@ namespace IL6
     public static class ConstructionPlacement
     {
         public const float CellSize = 1f;
+        public static string BlockedReason(bool spaceAvailable, bool farmAllowed, bool canPay)
+        {
+            if (!spaceAvailable) return "건물과 겹침 · 빈 격자로 이동";
+            if (!farmAllowed) return "농장 한도 · 씨앗 창고 확장 필요";
+            if (!canPay) return "자원 부족";
+            return string.Empty;
+        }
         public static Vector3 Snap(Vector3 position) => new Vector3(
             Mathf.Round(position.x / CellSize) * CellSize,
             Mathf.Round(position.y / CellSize) * CellSize, 0f);

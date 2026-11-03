@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace IL6
@@ -7,7 +7,7 @@ namespace IL6
     /// 플레이어 주변 청크(그리드 셀)를 스캔해 확률적으로 나무/사슴을 런타임 생성.
     /// 외부 prefab 없이 SpriteRenderer + ColorFallback + Gatherable (+ DeerAi) 를 코드로 조립.
     /// 멀어진 청크는 해당 콘텐츠 제거.
-    /// 초기 스타터 존(3x3 청크) 은 스폰 스킵 — 씬에 배치된 오브젝트와 겹치지 않게.
+    /// 초기 스타터 존(3x3 청크)은 무작위 생성을 건너뛰고 바깥 숲만 한 번 보강.
     /// </summary>
     public sealed class ProceduralSpawner : MonoBehaviour
     {
@@ -18,12 +18,16 @@ namespace IL6
         public int UnloadRadius = 4;
 
         [Header("Spawn probability (per slot)")]
-        [Range(0, 1)] public float TreeChance = 0.16f;
+        [Range(0, 1)] public float TreeChance = 0.45f;
         [Range(0, 1)] public float RockChance = 0.08f;  // 0.15→0.08
-        [Range(0, 1)] public float DeerChance = 0.10f;
-        [Range(0, 1)] public float NpcChance = 0.08f;
+        [Range(0, 1)] public float DeerChance = 0.025f;
+        [Range(0, 1)] public float NpcChance = 0.02f;
         [Range(0, 1)] public float DiscoveryChance = 0.10f;
         public int SlotsPerChunk = 6;
+        public int StarterGroveTrees = 20;
+        public int MaxProceduralAnimals = 12;
+        private bool _starterGroveSeeded;
+        private float _wildlifeCleanupTimer;
 
         [Header("Starter zone to skip (centered at chunk (Cx, Cy))")]
         public int StarterCx = 1;
@@ -41,29 +45,85 @@ namespace IL6
         private void Start()
         {
             foreach (var resource in Object.FindObjectsByType<Gatherable>(FindObjectsSortMode.None))
-                if (resource.YieldKind == ResourceKind.Wood && resource.GetComponent<TreeVisibility>() == null)
-                    resource.gameObject.AddComponent<TreeVisibility>();
+                if (resource.IsTree)
+                {
+                    var renderer = resource.GetComponent<SpriteRenderer>();
+                    if (renderer != null)
+                        TreeVisualStyle.Apply(renderer, TreeVariantIndex(resource.transform.position.x, resource.transform.position.y));
+                    if (resource.GetComponent<TreeVisibility>() == null)
+                        resource.gameObject.AddComponent<TreeVisibility>();
+                }
             if (Player == null)
             {
                 var p = GameObject.FindWithTag("Player");
                 if (p != null) Player = p.transform;
             }
+            SeedStarterGrove();
+        }
+
+        private void SeedStarterGrove()
+        {
+            if (_starterGroveSeeded) return;
+            _starterGroveSeeded = true;
+            var rng = new SeededRng(Seed ^ 0x6F726573u);
+            Vector2 center = new Vector2(GameConstants.VillageCenterX,GameConstants.VillageCenterY);
+            float half = Mathf.Max(VillageStarter.MinHalfSize,VillageStarter.CurrentHalfSize);
+            int planted = 0;
+            for(int attempt=0;attempt<StarterGroveTrees*80 && planted<StarterGroveTrees;attempt++)
+            {
+                float angle=rng.Next()*Mathf.PI*2f;
+                Vector2 direction=new Vector2(Mathf.Cos(angle),Mathf.Sin(angle));
+                float extent=half+3.5f+rng.Next()*4f;
+                Vector2 offset=direction*(extent/Mathf.Max(Mathf.Abs(direction.x),Mathf.Abs(direction.y)));
+                if(offset.y<0 && Mathf.Abs(offset.x)<2.5f) continue;
+                Vector2 point=center+offset;
+                bool blocked=false;
+                foreach(var hit in Physics2D.OverlapCircleAll(point,1.25f))
+                    if(!hit.isTrigger) {blocked=true;break;}
+                if(blocked) continue;
+                CreateTree(point.x,point.y);planted++;
+                Physics2D.SyncTransforms();
+            }
+        }
+
+        private void CleanupDistantWildlife()
+        {
+            if(Player==null) return;
+            float distance=(UnloadRadius+1)*ChunkSize;
+            foreach(var animal in Object.FindObjectsByType<AnimalAi>(FindObjectsSortMode.None))
+                if(animal.gameObject.name.EndsWith("_proc",System.StringComparison.Ordinal)
+                    && Vector2.Distance(animal.transform.position,Player.position)>distance)
+                    Destroy(animal.gameObject);
+        }
+
+        private static int ProceduralAnimalCount()
+        {
+            int count=0;
+            foreach(var animal in Object.FindObjectsByType<AnimalAi>(FindObjectsSortMode.None))
+                if(!animal.IsDead && animal.gameObject.name.EndsWith("_proc",System.StringComparison.Ordinal)) count++;
+            return count;
         }
 
         private float _dailyNpcTimer;
-        public float DailyNpcIntervalSec = 20f;
-        public int MaxAliveNpcs = 3;             // 월드에 동시 살아있는 영입 가능 NPC 상한
+        public float DailyNpcIntervalSec = 50f;
+        public int MaxAliveNpcs = 2;             // 후보 생성 상한이며 영입 인원 제한은 아님
         public int ScarceCompanionCount = 3;
         public int LowCompanionCount = 6;
-        public float ScarceNpcIntervalSec = 6f;
-        public float LowNpcIntervalSec = 12f;
-        public int ScarceMaxAliveNpcs = 5;
+        public float ScarceNpcIntervalSec = 20f;
+        public float LowNpcIntervalSec = 35f;
+        public int ScarceMaxAliveNpcs = 2;
         private const int WolfSafeCompanionThreshold = 3;
         private const string WolfAnimalName = "Wolf_proc";
 
         private void Update()
         {
             if (Player == null) return;
+            _wildlifeCleanupTimer -= Time.deltaTime;
+            if(_wildlifeCleanupTimer<=0f)
+            {
+                _wildlifeCleanupTimer=2f;
+                CleanupDistantWildlife();
+            }
             int pcx = Mathf.FloorToInt(Player.position.x / ChunkSize);
             int pcy = Mathf.FloorToInt(Player.position.y / ChunkSize);
 
@@ -74,7 +134,7 @@ namespace IL6
             if (!isNight) EnsureLoaded(pcx, pcy);
             UnloadFar(pcx, pcy);
 
-            // 낮에만 마을 근처에 일정 간격으로 NPC 스폰 — 영입 페이스 ~3명/분
+            // 낮에만 후보를 천천히 보충하며 주변 후보 수를 제한한다.
             bool isDay = GameSession.Instance != null
                 && GameSession.Instance.Cycle != null
                 && GameSession.Instance.Cycle.Phase == Phase.Day;
@@ -108,11 +168,27 @@ namespace IL6
                 : MaxAliveNpcs;
         }
 
+        public const float NpcVillageClearance=1.5f;
+        public static bool IsOutsideVillageForNpc(Vector2 position)
+        {
+            float half=Mathf.Max(VillageStarter.MinHalfSize,VillageStarter.CurrentHalfSize)+NpcVillageClearance;
+            return Mathf.Abs(position.x-GameConstants.VillageCenterX)>=half
+                || Mathf.Abs(position.y-GameConstants.VillageCenterY)>=half;
+        }
+        public static Vector3 OutsideVillageNpcPosition(Vector3 position)
+        {
+            if(IsOutsideVillageForNpc(position)) return position;
+            Vector2 delta=new Vector2(position.x-GameConstants.VillageCenterX,position.y-GameConstants.VillageCenterY);
+            float half=Mathf.Max(VillageStarter.MinHalfSize,VillageStarter.CurrentHalfSize)+NpcVillageClearance;
+            if(Mathf.Abs(delta.x)>Mathf.Abs(delta.y)) position.x=GameConstants.VillageCenterX+(delta.x<0?-half:half);
+            else position.y=GameConstants.VillageCenterY+(delta.y>0?half:-half);
+            return position;
+        }
         private Vector2 DailyNpcSpawnDistanceRange()
         {
-            int companions = RecruitableNpc.CurrentCompanionCount();
-            if (companions < ScarceCompanionCount) return new Vector2(3.2f, 4.2f);
-            return new Vector2(3.8f, 4.6f);
+            // Circumscribe the square settlement, including its corners and a walking margin.
+            float inner=Mathf.Sqrt(2f)*Mathf.Max(VillageStarter.MinHalfSize,VillageStarter.CurrentHalfSize)+NpcVillageClearance;
+            return new Vector2(inner,inner+2f);
         }
 
         private void EnsureLoaded(int pcx, int pcy)
@@ -223,20 +299,20 @@ namespace IL6
             switch (pick)
             {
                 case 0:
-                    site.Title = "Supply Cache";
-                    site.Description = "A buried cache of preserved food.";
+                    site.Title = "Winter Berry Bush";
+                    site.Description = "Hardy winter berries left among the snowy branches.";
                     site.RewardKind = ResourceKind.Food;
                     site.RewardAmount = rng.IntRange(3, 6);
                     break;
                 case 1:
-                    site.Title = "Broken Sled";
-                    site.Description = "Useful timber and lashings frozen into the snow.";
+                    site.Title = "Fallen Birch";
+                    site.Description = "A fallen birch limb and dry branches in the snow.";
                     site.RewardKind = ResourceKind.Wood;
                     site.RewardAmount = rng.IntRange(4, 8);
                     break;
                 case 2:
-                    site.Title = "Old Quarry Mark";
-                    site.Description = "Flat stones marked by an older settlement.";
+                    site.Title = "Snowbound Stones";
+                    site.Description = "Rounded stones partly buried under the snow.";
                     site.RewardKind = ResourceKind.Stone;
                     site.RewardAmount = rng.IntRange(3, 6);
                     break;
@@ -290,6 +366,7 @@ namespace IL6
             sr.sortingOrder = 4;
             var rockSpr = SpriteBank.SnowRock();
             if (rockSpr != null) sr.sprite = rockSpr;
+            RockVisualStyle.Apply(sr);
 
             var ySort = go.AddComponent<YSort>();
             ySort.SetUpdateEveryFrame(false);
@@ -330,8 +407,8 @@ namespace IL6
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 5;
             go.AddComponent<TreeVisibility>();
-            var treeSpr = SpriteBank.SnowPineTree();
-            if (treeSpr != null) sr.sprite = treeSpr;
+            var treeSpr = SpriteBank.TreeVariant(variant);
+            if (treeSpr != null) TreeVisualStyle.Apply(sr, variant);
 
             var ySort = go.AddComponent<YSort>();
             ySort.SetUpdateEveryFrame(false);
@@ -362,21 +439,16 @@ namespace IL6
             int hx = Mathf.FloorToInt(x * 37.17f);
             int hy = Mathf.FloorToInt(y * 53.31f);
             int hash = hx * 73856093 ^ hy * 19349663;
-            return Mathf.Abs(hash) % 9;
+            return (int)((uint)hash % SpriteBank.TreeVariantCount);
         }
 
         private static float TreeScaleForVariant(int variant)
         {
-            return variant switch
+            // Species slots remain a multiple of three to preserve each position's physics scale.
+            return (variant % 3) switch
             {
                 1 => 2.2f,
                 2 => 2.15f,
-                3 => 2.25f,
-                4 => 2.65f,
-                5 => 2.75f,
-                6 => 2.6f,
-                7 => 2.2f,
-                8 => 2.2f,
                 _ => 2.15f,
             };
         }
@@ -414,7 +486,7 @@ namespace IL6
             new AnimalArchetype {
                 Name = "Rabbit_proc", MeatMin = 1, MeatMax = 1, MeatDropChance = 1f,
                 DurationSec = 1.5f, Hp = 12,
-                FleeRadius = 5.5f, FleeSpeed = 5.5f,
+                FleeRadius = 3.6f, FleeSpeed = 3.6f,
                 Scale = 0.75f, ColliderRadius = 0.25f,
                 Tint = new Color(0.92f, 0.88f, 0.82f),
                 Shape = FallbackShape.Circle,
@@ -425,7 +497,7 @@ namespace IL6
             new AnimalArchetype {
                 Name = "Fox_proc", MeatMin = 2, MeatMax = 2, MeatDropChance = 1f,
                 DurationSec = 2.5f, Hp = 24,
-                FleeRadius = 4.5f, FleeSpeed = 4.5f,
+                FleeRadius = 3.3f, FleeSpeed = 3.2f,
                 Scale = 1.05f, ColliderRadius = 0.3f,
                 Tint = new Color(0.85f, 0.45f, 0.18f),
                 Shape = FallbackShape.Triangle,
@@ -436,7 +508,7 @@ namespace IL6
             new AnimalArchetype {
                 Name = "Boar_proc", MeatMin = 3, MeatMax = 5, MeatDropChance = 1f,
                 DurationSec = 4.5f, Hp = 480,
-                FleeRadius = 2.5f, FleeSpeed = 2.2f,
+                FleeRadius = 2.2f, FleeSpeed = 1.9f,
                 Scale = 1.9f, ColliderRadius = 0.5f,
                 Tint = new Color(0.35f, 0.25f, 0.18f),
                 Shape = FallbackShape.Rounded,
@@ -453,14 +525,14 @@ namespace IL6
                 Shape = FallbackShape.Triangle,
                 Outline = new Color(0.15f, 0.15f, 0.18f, 1f),
                 Weight = 0.13f, IsPredator = true, PredatorDamage = 6,
-                PackMin = 4, PackMax = 7,
+                PackMin = 2, PackMax = 3,
                 MinDay = 3,
             },
             // 사슴 — HP 높음, 빈도 ↑
             new AnimalArchetype {
                 Name = "Deer_proc", MeatMin = 2, MeatMax = 2, MeatDropChance = 1f,
                 DurationSec = 3f, Hp = 320,
-                FleeRadius = 3.5f, FleeSpeed = 3f,
+                FleeRadius = 2.8f, FleeSpeed = 2.6f,
                 Scale = 1.5f, ColliderRadius = 0.4f,
                 Tint = new Color(0.55f, 0.4f, 0.25f),
                 Shape = FallbackShape.Circle,
@@ -471,7 +543,7 @@ namespace IL6
             new AnimalArchetype {
                 Name = "SnowHare_proc", MeatMin = 1, MeatMax = 1, MeatDropChance = 1f,
                 DurationSec = 1.8f, Hp = 14,
-                FleeRadius = 6f, FleeSpeed = 6.5f,
+                FleeRadius = 4f, FleeSpeed = 4.1f,
                 Scale = 0.7f, ColliderRadius = 0.25f,
                 Tint = new Color(0.95f, 0.97f, 1f),
                 Shape = FallbackShape.Circle,
@@ -514,8 +586,10 @@ namespace IL6
             },
         };
 
-        private static void SpawnAnimalAt(float x, float y, SeededRng rng, System.Collections.Generic.List<GameObject> sink)
+        private void SpawnAnimalAt(float x, float y, SeededRng rng, System.Collections.Generic.List<GameObject> sink)
         {
+            int remaining=MaxProceduralAnimals-ProceduralAnimalCount();
+            if(remaining<=0) return;
             // 밤에는 동물 절대 스폰 X
             var session = GameSession.Instance;
             if (session != null && session.Cycle != null && session.Cycle.Phase == Phase.Night) return;
@@ -543,6 +617,7 @@ namespace IL6
             }
 
             int packSize = rng.IntRange(a.PackMin, Mathf.Max(a.PackMin, a.PackMax));
+            packSize=Mathf.Min(packSize,remaining);
             for (int p = 0; p < packSize; p++)
             {
                 float ox = p == 0 ? 0f : (rng.Next() - 0.5f) * 2f;
@@ -635,6 +710,7 @@ namespace IL6
                 hpBar.BgColor = new Color(0.05f, 0.05f, 0.08f, 0.9f);
                 hpBar.FillColor = new Color(0.85f, 0.4f, 0.4f);
             }
+            AnimalMotionVisual.Attach(go);
             return go;
         }
 
@@ -726,6 +802,7 @@ namespace IL6
                 float angle = rng.Next() * Mathf.PI * 2f;
                 float dist = Mathf.Lerp(spawnRange.x,spawnRange.y,rng.Next());
                 Vector2 position = village + new Vector2(Mathf.Cos(angle),Mathf.Sin(angle))*dist;
+                if(!IsOutsideVillageForNpc(position)) continue;
                 bool blocked = false;
                 foreach (var hit in Physics2D.OverlapCircleAll(position,.65f))
                     if (hit.GetComponent<Building>() != null || hit.GetComponent<Gatherable>() != null || hit.GetComponent<RecruitableNpc>() != null)
@@ -739,6 +816,7 @@ namespace IL6
         /// <summary>특정 NPC 아키타입을 지정 위치에 직접 스폰 — PrefabGenerator 용.</summary>
         public static GameObject CreateNpcFromArchetype(NpcArchetype arch, string displayName, Vector3 pos)
         {
+            pos=OutsideVillageNpcPosition(pos);
             if (string.IsNullOrWhiteSpace(displayName))
             {
                 uint seed = unchecked((uint)Time.frameCount * 1664525u + (uint)arch.Role.GetHashCode());
@@ -776,6 +854,7 @@ namespace IL6
 
         private static GameObject CreateNpc(float x, float y, SeededRng rng)
         {
+            if(!IsOutsideVillageForNpc(new Vector2(x,y))) return null;
             var arch = _npcArchetypes[rng.IntRange(0, _npcArchetypes.Length - 1)];
             string nm = CompanionNameGenerator.GenerateForRole(arch.Role, rng);
 

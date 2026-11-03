@@ -45,6 +45,7 @@ namespace IL6
             YSort.Ensure(gameObject);
             _started = true;
             if (MaxHp <= 0) RecalculateStats(true);
+            if (Kind == BuildingKind.Fence && CurrentHp > 0) FenceWreckage.ClearAt(transform.position);
             EnsureHpBar();
             _unsubDawn = EventBus.Instance.Subscribe<DawnStartedPayload>(_ => DawnRepair());
         }
@@ -113,11 +114,23 @@ namespace IL6
 
         public void TakeDamage(int amount)
         {
+            ApplyDamage(amount,true);
+        }
+
+        public void ConsumeFuelHp(int amount)
+        {
+            ApplyDamage(amount,false);
+        }
+
+        private void ApplyDamage(int amount,bool showHit)
+        {
+            if(amount<=0 || CurrentHp<=0)return;
             CurrentHp = Mathf.Max(0, CurrentHp - amount);
             LastDamagedAt = Time.time;
-            GameFeel.HitFlash(this, GetComponent<SpriteRenderer>());
+            if(showHit)GameFeel.HitFlash(this, GetComponent<SpriteRenderer>());
             if (CurrentHp <= 0)
             {
+                if(Kind==BuildingKind.Fence)FenceWreckage.Spawn(this);
                 Grid?.Remove(Eid);
                 ExposeHosted();
                 EventBus.Instance.Emit(new BuildingDestroyedPayload(Eid, Kind.ToString().ToLower()));
@@ -136,6 +149,7 @@ namespace IL6
 
         private void DawnRepair()
         {
+            if (Kind == BuildingKind.Fence) return;
             if (CurrentHp <= 0) return;
             int heal = Mathf.Max(1, MaxHp / 4);
             int before = CurrentHp;

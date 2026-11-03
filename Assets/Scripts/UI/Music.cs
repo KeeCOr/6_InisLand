@@ -3,8 +3,7 @@ using UnityEngine;
 namespace IL6
 {
     /// <summary>
-    /// 페이즈별 절차적 음악 루프. 외부 오디오 파일 없이 사인파 chord progression 으로 생성.
-    /// 페이즈 변경 시 오디오소스의 clip 만 교체 + crossfade.
+    /// 시간대별 녹음 음악. 리소스 누락 시에만 기존 합성음으로 대체한다.
     /// </summary>
     public static class Music
     {
@@ -17,6 +16,7 @@ namespace IL6
             var go = new GameObject("__MusicRunner");
             Object.DontDestroyOnLoad(go);
             _playback = go.AddComponent<MusicPlayback>();
+            go.AddComponent<MusicCredits>();
             _playback.SetVolume(Volume * 0.5f);
             return _playback;
         }
@@ -32,10 +32,10 @@ namespace IL6
         {
             AudioClip target = phase switch
             {
-                Phase.Day => _day ??= MakeLoop(new[] { 196f, 247f, 294f }, peaceful: true, seed: 11),  // G major
-                Phase.Night => _night ??= MakeLoop(new[] { 110f, 131f, 156f }, peaceful: false, seed: 23), // A minor 저음
-                Phase.Evening => _evening ??= MakeLoop(new[] { 165f, 196f, 247f }, peaceful: false, seed: 31),
-                Phase.Dawn => _dawn ??= MakeLoop(new[] { 220f, 277f, 330f }, peaceful: true, seed: 41), // 가벼운 메이저
+                Phase.Day => _day ??= LoadRecording("day", new[] { 196f, 247f, 294f }, true, 11),
+                Phase.Night => _night ??= LoadRecording("night", new[] { 110f, 131f, 156f }, false, 23),
+                Phase.Evening => _evening ??= LoadRecording("evening", new[] { 165f, 196f, 247f }, false, 31),
+                Phase.Dawn => _dawn ??= LoadRecording("dawn", new[] { 220f, 277f, 330f }, true, 41),
                 _ => null,
             };
             if (target == null) return;
@@ -45,6 +45,14 @@ namespace IL6
         public static void Stop()
         {
             if (_playback != null) _playback.Stop();
+        }
+
+        private static AudioClip LoadRecording(string phase, float[] chord, bool peaceful, int seed)
+        {
+            var clip = Resources.Load<AudioClip>("Music/" + phase);
+            if (clip != null) return clip;
+            Debug.LogWarning("Missing Music/" + phase + "; using legacy music fallback.");
+            return MakeLoop(chord, peaceful, seed);
         }
 
         /// <summary>

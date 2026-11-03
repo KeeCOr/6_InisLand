@@ -25,7 +25,7 @@ public void RockRareDropHasExactChanceBoundary(float sample,float chance,bool re
 [Test] public void MeatAndOreDropsUseRealRasterSpritesAndDistinctHudTargets() {
 Assert.That(ResourceIconSkin.WorldSprite(ResourceKind.Meat),Is.Not.Null);
 Assert.That(ResourceIconSkin.WorldSprite(ResourceKind.Ore),Is.Not.Null);
-Assert.That(ResourceIconSkin.WorldSprite(ResourceKind.Ore).texture,Is.SameAs(Resources.Load<Texture2D>("UI/Generated20261017/ore")));
+Assert.That(ResourceIconSkin.WorldSprite(ResourceKind.Ore).texture,Is.SameAs(Resources.Load<Texture2D>("Sprites/Environment/GroundProps20261103/drops/ore")));
 Assert.That(WoodPickup.HudIndex(ResourceKind.Ore),Is.EqualTo(2));Assert.That(WoodPickup.HudIndex(ResourceKind.Meat),Is.EqualTo(3));
 for(int i=0;i<6;i++) {var chip=MobileHudLayout.ResourceChip(i);Assert.That(chip.xMax,Is.LessThanOrEqualTo(MobileHudLayout.Resources.xMax));Assert.That(chip.yMax,Is.LessThanOrEqualTo(MobileHudLayout.Resources.yMax));}
 }

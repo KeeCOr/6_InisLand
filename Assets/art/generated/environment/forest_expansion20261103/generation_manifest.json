@@ -1,0 +1,80 @@
+{
+  "mode": "built-in image_gen",
+  "new_species": [
+    {
+      "key": "oak",
+      "path": "Assets/Resources/Sprites/Props/NordicTrees20261102/oak.png",
+      "source": "oak_source.png",
+      "source_rect": [
+        63,
+        38,
+        1019,
+        1408
+      ],
+      "canvas": [
+        768,
+        768
+      ],
+      "alpha_box": [
+        149,
+        64,
+        618,
+        736
+      ],
+      "source_height": 1.5,
+      "world_height": 3.35,
+      "sha256": "c2a1500f03bc0d86c30fd4c5c3c480b8fdff44a759eec5804ac8666d65ca1cd6"
+    },
+    {
+      "key": "cedar",
+      "path": "Assets/Resources/Sprites/Props/NordicTrees20261102/cedar.png",
+      "source": "cedar_source.png",
+      "source_rect": [
+        71,
+        57,
+        784,
+        1733
+      ],
+      "canvas": [
+        768,
+        768
+      ],
+      "alpha_box": [
+        241,
+        64,
+        527,
+        736
+      ],
+      "source_height": 1.5,
+      "world_height": 3.5,
+      "sha256": "2e11626e2eb40afc99b7998933099ae0e820a20c9f2f5b9156008e0b16561eaa"
+    },
+    {
+      "key": "larch",
+      "path": "Assets/Resources/Sprites/Props/NordicTrees20261102/larch.png",
+      "source": "larch_source.png",
+      "source_rect": [
+        309,
+        41,
+        949,
+        1207
+      ],
+      "canvas": [
+        768,
+        768
+      ],
+      "alpha_box": [
+        199,
+        64,
+        568,
+        736
+      ],
+      "source_height": 1.5,
+      "world_height": 3.4,
+      "sha256": "7ee5ff63367d62ba1f865d49fd882e62147565b2c5ba34654bc43b44e0b559a4"
+    }
+  ],
+  "existing_species": 6,
+  "total_species": 9,
+  "physics_preserved": "hash%9 then variant%3 matches former hash%6 then variant%3"
+}

@@ -1,0 +1,37 @@
+{
+  "assets": [
+    {
+      "key": "slab",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-b8d31cdd-3054-400b-a74d-048fbbc7633f.png",
+      "prompt": "Game sprite on transparent background: ONE low broad flat granite outcrop with three stacked horizontal natural stone shelves and a few streaks of snow. Clean hard-edged die-cut silhouette. The grey rock should occupy only the central 65 percent of the canvas; outside its contour is empty transparent alpha, as in the reference. Gently top-down orthographic view showing a wide flat upper surface and short front face. Match reference matte hand-painted blue-grey granite, restrained grey-brown contour, thin ivory snow and soft large colour planes. Horizontal slab silhouette, distinctly lower and wider than the reference boulder pile. Crisp opaque object, generous empty margin. Single isolated asset.",
+      "runtime": "Assets/Resources/Sprites/Props/NordicRocks20261103/slab.png",
+      "ppu": 1090.2068965517242,
+      "pivot_y": 0.6692077214981027,
+      "opaque_bounds": [
+        133,
+        435,
+        1121,
+        831
+      ],
+      "sha256": "b9db0f02850fa187722188acb62502331165810134abce9d06dcd54507a5539e"
+    },
+    {
+      "key": "split",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-d30bef8f-7468-4882-b5a8-23092bc20f84.png",
+      "prompt": "Create ONE new natural snowy granite rock sprite variation matching this exact reference's muted blue-grey hand-painted anime game style, matte broad brush planes, thin restrained grey-brown outline, soft overcast upper-left light and ivory snow on ledges. CHANGE SILHOUETTE to a WEATHERED UPRIGHT SPLIT BOULDER, two asymmetrical broad standing stones joined at a low base, one taller leaning slightly, natural vertical fissure and chipped ledges. About as tall as wide, not a tall monolith. Top surfaces visible from gently top-down orthographic camera. Not a round boulder pile. Thin uneven snow on top and ledges, no runes, no crystals, no ore colours, no shiny 3D facets, no black pixel outline, no photoreal texture. Full isolated complete rock centered with 12-15% margin, transparent RGBA outside rock, no scenery, no floor, no cast shadow or haze, no text. Same medieval Nordic snow village environment family.",
+      "runtime": "Assets/Resources/Sprites/Props/NordicRocks20261103/split.png",
+      "ppu": 860.6896551724138,
+      "pivot_y": 0.45898586591871526,
+      "opaque_bounds": [
+        221,
+        255,
+        1001,
+        1007
+      ],
+      "sha256": "bc6274a141228ae2da20bb7f63e7095869f1fd44d6d2ec23f1feb7eb7a814f53"
+    }
+  ],
+  "baseline": "Existing clustered snowRock retained; match 0.90625-unit opaque width and -0.38175-unit foot baseline.",
+  "rejected": "Initial slab outputs with grey haze not installed.",
+  "storage": "Runtime sprites only; original masters remain in .codex."
+}

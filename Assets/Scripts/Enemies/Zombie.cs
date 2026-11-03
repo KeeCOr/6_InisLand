@@ -249,7 +249,7 @@ namespace IL6
 
         public void TakeDamage(int amount)
         {
-            if (IsDead) return;
+            if (IsDead || amount <= 0) return;
             CurrentHp = Mathf.Max(0, CurrentHp - amount);
             GameFeel.HitFlash(this, _sr);
             GameFeel.FloatText(transform.position, $"-{amount}",
@@ -258,7 +258,8 @@ namespace IL6
             if (Time.unscaledTime - _lastHitSfxAt > 0.05f)
             {
                 _lastHitSfxAt = Time.unscaledTime;
-                Sfx.Hit();
+                Sfx.Impact(ImpactMaterial.Metal);
+                GameFeel.MaterialImpact(transform.position, ImpactMaterial.Metal);
             }
             if (CurrentHp <= 0)
             {

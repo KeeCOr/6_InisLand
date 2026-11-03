@@ -1,0 +1,155 @@
+[
+  {
+    "key": "hero",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-25d47f85-36d8-4725-b784-30fed0eec33c.png",
+    "prompt": "Image 1 is the character identity reference. Image 2 is the approved hunter portrait STYLE reference only; do not copy the hunter's face, beard or masculine build. Create a new dialogue illustration of THIS distinct character: teenage girl protagonist, vivid long red hair tied back loosely, brown green eyes, brown leather winter survival coat with cream fur trim and modest fully covered layers, dark gloves, axe carried safely at side, determined friendly expression. Preserve the hair, gender, costume palette and distinguishing props of image 1. Match image 2's polished painterly anime storybook rendering, soft wool/fur/leather textures, warm natural facial shading, elegant clean lines; NOT pixel art and NOT a chibi gameplay sprite. Waist-up illustrated portrait including hands, centered, three-quarter face turned slightly toward screen RIGHT toward dialogue. All head, hat, shoulders, hands and props fully inside frame with generous transparent margin on top and sides, waist ends neatly at bottom. Face must be readable at 220px displayed width. Consistent upper-left soft winter light. One character, TRUE transparent background, no environment, no UI, no frame, no text.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\hero.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      0,
+      0,
+      1213,
+      1296
+    ]
+  },
+  {
+    "key": "hunter",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-cd40f93c-756e-4c1c-a755-dee92a9cbd16.png",
+    "prompt": "Use image 1 only as CHARACTER IDENTITY REFERENCE, not as rendering style. Draw a new polished dialogue character illustration for a cozy snowy survival fantasy RPG. Adult male hunter: tousled dark brown hair, short brown beard, green eyes, cream fur trimmed brown leather winter coat, leather belt, quiver and wooden bow. Preserve these recognisable features. Painterly anime storybook illustration with clean elegant linework, soft natural shading and textured wool/leather, NON pixel-art, NOT a chibi game sprite. Waist-up portrait including both hands, body about four heads tall if extended, friendly calm expression, three-quarter face turned slightly toward screen right so he looks toward dialogue on his right. Full head and shoulders visible with generous top/side margins; waist ends neatly at bottom. Single character only, centered on TRUE transparent background, no UI, no frame, no lettering, no scenery. Consistent soft upper-left winter light, muted brown/cream/forest palette. Keep all costume and props within the canvas.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\hunter.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      0,
+      0,
+      1213,
+      1296
+    ]
+  },
+  {
+    "key": "warrior",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-531baa3f-6746-4d62-9bfa-0924ff2c75cd.png",
+    "prompt": "Image 1 is the character identity reference. Image 2 is the approved hunter portrait STYLE reference only; do not copy the hunter's face, beard or masculine build. Create a new dialogue illustration of THIS distinct character: young adult woman warrior, blue eyes, long blonde side braid, riveted rounded iron helmet, blue wool and chainmail coat with cream fur trim, round wooden shield and short sword. Preserve the hair, gender, costume palette and distinguishing props of image 1. Match image 2's polished painterly anime storybook rendering, soft wool/fur/leather textures, warm natural facial shading, elegant clean lines; NOT pixel art and NOT a chibi gameplay sprite. Waist-up illustrated portrait including hands, centered, three-quarter face turned slightly toward screen RIGHT toward dialogue. All head, hat, shoulders, hands and props fully inside frame with generous transparent margin on top and sides, waist ends neatly at bottom. Face must be readable at 220px displayed width. Consistent upper-left soft winter light. One character, TRUE transparent background, no environment, no UI, no frame, no text.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\warrior.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      0,
+      0,
+      1213,
+      1296
+    ]
+  },
+  {
+    "key": "farmer",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-4f33e9da-1cb3-439d-8122-2ce873f332ec.png",
+    "prompt": "Image 1 is the character identity reference. Image 2 is the approved hunter portrait STYLE reference only; do not copy the hunter's face, beard or masculine build. Create a new dialogue illustration of THIS distinct character: adult woman farmer, auburn hair, green eyes, olive green cloth cap with cream fur edge, olive and brown fur lined winter coat, woven vegetable basket and simple hoe. Preserve the hair, gender, costume palette and distinguishing props of image 1. Match image 2's polished painterly anime storybook rendering, soft wool/fur/leather textures, warm natural facial shading, elegant clean lines; NOT pixel art and NOT a chibi gameplay sprite. Waist-up illustrated portrait including hands, centered, three-quarter face turned slightly toward screen RIGHT toward dialogue. All head, hat, shoulders, hands and props fully inside frame with generous transparent margin on top and sides, waist ends neatly at bottom. Face must be readable at 220px displayed width. Consistent upper-left soft winter light. One character, TRUE transparent background, no environment, no UI, no frame, no text.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\farmer.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      0,
+      0,
+      1213,
+      1296
+    ]
+  },
+  {
+    "key": "cook",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-ce458a06-b635-41b8-a898-302791d98613.png",
+    "prompt": "Image 1 is the character identity reference. Image 2 is the approved hunter portrait STYLE reference only; do not copy the hunter's face, beard or masculine build. Create a new dialogue illustration of THIS distinct character: middle aged male cook, brown hair and full brown beard, brown fur band cap, muted green winter coat, cream apron with thin red stripes, red scarf, wooden ladle and small iron pot. Preserve the hair, gender, costume palette and distinguishing props of image 1. Match image 2's polished painterly anime storybook rendering, soft wool/fur/leather textures, warm natural facial shading, elegant clean lines; NOT pixel art and NOT a chibi gameplay sprite. Waist-up illustrated portrait including hands, centered, three-quarter face turned slightly toward screen RIGHT toward dialogue. All head, hat, shoulders, hands and props fully inside frame with generous transparent margin on top and sides, waist ends neatly at bottom. Face must be readable at 220px displayed width. Consistent upper-left soft winter light. One character, TRUE transparent background, no environment, no UI, no frame, no text.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\cook.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      0,
+      0,
+      1213,
+      1296
+    ]
+  },
+  {
+    "key": "healer",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-f6e52f30-be26-46f0-831e-9230e64c356f.png",
+    "prompt": "Image 1 is the character identity reference. Image 2 is the approved hunter portrait STYLE reference only; do not copy the hunter's face, beard or masculine build. Create a new dialogue illustration of THIS distinct character: adult woman healer, long dark brown braid, green eyes, small red berry and green leaf hair ornament, teal fur trimmed winter coat, medicinal herbs and red potion vial on belt. Preserve the hair, gender, costume palette and distinguishing props of image 1. Match image 2's polished painterly anime storybook rendering, soft wool/fur/leather textures, warm natural facial shading, elegant clean lines; NOT pixel art and NOT a chibi gameplay sprite. Waist-up illustrated portrait including hands, centered, three-quarter face turned slightly toward screen RIGHT toward dialogue. All head, hat, shoulders, hands and props fully inside frame with generous transparent margin on top and sides, waist ends neatly at bottom. Face must be readable at 220px displayed width. Consistent upper-left soft winter light. One character, TRUE transparent background, no environment, no UI, no frame, no text.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\healer.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      0,
+      18,
+      1167,
+      1296
+    ]
+  },
+  {
+    "key": "aunt",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-29a1b0d8-b022-42d2-a640-fb8a037eafd0.png",
+    "prompt": "Image 1 is the character identity reference. Image 2 is the approved hunter portrait STYLE reference only; do not copy the hunter's face, beard or masculine build. Create a new dialogue illustration of THIS distinct character: mature adult woman traveller, warm brown eyes, chestnut hair in low bun, tan fur trimmed coat, brown scarf, leather satchel strap held in one gloved hand. Preserve the hair, gender, costume palette and distinguishing props of image 1. Match image 2's polished painterly anime storybook rendering, soft wool/fur/leather textures, warm natural facial shading, elegant clean lines; NOT pixel art and NOT a chibi gameplay sprite. Waist-up illustrated portrait including hands, centered, three-quarter face turned slightly toward screen RIGHT toward dialogue. All head, hat, shoulders, hands and props fully inside frame with generous transparent margin on top and sides, waist ends neatly at bottom. Face must be readable at 220px displayed width. Consistent upper-left soft winter light. One character, TRUE transparent background, no environment, no UI, no frame, no text.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\aunt.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      0,
+      16,
+      1187,
+      1296
+    ]
+  },
+  {
+    "key": "uncle",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-ba74e115-a43e-498f-8a57-710199cdb2d4.png",
+    "prompt": "Image 1 is the character identity reference. Image 2 is the approved hunter portrait STYLE reference only; do not copy the hunter's face, beard or masculine build. Create a new dialogue illustration of THIS distinct character: older adult man, short gray beard and moustache, dark brows, brown fur band cap, deep brown fur trimmed winter coat, muted red scarf, gloved hands, kind weathered face. Preserve the hair, gender, costume palette and distinguishing props of image 1. Match image 2's polished painterly anime storybook rendering, soft wool/fur/leather textures, warm natural facial shading, elegant clean lines; NOT pixel art and NOT a chibi gameplay sprite. Waist-up illustrated portrait including hands, centered, three-quarter face turned slightly toward screen RIGHT toward dialogue. All head, hat, shoulders, hands and props fully inside frame with generous transparent margin on top and sides, waist ends neatly at bottom. Face must be readable at 220px displayed width. Consistent upper-left soft winter light. One character, TRUE transparent background, no environment, no UI, no frame, no text.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\uncle.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      0,
+      15,
+      1203,
+      1296
+    ]
+  },
+  {
+    "key": "child",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-694d5171-f016-4efe-b9d8-e183a9c9a1ee.png",
+    "prompt": "Image 1 is the character identity reference. Image 2 is the approved hunter portrait STYLE reference only; do not copy the hunter's face, beard or masculine build. Create a new dialogue illustration of THIS distinct character: young boy about ten, short tousled chestnut brown hair, green eyes, brown cream fur lined winter coat fully closed, muted red scarf, brown mittens, innocent hopeful smile, age appropriate fully clothed. Preserve the hair, gender, costume palette and distinguishing props of image 1. Match image 2's polished painterly anime storybook rendering, soft wool/fur/leather textures, warm natural facial shading, elegant clean lines; NOT pixel art and NOT a chibi gameplay sprite. Waist-up illustrated portrait including hands, centered, three-quarter face turned slightly toward screen RIGHT toward dialogue. All head, hat, shoulders, hands and props fully inside frame with generous transparent margin on top and sides, waist ends neatly at bottom. Face must be readable at 220px displayed width. Consistent upper-left soft winter light. One character, TRUE transparent background, no environment, no UI, no frame, no text.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\child.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      51,
+      13,
+      1162,
+      1296
+    ]
+  }
+]

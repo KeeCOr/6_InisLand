@@ -47,7 +47,12 @@ namespace IL6
             {
                 if (Player.IsDead || (Input != null && Input.MoveAxis.sqrMagnitude > .001f)) { Cancel(); return; }
                 float speedMul = CompanionTrait.GatherSpeedMultiplierFor(_active);
-                if (!_active.IsTree) _progress += Time.deltaTime * speedMul / Mathf.Max(.1f,_active.DurationSec);
+                if (_active.IsRock)
+                {
+                    var health=_active.EnsureRockHealth();health.Mine(Time.deltaTime*speedMul,Store);
+                    _progress=1f-(float)health.CurrentHp/health.MaxHp;
+                }
+                else if (!_active.IsTree) _progress += Time.deltaTime * speedMul / Mathf.Max(.1f,_active.DurationSec);
                 else _progress = 1f - (float)_active.EnsureTreeHealth().CurrentHp / _active.EnsureTreeHealth().MaxHp;
                 // 유휴 동료 자동 합류 — 0.5초마다 탐색
                 _assistRecheck -= Time.deltaTime;
@@ -177,12 +182,13 @@ namespace IL6
             if (_active == g) return true;
             if (_active != null) return false;
             if (g.IsTree && g.EnsureTreeHealth().CurrentHp <= 0) return false;
+            if (g.IsRock && g.EnsureRockHealth().CurrentHp <= 0) return false;
             if (_actions == null) _actions = GetComponent<PlayerActionState>();
             if (_actions != null && !_actions.TryBegin(g.IsTree ? PlayerAction.Logging : PlayerAction.Gather,
                 g.transform.position - Player.transform.position, Mathf.Max(.2f,g.DurationSec / 4f))) return false;
             g.EnsureTreeHealth();
             _active = g;
-            _progress = 0f;
+            _progress = g.IsRock?1f-(float)g.EnsureRockHealth().CurrentHp/g.EnsureRockHealth().MaxHp:0f;
             return true;
         }
     }

@@ -1,0 +1,105 @@
+[
+  {
+    "key": "hero_axe",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-fa7b404a-28c8-42fd-ad7b-0d6c4ae340b5.png",
+    "prompt": "Create a WALK-CYCLE sprite sheet for the EXACT character in the reference, retaining every identity, hair, outfit, equipment, pixel shading and chibi proportion. Output EXACTLY SIX fully separate full-body figures in a STRICT 3 COLUMN by 2 ROW equal-cell grid, transparent background. Column 1 FRONT facing down toward viewer, column 2 BACK facing up away with NO face visible, column 3 RIGHT SIDE profile facing screen right. TOP ROW step A: left boot forward and right boot behind, opposite free-arm swing. BOTTOM ROW step B: right boot forward and left boot behind, reverse free-arm swing. Both rows must CLEARLY show different alternating leg/boot poses; NOT repeated standing poses, NOT six different identities. Small relaxed walking stride, slight hair/coat trailing, torso and held equipment remain steady. EXACT SAME head size, full-body height, head center x, boots ground baseline, canvas framing, palette, lighting, face and proportions across both rows. Keep weapons and role-specific props stable in their correct hand, no attack swings. Style matches the existing detailed chunky pixel-art 3-head-tall winter survival game sprite. Slightly elevated orthographic game camera, not isometric, no horizon. Entire head, hair, hands, tools and boots inside EACH cell, generous 10% TRANSPARENT gutters; no crossing cell boundaries. No captions, no cell borders, no floor, no scenery, no shadows. TRUE transparent alpha. The heroine remains a red-haired girl; keep the SAME two-headed axe in all six frames.",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "key": "hero_bow",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-950ad84b-5023-44d9-9ed8-e5dd88613b29.png",
+    "prompt": "Create a WALK-CYCLE sprite sheet for the EXACT character in the reference, retaining every identity, hair, outfit, equipment, pixel shading and chibi proportion. Output EXACTLY SIX fully separate full-body figures in a STRICT 3 COLUMN by 2 ROW equal-cell grid, transparent background. Column 1 FRONT facing down toward viewer, column 2 BACK facing up away with NO face visible, column 3 RIGHT SIDE profile facing screen right. TOP ROW step A: left boot forward and right boot behind, opposite free-arm swing. BOTTOM ROW step B: right boot forward and left boot behind, reverse free-arm swing. Both rows must CLEARLY show different alternating leg/boot poses; NOT repeated standing poses, NOT six different identities. Small relaxed walking stride, slight hair/coat trailing, torso and held equipment remain steady. EXACT SAME head size, full-body height, head center x, boots ground baseline, canvas framing, palette, lighting, face and proportions across both rows. Keep weapons and role-specific props stable in their correct hand, no attack swings. Style matches the existing detailed chunky pixel-art 3-head-tall winter survival game sprite. Slightly elevated orthographic game camera, not isometric, no horizon. Entire head, hair, hands, tools and boots inside EACH cell, generous 10% TRANSPARENT gutters; no crossing cell boundaries. No captions, no cell borders, no floor, no scenery, no shadows. TRUE transparent alpha. The heroine remains a red-haired girl; keep the SAME bow and quiver, no axe in all six frames.",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "key": "hero_hammer",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-6595de46-511a-483e-bc24-10ea5fbb265c.png",
+    "prompt": "Create a WALK-CYCLE sprite sheet for the EXACT character in the reference, retaining every identity, hair, outfit, equipment, pixel shading and chibi proportion. Output EXACTLY SIX fully separate full-body figures in a STRICT 3 COLUMN by 2 ROW equal-cell grid, transparent background. Column 1 FRONT facing down toward viewer, column 2 BACK facing up away with NO face visible, column 3 RIGHT SIDE profile facing screen right. TOP ROW step A: left boot forward and right boot behind, opposite free-arm swing. BOTTOM ROW step B: right boot forward and left boot behind, reverse free-arm swing. Both rows must CLEARLY show different alternating leg/boot poses; NOT repeated standing poses, NOT six different identities. Small relaxed walking stride, slight hair/coat trailing, torso and held equipment remain steady. EXACT SAME head size, full-body height, head center x, boots ground baseline, canvas framing, palette, lighting, face and proportions across both rows. Keep weapons and role-specific props stable in their correct hand, no attack swings. Style matches the existing detailed chunky pixel-art 3-head-tall winter survival game sprite. Slightly elevated orthographic game camera, not isometric, no horizon. Entire head, hair, hands, tools and boots inside EACH cell, generous 10% TRANSPARENT gutters; no crossing cell boundaries. No captions, no cell borders, no floor, no scenery, no shadows. TRUE transparent alpha. The heroine remains a red-haired girl; keep the SAME wooden construction hammer, no axe in all six frames.",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "key": "hunter",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-cefc4ad5-41ab-4b78-9496-4b7f01c61e0d.png",
+    "prompt": "Create a WALK-CYCLE sprite sheet for the EXACT character in the reference, retaining every identity, hair, outfit, equipment, pixel shading and chibi proportion. Output EXACTLY SIX fully separate full-body figures in a STRICT 3 COLUMN by 2 ROW equal-cell grid, transparent background. Column 1 FRONT facing down toward viewer, column 2 BACK facing up away with NO face visible, column 3 RIGHT SIDE profile facing screen right. TOP ROW step A: left boot forward and right boot behind, opposite free-arm swing. BOTTOM ROW step B: right boot forward and left boot behind, reverse free-arm swing. Both rows must CLEARLY show different alternating leg/boot poses; NOT repeated standing poses, NOT six different identities. Small relaxed walking stride, slight hair/coat trailing, torso and held equipment remain steady. EXACT SAME head size, full-body height, head center x, boots ground baseline, canvas framing, palette, lighting, face and proportions across both rows. Keep weapons and role-specific props stable in their correct hand, no attack swings. Style matches the existing detailed chunky pixel-art 3-head-tall winter survival game sprite. Slightly elevated orthographic game camera, not isometric, no horizon. Entire head, hair, hands, tools and boots inside EACH cell, generous 10% TRANSPARENT gutters; no crossing cell boundaries. No captions, no cell borders, no floor, no scenery, no shadows. TRUE transparent alpha.",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "key": "warrior",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-efcf28c7-cba6-4544-825d-d1664dadf2ca.png",
+    "prompt": "Create a WALK-CYCLE sprite sheet for the EXACT character in the reference, retaining every identity, hair, outfit, equipment, pixel shading and chibi proportion. Output EXACTLY SIX fully separate full-body figures in a STRICT 3 COLUMN by 2 ROW equal-cell grid, transparent background. Column 1 FRONT facing down toward viewer, column 2 BACK facing up away with NO face visible, column 3 RIGHT SIDE profile facing screen right. TOP ROW step A: left boot forward and right boot behind, opposite free-arm swing. BOTTOM ROW step B: right boot forward and left boot behind, reverse free-arm swing. Both rows must CLEARLY show different alternating leg/boot poses; NOT repeated standing poses, NOT six different identities. Small relaxed walking stride, slight hair/coat trailing, torso and held equipment remain steady. EXACT SAME head size, full-body height, head center x, boots ground baseline, canvas framing, palette, lighting, face and proportions across both rows. Keep weapons and role-specific props stable in their correct hand, no attack swings. Style matches the existing detailed chunky pixel-art 3-head-tall winter survival game sprite. Slightly elevated orthographic game camera, not isometric, no horizon. Entire head, hair, hands, tools and boots inside EACH cell, generous 10% TRANSPARENT gutters; no crossing cell boundaries. No captions, no cell borders, no floor, no scenery, no shadows. TRUE transparent alpha.",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "key": "farmer",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-1dc14fce-85ad-4d08-b3e9-82e71353c42c.png",
+    "prompt": "Correct this SIX FRAME walk sprite sheet without changing grid, style, character identity, size or poses. The bottom row currently swaps equipment between hands, which is WRONG. In each column keep the TOP ROW's equipment and hand arrangement IDENTICAL in the BOTTOM ROW. Front column: hoe always SCREEN LEFT and vegetable basket always SCREEN RIGHT. Back column: hoe always SCREEN RIGHT and basket always SCREEN LEFT. Right-side column: basket always at front/right, hoe always behind/left. Only boots/legs alternate in the two frames and free body motion is subtle. No exchanging hands or mirroring upper body. Retain exact 3 columns FRONT/BACK/RIGHT SIDE, 2 rows left-step/right-step. Transparent alpha background, NO colored halo, NO text, NO extra cells. Keep all margins and existing full-body pixel-art character look.",
+    "extra_path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-9e51c9dc-69e1-441a-941a-69ed79b14239.png",
+    "extra_prompt": "Edit this TWO-VIEW sprite sheet to create ONE next walking pose for BOTH figures. Preserve the EXACT reference's upper body, all props and which hand holds them, hair, costume, head size, camera and all colors. Change ONLY lower legs and boots to a small walking step with the CHARACTER'S RIGHT foot advanced, left foot trailing. LEFT/front character keeps hoe in SCREEN LEFT hand and basket SCREEN RIGHT. RIGHT/back character keeps hoe SCREEN RIGHT and basket SCREEN LEFT. Do NOT mirror either figure or move any upper-body equipment. Output exactly TWO full-body figures side by side: LEFT strictly front facing viewer, RIGHT strictly back with no face. Same art style and chibi ratio, transparent alpha background, generous clear margins, no text, no grid, no halos. Canvas landscape 2:1 if possible. This will be step B alternating with a previously generated left-foot step A.",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "key": "cook",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-aaad5e74-e8ec-4c07-b98a-816a6d33be41.png",
+    "prompt": "Correct this SIX FRAME walk sprite sheet without changing grid, style, character identity, size or poses. The bottom row currently swaps equipment between hands, which is WRONG. In each column keep the TOP ROW's equipment and hand arrangement IDENTICAL in the BOTTOM ROW. Front column: wooden ladle always SCREEN LEFT and iron cooking pot always SCREEN RIGHT. Back column: ladle always SCREEN RIGHT and pot always SCREEN LEFT. Right-side column: ladle stays forward/right, pot stays behind/left. Only boots/legs alternate in the two frames and free body motion is subtle. No exchanging hands or mirroring upper body. Retain exact 3 columns FRONT/BACK/RIGHT SIDE, 2 rows left-step/right-step. Transparent alpha background, NO colored halo, NO text, NO extra cells. Keep all margins and existing full-body pixel-art character look.",
+    "extra_path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-bf873acc-6c16-4099-a967-b30e1311003a.png",
+    "extra_prompt": "Edit this TWO-VIEW sprite sheet to create ONE next walking pose for BOTH figures. Preserve the EXACT reference's upper body, all props and which hand holds them, hair, costume, head size, camera and all colors. Change ONLY lower legs and boots to a small walking step with the CHARACTER'S RIGHT foot advanced, left foot trailing. LEFT/front character keeps wooden ladle SCREEN LEFT and pot SCREEN RIGHT. RIGHT/back character keeps ladle SCREEN RIGHT and pot SCREEN LEFT. Do NOT mirror either figure or move any upper-body equipment. Output exactly TWO full-body figures side by side: LEFT strictly front facing viewer, RIGHT strictly back with no face. Same art style and chibi ratio, transparent alpha background, generous clear margins, no text, no grid, no halos. Canvas landscape 2:1 if possible. This will be step B alternating with a previously generated left-foot step A.",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "key": "healer",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-dd7998e8-145b-4b12-9304-2a2a2d785299.png",
+    "prompt": "Create a WALK-CYCLE sprite sheet for the EXACT character in the reference, retaining every identity, hair, outfit, equipment, pixel shading and chibi proportion. Output EXACTLY SIX fully separate full-body figures in a STRICT 3 COLUMN by 2 ROW equal-cell grid, transparent background. Column 1 FRONT facing down toward viewer, column 2 BACK facing up away with NO face visible, column 3 RIGHT SIDE profile facing screen right. TOP ROW step A: left boot forward and right boot behind, opposite free-arm swing. BOTTOM ROW step B: right boot forward and left boot behind, reverse free-arm swing. Both rows must CLEARLY show different alternating leg/boot poses; NOT repeated standing poses, NOT six different identities. Small relaxed walking stride, slight hair/coat trailing, torso and held equipment remain steady. EXACT SAME head size, full-body height, head center x, boots ground baseline, canvas framing, palette, lighting, face and proportions across both rows. Keep weapons and role-specific props stable in their correct hand, no attack swings. Style matches the existing detailed chunky pixel-art 3-head-tall winter survival game sprite. Slightly elevated orthographic game camera, not isometric, no horizon. Entire head, hair, hands, tools and boots inside EACH cell, generous 10% TRANSPARENT gutters; no crossing cell boundaries. No captions, no cell borders, no floor, no scenery, no shadows. TRUE transparent alpha.",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "key": "aunt",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-51d4afe3-1507-4932-b885-04d50cbdd13b.png",
+    "prompt": "Create a WALK-CYCLE sprite sheet for the EXACT character in the reference, retaining every identity, hair, outfit, equipment, pixel shading and chibi proportion. Output EXACTLY SIX fully separate full-body figures in a STRICT 3 COLUMN by 2 ROW equal-cell grid, transparent background. Column 1 FRONT facing down toward viewer, column 2 BACK facing up away with NO face visible, column 3 RIGHT SIDE profile facing screen right. TOP ROW step A: left boot forward and right boot behind, opposite free-arm swing. BOTTOM ROW step B: right boot forward and left boot behind, reverse free-arm swing. Both rows must CLEARLY show different alternating leg/boot poses; NOT repeated standing poses, NOT six different identities. Small relaxed walking stride, slight hair/coat trailing, torso and held equipment remain steady. EXACT SAME head size, full-body height, head center x, boots ground baseline, canvas framing, palette, lighting, face and proportions across both rows. Keep weapons and role-specific props stable in their correct hand, no attack swings. Style matches the existing detailed chunky pixel-art 3-head-tall winter survival game sprite. Slightly elevated orthographic game camera, not isometric, no horizon. Entire head, hair, hands, tools and boots inside EACH cell, generous 10% TRANSPARENT gutters; no crossing cell boundaries. No captions, no cell borders, no floor, no scenery, no shadows. TRUE transparent alpha.",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "key": "uncle",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-2ed10e33-a40a-46ca-8668-45f0c57dc124.png",
+    "prompt": "Create a WALK-CYCLE sprite sheet for the EXACT character in the reference, retaining every identity, hair, outfit, equipment, pixel shading and chibi proportion. Output EXACTLY SIX fully separate full-body figures in a STRICT 3 COLUMN by 2 ROW equal-cell grid, transparent background. Column 1 FRONT facing down toward viewer, column 2 BACK facing up away with NO face visible, column 3 RIGHT SIDE profile facing screen right. TOP ROW step A: left boot forward and right boot behind, opposite free-arm swing. BOTTOM ROW step B: right boot forward and left boot behind, reverse free-arm swing. Both rows must CLEARLY show different alternating leg/boot poses; NOT repeated standing poses, NOT six different identities. Small relaxed walking stride, slight hair/coat trailing, torso and held equipment remain steady. EXACT SAME head size, full-body height, head center x, boots ground baseline, canvas framing, palette, lighting, face and proportions across both rows. Keep weapons and role-specific props stable in their correct hand, no attack swings. Style matches the existing detailed chunky pixel-art 3-head-tall winter survival game sprite. Slightly elevated orthographic game camera, not isometric, no horizon. Entire head, hair, hands, tools and boots inside EACH cell, generous 10% TRANSPARENT gutters; no crossing cell boundaries. No captions, no cell borders, no floor, no scenery, no shadows. TRUE transparent alpha.",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "key": "child",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-8459f97c-92d5-4395-acc2-3be4299d67e5.png",
+    "prompt": "Create a WALK-CYCLE sprite sheet for the EXACT character in the reference, retaining every identity, hair, outfit, equipment, pixel shading and chibi proportion. Output EXACTLY SIX fully separate full-body figures in a STRICT 3 COLUMN by 2 ROW equal-cell grid, transparent background. Column 1 FRONT facing down toward viewer, column 2 BACK facing up away with NO face visible, column 3 RIGHT SIDE profile facing screen right. TOP ROW step A: left boot forward and right boot behind, opposite free-arm swing. BOTTOM ROW step B: right boot forward and left boot behind, reverse free-arm swing. Both rows must CLEARLY show different alternating leg/boot poses; NOT repeated standing poses, NOT six different identities. Small relaxed walking stride, slight hair/coat trailing, torso and held equipment remain steady. EXACT SAME head size, full-body height, head center x, boots ground baseline, canvas framing, palette, lighting, face and proportions across both rows. Keep weapons and role-specific props stable in their correct hand, no attack swings. Style matches the existing detailed chunky pixel-art 3-head-tall winter survival game sprite. Slightly elevated orthographic game camera, not isometric, no horizon. Entire head, hair, hands, tools and boots inside EACH cell, generous 10% TRANSPARENT gutters; no crossing cell boundaries. No captions, no cell borders, no floor, no scenery, no shadows. TRUE transparent alpha.",
+    "size": [
+      1536,
+      1024
+    ]
+  }
+]

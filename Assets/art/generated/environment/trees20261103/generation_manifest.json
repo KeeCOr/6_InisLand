@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-03",
+  "tool": "built-in image_gen",
+  "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-0213f9de-2930-44df-ab8e-fac9fe3c3c8b.png",
+  "references": [
+    "Assets/art/generated/environment/trees20261102/spruce.png",
+    "Assets/art/generated/environment/trees20261102/pine.png",
+    "Assets/art/generated/environment/trees20261102/birch.png",
+    "Assets/Resources/Sprites/Props/snowRock.png",
+    "Assets/Resources/Sprites/Characters/HeroIdentity20261026/hero_axe/idle_side.png"
+  ],
+  "operation": "One cohesive transparent family atlas; crop equal columns only, generated RGBA preserved. Existing runtime filenames and GUIDs retained.",
+  "assets": [
+    {
+      "species": "spruce",
+      "runtime": "Assets\\Resources\\Sprites\\Props\\NordicTrees20261102\\spruce.png",
+      "alpha_bounds": [
+        148,
+        33,
+        608,
+        696
+      ],
+      "size": [
+        724,
+        724
+      ],
+      "sha256": "18e0812a1ecd80e3ad745ef4957e11ff2d8f0276754208d266f65609abf92e10"
+    },
+    {
+      "species": "pine",
+      "runtime": "Assets\\Resources\\Sprites\\Props\\NordicTrees20261102\\pine.png",
+      "alpha_bounds": [
+        66,
+        20,
+        610,
+        693
+      ],
+      "size": [
+        724,
+        724
+      ],
+      "sha256": "c34c994299d10e7ea3144920f0ecd3d102a4fed6895d77f895306f9bf9227a26"
+    },
+    {
+      "species": "birch",
+      "runtime": "Assets\\Resources\\Sprites\\Props\\NordicTrees20261102\\birch.png",
+      "alpha_bounds": [
+        21,
+        31,
+        608,
+        696
+      ],
+      "size": [
+        724,
+        724
+      ],
+      "sha256": "27162b67cedffe4786408f38bffb74452dcd2716eeea7516c0a90a470a07af70"
+    }
+  ],
+  "prompt": "Use case: stylized-concept. Asset type: production transparent sprite atlas for the existing InisLand 2D game. Redesign these THREE Nordic winter tree assets into ONE cohesive environment family, a single horizontal row of three separate full trees. Reference image 1 spruce, image 2 pine, image 3 birch show old designs to replace; image 4 snow rock establishes restrained cool blue-gray snow shadows; image 5 heroine establishes simple readable stylized game linework. CRITICAL these are small WORLD environment sprites, not glossy inventory illustrations. Use the same restrained clean hand-painted/cel-shaded style for all three, broad simple color planes, fine muted dark blue-brown contour, moderate contrast, matte surfaces, snow pale ivory-blue with cool desaturated blue-gray shadows, muted gray-green needles, subdued brown bark. No warm orange rim lighting. Avoid tiny busy detail. Slightly top-down orthographic camera, visible branch/snow upper planes, horizontal front axis, no horizon, no diagonal isometric rotation. Left: compact natural Nordic spruce, tapered conical silhouette, 5 irregular broad branch masses with modest snow on upper surfaces, visible short trunk. Center: natural northern European Scots pine with straight trunk, substantial upper crown occupying TWO THIRDS of total height, irregular upward spreading real forest branches, no ornamental cloud pads, trunk only lower THIRD, width roughly 60 percent of total height. Right: silver birch in deep winter, pale gray-white trunk with a few dark marks, sturdy readable branching crown with enough blue-white snow to read at small size, NO orange autumn leaves, no fine twig lace. All three same total height, same line weight, same snow treatment, same light from upper left, same baseline, widths spruce 60 percent height/pine 60 percent/birch 65 percent. Main crowns should feel equally substantial. Whole objects fully inside each of three equal columns, generous 10 percent transparent margins above below sides and wide transparent gutters between them; no overlap. Trunk bases centered in their own columns and at identical bottom baseline. TRANSPARENT background outside precisely opaque tree silhouettes, absolutely no surrounding colored haze, glow, background rectangle, ground disc, shadow field, checkerboard, vignette, scenery, labels, text or watermark. Do not redraw heroine or rock. Deliver only these three game tree sprites on transparent background.\n",
+  "world_opaque_heights": {
+    "spruce": 3.225,
+    "pine": 3.1,
+    "birch": 3.35
+  },
+  "status": "historical version superseded by forest_revision/generation_manifest.json"
+}

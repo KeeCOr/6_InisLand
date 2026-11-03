@@ -33,6 +33,7 @@ namespace IL6
         // ── 글로우 이펙트 ────────────────────────────────────────────────────
         private SpriteRenderer _glowSr;
         private float _glowPhase;
+        public SpriteRenderer GlowRenderer => _glowSr;
 
         private void Awake()
         {
@@ -51,18 +52,22 @@ namespace IL6
         private void BuildGlow()
         {
             var go = new GameObject("CampfireGlow");
-            go.transform.SetParent(transform);
-            go.transform.localPosition = Vector3.zero;
-            go.transform.localScale = new Vector3(4.0f, 4.0f, 1f);
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(go, gameObject.scene);
+            go.transform.position = transform.position;
+            go.transform.localScale = Vector3.one;
 
             _glowSr = go.AddComponent<SpriteRenderer>();
-            _glowSr.sortingOrder = 1; // 바닥, 스프라이트 아래
+            _glowSr.sortingOrder = -9450; // Above snow, below range decals and all actors.
 
             // SpriteBank 시도
             Sprite glowSprite = SpriteBank.Load("Effects/41_warm_glow");
             if (glowSprite != null)
             {
                 _glowSr.sprite = glowSprite;
+                // Use world dimensions, independent of campfire/building root scale.
+                var size = glowSprite.bounds.size;
+                go.transform.localScale = new Vector3(5.4f / Mathf.Max(.01f,size.x),
+                    3.8f / Mathf.Max(.01f,size.y),1f);
             }
             else
             {
@@ -139,7 +144,7 @@ namespace IL6
                 if (drain > 0)
                 {
                     _drainAccum -= drain; // Keep fractional damage and elapsed time across frames.
-                    building.TakeDamage(drain);
+                    building.ConsumeFuelHp(drain);
                 }
             }
             else
@@ -161,10 +166,13 @@ namespace IL6
             // ── 글로우 깜빡임 ──────────────────────────────────────────────
             if (_glowSr != null)
             {
+                _glowSr.transform.position = transform.position;
+                _glowSr.enabled = true;
                 _glowPhase += Time.deltaTime * 1.8f;
                 float flicker = 0.35f + 0.08f * Mathf.Sin(_glowPhase * 2.3f)
                                       + 0.04f * Mathf.Sin(_glowPhase * 5.7f);
-                float active = IsActive ? 1f : 0.2f;
+                bool night = session != null && session.Cycle != null && session.Cycle.Phase == Phase.Night;
+                float active = IsActive ? (night ? .8f : .45f) : 0f;
                 _glowSr.color = new Color(1f, 0.72f, 0.2f, flicker * active);
             }
 
@@ -197,6 +205,9 @@ namespace IL6
             }
             return false;
         }
+
+        private void OnDisable() { if (_glowSr != null) _glowSr.enabled = false; }
+        private void OnDestroy() { if (_glowSr != null) Destroy(_glowSr.gameObject); }
 
         private void OnDrawGizmosSelected()
         {

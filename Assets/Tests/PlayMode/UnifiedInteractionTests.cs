@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
@@ -61,7 +61,8 @@ for(int i=0;i<32;i++) {var member=new GameObject("Existing companion");member.tr
 Assert.That(RecruitableNpc.CurrentCompanionCount(),Is.GreaterThanOrEqualTo(32));
 var go=new GameObject("Attack recruit test");go.transform.position=player.transform.position+Vector3.right;var npc=go.AddComponent<RecruitableNpc>();npc.Player=player.transform;
 Time.timeScale=0;Assert.That(hud.Attacker.TryManualAction(),Is.False);Assert.That(go.GetComponent<Companion>(),Is.Null);Time.timeScale=1;
-Assert.That(hud.Attacker.TryManualAction(),Is.True);Assert.That(go.GetComponent<Companion>(),Is.Not.Null);
+Assert.That(hud.Attacker.TryManualAction(),Is.True);Assert.That(go.GetComponent<Companion>(),Is.Null);
+Assert.That(hud.AcceptRecruitConversation(),Is.True);Assert.That(go.GetComponent<Companion>(),Is.Not.Null);
 npc.Recruit();Assert.That(go.GetComponents<Companion>().Length,Is.EqualTo(1),"Repeated recruitment must not create duplicate companions");
 Object.Destroy(group);Object.Destroy(go);Time.timeScale=1;InputReader.HudBlocked=false;yield return SceneManager.LoadSceneAsync("BootScene");
 }

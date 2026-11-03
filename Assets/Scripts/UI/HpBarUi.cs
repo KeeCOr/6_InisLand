@@ -6,6 +6,7 @@ namespace IL6
     /// 엔티티 머리 위 HP 바. Player 또는 Zombie 참조 중 하나 세팅.
     /// HP가 최대일 때 숨기고, 살아 있는 대상이 피해를 입었을 때만 표시.
     /// </summary>
+    [DefaultExecutionOrder(200)]
     public sealed class HpBarUi : MonoBehaviour
     {
         public PlayerController Player;
@@ -14,6 +15,7 @@ namespace IL6
         public Companion CompanionRef;
         public AnimalAi AnimalRef;
         public TreeHealth Tree;
+        public RockHealth Rock;
         public Vector2 Offset = new Vector2(0f, 0.7f);
         public Vector2 Size = new Vector2(0.9f, 0.12f);
         public Color BgColor = new Color(0.05f, 0.05f, 0.08f, 0.9f);
@@ -59,14 +61,26 @@ namespace IL6
 
         private void LateUpdate()
         {
-            if (Player != null)
+            if (Player != null || CompanionRef != null || Zombie != null || AnimalRef != null)
             {
-                var body=Player.GetComponent<SpriteRenderer>();
-                if (body != null)
+                // Use the current pose after the directional/action visuals have updated.
+                var body=GetComponent<SpriteRenderer>();
+                if (body != null && body.sprite != null)
                 {
-                    _root.transform.position=new Vector3(Player.transform.position.x,body.bounds.max.y+0.18f,Player.transform.position.z);
-                    _fill.GetComponent<SpriteRenderer>().color=new Color(0.3f,0.82f,0.48f,1f);
+                    _root.transform.position=new Vector3(transform.position.x,body.bounds.max.y+0.18f,transform.position.z);
                 }
+                var scale=transform.lossyScale;
+                _root.transform.localScale=new Vector3(Size.x/Mathf.Max(.001f,Mathf.Abs(scale.x)),Size.y/Mathf.Max(.001f,Mathf.Abs(scale.y)),1f);
+                _fill.GetComponent<SpriteRenderer>().color=Player != null
+                    ? new Color(0.3f,0.82f,0.48f,1f) : FillColor;
+            }
+            if(Rock!=null)
+            {
+                var body=Rock.GetComponent<SpriteRenderer>();
+                if(body!=null && body.sprite!=null)_root.transform.position=RockVisualStyle.TopPoint(body)+Vector3.up*.12f;
+                var scale=Rock.transform.lossyScale;
+                _root.transform.localScale=new Vector3(Size.x/Mathf.Max(.001f,Mathf.Abs(scale.x)),Size.y/Mathf.Max(.001f,Mathf.Abs(scale.y)),1f);
+                _fill.GetComponent<SpriteRenderer>().color=FillColor;
             }
             float ratio = GetHpRatio();
             bool campfire = Building != null && Building.Kind == BuildingKind.Campfire;
@@ -101,6 +115,7 @@ namespace IL6
             if (CompanionRef != null) return (float)CompanionRef.CurrentHp / Mathf.Max(1, CompanionRef.MaxHp);
             if (AnimalRef != null) return (float)AnimalRef.CurrentHp / Mathf.Max(1, AnimalRef.MaxHp);
             if (Tree != null) return (float)Tree.CurrentHp / Mathf.Max(1, Tree.MaxHp);
+            if (Rock != null) return (float)Rock.CurrentHp / Mathf.Max(1, Rock.MaxHp);
             return 1f;
         }
     }

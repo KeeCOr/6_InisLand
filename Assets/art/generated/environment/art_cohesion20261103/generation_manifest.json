@@ -1,0 +1,848 @@
+{
+  "style": "Matte Nordic winter; thin grey-brown contour; blue-grey snow; orthographic downward camera",
+  "entries": [
+    {
+      "key": "cabin",
+      "path": "Assets/Resources/Sprites/GeneratedStatic20261014/Buildings/cabin.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-50f8fd59-c7b4-4528-904a-43072cc962f1.png",
+      "sha256": "75e0849ee3b3348d0dbec8378982a637e59a591174a8d287fceecaf1a05bb056",
+      "previous_sha256": "0dc5bd2cb188c3acfc01d5abc9779f3c3773e241c1aeff6d36db85f0fa2b905f",
+      "ppu": 811.9873141724479,
+      "pivot": {
+        "x": 0.5003639010189228,
+        "y": 0.05939557526800283
+      },
+      "painted_width": 1.2524826216484608,
+      "foot_y": -0.0012413170307845104,
+      "previous_canvas": [
+        1374,
+        1145
+      ],
+      "canvas": [
+        1374,
+        1145
+      ]
+    },
+    {
+      "key": "farm",
+      "path": "Assets/Resources/Sprites/GeneratedStatic20261014/Buildings/farm.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-0a1d8938-0a10-4b18-be65-1c4972665fb6.png",
+      "sha256": "5a66db827b3f1f9fa181887659717ff5df36c6f52440448998575cac9a7bc4f4",
+      "previous_sha256": "36c660f7b78b5fa087df257edce3642379d227709d64f5b6376236fbc1279a70",
+      "ppu": 983.202595296026,
+      "pivot": {
+        "x": 0.5543619791666666,
+        "y": 0.05175591646390916
+      },
+      "painted_width": 1.2520308692120228,
+      "foot_y": -0.001015109666937447,
+      "previous_canvas": [
+        1536,
+        1024
+      ],
+      "canvas": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "key": "hunters_hut",
+      "path": "Assets/Resources/Sprites/GeneratedStatic20261014/Buildings/hunters_hut.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-fe90ce11-f262-4244-9f35-01c629e2b390.png",
+      "sha256": "9ced11a9096d766ee4944afdf83375a1465d704a2bab606428cc7585e9768b69",
+      "previous_sha256": "64e49380d6134b1bd9454a98bc41546d55ae6a375e39c5808b94f844ab9918bc",
+      "ppu": 839.1167167167167,
+      "pivot": {
+        "x": 0.5010917030567685,
+        "y": 0.07864812633594293
+      },
+      "painted_width": 1.2525075225677031,
+      "foot_y": -0.0012538239719157493,
+      "previous_canvas": [
+        1374,
+        1145
+      ],
+      "canvas": [
+        1374,
+        1145
+      ]
+    },
+    {
+      "key": "infirmary",
+      "path": "Assets/Resources/Sprites/GeneratedStatic20261014/Buildings/infirmary.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-5ec00d89-faea-4877-bd65-00a43d2afdec.png",
+      "sha256": "e8950e10c63c8c41ffb6327b3d9c9bbe7b9665cf96b07a33e96ccfaf10d7e446",
+      "previous_sha256": "dadd92db5c55bb2a31860d9f914bc150d53877f8f23947f808b218362d2d16db",
+      "ppu": 743.1896216216217,
+      "pivot": {
+        "x": 0.4996189024390244,
+        "y": 0.08423691525911232
+      },
+      "painted_width": 1.2527085590465872,
+      "foot_y": -8.26110509240374e-08,
+      "previous_canvas": [
+        1312,
+        1199
+      ],
+      "canvas": [
+        1312,
+        1199
+      ]
+    },
+    {
+      "key": "storage",
+      "path": "Assets/Resources/Sprites/GeneratedStatic20261014/Buildings/storage.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-17cb48f5-c7d9-4191-9a0c-9333ac568e4c.png",
+      "sha256": "f2b755d5a0d05c6c15635ff2c2b9c8279c11c8855143769584965999e0fd5e8d",
+      "previous_sha256": "0ec852e41d7129b62578707e4d05180b526658c0aef8a432071f5f186dd31b7a",
+      "ppu": 922.3874345549739,
+      "pivot": {
+        "x": 0.49854333576110704,
+        "y": 0.1135366469855278
+      },
+      "painted_width": 1.2521853146853146,
+      "foot_y": 5.845716783053706e-07,
+      "previous_canvas": [
+        1373,
+        1145
+      ],
+      "canvas": [
+        1373,
+        1145
+      ]
+    },
+    {
+      "key": "watchtower",
+      "path": "Assets/Resources/Sprites/GeneratedStatic20261014/Buildings/watchtower.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-1033bb41-ed93-4e90-93ed-e4689909294b.png",
+      "sha256": "1a48c48e77bd783b0ae60fc6ca0e7a24d3b1a06f5bcaa512aa3aa8caace08b3f",
+      "previous_sha256": "c63603116976a58d41670b1bb3c39f9ee678e0481901dde561e810ac257defc0",
+      "ppu": 787.6543532934131,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.04102321107784431
+      },
+      "painted_width": 0.8582444789055584,
+      "foot_y": -0.0012843859890303995,
+      "previous_canvas": [
+        1024,
+        1536
+      ],
+      "canvas": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "key": "wood_barricade",
+      "path": "Assets/Resources/Sprites/GeneratedStatic20261014/Buildings/wood_barricade.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-a0c696a0-ad54-4b50-83e0-781e9d15b997.png",
+      "sha256": "970181e9c701c44d1506a6103f9a833600ec9dab2bc40fcf6e8b3e5a590ad98c",
+      "previous_sha256": "27305fd7f01b93bf670a71dcdd36e72db1c47cf575cc2aff1910ee6a8cf6ed60",
+      "ppu": 1151.9921951219512,
+      "pivot": {
+        "x": 0.4993489583333333,
+        "y": 0.23340351524390243
+      },
+      "painted_width": 1.2517445917655268,
+      "foot_y": -0.000872575017445907,
+      "previous_canvas": [
+        1536,
+        1024
+      ],
+      "canvas": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "key": "blacksmith",
+      "path": "Assets/Resources/Sprites/Buildings/Identity20261019/blacksmith.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-4bb11861-b293-4b86-9135-61d2b61b4fd5.png",
+      "sha256": "cf7719a86b938f887592234640f54b9eeae2ceaf30b3c15b74bab814efcba607",
+      "previous_sha256": "53a2861ec474ff34d3d0a9ffdda363a44a98b0f82aa18cf63d5b7fde7f16e887",
+      "ppu": 1015.1783094098884,
+      "pivot": {
+        "x": 0.5003639010189228,
+        "y": 0.025327512687435143
+      },
+      "painted_width": 1.251996805111821,
+      "foot_y": -1.9968051138737147e-09,
+      "previous_canvas": [
+        1374,
+        1145
+      ],
+      "canvas": [
+        1374,
+        1145
+      ]
+    },
+    {
+      "key": "brazier",
+      "path": "Assets/Resources/Sprites/Buildings/Identity20261019/brazier.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-2f53faa1-3ac7-48c7-a790-669df2f5d495.png",
+      "sha256": "d2c7d5cf44bcfa7e2d26dba86469c5a8de96215ee47415b012910b6db0c24352",
+      "previous_sha256": "7c2d8a305876655e218111df464ce2ad8dfe027e134b04eaa45edb271dad1c36",
+      "ppu": 684.6753768844222,
+      "pivot": {
+        "x": 0.4987755102040816,
+        "y": 0.038222657750434416
+      },
+      "painted_width": 1.2531486146095716,
+      "foot_y": -0.0015743118387909266,
+      "previous_canvas": [
+        1225,
+        1284
+      ],
+      "canvas": [
+        1225,
+        1284
+      ]
+    },
+    {
+      "key": "carpenter",
+      "path": "Assets/Resources/Sprites/Buildings/Identity20261019/carpenter.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-5d28a711-9f42-4c2a-8adb-2c2374d559a2.png",
+      "sha256": "ca1983ad833cd6aacdd7c70226761ac9f1c5e4281f001c16faacd05544b7ad37",
+      "previous_sha256": "a2bf394f37d1014a6b8443950e8db9748745f676cdc440c48a8c5e33cd725b3f",
+      "ppu": 802.3608562691132,
+      "pivot": {
+        "x": 0.5009765625,
+        "y": 0.048852013876146794
+      },
+      "painted_width": 1.2525536261491317,
+      "foot_y": -0.0012768098059244143,
+      "previous_canvas": [
+        1536,
+        1024
+      ],
+      "canvas": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "key": "church",
+      "path": "Assets/Resources/Sprites/Buildings/Identity20261019/church.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-7a1cbaf5-5ed5-456c-afe2-c917a3be06d9.png",
+      "sha256": "5551ecf950e20d086365517d94371e9bfb1c67e9794ea233ba6896aa3fcb3e30",
+      "previous_sha256": "1e829fa8d6360681a346d502ea59322c2d7886d16c49e1a0639090acd890225c",
+      "ppu": 677.4977443609022,
+      "pivot": {
+        "x": 0.4996189024390244,
+        "y": 0.02340610104905717
+      },
+      "painted_width": 1.253140703517588,
+      "foot_y": -0.0015703597047738685,
+      "previous_canvas": [
+        1312,
+        1199
+      ],
+      "canvas": [
+        1312,
+        1199
+      ]
+    },
+    {
+      "key": "food_storage",
+      "path": "Assets/Resources/Sprites/Buildings/Identity20261019/food_storage.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-2eb23737-7ffb-4fc3-ab73-e2799dd092b5.png",
+      "sha256": "a2de42e8d40a3b4bf9abd12745bce61b2dc66ae0196ae4e52e3e8b89d25cdf01",
+      "previous_sha256": "b61e26cd414cb2d5004f34a4cd00a28bfe4570ab6a916a9e9d99bcda2732c5a9",
+      "ppu": 965.545252352438,
+      "pivot": {
+        "x": 0.5003612716763006,
+        "y": 0.020246479892890277
+      },
+      "painted_width": 1.2521422450728363,
+      "foot_y": -1.1996572411082476e-09,
+      "previous_canvas": [
+        1384,
+        1136
+      ],
+      "canvas": [
+        1384,
+        1136
+      ]
+    },
+    {
+      "key": "lookout_post",
+      "path": "Assets/Resources/Sprites/Buildings/Identity20261019/lookout_post.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-baa81051-0f73-44ff-8235-9a1133048cac.png",
+      "sha256": "3b7d1c4a47f3b4deb0c909348a7e0052d2ad508b626fa05329bdf3eb43201faa",
+      "previous_sha256": "9de05bd8e0b12f6b1e3c8a0a3e86260ce8e0a0f7ac0f02529c5e7823435be6e4",
+      "ppu": 681.5275397796818,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.04587155628531732
+      },
+      "painted_width": 1.2530674846625767,
+      "foot_y": 5.889570559945124e-09,
+      "previous_canvas": [
+        1312,
+        1199
+      ],
+      "canvas": [
+        1312,
+        1199
+      ]
+    },
+    {
+      "key": "sawmill",
+      "path": "Assets/Resources/Sprites/Buildings/Identity20261019/sawmill.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-bd57ead1-cfb2-4f03-a5a0-e9042303ab5d.png",
+      "sha256": "e000aa0e75529d54af84d70effbff2ff5c67a935baaf2789820e23139f99e956",
+      "previous_sha256": "ab3fdc9fe651db097c6d629848ed9158e067bfc90f5eeec1833ad8706fcc6815",
+      "ppu": 1162.3777003484322,
+      "pivot": {
+        "x": 0.5003255208333334,
+        "y": 0.020507817569686407
+      },
+      "painted_width": 1.2517445917655268,
+      "foot_y": -4.466154917397992e-09,
+      "previous_canvas": [
+        1536,
+        1024
+      ],
+      "canvas": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "key": "seed_storage",
+      "path": "Assets/Resources/Sprites/Buildings/Identity20261019/seed_storage.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-1775fc13-712b-4405-8bc8-a133a87be7fb.png",
+      "sha256": "e45e0ce1bd03a0e666ae7820b2adb3e815c6527d39947c42ec7f0e961d6111e6",
+      "previous_sha256": "f404cca85927a5214e01d9338b2f43f663d39e9f78b3efca4715db31469ed8da",
+      "ppu": 783.9934560327198,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.017514593419396873
+      },
+      "painted_width": 1.2525614754098362,
+      "foot_y": 3.1762295070936562e-09,
+      "previous_canvas": [
+        1312,
+        1199
+      ],
+      "canvas": [
+        1312,
+        1199
+      ]
+    },
+    {
+      "key": "training_camp",
+      "path": "Assets/Resources/Sprites/Buildings/Identity20261019/training_camp.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-6831b46e-dbb9-4d4a-8bee-7054c34f6b26.png",
+      "sha256": "3076b5e3bf9bdbfdd0f51c97b5328b3a66323475ad7f8d6a67ea84eb0d018b67",
+      "previous_sha256": "d4cbc81fbeae614c99248ad11a614773c8d483f85294a74c8c88bd5017a3c170",
+      "ppu": 1134.3666427030912,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.02248129207404745
+      },
+      "painted_width": 1.251799856011519,
+      "foot_y": -0.0008999233981281521,
+      "previous_canvas": [
+        1536,
+        1024
+      ],
+      "canvas": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "key": "quadruped_robot",
+      "path": "Assets/Resources/Sprites/Enemies/quadruped_robot.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-7a8a0ad3-61f0-4ffa-a596-f198d9ddc3dd.png",
+      "sha256": "f663a70c5b99c9cfa51d3ffa0eace8ff5ee49300c770facb0b081bbd4aee939a",
+      "previous_sha256": "d14f7eb5512205d3365da4edbccd723b9abe0eb3289d0d3c2b05b630a0e1f8bd",
+      "ppu": 658.1389578163772,
+      "pivot": {
+        "x": 0.49521531100478466,
+        "y": 0.2631583679184426
+      },
+      "painted_width": 1.2793650793650793,
+      "foot_y": -9.015873015667037e-07,
+      "previous_canvas": [
+        1254,
+        1254
+      ],
+      "canvas": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "key": "zombie",
+      "path": "Assets/Resources/Sprites/Enemies/zombie.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-86e4bdfc-5964-4331-bc82-d38b496fc54a.png",
+      "sha256": "a98a974bacb729dbe25d497368f597e4b50891fd41aa3244280eaac4a2366cd6",
+      "previous_sha256": "39f46eba0a2a683021d35952cc9846eb272442074e0ea1147bcfaf4260507216",
+      "ppu": 1218.4615384615386,
+      "pivot": {
+        "x": 0.49800637958532695,
+        "y": 0.5079744816586922
+      },
+      "painted_width": 0.4193813131313131,
+      "foot_y": -0.40625,
+      "previous_canvas": [
+        64,
+        64
+      ],
+      "canvas": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "key": "boss_frost_zombie",
+      "path": "Assets/Resources/Sprites/Enemies/boss_frost_zombie.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-51849c56-06b9-40d8-9dd2-9e9ada4360f7.png",
+      "sha256": "38d69ef7fdf96f86c03fa2c8637b1795d075c586daa59c0a716c272bef743eab",
+      "previous_sha256": "f365059dff58cdcb4b487ac515473d6fe488d32c93843152c95692ce6dbdc79a",
+      "ppu": 1132.5714285714287,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5121183640920484
+      },
+      "painted_width": 0.9571140262361251,
+      "foot_y": -0.453125,
+      "previous_canvas": [
+        64,
+        64
+      ],
+      "canvas": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "key": "boss_frost_lich",
+      "path": "Assets/Resources/Sprites/Enemies/boss_frost_lich.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-e69aeed2-622d-4a3b-8fa2-55f7d807f340.png",
+      "sha256": "9813ca0856678317acb668c83be1742ddd219b1798183d95230ebae3383e2c31",
+      "previous_sha256": "5e0b7dc97eb669a8ef169d2cb94586b827dbf06f94bcde04917900df4890d76e",
+      "ppu": 1281.1851851851852,
+      "pivot": {
+        "x": 0.48963317384370014,
+        "y": 0.5155502392344498
+      },
+      "painted_width": 0.516709065679926,
+      "foot_y": -0.421875,
+      "previous_canvas": [
+        64,
+        64
+      ],
+      "canvas": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "key": "boss_winter_knight",
+      "path": "Assets/Resources/Sprites/Enemies/boss_winter_knight.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-ddc91626-8627-4b49-ba34-481407f90fb4.png",
+      "sha256": "75891b32bf0c626e0f83462d9ce3fde1e4817cfda5d22f7c7470a1771e6cda65",
+      "previous_sha256": "e62967c5b6e6e1b3e7c05bb21b5913e1591a50569a81a3a09cdfe1600909095c",
+      "ppu": 1381.6470588235295,
+      "pivot": {
+        "x": 0.4944178628389155,
+        "y": 0.5230321793789287
+      },
+      "painted_width": 0.6470538147138964,
+      "foot_y": -0.421875,
+      "previous_canvas": [
+        64,
+        64
+      ],
+      "canvas": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "key": "boss_iron_giant",
+      "path": "Assets/Resources/Sprites/Enemies/boss_iron_giant.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-7f909eee-dfe0-480c-814e-38e562773967.png",
+      "sha256": "c99a0006d238578ce0a9a2d91c19cb3d8d90fe5acb1ad62a763e56f22faaf6f8",
+      "previous_sha256": "635f4bc5681c3fb651263bf6aa5e18d324f383a6cb8285e2700d56b06236cfdd",
+      "ppu": 1299.6923076923076,
+      "pivot": {
+        "x": 0.4996012759170654,
+        "y": 0.5098147466568519
+      },
+      "painted_width": 0.8902107007575758,
+      "foot_y": -0.421875,
+      "previous_canvas": [
+        64,
+        64
+      ],
+      "canvas": [
+        1254,
+        1254
+      ]
+    }
+  ],
+  "modular_entries": [
+    {
+      "key": "wooden_fence_Left",
+      "path": "Assets/Resources/Sprites/Props/Fence/fenceArchive.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-2de7985c-2e2f-4df6-83dc-576aa7f50fa3.png",
+      "old_rect": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "old_ppu": 64.0,
+      "guid": "192dffa522231214dac135ddf320c011",
+      "local_id": -871297487,
+      "painted_bounds": [
+        18,
+        4,
+        64,
+        63
+      ]
+    },
+    {
+      "key": "wooden_fence_Right",
+      "path": "Assets/Resources/Sprites/Props/Fence/fenceArchive.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-524a2253-d0a4-4608-a0e9-c5a0e789397e.png",
+      "old_rect": [
+        64,
+        0,
+        128,
+        64
+      ],
+      "old_ppu": 64.0,
+      "guid": "192dffa522231214dac135ddf320c011",
+      "local_id": 1358078031,
+      "painted_bounds": [
+        0,
+        4,
+        46,
+        63
+      ]
+    },
+    {
+      "key": "wooden_fence_Center",
+      "path": "Assets/Resources/Sprites/Props/Fence/fenceArchive.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-121dfa5e-1aa5-4e73-9635-491d795f1a16.png",
+      "old_rect": [
+        128,
+        0,
+        192,
+        64
+      ],
+      "old_ppu": 64.0,
+      "guid": "192dffa522231214dac135ddf320c011",
+      "local_id": -587855798,
+      "painted_bounds": [
+        0,
+        4,
+        64,
+        63
+      ]
+    },
+    {
+      "key": "wooden_fence_unit",
+      "path": "Assets/Resources/Sprites/Props/Fence/fenceArchive.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-75aaab6a-3569-4d12-8f3e-f8b4f8d42865.png",
+      "old_rect": [
+        192,
+        0,
+        256,
+        64
+      ],
+      "old_ppu": 64.0,
+      "guid": "192dffa522231214dac135ddf320c011",
+      "local_id": -1471060962,
+      "painted_bounds": [
+        18,
+        4,
+        46,
+        63
+      ]
+    },
+    {
+      "key": "verticalFence_Wood_Center",
+      "path": "Assets/Resources/Sprites/Props/Fence/fenceArchive.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-bc1bcd23-c177-4584-8408-7c0d147850e8.png",
+      "old_rect": [
+        256,
+        0,
+        320,
+        64
+      ],
+      "old_ppu": 64.0,
+      "guid": "192dffa522231214dac135ddf320c011",
+      "local_id": 629023156,
+      "painted_bounds": [
+        24,
+        0,
+        47,
+        64
+      ]
+    },
+    {
+      "key": "verticalFence_Wood_Bottom",
+      "path": "Assets/Resources/Sprites/Props/Fence/fenceArchive.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-56fe80a2-198c-40d7-8388-2fc6ec76d63c.png",
+      "old_rect": [
+        320,
+        0,
+        384,
+        64
+      ],
+      "old_ppu": 64.0,
+      "guid": "192dffa522231214dac135ddf320c011",
+      "local_id": 2091126557,
+      "painted_bounds": [
+        24,
+        0,
+        46,
+        59
+      ]
+    },
+    {
+      "key": "verticalFence_Wood_Top",
+      "path": "Assets/Resources/Sprites/Props/Fence/fenceArchive.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-c24babd5-42dc-445a-82b4-191e0a556876.png",
+      "old_rect": [
+        384,
+        0,
+        448,
+        64
+      ],
+      "old_ppu": 64.0,
+      "guid": "192dffa522231214dac135ddf320c011",
+      "local_id": -425876509,
+      "painted_bounds": [
+        24,
+        5,
+        46,
+        64
+      ]
+    },
+    {
+      "key": "Fence_Wood_BottomRightCorner",
+      "path": "Assets/Resources/Sprites/Props/Fence/fenceArchive.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-40a54079-441f-435d-9563-ad075bee06d7.png",
+      "old_rect": [
+        448,
+        0,
+        512,
+        64
+      ],
+      "old_ppu": 64.0,
+      "guid": "192dffa522231214dac135ddf320c011",
+      "local_id": -1459777947,
+      "painted_bounds": [
+        0,
+        0,
+        46,
+        63
+      ]
+    },
+    {
+      "key": "Fence_Wood_BottomLeftCorner",
+      "path": "Assets/Resources/Sprites/Props/Fence/fenceArchive.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-6076036f-9efe-4a64-bbd7-b49e10750875.png",
+      "old_rect": [
+        512,
+        0,
+        576,
+        64
+      ],
+      "old_ppu": 64.0,
+      "guid": "192dffa522231214dac135ddf320c011",
+      "local_id": 1358775883,
+      "painted_bounds": [
+        18,
+        0,
+        64,
+        63
+      ]
+    },
+    {
+      "key": "Fence_Wood_TopRightCorner",
+      "path": "Assets/Resources/Sprites/Props/Fence/fenceArchive.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-68bfecdf-3ae1-4bce-b60a-21f80142d14d.png",
+      "old_rect": [
+        576,
+        0,
+        640,
+        64
+      ],
+      "old_ppu": 64.0,
+      "guid": "192dffa522231214dac135ddf320c011",
+      "local_id": -1785259689,
+      "painted_bounds": [
+        0,
+        8,
+        46,
+        64
+      ]
+    },
+    {
+      "key": "Fence_Wood_TopLeftCorner",
+      "path": "Assets/Resources/Sprites/Props/Fence/fenceArchive.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-6e7341db-3960-4f79-8935-680f836f4c07.png",
+      "old_rect": [
+        640,
+        0,
+        704,
+        64
+      ],
+      "old_ppu": 64.0,
+      "guid": "192dffa522231214dac135ddf320c011",
+      "local_id": -1919052067,
+      "painted_bounds": [
+        18,
+        8,
+        64,
+        64
+      ]
+    },
+    {
+      "key": "gate_closed",
+      "path": "Assets/Resources/Sprites/Props/gate.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-de86d923-6ef0-4fc4-8b03-7981cd43a9a0.png",
+      "old_rect": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "old_ppu": 64.0,
+      "guid": "38be2d832439a314bbfbf0a09c2424a8",
+      "local_id": -1797241713,
+      "painted_bounds": [
+        0,
+        4,
+        64,
+        63
+      ]
+    },
+    {
+      "key": "gate_open",
+      "path": "Assets/Resources/Sprites/Props/gate.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-7c9bade8-f433-42b6-8d85-754ba5a44df9.png",
+      "old_rect": [
+        64,
+        0,
+        128,
+        64
+      ],
+      "old_ppu": 64.0,
+      "guid": "38be2d832439a314bbfbf0a09c2424a8",
+      "local_id": -42157007,
+      "painted_bounds": [
+        0,
+        0,
+        64,
+        63
+      ]
+    },
+    {
+      "key": "gate_vertical_closed",
+      "path": "Assets/Resources/Sprites/Props/gate.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-dfaaaa3b-10ec-4432-8d11-9803a085e680.png",
+      "old_rect": [
+        0,
+        64,
+        64,
+        128
+      ],
+      "old_ppu": 64.0,
+      "guid": "38be2d832439a314bbfbf0a09c2424a8",
+      "local_id": 307499910,
+      "painted_bounds": [
+        24,
+        0,
+        39,
+        64
+      ]
+    },
+    {
+      "key": "gate_vertical_open",
+      "path": "Assets/Resources/Sprites/Props/gate.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-0b4d15c1-d2b8-4e44-a94a-bd928aa2b240.png",
+      "old_rect": [
+        64,
+        64,
+        128,
+        128
+      ],
+      "old_ppu": 64.0,
+      "guid": "38be2d832439a314bbfbf0a09c2424a8",
+      "local_id": -1261802262,
+      "painted_bounds": [
+        24,
+        0,
+        55,
+        64
+      ]
+    },
+    {
+      "key": "bonFire_original",
+      "path": "Assets/Resources/Sprites/Props/BonFire/bonFire.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-46f384fc-20af-4e24-bbe2-cdd5b05bca4c.png",
+      "old_rect": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "old_ppu": 64.0,
+      "guid": "8dfe981bd41594847b6a9744d22d6684",
+      "local_id": 1680472783,
+      "painted_bounds": [
+        2,
+        25,
+        62,
+        61
+      ]
+    },
+    {
+      "key": "bonFire_scorched",
+      "path": "Assets/Resources/Sprites/Props/BonFire/bonFire.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-de491e15-9aff-4793-a84f-05ae7f55389d.png",
+      "old_rect": [
+        64,
+        0,
+        128,
+        64
+      ],
+      "old_ppu": 64.0,
+      "guid": "8dfe981bd41594847b6a9744d22d6684",
+      "local_id": -508685321,
+      "painted_bounds": [
+        2,
+        25,
+        62,
+        61
+      ]
+    }
+  ],
+  "modular_atlases": [
+    {
+      "path": "Assets/Resources/Sprites/Props/Fence/fenceArchive.png",
+      "scale": 4,
+      "sha256": "4df6b38b38a286e7736a30b3547aaf9fa31eea63060b79a443ad81f382b12466"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Props/gate.png",
+      "scale": 4,
+      "sha256": "b139d2a6b1992633802d534ee71293e8d44616a5086b872a037f0a6f9cfddf45"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Props/BonFire/bonFire.png",
+      "scale": 4,
+      "sha256": "7eb70eba0da291d4590bc789cb461acb982c24e097f010102c996194cf4abbcd"
+    }
+  ]
+}

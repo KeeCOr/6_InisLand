@@ -4,7 +4,7 @@ namespace IL6
 {
     public sealed partial class SimpleHud
     {
-        private bool _goalsCollapsed;
+        private bool _goalsCollapsed = true;
         private Texture2D _questTrackerPanel;
 
         private Rect GoalTrackerBounds
@@ -12,7 +12,9 @@ namespace IL6
             get
             {
                 var panel = MobileHudLayout.Goals;
-                if (_goalsCollapsed) panel.height = 40;
+                if (!_tutorialDismissed && _storyTutorial!=null && !_storyTutorial.IsDialogue && !_storyTutorial.IsComplete)
+                { panel.height=172;return panel; }
+                if (_goalsCollapsed) panel.height = 118;
                 else
                 {
                     var manager = SettlementGoalManager.Instance;
@@ -27,6 +29,7 @@ namespace IL6
 
         private void DrawSettlementGoals()
         {
+            if(DrawStoryObjective()) return;
             var manager = SettlementGoalManager.Instance;
             if (manager == null || manager.Goals == null || manager.Goals.Count == 0) return;
             var goals = manager.Goals;
@@ -44,13 +47,11 @@ namespace IL6
             var subtle = new Color(.76f, .81f, .79f);
             var heading = new GUIStyle(_label) { fontSize = 12, fontStyle = FontStyle.Bold,
                 alignment = TextAnchor.MiddleLeft, normal = { textColor = gold } };
-            HudText.Label(new Rect(panel.x+16,panel.y+3,112,32),"초기 목표",heading);
+            HudText.Label(new Rect(panel.x+16,panel.y+3,112,32),"마을 복구",heading);
             HudText.Label(new Rect(panel.xMax-104,panel.y+3,48,32),$"{completed}/{goals.Count}",
                 new GUIStyle(heading) { alignment = TextAnchor.MiddleRight });
-            var toggle = new Rect(panel.xMax-48,panel.y,44,40);
-            if (GUI.Button(toggle,new GUIContent(_goalsCollapsed?"+":"−","목표 목록 접기 / 펼치기"),
-                new GUIStyle(_smallBtn) { fontSize = 20 })) _goalsCollapsed = !_goalsCollapsed;
-            if (_goalsCollapsed) return;
+            var toggle = new Rect(panel.xMax-42,panel.y+7,28,26);
+            if(MobileButtonTheme.Pill(toggle,_goalsCollapsed?"+":"−",new GUIStyle(_label){fontSize=18},true)) _goalsCollapsed=!_goalsCollapsed;
 
             if (active < 0)
             {
@@ -64,6 +65,13 @@ namespace IL6
                 new GUIStyle(_section) { fontSize = 17, normal = { textColor = Color.white } });
             var conditions = current.Progress.Split(new[] { "  " },System.StringSplitOptions.RemoveEmptyEntries);
             var conditionStyle = new GUIStyle(_labelSubtle) { fontSize = 13, normal = { textColor = subtle } };
+            if (_goalsCollapsed)
+            {
+                string progress = string.Join(" · ", conditions);
+                HudText.Label(new Rect(panel.x+24,panel.y+69,panel.width-40,42),progress,
+                    new GUIStyle(conditionStyle) { fontSize=13, wordWrap=true });
+                return;
+            }
             for (int i = 0; i < conditions.Length && i < 3; i++)
             {
                 string condition = conditions[i].Trim();
@@ -76,6 +84,7 @@ namespace IL6
                     new GUIStyle(conditionStyle) { alignment = TextAnchor.MiddleRight, normal = { textColor = Color.white } });
             }
 
+            if (_goalsCollapsed) return;
             UiTheme.Rect(new Rect(panel.x+16,panel.y+138,panel.width-32,1),new Color(.8f,.72f,.49f,.25f));
             int shown = 0;
             for (int i = active+1; i < goals.Count && shown < 2; i++)

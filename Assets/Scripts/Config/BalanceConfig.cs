@@ -29,6 +29,7 @@ namespace IL6
         [Header("Gather (seconds + yield)")]
         public float TreeDurationSec = 4f;
         public float RockDurationSec = 6f;
+        public int RockMaxHp = 200;
         public float DeerDurationSec = 3f;
         public int TreeWoodYield = 3;
         public int RockStoneYield = 2;

@@ -18,7 +18,7 @@ namespace IL6
         private Transform FindTarget()
         {
             Transform best = null;
-            float bestDist = SightRange;
+            float bestDist = IsAttackAlert ? float.PositiveInfinity : SightRange;
             if (_player != null)
             {
                 var pc = _player.GetComponent<PlayerController>();

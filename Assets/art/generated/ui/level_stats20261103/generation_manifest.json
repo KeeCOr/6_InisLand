@@ -1,0 +1,116 @@
+{
+  "mode": "built-in image_gen",
+  "source": "source.png",
+  "assets": [
+    {
+      "name": "rune-choice-damage-up",
+      "path": "Assets/Resources/UI/rune_choices/rune-choice-damage-up.png",
+      "source_rect": [
+        0,
+        0,
+        397,
+        396
+      ],
+      "sha256": "a1401888c09d3f41b6f3dc68837e3232362c54360d5c04aad32a5fc4ee33c70f"
+    },
+    {
+      "name": "rune-choice-fire-rate-up",
+      "path": "Assets/Resources/UI/rune_choices/rune-choice-fire-rate-up.png",
+      "source_rect": [
+        397,
+        0,
+        793,
+        396
+      ],
+      "sha256": "9429febf7929371ba2fd3cadc629a99a635259c98fa7f07c9f977876995484b7"
+    },
+    {
+      "name": "rune-choice-hp-up",
+      "path": "Assets/Resources/UI/rune_choices/rune-choice-hp-up.png",
+      "source_rect": [
+        793,
+        0,
+        1190,
+        396
+      ],
+      "sha256": "7c8ac4b88eb836b26e055798f97d9712162d6cef955780db50b8c0396d76066a"
+    },
+    {
+      "name": "rune-choice-range-up",
+      "path": "Assets/Resources/UI/rune_choices/rune-choice-range-up.png",
+      "source_rect": [
+        1190,
+        0,
+        1586,
+        396
+      ],
+      "sha256": "e2cd21722738937cab988ff4c80d619eeb9be992b4419f93bcf0260f88077ec4"
+    },
+    {
+      "name": "rune-choice-move-speed-up",
+      "path": "Assets/Resources/UI/rune_choices/rune-choice-move-speed-up.png",
+      "source_rect": [
+        1586,
+        0,
+        1983,
+        396
+      ],
+      "sha256": "d7305acc223bd17cd3785c620600211589293fec584d0676deb11baacd6ca71b"
+    },
+    {
+      "name": "rune-choice-melee-damage-up",
+      "path": "Assets/Resources/UI/rune_choices/rune-choice-melee-damage-up.png",
+      "source_rect": [
+        0,
+        396,
+        397,
+        793
+      ],
+      "sha256": "f51e62a64c85743aed02c2a2b55829fd60d7de72c896ec226afb9c9290e72b74"
+    },
+    {
+      "name": "rune-choice-ranged-damage-up",
+      "path": "Assets/Resources/UI/rune_choices/rune-choice-ranged-damage-up.png",
+      "source_rect": [
+        397,
+        396,
+        793,
+        793
+      ],
+      "sha256": "0d32567166650e9152fb4d566d2e3fe974fcf255fa57b467d6a82908c2ec7aa3"
+    },
+    {
+      "name": "rune-scope-melee",
+      "path": "Assets/Resources/UI/rune_choices/rune-scope-melee.png",
+      "source_rect": [
+        793,
+        396,
+        1190,
+        793
+      ],
+      "sha256": "769d592e3a4d6786d8c9c450d30cdd3a3c7b00537234ffe91dcc654d5e556667"
+    },
+    {
+      "name": "rune-scope-ranged",
+      "path": "Assets/Resources/UI/rune_choices/rune-scope-ranged.png",
+      "source_rect": [
+        1190,
+        396,
+        1586,
+        793
+      ],
+      "sha256": "0287a1ec4680283f6ee5d6cd30a90099efa593d02c2e6d322a5a9476c09925ac"
+    },
+    {
+      "name": "rune-scope-common",
+      "path": "Assets/Resources/UI/rune_choices/rune-scope-common.png",
+      "source_rect": [
+        1586,
+        396,
+        1983,
+        793
+      ],
+      "sha256": "7334ac2e899f835825ea53e4dd2d8ca0c364e603df37790ae760c5b882e8cf81"
+    }
+  ]
+}

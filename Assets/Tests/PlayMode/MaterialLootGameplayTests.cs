@@ -20,7 +20,7 @@ store.Spend(ResourceKind.Ore,store.Get(ResourceKind.Ore));store.Spend(ResourceKi
 BalanceConfig.Instance.RockOreDropChance=1;
 rock.transform.position=player.transform.position+Vector3.right*4;
 var node=rock.AddComponent<Gatherable>();node.YieldKind=ResourceKind.Stone;node.YieldAmount=2;node.DestroyOnGather=false;
-node.OnGathered(store);node.OnGathered(store);
+node.EnsureRockHealth().Hit(node.EnsureRockHealth().MaxHp,store);node.OnGathered(store);
 var ore=Object.FindObjectsByType<WoodPickup>(FindObjectsSortMode.None).Where(x=>x.Kind==ResourceKind.Ore).ToArray();
 Assert.That(ore.Length,Is.EqualTo(1));Assert.That(store.Get(ResourceKind.Stone),Is.EqualTo(2));Assert.That(store.Get(ResourceKind.Ore),Is.Zero);
 yield return new WaitForSeconds(.5f);player.transform.position=ore[0].transform.position;
@@ -28,7 +28,7 @@ store.Add(ResourceKind.Ore,store.GetCap(ResourceKind.Ore));Assert.That(ore[0].Tr
 store.Spend(ResourceKind.Ore,store.Get(ResourceKind.Ore));Assert.That(ore[0].TryCollect(player),Is.True);Assert.That(store.Get(ResourceKind.Ore),Is.Zero);
 yield return new WaitForSeconds(.8f);Assert.That(store.Get(ResourceKind.Ore),Is.EqualTo(1));Assert.That(WoodPickup.LastPickupKind,Is.EqualTo(ResourceKind.Ore));
 BalanceConfig.Instance.RockOreDropChance=0;
-var ordinary=noOre.AddComponent<Gatherable>();ordinary.YieldKind=ResourceKind.Stone;ordinary.DestroyOnGather=false;ordinary.OnGathered(store);
+var ordinary=noOre.AddComponent<Gatherable>();ordinary.YieldKind=ResourceKind.Stone;ordinary.DestroyOnGather=false;ordinary.EnsureRockHealth().Hit(ordinary.EnsureRockHealth().MaxHp,store);ordinary.OnGathered(store);
 Assert.That(Object.FindObjectsByType<WoodPickup>(FindObjectsSortMode.None).Count(x=>x.Kind==ResourceKind.Ore),Is.Zero);
 deer.transform.position=player.transform.position+Vector3.right*4;
 var meat=deer.AddComponent<Gatherable>();meat.YieldKind=ResourceKind.Meat;meat.YieldAmount=0;

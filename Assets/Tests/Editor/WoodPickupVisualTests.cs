@@ -6,11 +6,11 @@ namespace IL6.Tests
     public sealed class WoodPickupVisualTests
     {
         [Test]
-        public void WorldDropUsesTheSameGeneratedWoodImageAsTheCounter()
+        public void WorldDropUsesSnowfieldArtWhileKeepingThePickupSize()
         {
             var sprite=ResourceIconSkin.WorldWoodSprite;
             Assert.That(sprite,Is.Not.Null);
-            Assert.That(sprite.texture,Is.SameAs(Resources.Load<Texture2D>("UI/Generated20261014/resources")));
+            Assert.That(sprite.texture,Is.SameAs(Resources.Load<Texture2D>("Sprites/Environment/GroundProps20261103/drops/wood")));
             Assert.That(Mathf.Max(sprite.bounds.size.x,sprite.bounds.size.y),Is.InRange(.64f,.66f));
         }
         [Test]

@@ -1,0 +1,673 @@
+{
+  "date": "2026-11-03",
+  "style_references": [
+    "Assets/Resources/Sprites/Characters/HeroIdentity20261026/hero_axe/idle_side.png",
+    "Assets/Resources/UI/DialoguePortraits/hero.png"
+  ],
+  "assets": [
+    {
+      "kind": "companions",
+      "key": "uncle",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-aba46248-8002-476c-bc2d-9ae14bfe89d7.png",
+      "prompt": "Use case: style-transfer plus extreme-cold costume correction. Image1 NPC IDENTITY and9pose sheet. Image2 heroine EXACT clean anime drawing style. Image3 approved winter farmer is the common COLD-WEATHER wardrobe/rendering standard. Redraw NPC in same artist's crisp warm brown contour and smooth clean bright anime cel-painted shading, restrained highlights, simplified material shapes; NO grain/fabric noise, realistic3D skin/nose, clay/doll rendering. THREE HEADS TALL like heroine. Preserve NPC's own age, skin, face, hairstyle/color, role/tools/palette; never copy other identities. This is EXTREME COLD outdoor medieval SCANDINAVIA: thick layered wool/sheepskin, closed neckline, full long sleeves, lined head covering, insulated mittens over ALL fingers, opaque wool trousers/leggings, tall lined leather boots. No bare hands/arms/legs, no thin summer blouse, rolled sleeves, straw hat, modern zippers or fashion. Strict equal 3columns x3rows NINE isolated fullbody poses: columns FRONT/BACK/RIGHT SIDE. Row1 IDLE; row2 WALK wide-contact right foot forward; row3 WALK passing left knee ahead, feet close below hips, CLEARLY DIFFERENT side-foot silhouette from row2. Same head/body size and same complete outfit across all nine. Each complete figure/tools inside its OWN cell with40px inner gutters and45px outer margins. True transparent RGBA, NO ground/shadow/halo/text/grid. All hats/hair/boots/tools uncropped. Elderly MALE, white side hair/eyebrows, short white mustache and pointed goatee, amber eyes, wise gentle face. Retain navy felt cap with thick shearling ear-covering sides, heavy mustard quilted tunic, brown sheepskin waistcoat, broad dark teal wool scarf covering neck, wooden tool pack and scroll. Add brown leather mittens over fingers and tall lined dark brown boots. Keep elder identity, not young boy.",
+      "sha256": "3fe24d203a5772fcb6a4de11dfee65ffd9222219a70daceed45ea128765e281e",
+      "size": [
+        1254,
+        1254
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\companions\\uncle.png",
+      "tool": "built-in image_gen",
+      "pose_bounds": [
+        [
+          155,
+          11,
+          379,
+          415
+        ],
+        [
+          513,
+          13,
+          734,
+          416
+        ],
+        [
+          887,
+          13,
+          1083,
+          418
+        ],
+        [
+          153,
+          426,
+          384,
+          829
+        ],
+        [
+          503,
+          426,
+          735,
+          828
+        ],
+        [
+          874,
+          425,
+          1116,
+          828
+        ],
+        [
+          151,
+          837,
+          374,
+          1245
+        ],
+        [
+          511,
+          837,
+          732,
+          1245
+        ],
+        [
+          878,
+          836,
+          1092,
+          1245
+        ]
+      ]
+    },
+    {
+      "kind": "companions",
+      "key": "hunter",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-3d8a30bc-1c14-4348-9d6b-2a2a9ba5ff6b.png",
+      "prompt": "Use case: style-transfer plus extreme-cold costume correction. Image1 NPC IDENTITY and9pose sheet. Image2 heroine EXACT clean anime drawing style. Image3 approved winter farmer is the common COLD-WEATHER wardrobe/rendering standard. Redraw NPC in same artist's crisp warm brown contour and smooth clean bright anime cel-painted shading, restrained highlights, simplified material shapes; NO grain/fabric noise, realistic3D skin/nose, clay/doll rendering. THREE HEADS TALL like heroine. Preserve NPC's own age, skin, face, hairstyle/color, role/tools/palette; never copy other identities. This is EXTREME COLD outdoor medieval SCANDINAVIA: thick layered wool/sheepskin, closed neckline, full long sleeves, lined head covering, insulated mittens over ALL fingers, opaque wool trousers/leggings, tall lined leather boots. No bare hands/arms/legs, no thin summer blouse, rolled sleeves, straw hat, modern zippers or fashion. Strict equal 3columns x3rows NINE isolated fullbody poses: columns FRONT/BACK/RIGHT SIDE. Row1 IDLE; row2 WALK wide-contact right foot forward; row3 WALK passing left knee ahead, feet close below hips, CLEARLY DIFFERENT side-foot silhouette from row2. Same head/body size and same complete outfit across all nine. Each complete figure/tools inside its OWN cell with40px inner gutters and45px outer margins. True transparent RGBA, NO ground/shadow/halo/text/grid. All hats/hair/boots/tools uncropped. Young adult MALE hunter, amber eyes, naturally swept dark hair and low nape ponytail partly visible. Heavy dark olive WOOL HOOD UP lined ivory sheepskin, short fur-edged cape clasped closed over brown scarf, thick cream padded long-sleeve under-tunic, brown leather bracers OVER gloves, dark opaque patched trousers and fur-lined boots. Bow and quiver keep hunter role. All fingers covered brown insulated gloves, no fingerless gauntlets, no bare neck, no modern gelled hair. Image1 ALREADY HAS correct winter clothes: preserve those clothes/role/colors/hood and all nine pose meanings. Change its remaining grainy shading to match image2 heroine and image3 clean winter farmer EXACTLY. Remove stippled cloth texture, tiny scratches, fabric weave and storybook grain; use clear broad smooth cel shadows and crisp warm brown contours. Do not merely recolor the original. Keep large expressive anime eyes and tiny simplified nose.",
+      "sha256": "f913d059b55c30409f715d7aea4915ba4cecd67af0debb626a27e13c391fb633",
+      "size": [
+        1254,
+        1254
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\companions\\hunter.png",
+      "tool": "built-in image_gen",
+      "pose_bounds": [
+        [
+          129,
+          13,
+          365,
+          414
+        ],
+        [
+          511,
+          13,
+          736,
+          415
+        ],
+        [
+          904,
+          13,
+          1130,
+          415
+        ],
+        [
+          126,
+          427,
+          365,
+          834
+        ],
+        [
+          510,
+          427,
+          740,
+          834
+        ],
+        [
+          899,
+          427,
+          1155,
+          834
+        ],
+        [
+          134,
+          842,
+          364,
+          1247
+        ],
+        [
+          510,
+          842,
+          734,
+          1246
+        ],
+        [
+          905,
+          842,
+          1142,
+          1247
+        ]
+      ]
+    },
+    {
+      "kind": "companions",
+      "key": "child",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-164ad6df-7ef4-456e-b01c-b3af348fbff8.png",
+      "prompt": "Use case: style-transfer plus extreme-cold costume correction. Image1 NPC IDENTITY and9pose sheet. Image2 heroine EXACT clean anime drawing style. Image3 approved winter farmer is the common COLD-WEATHER wardrobe/rendering standard. Redraw NPC in same artist's crisp warm brown contour and smooth clean bright anime cel-painted shading, restrained highlights, simplified material shapes; NO grain/fabric noise, realistic3D skin/nose, clay/doll rendering. THREE HEADS TALL like heroine. Preserve NPC's own age, skin, face, hairstyle/color, role/tools/palette; never copy other identities. This is EXTREME COLD outdoor medieval SCANDINAVIA: thick layered wool/sheepskin, closed neckline, full long sleeves, lined head covering, insulated mittens over ALL fingers, opaque wool trousers/leggings, tall lined leather boots. No bare hands/arms/legs, no thin summer blouse, rolled sleeves, straw hat, modern zippers or fashion. Strict equal 3columns x3rows NINE isolated fullbody poses: columns FRONT/BACK/RIGHT SIDE. Row1 IDLE; row2 WALK wide-contact right foot forward; row3 WALK passing left knee ahead, feet close below hips, CLEARLY DIFFERENT side-foot silhouette from row2. Same head/body size and same complete outfit across all nine. Each complete figure/tools inside its OWN cell with40px inner gutters and45px outer margins. True transparent RGBA, NO ground/shadow/halo/text/grid. All hats/hair/boots/tools uncropped. BOY, innocent brown eyes, short naturally tousled dark hair showing at forehead. Thick mustard quilted knee-length winter tunic under teal WOOL HOOD UP lined ivory sheepskin, small patched cape clasped closed over scarf, rust-red belt pouch, brown mittens, opaque dark wool trousers and insulated furcuff boots. Keep young boy identity and patched teal color, no school bag.",
+      "sha256": "4fd65b0e716d868e3ecc1c5ff68ed5a7bd165abf427fe160616a3e925828ec56",
+      "size": [
+        1254,
+        1254
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\companions\\child.png",
+      "tool": "built-in image_gen",
+      "pose_bounds": [
+        [
+          169,
+          12,
+          370,
+          419
+        ],
+        [
+          528,
+          15,
+          725,
+          419
+        ],
+        [
+          887,
+          13,
+          1086,
+          420
+        ],
+        [
+          156,
+          427,
+          379,
+          830
+        ],
+        [
+          517,
+          430,
+          742,
+          830
+        ],
+        [
+          881,
+          429,
+          1135,
+          829
+        ],
+        [
+          167,
+          837,
+          370,
+          1242
+        ],
+        [
+          526,
+          839,
+          727,
+          1243
+        ],
+        [
+          886,
+          840,
+          1109,
+          1239
+        ]
+      ]
+    },
+    {
+      "kind": "companions",
+      "key": "cook",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-dbd53096-1faf-4bf4-8bae-cf04a6156e35.png",
+      "prompt": "Use case: style-transfer plus extreme-cold costume correction. Image1 NPC IDENTITY and9pose sheet. Image2 heroine EXACT clean anime drawing style. Image3 approved winter farmer is the common COLD-WEATHER wardrobe/rendering standard. Redraw NPC in same artist's crisp warm brown contour and smooth clean bright anime cel-painted shading, restrained highlights, simplified material shapes; NO grain/fabric noise, realistic3D skin/nose, clay/doll rendering. THREE HEADS TALL like heroine. Preserve NPC's own age, skin, face, hairstyle/color, role/tools/palette; never copy other identities. This is EXTREME COLD outdoor medieval SCANDINAVIA: thick layered wool/sheepskin, closed neckline, full long sleeves, lined head covering, insulated mittens over ALL fingers, opaque wool trousers/leggings, tall lined leather boots. No bare hands/arms/legs, no thin summer blouse, rolled sleeves, straw hat, modern zippers or fashion. Strict equal 3columns x3rows NINE isolated fullbody poses: columns FRONT/BACK/RIGHT SIDE. Row1 IDLE; row2 WALK wide-contact right foot forward; row3 WALK passing left knee ahead, feet close below hips, CLEARLY DIFFERENT side-foot silhouette from row2. Same head/body size and same complete outfit across all nine. Each complete figure/tools inside its OWN cell with40px inner gutters and45px outer margins. True transparent RGBA, NO ground/shadow/halo/text/grid. All hats/hair/boots/tools uncropped. Stocky middle-aged MALE cook, dark curly hair, black moustache, smiling narrowed warm eyes, round cheeks. Thick cream WOOL hood/cap with ear-covering shearling lining replaces thin linen chef headscarf. Burgundy heavy quilted wool coat with FULL LENGTH sleeves and furcuffs, closed cord neck over warm brown scarf, cream working apron, brown leather mittens grasping ladle and compact black pot, opaque charcoal trousers and fur-lined brown boots. Broad build but visible walking legs. No exposed wrists or rolled sleeves or restaurant toque.",
+      "sha256": "381930b8b89f71d8b9df22d343937fe876e835a836aa22792bd4ff0d8e583c8c",
+      "size": [
+        1254,
+        1254
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\companions\\cook.png",
+      "tool": "built-in image_gen",
+      "pose_bounds": [
+        [
+          139,
+          9,
+          414,
+          418
+        ],
+        [
+          499,
+          9,
+          777,
+          418
+        ],
+        [
+          898,
+          9,
+          1103,
+          418
+        ],
+        [
+          140,
+          427,
+          410,
+          835
+        ],
+        [
+          503,
+          427,
+          759,
+          835
+        ],
+        [
+          882,
+          428,
+          1170,
+          834
+        ],
+        [
+          137,
+          839,
+          419,
+          1246
+        ],
+        [
+          500,
+          842,
+          756,
+          1246
+        ],
+        [
+          897,
+          839,
+          1151,
+          1248
+        ]
+      ]
+    },
+    {
+      "kind": "companions",
+      "key": "healer",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-10fb372a-f817-4633-96e3-55b5443fecb7.png",
+      "prompt": "Use case: style-transfer plus extreme-cold costume correction. Image1 NPC IDENTITY and9pose sheet. Image2 heroine EXACT clean anime drawing style. Image3 approved winter farmer is the common COLD-WEATHER wardrobe/rendering standard. Redraw NPC in same artist's crisp warm brown contour and smooth clean bright anime cel-painted shading, restrained highlights, simplified material shapes; NO grain/fabric noise, realistic3D skin/nose, clay/doll rendering. THREE HEADS TALL like heroine. Preserve NPC's own age, skin, face, hairstyle/color, role/tools/palette; never copy other identities. This is EXTREME COLD outdoor medieval SCANDINAVIA: thick layered wool/sheepskin, closed neckline, full long sleeves, lined head covering, insulated mittens over ALL fingers, opaque wool trousers/leggings, tall lined leather boots. No bare hands/arms/legs, no thin summer blouse, rolled sleeves, straw hat, modern zippers or fashion. Strict equal 3columns x3rows NINE isolated fullbody poses: columns FRONT/BACK/RIGHT SIDE. Row1 IDLE; row2 WALK wide-contact right foot forward; row3 WALK passing left knee ahead, feet close below hips, CLEARLY DIFFERENT side-foot silhouette from row2. Same head/body size and same complete outfit across all nine. Each complete figure/tools inside its OWN cell with40px inner gutters and45px outer margins. True transparent RGBA, NO ground/shadow/halo/text/grid. All hats/hair/boots/tools uncropped. Adult FEMALE healer, gentle violet eyes, round brass glasses, pale lavender low braid visible over shoulder. Heavy blue WOOL HOOD UP with ivory shearling edging and small embroidered herb brooch, thick closed blue winter mantle over cream high-neck wool scarf and layered insulated dress, brown mittens and opaque dark wool leggings with tall fur-lined brown boots. Leather belt with red/blue medicine vials and herb pouch. No exposed thin blouse or bare neckline, no salon bob, preserve lavender braid/glasses identity. Image1 ALREADY HAS correct winter clothes: preserve those clothes/role/colors/hood and all nine pose meanings. Change its remaining grainy shading to match image2 heroine and image3 clean winter farmer EXACTLY. Remove stippled cloth texture, tiny scratches, fabric weave and storybook grain; use clear broad smooth cel shadows and crisp warm brown contours. Do not merely recolor the original. Keep large expressive anime eyes and tiny simplified nose.",
+      "sha256": "d29d8587f89aac4c6f4f3e50f6b7e358a89ba7c5628fc1b88bd21b75c3f0dd1d",
+      "size": [
+        1254,
+        1254
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\companions\\healer.png",
+      "tool": "built-in image_gen",
+      "pose_bounds": [
+        [
+          144,
+          5,
+          359,
+          420
+        ],
+        [
+          520,
+          7,
+          734,
+          420
+        ],
+        [
+          889,
+          7,
+          1104,
+          421
+        ],
+        [
+          121,
+          423,
+          359,
+          830
+        ],
+        [
+          494,
+          424,
+          740,
+          829
+        ],
+        [
+          876,
+          425,
+          1161,
+          829
+        ],
+        [
+          137,
+          833,
+          357,
+          1250
+        ],
+        [
+          506,
+          835,
+          728,
+          1250
+        ],
+        [
+          882,
+          837,
+          1114,
+          1250
+        ]
+      ]
+    },
+    {
+      "kind": "companions",
+      "key": "warrior",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-c607f385-2221-45cc-9fb8-679ef846eab6.png",
+      "prompt": "Precise sprite-sheet layout correction ONLY. Preserve this exact dark-skinned white-braided male warrior, navy lined wool cap and silver band, fur neck wrap and winter padded navy coat with ochre sash, armor over insulated sleeves/legs, mittens, tall fur-lined boots, sword and round shield, same clean smooth anime rendering. Preserve all NINE front/back/right-side idle/contact/passing poses and facial identity. CRITICAL FIX: each of the9 figures is too large and row2 boots overlap row3 hats. REDUCE EVERY FIGURE by20percent within its own equal 3x3 cell, giving AT LEAST50 pixels completely TRANSPARENT separation vertically AND horizontally, at least50px transparent outer margin. Enlarge canvas if necessary. All hats/heads/boots must be fully drawn and entirely inside each cell. Rows must not touch or overlap, not even1pixel. Do NOT add more details, restyle, change colors, change clothing, or copy legs. Same exact3x3 grid nine complete isolated figures. Row1 idle, row2 wide walkcontact, row3 narrower passing stance; front/back/rightside columns. True RGBA transparent background, no text/grid/ground/shadow.",
+      "sha256": "0f7ef2b4893a26cb284d91a7a42d24fa33b2ec79d5eebfe185f6487ace37569e",
+      "size": [
+        1254,
+        1254
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\companions\\warrior.png",
+      "tool": "built-in image_gen",
+      "pose_bounds": [
+        [
+          161,
+          61,
+          337,
+          371
+        ],
+        [
+          537,
+          63,
+          709,
+          371
+        ],
+        [
+          923,
+          66,
+          1070,
+          371
+        ],
+        [
+          161,
+          456,
+          347,
+          767
+        ],
+        [
+          524,
+          459,
+          713,
+          769
+        ],
+        [
+          915,
+          460,
+          1114,
+          765
+        ],
+        [
+          164,
+          847,
+          343,
+          1157
+        ],
+        [
+          532,
+          848,
+          704,
+          1157
+        ],
+        [
+          921,
+          849,
+          1103,
+          1156
+        ]
+      ]
+    },
+    {
+      "kind": "companions",
+      "key": "farmer",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-0dd8d6e6-34b2-4b9b-9f8b-c2dccbe913e2.png",
+      "prompt": "Use case: style-transfer and winter wardrobe correction. Image1 farmer NPC sheet identity and pose reference; image2 heroine EXACT art style; image3 approved elder sheet common rendering. Redraw same adult FEMALE farmer, copper auburn twin braids, green eyes and freckles, but properly dressed for EXTREME COLD medieval Scandinavian snowy village. REMOVE straw sunhat completely and REMOVE exposed thin blouse/summer dress. Replace with moss-green WOOL HOOD lined ivory sheepskin framing recognizable face and visible braids, heavy long quilted olive wool coat closed to neck over thick layers, cream working apron with tiny carrot motif, brown leather mittens, opaque dark wool trousers, insulated fur-cuff leather boots. Vegetable basket and compact hoe retain farmer role, no flowers as warm-weather hat decoration. All skin covered except face. Same smooth clean bright anime game rendering as heroine: consistent warm dark brown contour, restrained glossy highlights, smooth cel-painted materials, NO grain or realistic 3D nose. THREE HEADS TALL. Strict THREE columns x THREE rows NINE full-body sprite poses: columns FRONT / BACK / RIGHT SIDE; row1 IDLE, row2 WALK wide contact right leg forward, row3 WALK passing left knee ahead and feet closer under body. Right side A and B need visibly different feet silhouettes. Same identity/outfit/head/body size in all nine cells. Transparent background. All complete figures and tools inside own equal cell with40px inner gutters and45px outer margins. No cropped boots/hair/hood, no floor, shadows, text/grid. Only this farmer, do not copy heroine or elder identity. No modern coats/zippers, no bare hands, no bare legs, no unlined cloth hat, no light summer clothes.",
+      "sha256": "f502806b24b63b076daaef8ddf5d6316f6e84fe2af1f36585687ae331044de1a",
+      "size": [
+        1254,
+        1254
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\companions\\farmer.png",
+      "tool": "built-in image_gen",
+      "pose_bounds": [
+        [
+          160,
+          10,
+          372,
+          418
+        ],
+        [
+          517,
+          13,
+          726,
+          418
+        ],
+        [
+          901,
+          14,
+          1092,
+          418
+        ],
+        [
+          159,
+          423,
+          382,
+          831
+        ],
+        [
+          507,
+          424,
+          725,
+          829
+        ],
+        [
+          913,
+          424,
+          1159,
+          828
+        ],
+        [
+          155,
+          836,
+          377,
+          1247
+        ],
+        [
+          518,
+          836,
+          723,
+          1246
+        ],
+        [
+          904,
+          838,
+          1109,
+          1245
+        ]
+      ]
+    },
+    {
+      "kind": "companions",
+      "key": "aunt",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-03326333-edbb-4e07-a00b-3af8407ba4ad.png",
+      "prompt": "Use case: style-transfer plus extreme-cold costume correction. Image1 NPC IDENTITY and9pose sheet. Image2 heroine EXACT clean anime drawing style. Image3 approved winter farmer is the common COLD-WEATHER wardrobe/rendering standard. Redraw NPC in same artist's crisp warm brown contour and smooth clean bright anime cel-painted shading, restrained highlights, simplified material shapes; NO grain/fabric noise, realistic3D skin/nose, clay/doll rendering. THREE HEADS TALL like heroine. Preserve NPC's own age, skin, face, hairstyle/color, role/tools/palette; never copy other identities. This is EXTREME COLD outdoor medieval SCANDINAVIA: thick layered wool/sheepskin, closed neckline, full long sleeves, lined head covering, insulated mittens over ALL fingers, opaque wool trousers/leggings, tall lined leather boots. No bare hands/arms/legs, no thin summer blouse, rolled sleeves, straw hat, modern zippers or fashion. Strict equal 3columns x3rows NINE isolated fullbody poses: columns FRONT/BACK/RIGHT SIDE. Row1 IDLE; row2 WALK wide-contact right foot forward; row3 WALK passing left knee ahead, feet close below hips, CLEARLY DIFFERENT side-foot silhouette from row2. Same head/body size and same complete outfit across all nine. Each complete figure/tools inside its OWN cell with40px inner gutters and45px outer margins. True transparent RGBA, NO ground/shadow/halo/text/grid. All hats/hair/boots/tools uncropped. Adult FEMALE villager, warm brown eyes, chestnut hair in simple bun mostly under a heavy PLUM wool hood with cream fur lining, small plain teal-stone bronze clasp. Broad thick plum shawl closed over warm cream neck scarf, thick terracotta wool winter coat/dress with long insulated sleeves, mustard embroidered belt pouch, brown mittens, opaque dark wool leggings, fur-lined brown boots and rolled wool blanket on back. No thin puffy blouse exposed to cold, no bare fingers, preserve adult friendly face, not heroine clone. Image1 ALREADY HAS correct winter clothes: preserve those clothes/role/colors/hood and all nine pose meanings. Change its remaining grainy shading to match image2 heroine and image3 clean winter farmer EXACTLY. Remove stippled cloth texture, tiny scratches, fabric weave and storybook grain; use clear broad smooth cel shadows and crisp warm brown contours. Do not merely recolor the original. Keep large expressive anime eyes and tiny simplified nose.",
+      "sha256": "78efe8ad04fde6dbb1b19c2eb4afe21de778ba2474ce1cfcc662d3b172d63182",
+      "size": [
+        1254,
+        1254
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\companions\\aunt.png",
+      "tool": "built-in image_gen",
+      "pose_bounds": [
+        [
+          161,
+          6,
+          383,
+          420
+        ],
+        [
+          515,
+          6,
+          733,
+          419
+        ],
+        [
+          903,
+          9,
+          1104,
+          421
+        ],
+        [
+          154,
+          422,
+          384,
+          831
+        ],
+        [
+          503,
+          422,
+          736,
+          831
+        ],
+        [
+          902,
+          424,
+          1151,
+          831
+        ],
+        [
+          157,
+          833,
+          384,
+          1250
+        ],
+        [
+          515,
+          833,
+          731,
+          1249
+        ],
+        [
+          906,
+          833,
+          1141,
+          1251
+        ]
+      ]
+    },
+    {
+      "kind": "portraits",
+      "key": "uncle",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-a844f42c-735b-41d8-8c65-dcc02c469ae5.png",
+      "prompt": "Use case: style-transfer plus extreme-cold wardrobe correction. Image1 NPC IDENTITY portrait; image2 heroine EXACT portrait style/lighting; image3 NPC's FINAL WINTER WORLD OUTFIT. Image3 MUST override thin/old clothing in image1. Preserve own age, recognizable face, skin tone, hair/eye colors, profession, props. Same polished anime dialogue painter as heroine: clean subtle brown lines, smooth soft skin gradients, gently simplified nose, clear expressive eyes and restrained highlights, clean broad soft cloth shadows with NO grain/rough fabric weave or photoreal3D/doll skin. Warm upper-left key light. EXTREME COLD medieval Nordic: thick wool/quilted layers, ivory sheepskin lining, head/ears covered by matching hood/cap, neck scarf/closed collar, full long sleeves, brown insulated gloves if hands visible, no bare arms or summer blouse. ONE waist-up portrait, NOT chibi/spritesheet. Strict front facing camera and direct eye contact. Centered shoulders, hood/crown to chin around1/3 canvas height, full hood/hair inside6percent transparent top/side margin, waist at bottom. True transparent RGBA; no scene/glow/halo/text. Keep tools compact, no modern hardware. Match image3 outfit precisely. Elderly MALE, white side hair/eyebrows, short white mustache and pointed goatee, amber eyes, wise gentle face. Retain navy felt cap with thick shearling ear-covering sides, heavy mustard quilted tunic, brown sheepskin waistcoat, broad dark teal wool scarf covering neck, wooden tool pack and scroll. Add brown leather mittens over fingers and tall lined dark brown boots. Keep elder identity, not young boy.",
+      "sha256": "3561eaaddb76027c8b44270e318424c7013040707fa096c1afc99d2a4549cb98",
+      "size": [
+        1212,
+        1297
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\portraits\\uncle.png",
+      "tool": "built-in image_gen",
+      "runtime": "Assets\\Resources\\UI\\DialoguePortraits\\uncle.png"
+    },
+    {
+      "kind": "portraits",
+      "key": "hunter",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-937f9f25-fbe9-4725-8c58-c2c2c7dedb6f.png",
+      "prompt": "Use case: style-transfer plus extreme-cold wardrobe correction. Image1 NPC IDENTITY portrait; image2 heroine EXACT portrait style/lighting; image3 NPC's FINAL WINTER WORLD OUTFIT. Image3 MUST override thin/old clothing in image1. Preserve own age, recognizable face, skin tone, hair/eye colors, profession, props. Same polished anime dialogue painter as heroine: clean subtle brown lines, smooth soft skin gradients, gently simplified nose, clear expressive eyes and restrained highlights, clean broad soft cloth shadows with NO grain/rough fabric weave or photoreal3D/doll skin. Warm upper-left key light. EXTREME COLD medieval Nordic: thick wool/quilted layers, ivory sheepskin lining, head/ears covered by matching hood/cap, neck scarf/closed collar, full long sleeves, brown insulated gloves if hands visible, no bare arms or summer blouse. ONE waist-up portrait, NOT chibi/spritesheet. Strict front facing camera and direct eye contact. Centered shoulders, hood/crown to chin around1/3 canvas height, full hood/hair inside6percent transparent top/side margin, waist at bottom. True transparent RGBA; no scene/glow/halo/text. Keep tools compact, no modern hardware. Match image3 outfit precisely. Young adult MALE hunter, amber eyes, naturally swept dark hair and low nape ponytail partly visible. Heavy dark olive WOOL HOOD UP lined ivory sheepskin, short fur-edged cape clasped closed over brown scarf, thick cream padded long-sleeve under-tunic, brown leather bracers OVER gloves, dark opaque patched trousers and fur-lined boots. Bow and quiver keep hunter role. All fingers covered brown insulated gloves, no fingerless gauntlets, no bare neck, no modern gelled hair. IMPORTANT COMPOSITION: CLOSE WAIST-UP ONLY like image2. The sheet in image3 is clothing reference ONLY, never reproduce its full-body composition or poses. NO legs/feet/boots in portrait. Frame from whole hood/cap to waist, face and shoulders prominent. Entire head/hood inside50px transparent top margin. Do not make a small full-body figure floating in a tall canvas.",
+      "sha256": "e81dacd012ecb8ce9bae71c62d7e124d59533a69ad1d0f7608f7572031986ece",
+      "size": [
+        1213,
+        1296
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\portraits\\hunter.png",
+      "tool": "built-in image_gen",
+      "runtime": "Assets\\Resources\\UI\\DialoguePortraits\\hunter.png"
+    },
+    {
+      "kind": "portraits",
+      "key": "child",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-cd9003b7-1ce2-4a96-84b5-41dc8e7e9492.png",
+      "prompt": "Use case: style-transfer plus extreme-cold wardrobe correction. Image1 NPC IDENTITY portrait; image2 heroine EXACT portrait style/lighting; image3 NPC's FINAL WINTER WORLD OUTFIT. Image3 MUST override thin/old clothing in image1. Preserve own age, recognizable face, skin tone, hair/eye colors, profession, props. Same polished anime dialogue painter as heroine: clean subtle brown lines, smooth soft skin gradients, gently simplified nose, clear expressive eyes and restrained highlights, clean broad soft cloth shadows with NO grain/rough fabric weave or photoreal3D/doll skin. Warm upper-left key light. EXTREME COLD medieval Nordic: thick wool/quilted layers, ivory sheepskin lining, head/ears covered by matching hood/cap, neck scarf/closed collar, full long sleeves, brown insulated gloves if hands visible, no bare arms or summer blouse. ONE waist-up portrait, NOT chibi/spritesheet. Strict front facing camera and direct eye contact. Centered shoulders, hood/crown to chin around1/3 canvas height, full hood/hair inside6percent transparent top/side margin, waist at bottom. True transparent RGBA; no scene/glow/halo/text. Keep tools compact, no modern hardware. Match image3 outfit precisely. BOY, innocent brown eyes, short naturally tousled dark hair showing at forehead. Thick mustard quilted knee-length winter tunic under teal WOOL HOOD UP lined ivory sheepskin, small patched cape clasped closed over scarf, rust-red belt pouch, brown mittens, opaque dark wool trousers and insulated furcuff boots. Keep young boy identity and patched teal color, no school bag.",
+      "sha256": "5fa8e758ed1498a661cd46918058a807f49eb948e8edd7e3999029495822d1cb",
+      "size": [
+        1212,
+        1297
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\portraits\\child.png",
+      "tool": "built-in image_gen",
+      "runtime": "Assets\\Resources\\UI\\DialoguePortraits\\child.png"
+    },
+    {
+      "kind": "portraits",
+      "key": "cook",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-7a0e5695-bed3-4d58-a207-33165ecd4307.png",
+      "prompt": "Use case: precise-object-edit plus style-transfer. Image1 is the final winter COOK portrait to correct. Keep this exact adult male cook identity, warm ivory shearling hood, burgundy quilted long-sleeved coat, brown wool neck wrap, cream apron, gloves, small pot and ladle. FIX COMPOSITION: redraw as CLOSE WAIST-UP DIALOGUE PORTRAIT, crop at waist/belt, NO legs, NO boots, NOT full-body. Head must occupy the same proportion of canvas as heroine in image2. Keep full hood above with6percent transparent top and side margin. Face fully FRONT to camera with direct eye contact, warm smiling narrowed eyes. Match image2 heroine's polished ANIME painting style: clean refined brown linework, smoothly simplified nose, restrained skin shading, no 3D swollen nose, no clay doll or photoreal surface, no grain. Preserve moustache, curled dark hair, age and broad build, don't make him a girl/teen. The hood/coat/neck/arms must remain fully insulated and gloved. One isolated waist-up figure, transparent RGBA, no scenery/halo/text. Ladle and pot compact at lower waist edge. No exposed fingers or rolled sleeves.",
+      "sha256": "bf116108829d7a4dcc341fe0792ca72ffd1484ed85908b2926ecaf27f240ad8e",
+      "size": [
+        1213,
+        1296
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\portraits\\cook.png",
+      "tool": "built-in image_gen",
+      "runtime": "Assets\\Resources\\UI\\DialoguePortraits\\cook.png"
+    },
+    {
+      "kind": "portraits",
+      "key": "healer",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-d6070c4e-50de-4b64-8e1e-d6d9894a442f.png",
+      "prompt": "Use case: style-transfer plus extreme-cold wardrobe correction. Image1 NPC IDENTITY portrait; image2 heroine EXACT portrait style/lighting; image3 NPC's FINAL WINTER WORLD OUTFIT. Image3 MUST override thin/old clothing in image1. Preserve own age, recognizable face, skin tone, hair/eye colors, profession, props. Same polished anime dialogue painter as heroine: clean subtle brown lines, smooth soft skin gradients, gently simplified nose, clear expressive eyes and restrained highlights, clean broad soft cloth shadows with NO grain/rough fabric weave or photoreal3D/doll skin. Warm upper-left key light. EXTREME COLD medieval Nordic: thick wool/quilted layers, ivory sheepskin lining, head/ears covered by matching hood/cap, neck scarf/closed collar, full long sleeves, brown insulated gloves if hands visible, no bare arms or summer blouse. ONE waist-up portrait, NOT chibi/spritesheet. Strict front facing camera and direct eye contact. Centered shoulders, hood/crown to chin around1/3 canvas height, full hood/hair inside6percent transparent top/side margin, waist at bottom. True transparent RGBA; no scene/glow/halo/text. Keep tools compact, no modern hardware. Match image3 outfit precisely. Adult FEMALE healer, gentle violet eyes, round brass glasses, pale lavender low braid visible over shoulder. Heavy blue WOOL HOOD UP with ivory shearling edging and small embroidered herb brooch, thick closed blue winter mantle over cream high-neck wool scarf and layered insulated dress, brown mittens and opaque dark wool leggings with tall fur-lined brown boots. Leather belt with red/blue medicine vials and herb pouch. No exposed thin blouse or bare neckline, no salon bob, preserve lavender braid/glasses identity. IMPORTANT COMPOSITION: CLOSE WAIST-UP ONLY like image2. The sheet in image3 is clothing reference ONLY, never reproduce its full-body composition or poses. NO legs/feet/boots in portrait. Frame from whole hood/cap to waist, face and shoulders prominent. Entire head/hood inside50px transparent top margin. Do not make a small full-body figure floating in a tall canvas.",
+      "sha256": "a3fa9acabd57c22ae46c4bde48d9d88502c87de49e190fd44359bbf6133744e2",
+      "size": [
+        1213,
+        1296
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\portraits\\healer.png",
+      "tool": "built-in image_gen",
+      "runtime": "Assets\\Resources\\UI\\DialoguePortraits\\healer.png"
+    },
+    {
+      "kind": "portraits",
+      "key": "warrior",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-d7a39445-fc61-4b6d-9ffc-a5ad56750720.png",
+      "prompt": "Use case: style-transfer plus extreme-cold wardrobe correction. Image1 NPC IDENTITY portrait; image2 heroine EXACT portrait style/lighting; image3 NPC's FINAL WINTER WORLD OUTFIT. Image3 MUST override thin/old clothing in image1. Preserve own age, recognizable face, skin tone, hair/eye colors, profession, props. Same polished anime dialogue painter as heroine: clean subtle brown lines, smooth soft skin gradients, gently simplified nose, clear expressive eyes and restrained highlights, clean broad soft cloth shadows with NO grain/rough fabric weave or photoreal3D/doll skin. Warm upper-left key light. EXTREME COLD medieval Nordic: thick wool/quilted layers, ivory sheepskin lining, head/ears covered by matching hood/cap, neck scarf/closed collar, full long sleeves, brown insulated gloves if hands visible, no bare arms or summer blouse. ONE waist-up portrait, NOT chibi/spritesheet. Strict front facing camera and direct eye contact. Centered shoulders, hood/crown to chin around1/3 canvas height, full hood/hair inside6percent transparent top/side margin, waist at bottom. True transparent RGBA; no scene/glow/halo/text. Keep tools compact, no modern hardware. Match image3 outfit precisely. Adult MALE warrior, dark brown skin, amber eyes, silver-white twin braids and plain silver headband. WARM navy wool coif/soft cap under headband covering ears, thick ivory fur neck wrap over navy quilted wool coat, ochre sash, simple steel plates over insulated sleeves and leggings, brown padded gauntlets completely covering fingers, fur-lined tall boots. Sword and round wooden shield on back. No bare arms/neck/legs, keep dark skin and masculine strong face, armor clean broad highlights not gritty textures. IMPORTANT COMPOSITION: CLOSE WAIST-UP ONLY like image2. The sheet in image3 is clothing reference ONLY, never reproduce its full-body composition or poses. NO legs/feet/boots in portrait. Frame from whole hood/cap to waist, face and shoulders prominent. Entire head/hood inside50px transparent top margin. Do not make a small full-body figure floating in a tall canvas.",
+      "sha256": "1f0bdfea5d2d70d720aca9f277c621d573da23d3578ce4105a4ed0f1f864af0f",
+      "size": [
+        1213,
+        1296
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\portraits\\warrior.png",
+      "tool": "built-in image_gen",
+      "runtime": "Assets\\Resources\\UI\\DialoguePortraits\\warrior.png"
+    },
+    {
+      "kind": "portraits",
+      "key": "farmer",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-a9561dba-4706-47be-9425-a2707ddf353b.png",
+      "prompt": "Use case: style-transfer and extreme-cold wardrobe correction. Image1 is farmer IDENTITY portrait; image2 heroine is EXACT portrait art/lighting reference; image3 is the farmer's FINAL WINTER OUTFIT which MUST override old outfit in image1. One adult female farmer with green eyes, freckles, copper auburn twin braids and friendly face, now wearing moss-green WOOL HOOD UP with ivory sheep-fur lining, thick olive quilted wool coat closed to neck and heavy collar, cream working apron with small carrot motif over winter coat, brown insulated mittens holding basket of winter root vegetables, compact little hoe on back. No straw hat, no bare hands or exposed summer blouse. All skin covered except face. Medieval Scandinavian extreme cold. Redraw as matching polished anime DIALOGUE PORTRAIT in heroine's artist: clean subtle brown contour, smooth soft skin, gently simplified nose, clear green anime eyes, softly cel-painted fabric forms, restrained warm upper-left highlights, NO grain/rough weave/3D/photo shading. Preserve farmer age, face/green eyes/braids, not copy heroine face or red hair. Front-facing, direct eye contact, gentle closed smile. NOT chibi, NOT spritesheet. Vertical waist-up portrait centered with whole hood and shoulder silhouette within6percent transparent top/side margins, crown-to-chin approx1/3 canvas height; waist at bottom. True RGBA transparent, no background, scenery, glow/halo, text or border.",
+      "sha256": "b78e7062e286c498ea10866cb1f7172035b7bc6e25b8ad6302806f5bf31f6e70",
+      "size": [
+        1212,
+        1297
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\portraits\\farmer.png",
+      "tool": "built-in image_gen",
+      "runtime": "Assets\\Resources\\UI\\DialoguePortraits\\farmer.png"
+    },
+    {
+      "kind": "portraits",
+      "key": "aunt",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-5010d77d-4ff7-47e7-8c90-5cb0bc373e18.png",
+      "prompt": "Use case: style-transfer plus extreme-cold wardrobe correction. Image1 NPC IDENTITY portrait; image2 heroine EXACT portrait style/lighting; image3 NPC's FINAL WINTER WORLD OUTFIT. Image3 MUST override thin/old clothing in image1. Preserve own age, recognizable face, skin tone, hair/eye colors, profession, props. Same polished anime dialogue painter as heroine: clean subtle brown lines, smooth soft skin gradients, gently simplified nose, clear expressive eyes and restrained highlights, clean broad soft cloth shadows with NO grain/rough fabric weave or photoreal3D/doll skin. Warm upper-left key light. EXTREME COLD medieval Nordic: thick wool/quilted layers, ivory sheepskin lining, head/ears covered by matching hood/cap, neck scarf/closed collar, full long sleeves, brown insulated gloves if hands visible, no bare arms or summer blouse. ONE waist-up portrait, NOT chibi/spritesheet. Strict front facing camera and direct eye contact. Centered shoulders, hood/crown to chin around1/3 canvas height, full hood/hair inside6percent transparent top/side margin, waist at bottom. True transparent RGBA; no scene/glow/halo/text. Keep tools compact, no modern hardware. Match image3 outfit precisely. Adult FEMALE villager, warm brown eyes, chestnut hair in simple bun mostly under a heavy PLUM wool hood with cream fur lining, small plain teal-stone bronze clasp. Broad thick plum shawl closed over warm cream neck scarf, thick terracotta wool winter coat/dress with long insulated sleeves, mustard embroidered belt pouch, brown mittens, opaque dark wool leggings, fur-lined brown boots and rolled wool blanket on back. No thin puffy blouse exposed to cold, no bare fingers, preserve adult friendly face, not heroine clone. IMPORTANT COMPOSITION: CLOSE WAIST-UP ONLY like image2. The sheet in image3 is clothing reference ONLY, never reproduce its full-body composition or poses. NO legs/feet/boots in portrait. Frame from whole hood/cap to waist, face and shoulders prominent. Entire head/hood inside50px transparent top margin. Do not make a small full-body figure floating in a tall canvas.",
+      "sha256": "00ae60ce6580c870370f08d6cfc191d3c8b7fe3d3ec080dd72523b54b722acfc",
+      "size": [
+        1213,
+        1296
+      ],
+      "archive": "Assets\\art\\generated\\characters\\unified20261103\\portraits\\aunt.png",
+      "tool": "built-in image_gen",
+      "runtime": "Assets\\Resources\\UI\\DialoguePortraits\\aunt.png"
+    }
+  ]
+}

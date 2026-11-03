@@ -1,0 +1,25 @@
+{
+  "entries": [
+    {
+      "key": "impact",
+      "path": "Assets/Resources/Sprites/FX/Hit20261103/impact.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-db3ec135-0855-4527-af61-54ec1eddea63.png",
+      "ppu": 724.0,
+      "sha256": "484dbbbeae60b45ea20561a0fe0f452ed12503e5e8fdf0186e84a076ac3c7759"
+    },
+    {
+      "key": "horizontal",
+      "path": "Assets/Resources/Sprites/Props/FenceWreckage20261103/horizontal.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-5180d745-061f-4b68-b669-827a9d1bef04.png",
+      "ppu": 1830.5263157894738,
+      "sha256": "bcfa62009062304818b763877feea587fad6b6f9fdd157b44fc7e5e1a869fda1"
+    },
+    {
+      "key": "vertical",
+      "path": "Assets/Resources/Sprites/Props/FenceWreckage20261103/vertical.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-330bd237-ebd2-4b75-b74e-e30158e65f95.png",
+      "ppu": 1247.3684210526317,
+      "sha256": "d5d18e5a51b8c48837a1303539120502a2e6af8dff188cfeb4c7a9dee87bd8b5"
+    }
+  ]
+}

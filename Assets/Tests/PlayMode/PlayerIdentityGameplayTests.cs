@@ -24,7 +24,9 @@ namespace IL6.Tests
             var attacker=player.GetComponent<PlayerAttackController>();
             player.enabled=false;
             attacker.enabled=false;
-            Assert.That(renderer.sprite.name,Does.StartWith("redhair_axe_"));
+            Assert.That(renderer.sprite,Is.SameAs(DirectionalCharacterVisual.HeroSideIdle("hero_axe")));
+            // Test the retained action Animator separately from LateUpdate locomotion ownership.
+            player.GetComponent<DirectionalCharacterVisual>().enabled=false;
             foreach(var weapon in new[]{0,1,0})
             {
                 attacker.SwitchToWeapon(weapon);

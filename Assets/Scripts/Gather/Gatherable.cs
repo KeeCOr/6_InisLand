@@ -14,12 +14,25 @@ namespace IL6
         public bool DestroyOnGather = true;
         private bool _claimed;
         public bool IsTree => YieldKind == ResourceKind.Wood && GetComponent<DiscoverySite>() == null;
+        public bool IsRock => YieldKind==ResourceKind.Stone && GetComponent<DiscoverySite>()==null && GetComponent<AnimalAi>()==null;
+        public RockHealth EnsureRockHealth()
+        {
+            if(!IsRock)return null;
+            return GetComponent<RockHealth>()??gameObject.AddComponent<RockHealth>();
+        }
         public TreeHealth EnsureTreeHealth()
         {
             if (!IsTree) return null;
             return GetComponent<TreeHealth>() ?? gameObject.AddComponent<TreeHealth>();
         }
-        private void Start() { YSort.Ensure(gameObject); EnsureTreeHealth(); }
+        private void Start()
+        {
+            YSort.Ensure(gameObject);EnsureTreeHealth();
+            EnsureRockHealth();
+            if(IsRock)RockVisualStyle.Apply(GetComponent<SpriteRenderer>());
+            if(GetComponent<AnimalAi>()==null && GetComponent<DiscoverySite>()==null && (IsTree || YieldKind==ResourceKind.Stone))
+                SnowContact.Attach(this);
+        }
 
         public void OnGathered(ResourceStore store)
         {
@@ -27,6 +40,7 @@ namespace IL6
             var animal=GetComponent<AnimalAi>();
             if (animal!=null && !animal.IsDead) return;
             if (IsTree && EnsureTreeHealth().CurrentHp > 0) return;
+            if (IsRock && EnsureRockHealth().CurrentHp > 0) return;
             _claimed = true;
             var discovery = GetComponent<DiscoverySite>();
             if (discovery != null)
@@ -34,7 +48,7 @@ namespace IL6
                 discovery.Resolve(store);
                 if (DestroyOnGather)
                 {
-                    GameFeel.DeathPoof(transform.position, DiscoverySite.TintFor(discovery.RewardKind), 0.5f);
+                    GatherCompletionFx.Spawn(this, discovery.RewardKind);
                     Destroy(gameObject);
                 }
                 return;
@@ -78,7 +92,8 @@ namespace IL6
 
             if (DestroyOnGather)
             {
-                GameFeel.DeathPoof(transform.position, tint, 0.5f);
+                if(animal==null)GatherCompletionFx.Spawn(this,YieldKind);
+                else GameFeel.DeathPoof(transform.position, tint, 0.5f);
                 Destroy(gameObject);
             }
         }

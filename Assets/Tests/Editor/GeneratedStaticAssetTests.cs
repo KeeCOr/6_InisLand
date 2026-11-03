@@ -23,7 +23,7 @@ namespace IL6.Tests
         {
             var sprite = Resources.Load<Sprite>("Sprites/GeneratedStatic20261014/" + path);
             Assert.That(sprite, Is.Not.Null, path);
-            Assert.That(sprite.texture.filterMode, Is.EqualTo(FilterMode.Point), path);
+            Assert.That(sprite.texture.filterMode, Is.EqualTo(FilterMode.Bilinear), path);
             Assert.That(sprite.pixelsPerUnit, Is.GreaterThan(50f), path);
             Assert.That(sprite.bounds.size.y, Is.LessThan(3.5f), path);
         }

@@ -6,7 +6,7 @@ namespace IL6
 {
     public enum RuneKind
     {
-        // 레거시 (단순 능력치) — 풀에서는 제거됐지만 enum 은 보존 (구 세이브 호환)
+        // Common stat upgrades; retain enum order for existing saves.
         DamageUp,
         FireRateUp,
         HpUp,
@@ -25,6 +25,8 @@ namespace IL6
         Pierce,       // 신규: 투사체 관통 (1회 추가 적중)
         AllyBoost,    // 신규: 동료 데미지 +%
         ResourceGift, // 신규: 즉시 자원 획득 (스택 안 됨, 매번 효과 발동)
+        MeleeDamageUp,
+        RangedDamageUp,
     }
 
     /// <summary>
@@ -66,6 +68,10 @@ namespace IL6
         public float ProjectileSpeedMultiplier { get; private set; } = 1f;
         public float BonusRange { get; private set; }
         public float MoveSpeedMultiplier { get; private set; } = 1f;
+        public float MeleeDamageMultiplier { get; private set; } = 1f;
+        public float RangedDamageMultiplier { get; private set; } = 1f;
+        public float DamageMultiplierFor(bool ranged) => DamageMultiplier *
+            (ranged ? RangedDamageMultiplier : MeleeDamageMultiplier);
 
         // 특수 룬 효과 값 (스택별)
         public int PoisonDpsCalc => Scaled(RuneKind.PoisonBlade, 5, 7, 18);
@@ -164,12 +170,14 @@ namespace IL6
             BonusMaxHp = GetStacks(RuneKind.HpUp) switch { 0 => 0, 1 => 25, 2 => 50, 3 => 120, _ => 0 };
             BonusRange = GetStacks(RuneKind.RangeUp) switch { 0 => 0f, 1 => 1f, 2 => 2f, 3 => 5f, _ => 0f };
             MoveSpeedMultiplier = GetStacks(RuneKind.MoveSpeedUp) switch { 0 => 1f, 1 => 1.15f, 2 => 1.25f, 3 => 1.6f, _ => 1f };
+            MeleeDamageMultiplier = GetStacks(RuneKind.MeleeDamageUp) switch { 0 => 1f, 1 => 1.25f, 2 => 1.5f, 3 => 2.2f, _ => 1f };
+            RangedDamageMultiplier = GetStacks(RuneKind.RangedDamageUp) switch { 0 => 1f, 1 => 1.25f, 2 => 1.5f, 3 => 2.2f, _ => 1f };
         }
 
         public List<RuneKind> PickThreeOffer(uint seed)
         {
             var rng = new SeededRng(seed ^ (uint)Level);
-            // 효과 기반 룬만 — 단순 능력치(DamageUp/FireRateUp/HpUp/RangeUp/MoveSpeedUp) 제외.
+            // Common stats and weapon-specific upgrades share the existing weighted offer pool.
             var pool = new List<RuneKind>();
             void AddIfRoom(RuneKind k, int weight)
             {
@@ -188,6 +196,13 @@ namespace IL6
             AddIfRoom(RuneKind.Pierce, 2);
             AddIfRoom(RuneKind.AllyBoost, 2);
             AddIfRoom(RuneKind.ResourceGift, 2);
+            AddIfRoom(RuneKind.DamageUp, 2);
+            AddIfRoom(RuneKind.FireRateUp, 2);
+            AddIfRoom(RuneKind.HpUp, 2);
+            AddIfRoom(RuneKind.RangeUp, 2);
+            AddIfRoom(RuneKind.MoveSpeedUp, 2);
+            AddIfRoom(RuneKind.MeleeDamageUp, 2);
+            AddIfRoom(RuneKind.RangedDamageUp, 2);
 
             var pick = new List<RuneKind>();
             var used = new HashSet<RuneKind>();
@@ -206,9 +221,9 @@ namespace IL6
         public static string Title(RuneKind k) => k switch
         {
             RuneKind.PoisonBlade => "☠ 독 무기",
-            RuneKind.IceArrow => "❄ 얼음 화살",
+            RuneKind.IceArrow => "❄ 냉기 무기",
             RuneKind.LightningStrike => "⚡ 번개 강타",
-            RuneKind.MultiShot => "✦ 다중 사격",
+            RuneKind.MultiShot => "✦ 추가 공격",
             RuneKind.Detonator => "💥 폭발 처치",
             RuneKind.SummonDog => "🐕 사냥개 소환",
             RuneKind.SummonHawk => "🦅 매 소환",
@@ -217,7 +232,9 @@ namespace IL6
             RuneKind.Pierce => "🏹 관통",
             RuneKind.AllyBoost => "🤝 동료 강화",
             RuneKind.ResourceGift => "📦 보급 상자",
-            RuneKind.DamageUp => "⚔ 대미지",
+            RuneKind.DamageUp => "⚔ 공격력",
+            RuneKind.MeleeDamageUp => "⚔ 근접 공격력",
+            RuneKind.RangedDamageUp => "🏹 원거리 공격력",
             RuneKind.FireRateUp => "⚡ 공격속도",
             RuneKind.HpUp => "❤ 체력",
             RuneKind.RangeUp => "↔ 사거리",
@@ -239,6 +256,11 @@ namespace IL6
             {
                 case RuneKind.DamageUp:
                     return level switch { 1 => "대미지 +25%", 2 => "대미지 +50%", 3 => "대미지 +120%", _ => "" };
+                case RuneKind.MeleeDamageUp:
+                    return (level switch { 1 => "근접 무기 공격력 +25%", 2 => "근접 무기 공격력 +50%", 3 => "근접 무기 공격력 +120%", _ => "" })
+                        + "\n근접 기본 특성: 넉백1.5칸 · 짧은 경직";
+                case RuneKind.RangedDamageUp:
+                    return level switch { 1 => "원거리 무기 공격력 +25%", 2 => "원거리 무기 공격력 +50%", 3 => "원거리 무기 공격력 +120%", _ => "" };
                 case RuneKind.FireRateUp:
                     return level switch { 1 => "공속 +18%", 2 => "공속 +43%", 3 => "공속 +100%", _ => "" };
                 case RuneKind.HpUp:
@@ -272,7 +294,7 @@ namespace IL6
                         _ => ""
                     };
                 case RuneKind.MultiShot:
-                    return level switch { 1 => "투사체 +1발", 2 => "투사체 +2발", 3 => "투사체 +4발 부채꼴", _ => "" };
+                    return level switch { 1 => "근접 추가 대상 +1 / 원거리 추가 화살 +1", 2 => "근접 추가 대상 +2 / 원거리 추가 화살 +2", 3 => "근접 추가 대상 +4 / 원거리 추가 화살 +4 부채꼴", _ => "" };
                 case RuneKind.Detonator:
                     return level switch
                     {

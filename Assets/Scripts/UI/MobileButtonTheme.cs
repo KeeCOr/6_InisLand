@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace IL6
 {
@@ -8,7 +8,13 @@ namespace IL6
         private static Texture2D _disc;
         public static readonly Color Jade=new Color(0.13f,0.67f,0.48f);
         public static readonly Color Gold=new Color(0.78f,0.57f,0.24f);
-        public static bool Contains(Rect r,Vector2 p) => (p-r.center).sqrMagnitude<=r.width*r.width*0.25f;
+        public static bool Contains(Rect r,Vector2 p)
+        {
+            if(!r.Contains(p)) return false;
+            float radius=Mathf.Min(r.width,r.height)*.5f;
+            var delta=new Vector2(Mathf.Max(0,Mathf.Abs(p.x-r.center.x)-(r.width*.5f-radius)),Mathf.Max(0,Mathf.Abs(p.y-r.center.y)-(r.height*.5f-radius)));
+            return delta.sqrMagnitude<=radius*radius;
+        }
         private static void Disc(Rect r,Color c)
         {
             if(_disc==null)
@@ -71,9 +77,10 @@ namespace IL6
         {
             bool usable=enabled && GUI.enabled;
             float alpha=usable ? 1f : 0.38f;
-            Disc(new Rect(r.x-5,r.y-5,r.width+10,r.height+10),new Color(tint.r,tint.g,tint.b,selected?0.35f:0.12f));
-            float artSize=r.width*(r.width>=100?.9f:.78f);
-            bool generated=GeneratedUiSkin.Atlas(new Rect(r.center.x-artSize/2,r.y,artSize,artSize),(int)glyph,new Color(1,1,1,alpha));
+            float artSize=Mathf.Min(r.width,r.height-24);
+            var art=new Rect(r.center.x-artSize/2,r.y,artSize,artSize);
+            if(selected) Disc(new Rect(art.x-3,art.y-3,art.width+6,art.height+6),new Color(tint.r,tint.g,tint.b,.24f));
+            bool generated=GeneratedUiSkin.Atlas(art,(int)glyph,new Color(1,1,1,alpha));
             if (!generated)
             {
                 Disc(new Rect(r.x,r.y+3,r.width,r.height),new Color(0.02f,0.05f,0.04f,0.45f));
@@ -84,16 +91,16 @@ namespace IL6
                 var icon=new Rect(r.center.x-size/2,r.y+r.height*0.19f,size,size);
                 DrawGlyph(icon,glyph,new Color(1,0.98f,0.88f,alpha));
             }
-            var text=new GUIStyle(GUI.skin.label){fontSize=r.width>=90?15:12,fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleCenter,normal={textColor=new Color(1,1,0.94f,alpha)}};
-            var nameRect=new Rect(r.x-6,r.yMax-25,r.width+12,22);
-            if(generated) RoundRect(new Rect(r.x+2,r.yMax-24,r.width-4,22),6,new Color(.02f,.09f,.08f,.88f*alpha));
+            var text=new GUIStyle(GUI.skin.label){fontSize=r.width>=90?14:12,fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleCenter,normal={textColor=new Color(1,1,.94f,alpha)}};
+            var nameRect=new Rect(r.x,r.y+artSize+2,r.width,22);
+            if(generated) GeneratedUiSkin.Pill(nameRect,new Color(.23f,.34f,.30f,.88f*alpha));
             HudText.Label(nameRect,label,text);
             if(!string.IsNullOrEmpty(key))
             {
-                float w=Mathf.Max(22,key.Length*7+10);
-                var badge=new Rect(r.xMax-w+5,generated?r.y-2:r.yMax-9,w,20);
-                UiTheme.Rect(badge,new Color(0.04f,0.09f,0.09f,0.9f));
-                HudText.Label(badge,key,new GUIStyle(text){fontSize=11});
+                float w=Mathf.Max(20,key.Length*6+8);
+                var badge=new Rect(art.xMax-w+4,art.y+1,w,17);
+                RoundRect(badge,4,new Color(.035f,.09f,.08f,.92f*alpha));
+                HudText.Label(badge,key,new GUIStyle(text){fontSize=10});
             }
             bool pointerRelease=Event.current.type==EventType.MouseUp;
             return usable && GUI.Button(r,"",GUIStyle.none) && pointerRelease && Contains(r,MobileHudLayout.GuiPoint(Input.mousePosition));

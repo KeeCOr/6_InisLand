@@ -16,7 +16,8 @@ namespace IL6
         {
             if (CurrentHp <= 0 || damage <= 0 || store == null) return;
             CurrentHp = Mathf.Max(0, CurrentHp - damage);
-            Sfx.Hit();
+            Sfx.Impact(ImpactMaterial.Wood);
+            GameFeel.MaterialImpact(transform.position + Vector3.up * .5f, ImpactMaterial.Wood);
             GameFeel.FloatText(transform.position + Vector3.up, $"-{damage}", new Color(1f,.85f,.4f));
             if (CurrentHp == 0) GetComponent<Gatherable>().OnGathered(store);
         }

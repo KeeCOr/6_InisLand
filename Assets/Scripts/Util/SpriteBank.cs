@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace IL6
 {
@@ -34,6 +34,7 @@ namespace IL6
         public static Sprite Boar()         => Load("Animals/boar");
         public static Sprite Mammoth()      => Load("Animals/mammoth");
         public static Sprite Bear()         => Load("Animals/bear");
+        public static Sprite DogPet()       => Load("Pets/dog");
         public static Sprite HawkPet()      => Load("Pets/hawk");
 
         // ── 적 ──────────────────────────────────────────────────────────────────
@@ -76,9 +77,20 @@ namespace IL6
 
         public static Vector3 CompanionScaleForRole(string role)
         {
-            if (IsChildRole(role)) return Vector3.one * 0.82f;
-            if (IsFemaleRole(role)) return Vector3.one * 0.96f;
-            return Vector3.one;
+            // Keep actor/collider scale stable; the 2026-10-26 art importer normalizes visual height.
+            float scale = (role??"").ToLowerInvariant() switch
+            {
+                "hunter" or "사냥꾼" => 0.771241867f,
+                "warrior" or "전사" => 0.805882400f,
+                "farmer" or "농부" => 0.786274540f,
+                "cook" or "요리사" => 0.756302552f,
+                "healer" or "치유사" => 0.831785368f,
+                "aunt" => 0.877995667f,
+                "uncle" => 0.742362084f,
+                "child" => 0.750980400f,
+                _ => IsChildRole(role)?0.750980400f:IsFemaleRole(role)?0.877995667f:0.742362084f
+            };
+            return Vector3.one * scale;
         }
 
         public static bool IsChildRole(string role)
@@ -97,7 +109,7 @@ namespace IL6
         }
 
         // ── 프랍 (나무 / 바위 / 장식물) ──────────────────────────────────────────
-        public static Sprite SnowPineTree()       => Load("Props/snowPineTree");
+        public static Sprite SnowPineTree()       => Load("Props/NordicTrees20261102/spruce");
         public static Sprite BareTree()       => Load("Props/bare_tree");
         public static Sprite SnowRock()      => Load("Props/snowRock");
         public static Sprite SmallRocks()     => Load("Props/small_rocks");
@@ -211,15 +223,7 @@ namespace IL6
 
         public static Sprite BuildingByKind(BuildingKind kind) => ConstructionPlacement.Sprite(kind);
 
-        public static Sprite DiscoveryByReward(ResourceKind kind) => kind switch
-        {
-            ResourceKind.Wood => WoodIcon(),
-            ResourceKind.Stone => StoneIcon(),
-            ResourceKind.Meat => MeatIcon(),
-            ResourceKind.Food => FoodIcon(),
-            ResourceKind.Frostbloom => UpgradeIcon(),
-            _ => UpgradeIcon(),
-        };
+        public static Sprite DiscoveryByReward(ResourceKind kind) => GroundResourceArt.Site(kind);
 
         public static Sprite AnimalByName(string procName) => procName switch
         {
@@ -279,19 +283,20 @@ namespace IL6
 
         public static Sprite TreeVariant(int variant)
         {
-            switch (Mathf.Abs(variant) % 9)
+            switch ((uint)variant % TreeVariantCount)
             {
-                case 0: return PineTree();
-                case 1: return PineTree02();
-                case 2: return PineTree03();
-                case 3: return PineTree04();
-                case 4: return BareTree();
-                case 5: return BareTree02();
-                case 6: return BareTree03();
-                case 7: return SnowTree01();
-                default: return SnowTree02();
+                case 0: return SnowPineTree();
+                case 1: return Load("Props/NordicTrees20261102/pine");
+                case 2: return Load("Props/NordicTrees20261102/birch");
+                case 3: return Load("Props/NordicTrees20261102/fir");
+                case 4: return Load("Props/NordicTrees20261102/sparse_spruce");
+                case 5: return Load("Props/NordicTrees20261102/birch_cluster");
+                case 6: return Load("Props/NordicTrees20261102/oak");
+                case 7: return Load("Props/NordicTrees20261102/cedar");
+                default: return Load("Props/NordicTrees20261102/larch");
             }
         }
+        public const int TreeVariantCount = 9;
 
         public static Sprite SnowRocks() => LoadSpriteOrUi("Props/snow_rocks", "hud/hud-stone");
 

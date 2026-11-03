@@ -1,0 +1,12 @@
+{
+  "mode": "built-in image_gen",
+  "source": "source.png",
+  "source_rect": [
+    99,
+    88,
+    1146,
+    1151
+  ],
+  "path": "Assets/Resources/UI/Generated20261103/sunset_warning.png",
+  "sha256": "45989bde79ae77ff45722ba64a5b1576b47749f5ddf4f11aef8de8a2b8c4daa7"
+}

@@ -17,7 +17,6 @@ namespace IL6
 
         private System.Collections.Generic.List<RuneKind> _runeOffer;
         private readonly System.Collections.Generic.Dictionary<RuneKind, Texture2D> _runeIconCache = new();
-        private readonly System.Collections.Generic.Dictionary<string, Texture2D> _portraitCache = new();
         private readonly System.Collections.Generic.Dictionary<string, Texture2D> _hudIconCache = new();
 
         // P1-4: 마스터 시너지 토스트
@@ -28,11 +27,6 @@ namespace IL6
         private int _nightSummaryDay;
 
         private GUIStyle _label, _labelSubtle, _title, _section, _weapon, _bigDeath, _btn, _smallBtn;
-        private string _recruitCutName = "";
-        private string _recruitCutRole = "";
-        private string _recruitCutDialog = "";
-        private Texture2D _recruitCutPortrait;
-        private float _recruitCutLeft;
         private float _recruitCutPrevTimeScale = 1f;
         private bool _recruitCutPaused;
 
@@ -92,7 +86,11 @@ namespace IL6
             {
             EnsureStyles();
             if (UpdateDeathScreenState()) { GUI.depth=-1000; DrawDeathOverlay(); return; }
+            if (VillageReturnVisible) { DrawNightIntroFade(); return; }
             if (Progression != null && Progression.LevelUpPending) { GUI.depth=-900; DrawRuneModal(); return; }
+            if (_recruitCutPaused) { DrawRecruitConversation(); return; }
+            if(TutorialDialogueBlocking) {DrawTutorialOverlay();return;}
+            if(_morningFenceOpen) {DrawMorningFenceRepair();return;}
             if (_researchOpen) { DrawResearchCatalog(); return; }
             if (_workMenuOpen) { DrawNearbyWorkMenu(); return; }
             if (_paused) { DrawPauseMenu(); if (_paused) DrawSfxCorner(); return; }
@@ -105,14 +103,13 @@ namespace IL6
             {
                 DrawBuildHotbar();DrawPlacementPreview();DrawBuildPlacementControls();HandlePlacementInput();return;
             }
-            DrawStatCard();        // 상단 좌측: HP/XP/모드 탭/무기
-            DrawResourceBar();     // 상단 우측: 자원 세로 카드
+            DrawStatCard();        // 좌측 상단: 레벨/HP
+            DrawResourceBar();     // 좌측 상단: 자원 2줄
+            DrawExperienceBar();   // 자원 바로 아래: 경험치
             DrawWaveStanceBar();   // 하단 좌측: 동료 스탠스 + 웨이브 정보
             DrawMobileControls();       // 하단 우측: 볼륨 슬라이더 (항상)
             DrawContextActionPanel();
             if (_hudMode == HudMode.Build) DrawBuildHotbar();
-            DrawRecruitDialog();
-            DrawRecruitCutscene();
             DrawRuneModal();
             DrawPhaseBanner();
             DrawBossWarning();
@@ -121,6 +118,7 @@ namespace IL6
             DrawHomeCompass();
             DrawThreatCompass();   // 공격받는 건물/동료 방향 화살표
             DrawPhaseClock();      // 상단 중앙
+            DrawSunsetWarning();
             // ControlsHint 제거 — 모드 탭과 튜토리얼이 키 안내 대신함
             DrawTutorialOverlay();
             HandlePlacementInput();
@@ -145,47 +143,7 @@ namespace IL6
         // ====================================================================
         private void DrawPlacementPreview()
         {
-            if (_pendingBuildKind == null) return;
-            var cam = Camera.main;
-            if (cam == null) return;
-            Vector3 wp = ConstructionPlacement.Snap(MouseWorldPos(cam));
-            DrawConstructionGrid(cam, wp);
-            bool available = ConstructionPlacement.IsAvailable(_pendingBuildKind.Value, wp);
-
-            // 화면 가운데 안내 텍스트
-            var bannerStyle = new GUIStyle(GUI.skin.label) {
-                fontSize = 15, fontStyle = FontStyle.Bold,
-                alignment = TextAnchor.MiddleCenter,
-                normal = { textColor = UiTheme.TextGold }
-            };
-            string label = available
-                ? $"{BuildingName(_pendingBuildKind.Value)} · 격자 배치 | 땅을 눌러 설치 · ESC 취소"
-                : "다른 건물과 겹칩니다 · 빈 격자로 이동하세요";
-            UiTheme.Rect(new Rect(MobileHudLayout.Width/2-280, 96, 560, 40), new Color(0.05f, 0.07f, 0.12f, 0.85f));
-            HudText.Label(new Rect(MobileHudLayout.Width/2-272, 103, 544, 26), label, bannerStyle);
-
-            // 마우스 위치에 작은 골드 + (커서)
-            Vector3 sp = cam.WorldToScreenPoint(wp);
-            sp.x /= MobileHudLayout.Scale; sp.y /= MobileHudLayout.Scale;
-            float gx = sp.x, gy = MobileHudLayout.Height - sp.y;
-            var sprite = ConstructionPlacement.Sprite(_pendingBuildKind.Value);
-            Vector3 size = ConstructionPlacement.Scale(_pendingBuildKind.Value);
-            float worldUnit = (cam.WorldToScreenPoint(wp + Vector3.right).x-cam.WorldToScreenPoint(wp).x)/MobileHudLayout.Scale;
-            var footprint = new Rect(gx-size.x*worldUnit/2f, gy-size.y*worldUnit/2f, size.x*worldUnit, size.y*worldUnit);
-            UiTheme.Rect(footprint, available ? new Color(.3f,.9f,.6f,.18f) : new Color(1f,.2f,.15f,.25f));
-            if (sprite != null)
-            {
-                float pixelsPerUnit = (cam.WorldToScreenPoint(wp + Vector3.right).x - cam.WorldToScreenPoint(wp).x) / MobileHudLayout.Scale;
-                float width = sprite.rect.width / sprite.pixelsPerUnit * pixelsPerUnit * size.x;
-                float height = sprite.rect.height / sprite.pixelsPerUnit * pixelsPerUnit * size.y;
-                var rect = new Rect(gx - sprite.pivot.x / sprite.rect.width * width,
-                    gy - (1f - sprite.pivot.y / sprite.rect.height) * height, width, height);
-                var color = GUI.color; GUI.color = available ? new Color(.8f, 1f, .9f, .65f) : new Color(1f, .35f, .3f, .65f);
-                DrawSpriteInRect(sprite, rect);
-                GUI.color = color;
-            }
-            UiTheme.Rect(new Rect(gx - 1, gy - 12, 2, 24), UiTheme.TextGold);
-            UiTheme.Rect(new Rect(gx - 12, gy - 1, 24, 2), UiTheme.TextGold);
+            DrawConstructionPlacementPreview();
         }
 
         private static void DrawConstructionGrid(Camera cam, Vector3 cursor)
@@ -252,6 +210,7 @@ namespace IL6
             sr.sortingOrder = 3;
             sr.sprite = ConstructionPlacement.Sprite(kind);
             sr.color = new Color(0.7f, 0.78f, 0.85f, 0.5f);
+            if(kind==BuildingKind.Fence)FenceVisual.Apply(go);
             var cf = go.AddComponent<ColorFallback>();
             cf.Tint = new Color(0.7f, 0.78f, 0.85f, 0.5f);
             cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
@@ -342,42 +301,11 @@ namespace IL6
         // ====================================================================
         // 밤 인트로: Evening 시작 → 화면 암전 → 플레이어 마을로 이동 → 암전 해제 → Night
         // ====================================================================
-        private float _fadeAlpha;          // 0 (투명) ~ 1 (완전 암전)
-        private float _fadeTarget;         // 목표 alpha
-        private float _fadeSpeed = 1.6f;   // alpha/sec
         private bool _teleportPending;
-        private GUIStyle _fadeStyle;
 
         private void DrawNightIntroFade()
         {
-            // 부드러운 이행
-            if (Mathf.Abs(_fadeAlpha - _fadeTarget) > 0.001f)
-            {
-                float dir = Mathf.Sign(_fadeTarget - _fadeAlpha);
-                _fadeAlpha = Mathf.Clamp01(_fadeAlpha + dir * _fadeSpeed * Time.unscaledDeltaTime);
-                // 암전 절정에서 마을로 이동
-                if (_teleportPending && _fadeAlpha > 0.92f)
-                {
-                    _teleportPending = false;
-                    BringEveryoneToVillage();
-                }
-            }
-            if (_fadeAlpha <= 0.001f) return;
-
-            UiTheme.Rect(new Rect(0, 0, MobileHudLayout.Width, MobileHudLayout.Height), new Color(0, 0, 0, _fadeAlpha));
-            // 중앙 텍스트
-            if (_fadeStyle == null)
-            {
-                _fadeStyle = new GUIStyle(GUI.skin.label) {
-                    fontSize = 18, fontStyle = FontStyle.Bold,
-                    alignment = TextAnchor.MiddleCenter,
-                    normal = { textColor = new Color(1f, 0.86f, 0.45f, 1f) }
-                };
-            }
-            var oldC = GUI.contentColor;
-            GUI.contentColor = new Color(1f, 0.86f, 0.45f, _fadeAlpha);
-            HudText.Label(new Rect(0, MobileHudLayout.Height / 2 - 20, MobileHudLayout.Width, 40), "마을로 돌아가는 중...", _fadeStyle);
-            GUI.contentColor = oldC;
+            DrawVillageReturnIllustration();
         }
 
         /// <summary>플레이어 + 모든 살아있는 동료/펫 을 마을 중심으로 즉시 이동.</summary>
@@ -418,20 +346,23 @@ namespace IL6
             if (_unsubFadeIn != null) return;
             _unsubFadeIn = EventBus.Instance.Subscribe<EveningStartedPayload>(_ =>
             {
-                _fadeTarget = 1f;
+                _villageReturnActive = true;
                 _teleportPending = true;
             });
-            _unsubFadeOut = EventBus.Instance.Subscribe<NightStartedPayload>(_ =>
+            _unsubFadeOut = EventBus.Instance.Subscribe<NightStartedPayload>(p =>
             {
-                _fadeTarget = 0f;
+                _villageReturnActive = false;
                 // Evening 페이즈가 스킵된 경우(디버그 강제 밤 등) 안전망 — 즉시 마을 집결
-                BringEveryoneToVillage();
+                if(_lastVillageReturnDay!=p.Day){BringEveryoneToVillage();_lastVillageReturnDay=p.Day;}
+                _teleportPending=false;
             });
             _unsubDawnFlare = EventBus.Instance.Subscribe<DawnStartedPayload>(_ => _dawnAlpha = 1f);
         }
 
         private void UnhookFadeEvents()
         {
+            _villageReturnActive=false;
+            _teleportPending=false;
             _unsubFadeIn?.Invoke(); _unsubFadeIn = null;
             _unsubFadeOut?.Invoke(); _unsubFadeOut = null;
             _unsubDawnFlare?.Invoke(); _unsubDawnFlare = null;
@@ -480,7 +411,6 @@ namespace IL6
         private string _phaseBanner = "";
         private float _phaseBannerLeft;
         private System.Action _unsubE, _unsubN, _unsubD, _unsubA;
-        private System.Action _unsubRecruit;
 
         private void OnEnable()
         {
@@ -498,7 +428,7 @@ namespace IL6
                 _nightSummaryTimer = 3.5f;
             });
             _unsubA = EventBus.Instance.Subscribe<DayStartedPayload>(p =>
-                { ShowBanner($"Day {p.Day}  ☀  새 날"); Music.PlayForPhase(Phase.Day); });
+                { ShowBanner($"Day {p.Day}  ☀  새 날"); Music.PlayForPhase(Phase.Day); QueueMorningFenceRepair(p.Day); });
             // P1-4: 마스터 시너지 발동 구독
             if (Progression != null)
                 Progression.OnElementalSynergyAchieved += OnSynergyAchieved;
@@ -507,6 +437,9 @@ namespace IL6
 
         private void OnDisable()
         {
+            DeclineMorningFenceRepair();
+            ReleaseStoryPause();
+            DeclineRecruitConversation();
             _buildRepairMode=false;
             CloseNearbyWorkMenu();
             CloseResearchCatalog();
@@ -629,13 +562,15 @@ namespace IL6
             };
             float dur = s.Cycle.PhaseDurationSec;
             float rem = Mathf.Max(0f, dur - s.Cycle.ElapsedInPhase);
-            int mm = Mathf.FloorToInt(rem / 60f);
-            int ss = Mathf.FloorToInt(rem % 60f);
+            int totalSeconds = Mathf.CeilToInt(rem);
+            int mm = totalSeconds / 60;
+            int ss = totalSeconds % 60;
             string clock = $"{mm:00}:{ss:00}";
             if (rem <= 0f && s.Cycle.Phase == Phase.Night && s.Cycle.NightEndBlocked != null && s.Cycle.NightEndBlocked()) clock = "보스전";
 
             int W = 130, H = 62;
             var r = MobileHudLayout.Clock;
+            DrawSunsetClockAccent(r);
 
             // 배경 패널 (페이즈 색조)
             Color tint = s.Cycle.Phase switch
@@ -780,109 +715,6 @@ namespace IL6
             HudText.Label(new Rect(r.x + 36, r.y, r.width - 36, H), $"{dist:F0}u to home", _compassDist);
         }
 
-        private const string TutorialPrefKey = "il6_tutorial_seen_v2"; // v2 = 세계관/목표 페이지 추가
-        private bool _tutorialDismissed;
-        private int _tutPage; // 0: 세계관 / 1: 목표 / 2: 조작
-        private GUIStyle _tutTitle, _tutBody, _tutLore;
-
-        private void DrawTutorialOverlay()
-        {
-            if (_tutorialDismissed) return;
-            if (PlayerPrefs.GetInt(TutorialPrefKey, 0) == 1) { _tutorialDismissed = true; return; }
-
-            if (!_tutorialPaused) { _tutorialPreviousScale=Time.timeScale; _tutorialPaused=true; Time.timeScale=0; }
-            int W = 700, H = 440;
-            var r = new Rect(MobileHudLayout.Width / 2 - W / 2, MobileHudLayout.Height / 2 - H / 2, W, H);
-            UiTheme.Rect(new Rect(0, 0, MobileHudLayout.Width, MobileHudLayout.Height), new Color(0, 0, 0, 0.7f));
-            UiTheme.Panel(r);
-
-            string pageTitle = _tutPage switch
-            {
-                0 => "끝없는 겨울이 찾아왔다",
-                1 => "생존 목표",
-                _ => "조작과 시스템",
-            };
-            UiTheme.TitleBar(r, pageTitle, _title);
-
-            if (_tutTitle == null)
-            {
-                _tutTitle = new GUIStyle(GUI.skin.label) {
-                    fontSize = 19, fontStyle = FontStyle.Bold,
-                    normal = { textColor = UiTheme.TextGold }, wordWrap = true };
-                _tutBody = new GUIStyle(GUI.skin.label) {
-                    fontSize = 16, normal = { textColor = UiTheme.TextCream }, wordWrap = true };
-                _tutLore = new GUIStyle(GUI.skin.label) {
-                    fontSize = 17, fontStyle = FontStyle.Normal,
-                    normal = { textColor = UiTheme.TextCream }, wordWrap = true };
-            }
-
-            int x = (int)r.x + 28, y = (int)r.y + 56, w = (int)r.width - 56;
-
-            if (_tutPage == 0)
-            {
-                HudText.Label(new Rect(x, y, w, 28), "한때 푸르렀던 이 땅에 끝없는 겨울이 내려앉았다.", _tutLore); y += 30;
-                HudText.Label(new Rect(x, y, w, 28), "사람들은 떠났고, 남은 자들은 얼어죽거나 — 더 끔찍한 운명을 맞았다.", _tutLore); y += 30;
-                HudText.Label(new Rect(x, y, w, 28), "밤이 되면 죽은 자들이 마을의 모닥불을 향해 일어선다.", _tutLore); y += 36;
-                HudText.Label(new Rect(x, y, w, 24), "낮에는 준비하고, 밤에는 마을을 지키세요.", _tutTitle); y += 28;
-                HudText.Label(new Rect(x, y, w, 28), "눈보라 너머에는 두려움도, 희망도 함께 살고 있다.", _tutLore); y += 30;
-            }
-            else if (_tutPage == 1)
-            {
-                HudText.Label(new Rect(x, y, w, 24), "낮에는 준비하고, 밤에는 마을을 지키세요.", _tutTitle); y += 28;
-                HudText.Label(new Rect(x, y, w, 22), "·  나무·돌을 캐고 동물을 사냥해 식량 확보", _tutBody); y += 22;
-                HudText.Label(new Rect(x, y, w, 22), "·  문 밖에서 떠도는 방랑자(NPC)를 만나 영입", _tutBody); y += 22;
-                HudText.Label(new Rect(x, y, w, 22), "·  마을에 모닥불·울타리·망루를 지어 방어 강화", _tutBody); y += 30;
-
-                HudText.Label(new Rect(x, y, w, 24), "낮에는 준비하고, 밤에는 마을을 지키세요.", _tutTitle); y += 28;
-                HudText.Label(new Rect(x, y, w, 22), "·  좀비 웨이브가 사방에서 몰려온다", _tutBody); y += 22;
-                HudText.Label(new Rect(x, y, w, 22), "·  5일·10일·15일째 밤에는 보스가 출현", _tutBody); y += 22;
-                HudText.Label(new Rect(x, y, w, 22), "·  레벨이 오를수록 낮과 밤이 길어진다 — 더 많은 시간, 더 큰 위협", _tutBody); y += 30;
-            }
-            else // page 2
-            {
-                HudText.Label(new Rect(x, y, w, 24), "낮에는 준비하고, 밤에는 마을을 지키세요.", _tutTitle); y += 28;
-                HudText.Label(new Rect(x, y, w, 22), "·  WASD / 방향키 — 이동 (W = 위)", _tutBody); y += 22;
-                HudText.Label(new Rect(x, y, w, 22), "·  Space — 공격·벌목·채굴·영입·수리·주변 작업", _tutBody); y += 22;
-                HudText.Label(new Rect(x, y, w, 22), "·  이동 — 작업 중단", _tutBody); y += 22;
-                HudText.Label(new Rect(x, y, w, 22), "·  B / 3 — 건설  ·  1 / 2 — 무기 전환  ·  ESC — 메뉴", _tutBody); y += 30;
-
-                HudText.Label(new Rect(x, y, w, 24), "낮에는 준비하고, 밤에는 마을을 지키세요.", _tutTitle); y += 28;
-                HudText.Label(new Rect(x, y, w, 22), "·  좀비 처치 → XP → 레벨업 시 룬 3종 중 1개 선택 (최대 3중첩)", _tutBody); y += 22;
-                HudText.Label(new Rect(x, y, w, 22), "·  같은 원소 룬 마스터 시 시너지 발동 (독·얼음·번개)", _tutBody); y += 22;
-            }
-
-            // 페이지 인디케이터 (점 3개)
-            int dotY = (int)r.yMax - 82;
-            int dotX = (int)(r.x + r.width / 2 - 18);
-            for (int i = 0; i < 3; i++)
-            {
-                Color dot = i == _tutPage ? UiTheme.TextGold : UiTheme.PanelBorderDim;
-                UiTheme.Rect(new Rect(dotX + i * 14, dotY, 8, 8), dot);
-            }
-
-            // 버튼
-            int btnW = 160;
-            int btnY = (int)r.yMax - 60;
-            if (_tutPage > 0)
-            {
-                if (UiTheme.Button(new Rect(r.x + 28, btnY, btnW, 44), "이전", _smallBtn)) _tutPage--;
-            }
-            string nextLabel = _tutPage < 2 ? "다음" : "모험 시작";
-            if (UiTheme.Button(new Rect(r.xMax - btnW - 28, btnY, btnW, 44), nextLabel, _btn))
-            {
-                if (_tutPage < 2) _tutPage++;
-                else DismissTutorial();
-            }
-        }
-
-        private void DismissTutorial()
-        {
-            _tutorialDismissed = true;
-            if (_tutorialPaused) { _tutorialPaused=false; Time.timeScale=_buildPaused || _paused || _recruitCutPaused || (Progression!=null && Progression.LevelUpPending) ? 0 : Mathf.Max(0.0001f,_tutorialPreviousScale); }
-            PlayerPrefs.SetInt(TutorialPrefKey, 1);
-            PlayerPrefs.Save();
-        }
-
         private void DrawControlsHint()
         {
             const string hint = "WASD 이동 · Space 공격/작업 · ESC 메뉴";
@@ -941,7 +773,12 @@ namespace IL6
 
         private void Update()
         {
-            if (UpdateDeathScreenState()) return;
+            ValidateRecruitConversation();
+            if (UpdateDeathScreenState()) {DeclineMorningFenceRepair();return;}
+            UpdateVillageReturn();
+            if(_villageReturnActive){InputReader.HudBlocked=true;return;}
+            UpdateStoryTutorial();
+            UpdateMorningFenceRepair();
             TryShowInitialBanner();
             InputReader.HudBlocked = ControlsBlocked;
             HandleSecondaryTouch();
@@ -960,6 +797,7 @@ namespace IL6
 
             if (_synergyToastTimer > 0f) _synergyToastTimer -= Time.unscaledDeltaTime;
             if (_nightSummaryTimer > 0f) _nightSummaryTimer -= Time.unscaledDeltaTime;
+            UpdateSunsetWarning();
 
             if (Player == null) return;
             if (_lastPlayerHp == -1) _lastPlayerHp = Player.CurrentHp;
@@ -988,28 +826,17 @@ namespace IL6
             var r = MobileHudLayout.Status;
             UiTheme.Panel(r);
             var label = new GUIStyle(_label) { fontSize = 14, fontStyle = FontStyle.Bold };
-            var portrait=new Rect(r.x+8,r.y+10,54,54);
-            MobileButtonTheme.RoundRect(portrait,27,MobileButtonTheme.Jade);
-            if(Player!=null)
-            {
-                var sprite=Player.GetComponent<SpriteRenderer>().sprite;
-                if(sprite!=null)
-                {
-                    var tr=sprite.textureRect;
-                    var uv=new Rect((tr.x+tr.width*.2f)/sprite.texture.width,(tr.y+tr.height*.4f)/sprite.texture.height,tr.width*.6f/sprite.texture.width,tr.height*.6f/sprite.texture.height);
-                    GUI.DrawTextureWithTexCoords(new Rect(portrait.x+4,portrait.y+4,46,46),sprite.texture,uv,true);
-                }
-            }
-            HudText.Label(new Rect(r.x+72,r.y+8,r.width-82,22),Progression!=null?$"겨울의 생존자 · Lv. {Progression.Level}":"겨울의 생존자",label);
+            HudText.Label(new Rect(r.x+14,r.y+8,r.width-28,22),Progression!=null?$"겨울의 생존자 · Lv. {Progression.Level}":"겨울의 생존자",label);
             if (Player != null)
             {
-                var bar = new Rect(r.x+72,r.y+34,r.width-82,18);
+                var bar = new Rect(r.x+14,r.y+34,r.width-28,18);
                 UiTheme.Bar(bar, Player.MaxHp > 0 ? (float)Player.CurrentHp/Player.MaxHp : 0f, new Color(0.28f,0.72f,0.42f));
-                MobileButtonTheme.RoundRect(new Rect(bar.center.x-48,bar.y+1,96,16),4,new Color(.015f,.05f,.03f,.62f));
-                HudText.Label(bar,$"{Player.CurrentHp} / {Player.MaxHp}",new GUIStyle(label){fontSize=12,alignment=TextAnchor.MiddleCenter});
+                var hpText=new GUIStyle(label){fontSize=12,alignment=TextAnchor.MiddleCenter,normal={textColor=Color.white}};
+                var hpShadow=new GUIStyle(hpText){normal={textColor=new Color(.01f,.025f,.04f,.9f)}};
+                string hpValue=$"{Player.CurrentHp} / {Player.MaxHp}";
+                HudText.Label(new Rect(bar.x+1,bar.y+1,bar.width,bar.height),hpValue,hpShadow);
+                HudText.Label(bar,hpValue,hpText);
             }
-            if (Progression != null)
-                UiTheme.Bar(new Rect(r.x+72,r.y+58,r.width-82,5), Progression.XpToNext>0 ? (float)Progression.Xp/Progression.XpToNext : 0f, UiTheme.BarXpFill);
         }
 
         private void DrawModeTab(Rect r, HudMode mode, string label)
@@ -1153,12 +980,17 @@ namespace IL6
         {
             Building best = FindNearbyUpgradeableBuilding(3.5f);
             if (best == null) return;
+            // Upgrading restores HP too: damaged fire/fence work must use the hammer.
+            if ((best.Kind==BuildingKind.Campfire || best.Kind==BuildingKind.Fence)
+                && best.CurrentHp<best.MaxHp && !ManualWorldInteraction.CanRepair(Player)) return;
             ResourceCost cost = best.NextUpgradeCost();
             bool ok = cost.CanPay(session.Resources);
             string effect = BuildingUpgradeRules.UpgradeSummary(best.Kind, best.Level + 1);
             string label = ok ? $"시설 강화 Lv.{best.Level + 1} ({cost})" : $"시설 강화: 자원 부족 ({cost})";
             actions.Add(new ContextAction(30, label, ok, () =>
             {
+                if(best==null || ((best.Kind==BuildingKind.Campfire || best.Kind==BuildingKind.Fence)
+                    && best.CurrentHp<best.MaxHp && !ManualWorldInteraction.CanRepair(Player))) return;
                 if (best.TryUpgrade(session.Resources)) Sfx.Build();
             }, "upgrade"));
         }
@@ -1867,102 +1699,6 @@ namespace IL6
         // ====================================================================
         // 영입 다이얼로그 (하단 중앙)
         // ====================================================================
-        private void ShowRecruitCutscene(string displayName, string role, string dialogText)
-        {
-            _recruitCutName = string.IsNullOrEmpty(displayName) ? "방랑자" : displayName;
-            _recruitCutRole = string.IsNullOrEmpty(role) ? "동료" : role;
-            _recruitCutDialog = string.IsNullOrEmpty(dialogText) ? "함께하겠습니다." : dialogText;
-            _recruitCutPortrait = PortraitForRole(_recruitCutRole);
-            _recruitCutLeft = 4.5f;
-            if (!_recruitCutPaused)
-            {
-                _recruitCutPrevTimeScale = Time.timeScale;
-                Time.timeScale = 0f;
-                _recruitCutPaused = true;
-            }
-        }
-
-        private void DrawRecruitCutscene()
-        {
-            if (_recruitCutLeft <= 0f)
-            {
-                EndRecruitCutscene();
-                return;
-            }
-            _recruitCutLeft -= Time.unscaledDeltaTime;
-            if (Event.current != null && Event.current.type == EventType.MouseDown)
-            {
-                EndRecruitCutscene();
-                Event.current.Use();
-                return;
-            }
-
-            float fade = Mathf.Clamp01(Mathf.Min(_recruitCutLeft, 4.5f - _recruitCutLeft) / 0.35f);
-            var oldC = GUI.color;
-            GUI.color = new Color(1f, 1f, 1f, fade);
-
-            UiTheme.Rect(new Rect(0, 0, MobileHudLayout.Width, MobileHudLayout.Height), new Color(0f, 0f, 0f, 0.48f * fade));
-
-            int panelW = Mathf.Min(880, MobileHudLayout.Width - 48);
-            int panelH = 210;
-            var panel = new Rect(MobileHudLayout.Width / 2f - panelW / 2f, MobileHudLayout.Height - panelH - 32, panelW, panelH);
-            UiTheme.Rect(new Rect(panel.x - 2, panel.y - 2, panel.width + 4, panel.height + 4), new Color(0.95f, 0.78f, 0.35f, 0.85f * fade));
-            UiTheme.Rect(panel, new Color(0.055f, 0.07f, 0.10f, 0.96f * fade));
-
-            float portraitW = Mathf.Min(260f, panel.width * 0.32f);
-            float portraitH = Mathf.Min(360f, Mathf.Max(150f, panel.y - 16f));
-            float portraitY = Mathf.Max(16f, panel.y - portraitH + 52f);
-            var portraitRect = new Rect(panel.x + 22, portraitY, portraitW, portraitH);
-            if (_recruitCutPortrait != null)
-                GUI.DrawTexture(InnerRect(portraitRect, 4f), _recruitCutPortrait, ScaleMode.ScaleToFit, true);
-
-            var nameStyle = new GUIStyle(_title) { fontSize = 26, alignment = TextAnchor.MiddleLeft };
-            var roleStyle = new GUIStyle(_labelSubtle) { fontSize = 16, alignment = TextAnchor.MiddleLeft };
-            var dialogStyle = new GUIStyle(_label) { fontSize = 21, wordWrap = true, alignment = TextAnchor.UpperLeft };
-            var hintStyle = new GUIStyle(_labelSubtle) { fontSize = 13, alignment = TextAnchor.MiddleRight };
-
-            float tx = panel.x + portraitW + 52f;
-            float tw = panel.width - portraitW - 82f;
-            HudText.Label(new Rect(tx, panel.y + 24, tw, 34), $"{_recruitCutName}", nameStyle);
-            HudText.Label(new Rect(tx, panel.y + 58, tw, 22), $"새 동료 · {_recruitCutRole}", roleStyle);
-            UiTheme.Separator(new Rect(tx, panel.y + 88, tw, 1));
-            HudText.Label(new Rect(tx, panel.y + 106, tw, 66), $"\"{_recruitCutDialog}\"", dialogStyle);
-            HudText.Label(new Rect(tx, panel.y + panel.height - 34, tw, 22), "탭해서 모험 계속하기", hintStyle);
-
-            GUI.color = oldC;
-        }
-
-        private void EndRecruitCutscene()
-        {
-            _recruitCutLeft = 0f;
-            if (_recruitCutPaused)
-            {
-                bool runeModalOpen = Progression != null && Progression.LevelUpPending;
-                bool deathOpen = Player != null && Player.IsDead;
-                Time.timeScale = _buildPaused || runeModalOpen || deathOpen ? 0f : Mathf.Max(0.0001f, _recruitCutPrevTimeScale);
-                _recruitCutPaused = false;
-            }
-        }
-
-        private Texture2D PortraitForRole(string role)
-        {
-            string key = role switch
-            {
-                "아이" => "companion-child-bust",
-                "농부" => "companion-aunt-bust",
-                "노인" => "companion-aunt-bust",
-                _ => "companion-uncle-bust",
-            };
-
-            if (SpriteBank.IsChildRole(role)) key = "companion-child-bust";
-            else if (SpriteBank.IsFemaleRole(role)) key = "companion-aunt-bust";
-
-            if (_portraitCache.TryGetValue(key, out var cached)) return cached;
-            var tex = Resources.Load<Texture2D>($"UI/portraits/{key}");
-            _portraitCache[key] = tex;
-            return tex;
-        }
-
         // ====================================================================
         // 룬 모달 / 사망 오버레이
         // ====================================================================
@@ -2081,7 +1817,7 @@ namespace IL6
             // 사망/룬모달/튜토리얼이 떠 있을 때는 ESC 무시
             bool blockedByModal = _researchOpen || _buildPaused || (Player != null && Player.IsDead)
                 || (Progression != null && Progression.LevelUpPending)
-                || (!_tutorialDismissed && PlayerPrefs.GetInt(TutorialPrefKey, 0) == 0);
+                || TutorialDialogueBlocking;
 
             if (Event.current != null && Event.current.type == EventType.KeyDown
                 && Event.current.keyCode == KeyCode.Escape && !blockedByModal)
@@ -2104,7 +1840,7 @@ namespace IL6
 
             UiTheme.Rect(new Rect(0, 0, MobileHudLayout.Width, MobileHudLayout.Height), new Color(0, 0, 0, 0.7f));
 
-            var modal = HudLayout.CenterModal(480f, 420f);
+            var modal = HudLayout.CenterModal(480f, 560f);
             int W = (int)modal.width;
             UiTheme.Panel(modal);
             UiTheme.TitleBar(modal, "모험 메뉴", _title);
@@ -2135,6 +1871,12 @@ namespace IL6
             }
             by += 60;
             if (UiTheme.Button(new Rect(bx, by, bw, 48), "연구 목록 · 건물별 업그레이드", _btn)) OpenResearchCatalog();
+            by += 60;
+            HudText.Label(new Rect(bx,by,bw,24),$"화면 UI 크기 {HudViewSettings.UiScale:P0}",_label);
+            HudViewSettings.UiScale=GUI.HorizontalSlider(new Rect(bx,by+30,bw,20),HudViewSettings.UiScale,.8f,1f);
+            by += 60;
+            HudText.Label(new Rect(bx,by,bw,24),$"월드 확대 {HudViewSettings.WorldZoom:P0}",_label);
+            HudViewSettings.WorldZoom=GUI.HorizontalSlider(new Rect(bx,by+30,bw,20),HudViewSettings.WorldZoom,.75f,1.4f);
             by += 60;
             if (UiTheme.Button(new Rect(bx, by, bw, 48), "새로 시작", _btn))
             {

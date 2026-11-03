@@ -1,0 +1,123 @@
+[
+  {
+    "key": "hero_axe",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-93309f8b-280d-4153-87ce-d06f7b000068.png",
+    "prompt": "Create a TWO-VIEW world game sprite sheet from the reference identity, NOT dialogue illustration. Transparent background, landscape exactly two equally sized square cells side by side. LEFT cell: full-body FRONT view facing screen down toward viewer. RIGHT cell: same character full-body BACK view facing screen up AWAY from viewer, no face visible. Both torso and face strictly front/back, NOT profile or 3/4. Slightly elevated orthographic RPG game camera so tops of head and boots visible, no horizon or isometric rotation. Keep chunky cute 3-head-tall chibi proportions, same head/body ratio and detailed pixel-art style, hair, outfit, colors, gender, age and role props as reference. Each figure centered independently in its half, matching height and boots baseline, entire silhouette and props inside cell with 8% clear transparent padding on all sides. Neutral standing ready pose. Only TWO figures, no labels, text, frames, shadows or scenery. True transparent alpha. The input is a sprite sheet identity/style reference only. Draw only the SAME red-haired young girl in TWO full-body views, each ~3 heads tall. Equip her existing two-headed axe. Do not reproduce the input sheet layout; output ONLY front at left and back at right.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Characters\\Directions20261026\\hero_axe.png",
+    "size": [
+      1774,
+      887
+    ]
+  },
+  {
+    "key": "hero_bow",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-63ad5e98-e74e-4010-9cdf-3a5af1528941.png",
+    "prompt": "Create a TWO-VIEW world game sprite sheet from the reference identity, NOT dialogue illustration. Transparent background, landscape exactly two equally sized square cells side by side. LEFT cell: full-body FRONT view facing screen down toward viewer. RIGHT cell: same character full-body BACK view facing screen up AWAY from viewer, no face visible. Both torso and face strictly front/back, NOT profile or 3/4. Slightly elevated orthographic RPG game camera so tops of head and boots visible, no horizon or isometric rotation. Keep chunky cute 3-head-tall chibi proportions, same head/body ratio and detailed pixel-art style, hair, outfit, colors, gender, age and role props as reference. Each figure centered independently in its half, matching height and boots baseline, entire silhouette and props inside cell with 8% clear transparent padding on all sides. Neutral standing ready pose. Only TWO figures, no labels, text, frames, shadows or scenery. True transparent alpha. The input is a sprite sheet identity/style reference only. Draw only the SAME red-haired young girl in TWO full-body views, each ~3 heads tall. Equip a wooden bow and quiver, NO axe. Do not reproduce the input sheet layout; output ONLY front at left and back at right.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Characters\\Directions20261026\\hero_bow.png",
+    "size": [
+      1774,
+      887
+    ]
+  },
+  {
+    "key": "hero_hammer",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-999f665d-147f-4146-b3c2-3a826f3418af.png",
+    "prompt": "Create a TWO-VIEW world game sprite sheet from the reference identity, NOT dialogue illustration. Transparent background, landscape exactly two equally sized square cells side by side. LEFT cell: full-body FRONT view facing screen down toward viewer. RIGHT cell: same character full-body BACK view facing screen up AWAY from viewer, no face visible. Both torso and face strictly front/back, NOT profile or 3/4. Slightly elevated orthographic RPG game camera so tops of head and boots visible, no horizon or isometric rotation. Keep chunky cute 3-head-tall chibi proportions, same head/body ratio and detailed pixel-art style, hair, outfit, colors, gender, age and role props as reference. Each figure centered independently in its half, matching height and boots baseline, entire silhouette and props inside cell with 8% clear transparent padding on all sides. Neutral standing ready pose. Only TWO figures, no labels, text, frames, shadows or scenery. True transparent alpha. The input is a sprite sheet identity/style reference only. Draw only the SAME red-haired young girl in TWO full-body views, each ~3 heads tall. Equip a small wooden construction hammer, NO axe or bow. Do not reproduce the input sheet layout; output ONLY front at left and back at right.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Characters\\Directions20261026\\hero_hammer.png",
+    "size": [
+      1774,
+      887
+    ]
+  },
+  {
+    "key": "hunter",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-5a52eb7e-ea80-4ca3-8661-45021b92ed19.png",
+    "prompt": "Create a TWO-VIEW world game sprite sheet from the reference identity, NOT dialogue illustration. Transparent background, landscape exactly two equally sized square cells side by side. LEFT cell: full-body FRONT view facing screen down toward viewer. RIGHT cell: same character full-body BACK view facing screen up AWAY from viewer, no face visible. Both torso and face strictly front/back, NOT profile or 3/4. Slightly elevated orthographic RPG game camera so tops of head and boots visible, no horizon or isometric rotation. Keep chunky cute 3-head-tall chibi proportions, same head/body ratio and detailed pixel-art style, hair, outfit, colors, gender, age and role props as reference. Each figure centered independently in its half, matching height and boots baseline, entire silhouette and props inside cell with 8% clear transparent padding on all sides. Neutral standing ready pose. Only TWO figures, no labels, text, frames, shadows or scenery. True transparent alpha. Preserve all character-specific equipment; held items may be partly obscured appropriately in back view.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Characters\\Directions20261026\\hunter.png",
+    "size": [
+      1774,
+      887
+    ]
+  },
+  {
+    "key": "warrior",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-c1c6e751-f2ac-4f0b-8881-57528f1c3c17.png",
+    "prompt": "Create a TWO-VIEW world game sprite sheet from the reference identity, NOT dialogue illustration. Transparent background, landscape exactly two equally sized square cells side by side. LEFT cell: full-body FRONT view facing screen down toward viewer. RIGHT cell: same character full-body BACK view facing screen up AWAY from viewer, no face visible. Both torso and face strictly front/back, NOT profile or 3/4. Slightly elevated orthographic RPG game camera so tops of head and boots visible, no horizon or isometric rotation. Keep chunky cute 3-head-tall chibi proportions, same head/body ratio and detailed pixel-art style, hair, outfit, colors, gender, age and role props as reference. Each figure centered independently in its half, matching height and boots baseline, entire silhouette and props inside cell with 8% clear transparent padding on all sides. Neutral standing ready pose. Only TWO figures, no labels, text, frames, shadows or scenery. True transparent alpha. Preserve all character-specific equipment; held items may be partly obscured appropriately in back view.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Characters\\Directions20261026\\warrior.png",
+    "size": [
+      1774,
+      887
+    ]
+  },
+  {
+    "key": "farmer",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-687a080c-9f00-43ac-9259-4af192d74fc8.png",
+    "prompt": "Create a TWO-VIEW world game sprite sheet from the reference identity, NOT dialogue illustration. Transparent background, landscape exactly two equally sized square cells side by side. LEFT cell: full-body FRONT view facing screen down toward viewer. RIGHT cell: same character full-body BACK view facing screen up AWAY from viewer, no face visible. Both torso and face strictly front/back, NOT profile or 3/4. Slightly elevated orthographic RPG game camera so tops of head and boots visible, no horizon or isometric rotation. Keep chunky cute 3-head-tall chibi proportions, same head/body ratio and detailed pixel-art style, hair, outfit, colors, gender, age and role props as reference. Each figure centered independently in its half, matching height and boots baseline, entire silhouette and props inside cell with 8% clear transparent padding on all sides. Neutral standing ready pose. Only TWO figures, no labels, text, frames, shadows or scenery. True transparent alpha. Preserve all character-specific equipment; held items may be partly obscured appropriately in back view.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Characters\\Directions20261026\\farmer.png",
+    "size": [
+      1774,
+      887
+    ]
+  },
+  {
+    "key": "cook",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-53ecce4b-365d-4599-9122-0b9a672ba9aa.png",
+    "prompt": "Create a TWO-VIEW world game sprite sheet from the reference identity, NOT dialogue illustration. Transparent background, landscape exactly two equally sized square cells side by side. LEFT cell: full-body FRONT view facing screen down toward viewer. RIGHT cell: same character full-body BACK view facing screen up AWAY from viewer, no face visible. Both torso and face strictly front/back, NOT profile or 3/4. Slightly elevated orthographic RPG game camera so tops of head and boots visible, no horizon or isometric rotation. Keep chunky cute 3-head-tall chibi proportions, same head/body ratio and detailed pixel-art style, hair, outfit, colors, gender, age and role props as reference. Each figure centered independently in its half, matching height and boots baseline, entire silhouette and props inside cell with 8% clear transparent padding on all sides. Neutral standing ready pose. Only TWO figures, no labels, text, frames, shadows or scenery. True transparent alpha. Preserve all character-specific equipment; held items may be partly obscured appropriately in back view.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Characters\\Directions20261026\\cook.png",
+    "size": [
+      1774,
+      887
+    ]
+  },
+  {
+    "key": "healer",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-357c7161-92dd-48c1-b9bf-53ccf28e1242.png",
+    "prompt": "Create a TWO-VIEW world game sprite sheet from the reference identity, NOT dialogue illustration. Transparent background, landscape exactly two equally sized square cells side by side. LEFT cell: full-body FRONT view facing screen down toward viewer. RIGHT cell: same character full-body BACK view facing screen up AWAY from viewer, no face visible. Both torso and face strictly front/back, NOT profile or 3/4. Slightly elevated orthographic RPG game camera so tops of head and boots visible, no horizon or isometric rotation. Keep chunky cute 3-head-tall chibi proportions, same head/body ratio and detailed pixel-art style, hair, outfit, colors, gender, age and role props as reference. Each figure centered independently in its half, matching height and boots baseline, entire silhouette and props inside cell with 8% clear transparent padding on all sides. Neutral standing ready pose. Only TWO figures, no labels, text, frames, shadows or scenery. True transparent alpha. Preserve all character-specific equipment; held items may be partly obscured appropriately in back view.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Characters\\Directions20261026\\healer.png",
+    "size": [
+      1774,
+      887
+    ]
+  },
+  {
+    "key": "aunt",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-3d92e38b-ca1f-401c-a0dc-3700a9986215.png",
+    "prompt": "Create a TWO-VIEW world game sprite sheet from the reference identity, NOT dialogue illustration. Transparent background, landscape exactly two equally sized square cells side by side. LEFT cell: full-body FRONT view facing screen down toward viewer. RIGHT cell: same character full-body BACK view facing screen up AWAY from viewer, no face visible. Both torso and face strictly front/back, NOT profile or 3/4. Slightly elevated orthographic RPG game camera so tops of head and boots visible, no horizon or isometric rotation. Keep chunky cute 3-head-tall chibi proportions, same head/body ratio and detailed pixel-art style, hair, outfit, colors, gender, age and role props as reference. Each figure centered independently in its half, matching height and boots baseline, entire silhouette and props inside cell with 8% clear transparent padding on all sides. Neutral standing ready pose. Only TWO figures, no labels, text, frames, shadows or scenery. True transparent alpha. Preserve all character-specific equipment; held items may be partly obscured appropriately in back view.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Characters\\Directions20261026\\aunt.png",
+    "size": [
+      1774,
+      887
+    ]
+  },
+  {
+    "key": "uncle",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-ab19794c-0d0b-482a-88f1-af25ddb198ca.png",
+    "prompt": "Create a TWO-VIEW world game sprite sheet from the reference identity, NOT dialogue illustration. Transparent background, landscape exactly two equally sized square cells side by side. LEFT cell: full-body FRONT view facing screen down toward viewer. RIGHT cell: same character full-body BACK view facing screen up AWAY from viewer, no face visible. Both torso and face strictly front/back, NOT profile or 3/4. Slightly elevated orthographic RPG game camera so tops of head and boots visible, no horizon or isometric rotation. Keep chunky cute 3-head-tall chibi proportions, same head/body ratio and detailed pixel-art style, hair, outfit, colors, gender, age and role props as reference. Each figure centered independently in its half, matching height and boots baseline, entire silhouette and props inside cell with 8% clear transparent padding on all sides. Neutral standing ready pose. Only TWO figures, no labels, text, frames, shadows or scenery. True transparent alpha. Preserve all character-specific equipment; held items may be partly obscured appropriately in back view.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Characters\\Directions20261026\\uncle.png",
+    "size": [
+      1774,
+      887
+    ]
+  },
+  {
+    "key": "child",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-2ed70bff-1342-4d1a-84f8-53142fddd835.png",
+    "prompt": "Create a TWO-VIEW world game sprite sheet from the reference identity, NOT dialogue illustration. Transparent background, landscape exactly two equally sized square cells side by side. LEFT cell: full-body FRONT view facing screen down toward viewer. RIGHT cell: same character full-body BACK view facing screen up AWAY from viewer, no face visible. Both torso and face strictly front/back, NOT profile or 3/4. Slightly elevated orthographic RPG game camera so tops of head and boots visible, no horizon or isometric rotation. Keep chunky cute 3-head-tall chibi proportions, same head/body ratio and detailed pixel-art style, hair, outfit, colors, gender, age and role props as reference. Each figure centered independently in its half, matching height and boots baseline, entire silhouette and props inside cell with 8% clear transparent padding on all sides. Neutral standing ready pose. Only TWO figures, no labels, text, frames, shadows or scenery. True transparent alpha. Preserve all character-specific equipment; held items may be partly obscured appropriately in back view.",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\Sprites\\Characters\\Directions20261026\\child.png",
+    "size": [
+      1774,
+      887
+    ]
+  }
+]

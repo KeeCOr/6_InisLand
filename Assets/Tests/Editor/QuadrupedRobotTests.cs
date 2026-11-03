@@ -11,7 +11,7 @@ namespace IL6.Tests
         {
             var sprite = Resources.Load<Sprite>("Sprites/Enemies/quadruped_robot");
             Assert.That(sprite, Is.Not.Null);
-            Assert.That(sprite.texture.filterMode, Is.EqualTo(FilterMode.Point));
+            Assert.That(sprite.texture.filterMode, Is.EqualTo(FilterMode.Bilinear));
             Assert.That(sprite.bounds.size.x, Is.LessThan(2.5f));
         }
 

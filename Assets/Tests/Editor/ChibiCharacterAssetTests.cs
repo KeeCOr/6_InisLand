@@ -13,7 +13,8 @@ namespace IL6.Tests
             Assert.That(sprite,Is.Not.Null);
             Assert.That(sprite.texture.width,Is.GreaterThanOrEqualTo(256));
             Assert.That(sprite.rect.width/sprite.rect.height,Is.InRange(.9f,1.1f),"All roles must use the new compact atlas cells");
-            Assert.That(sprite.bounds.size.y,Is.InRange(.9f,1.4f),"World scale must stay consistent across roles");
+            float worldHeight=sprite.bounds.size.y*SpriteBank.CompanionScaleForRole(role).y;
+            Assert.That(worldHeight,Is.InRange(.9f,1.4f),"Rendered world scale must stay consistent across roles");
             Assert.That(sprite.pivot.y/sprite.rect.height,Is.InRange(0f,.3f),"Feet must anchor to the ground");
         }
         [TestCase("axe")][TestCase("bow")]

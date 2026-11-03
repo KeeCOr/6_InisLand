@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using IL6.Events;
 
 namespace IL6
@@ -25,6 +25,7 @@ namespace IL6
 
         public bool IsPlayerInRange { get; private set; }
         public string DisplayNamePublic => DisplayName;
+        public Texture2D DialoguePortrait => DialoguePortraits.ForRole(Role);
 
         private Vector3 _baseScale;
         private bool _appearanceReady;
@@ -50,6 +51,8 @@ namespace IL6
         private void Start()
         {
             EnsureAppearance();
+            // Also cover authored scene/prefab candidates before the first visible frame.
+            if(CanRecruit()) transform.position=ProceduralSpawner.OutsideVillageNpcPosition(transform.position);
         }
 
         private void EnsureAppearance()
@@ -58,6 +61,8 @@ namespace IL6
             {
                 _baseScale = Vector3.Scale(transform.localScale, SpriteBank.CompanionScaleForRole(Role));
                 _appearanceReady = true;
+                var directions=GetComponent<DirectionalCharacterVisual>() ?? gameObject.AddComponent<DirectionalCharacterVisual>();
+                directions.Configure(Role);
             }
             transform.localScale = _baseScale;
             if (Player == null)
@@ -78,15 +83,8 @@ namespace IL6
             float d = Vector2.Distance(transform.position, Player.position);
             IsPlayerInRange = d <= RecruitRange;
 
-            if (IsPlayerInRange)
-            {
-                float pulse = 1f + Mathf.Sin(Time.time * 6f) * 0.08f;
-                transform.localScale = _baseScale * pulse;
-            }
-            else
-            {
-                transform.localScale = _baseScale;
-            }
+            // Keep crown-to-chin size stable while approaching and during dialogue.
+            transform.localScale = _baseScale;
         }
 
         public const int FreeCapacity = 12;

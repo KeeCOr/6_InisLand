@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -69,7 +69,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -114,11 +114,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 724
-        width: 362
-        height: 362
+        y: 676
+        width: 289
+        height: 338
       alignment: 9
-      pivot: {x: 0.58, y: 0}
+      pivot: {x: 0.5, y: 0.02366864}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -134,12 +134,12 @@ TextureImporter:
       name: redhair_logging_1
       rect:
         serializedVersion: 2
-        x: 362
-        y: 724
-        width: 362
-        height: 362
+        x: 289
+        y: 676
+        width: 289
+        height: 338
       alignment: 9
-      pivot: {x: 0.58, y: 0}
+      pivot: {x: 0.5, y: 0.02366864}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -155,12 +155,12 @@ TextureImporter:
       name: redhair_logging_2
       rect:
         serializedVersion: 2
-        x: 724
-        y: 724
-        width: 362
-        height: 362
+        x: 578
+        y: 676
+        width: 289
+        height: 338
       alignment: 9
-      pivot: {x: 0.58, y: 0}
+      pivot: {x: 0.5, y: 0.02366864}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -176,12 +176,12 @@ TextureImporter:
       name: redhair_logging_3
       rect:
         serializedVersion: 2
-        x: 1086
-        y: 724
-        width: 362
-        height: 362
+        x: 867
+        y: 676
+        width: 289
+        height: 338
       alignment: 9
-      pivot: {x: 0.58, y: 0}
+      pivot: {x: 0.5, y: 0.02366864}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -198,11 +198,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 362
-        width: 362
-        height: 362
+        y: 338
+        width: 289
+        height: 338
       alignment: 9
-      pivot: {x: 0.58, y: 0.03038674}
+      pivot: {x: 0.5, y: 0.02366864}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -218,12 +218,12 @@ TextureImporter:
       name: redhair_logging_5
       rect:
         serializedVersion: 2
-        x: 362
-        y: 362
-        width: 362
-        height: 362
+        x: 289
+        y: 338
+        width: 289
+        height: 338
       alignment: 9
-      pivot: {x: 0.58, y: 0.002762431}
+      pivot: {x: 0.5, y: 0.02366864}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -239,12 +239,12 @@ TextureImporter:
       name: redhair_logging_6
       rect:
         serializedVersion: 2
-        x: 724
-        y: 362
-        width: 362
-        height: 362
+        x: 578
+        y: 338
+        width: 289
+        height: 338
       alignment: 9
-      pivot: {x: 0.58, y: 0.002762431}
+      pivot: {x: 0.5, y: 0.02366864}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -260,12 +260,12 @@ TextureImporter:
       name: redhair_logging_7
       rect:
         serializedVersion: 2
-        x: 1086
-        y: 362
-        width: 362
-        height: 362
+        x: 867
+        y: 338
+        width: 289
+        height: 338
       alignment: 9
-      pivot: {x: 0.58, y: 0.03038674}
+      pivot: {x: 0.5, y: 0.02366864}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -283,10 +283,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 362
-        height: 362
+        width: 289
+        height: 338
       alignment: 9
-      pivot: {x: 0.58, y: 0.17679559}
+      pivot: {x: 0.5, y: 0.02366864}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -302,12 +302,12 @@ TextureImporter:
       name: redhair_logging_9
       rect:
         serializedVersion: 2
-        x: 362
+        x: 289
         y: 0
-        width: 362
-        height: 362
+        width: 289
+        height: 338
       alignment: 9
-      pivot: {x: 0.58, y: 0.17679559}
+      pivot: {x: 0.5, y: 0.02366864}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -323,12 +323,12 @@ TextureImporter:
       name: redhair_logging_10
       rect:
         serializedVersion: 2
-        x: 724
+        x: 578
         y: 0
-        width: 362
-        height: 362
+        width: 289
+        height: 338
       alignment: 9
-      pivot: {x: 0.58, y: 0.17679559}
+      pivot: {x: 0.5, y: 0.02366864}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -344,12 +344,12 @@ TextureImporter:
       name: redhair_logging_11
       rect:
         serializedVersion: 2
-        x: 1086
+        x: 867
         y: 0
-        width: 362
-        height: 362
+        width: 289
+        height: 338
       alignment: 9
-      pivot: {x: 0.58, y: 0.17679559}
+      pivot: {x: 0.5, y: 0.02366864}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

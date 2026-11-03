@@ -18,7 +18,7 @@ namespace IL6.Tests
             typeof(SimpleHud).GetMethod("PrepareHudPreview",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(hud,null);
             hud.Player.transform.position=new Vector3(1000,1000,0);
             var session=GameSession.Instance;var previous=session.Research.Snapshot();var resources=session.Resources.Snapshot();
-            string path=Path.Combine(Application.persistentDataPath,SaveLoad.FileName);byte[] saved=File.Exists(path)?File.ReadAllBytes(path):null;
+            string path=SaveLoad.StoragePath;byte[] saved=File.Exists(path)?File.ReadAllBytes(path):null;
             var objects=new List<GameObject>();
             session.Research.Restore(null);session.Resources.IncreaseCap(1000);session.Resources.Add(ResourceKind.Wood,700);session.Resources.Add(ResourceKind.Stone,700);session.Resources.Spend(ResourceKind.Ore,session.Resources.Get(ResourceKind.Ore));session.Resources.Add(ResourceKind.Ore,90);
             try {

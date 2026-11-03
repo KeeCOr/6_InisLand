@@ -19,6 +19,9 @@ namespace IL6
         protected SpriteRenderer _sr;
         protected Transform _player;
         private float _regenTimer;
+        public float AttackAlertDuration = 5f;
+        private float _attackAlertUntil;
+        public bool IsAttackAlert => !IsDead && Time.time < _attackAlertUntil;
 
         protected virtual void Awake()
         {
@@ -37,6 +40,7 @@ namespace IL6
             var p = GameObject.FindWithTag("Player");
             if (p != null) _player = p.transform;
             if (CurrentHp <= 0) CurrentHp = MaxHp;
+            AnimalMotionVisual.Attach(gameObject);
         }
 
         public void InitHp(int hp)
@@ -45,9 +49,19 @@ namespace IL6
             CurrentHp = hp;
         }
 
+        public void TakeDamage(int amount, Vector2 attackerPosition)
+        {
+            if (IsDead || amount <= 0) return;
+            OnAttacked(attackerPosition);
+            TakeDamage(amount);
+        }
+
+        protected virtual void OnAttacked(Vector2 attackerPosition) { }
+
         public virtual void TakeDamage(int amount)
         {
-            if (CurrentHp <= 0) return;
+            if (CurrentHp <= 0 || amount <= 0) return;
+            _attackAlertUntil = Time.time + Mathf.Max(0f, AttackAlertDuration);
             CurrentHp = Mathf.Max(0, CurrentHp - amount);
             GameFeel.HitFlash(this, _sr);
             GameFeel.FloatText(transform.position, $"-{amount}", new Color(1f, 0.85f, 0.4f));

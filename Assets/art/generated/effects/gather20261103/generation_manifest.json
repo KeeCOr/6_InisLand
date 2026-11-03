@@ -1,0 +1,101 @@
+{
+  "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-dea2116c-9f78-4269-857e-ea6026718143.png",
+  "mode": "built-in image_gen",
+  "world_width": 1.35,
+  "pivot": [
+    0.5,
+    0.3
+  ],
+  "frames": [
+    {
+      "path": "Assets/Resources/Sprites/FX/Gather20261103/wood_start.png",
+      "source_rect": [
+        0,
+        0,
+        418,
+        418
+      ],
+      "sha256": "a16494edb7a886bd0feeb87521b19cb3dca04eedfbcba30ed9c6d07f1c37f709"
+    },
+    {
+      "path": "Assets/Resources/Sprites/FX/Gather20261103/wood_loop.png",
+      "source_rect": [
+        418,
+        0,
+        836,
+        418
+      ],
+      "sha256": "ba75e05a88640f7dcc0ee39712e436130cf01ab892548e26ec5481751a2f13e4"
+    },
+    {
+      "path": "Assets/Resources/Sprites/FX/Gather20261103/wood_end.png",
+      "source_rect": [
+        836,
+        0,
+        1254,
+        418
+      ],
+      "sha256": "fa951c5e61e1180e49bc31362909d76a6273505bdc14041ef3a94872668e2660"
+    },
+    {
+      "path": "Assets/Resources/Sprites/FX/Gather20261103/stone_start.png",
+      "source_rect": [
+        0,
+        418,
+        418,
+        836
+      ],
+      "sha256": "1276dcdb9cf2c8b6bdb6af859a92a1808ff9ea041bb29d6b126b407255ceaae9"
+    },
+    {
+      "path": "Assets/Resources/Sprites/FX/Gather20261103/stone_loop.png",
+      "source_rect": [
+        418,
+        418,
+        836,
+        836
+      ],
+      "sha256": "8c7a5f56ec1d6f87907ea7cfd5347fe0b552496a998bafe68e9fac620cb02149"
+    },
+    {
+      "path": "Assets/Resources/Sprites/FX/Gather20261103/stone_end.png",
+      "source_rect": [
+        836,
+        418,
+        1254,
+        836
+      ],
+      "sha256": "ce5d5efea179ff759a52c71a8da71696e82099f4cd86fa9f88fc42d1bf559e21"
+    },
+    {
+      "path": "Assets/Resources/Sprites/FX/Gather20261103/plant_start.png",
+      "source_rect": [
+        0,
+        836,
+        418,
+        1254
+      ],
+      "sha256": "beb09dc55ed2a60b770e1d3f997279d40fffca8c7ddbe11ec81ec7045186c23f"
+    },
+    {
+      "path": "Assets/Resources/Sprites/FX/Gather20261103/plant_loop.png",
+      "source_rect": [
+        418,
+        836,
+        836,
+        1254
+      ],
+      "sha256": "fc7c4f2ed1928ecbbb431aad5f73940eef5d14cc2e230b3098429277db02acb3"
+    },
+    {
+      "path": "Assets/Resources/Sprites/FX/Gather20261103/plant_end.png",
+      "source_rect": [
+        836,
+        836,
+        1254,
+        1254
+      ],
+      "sha256": "3923132e5afa0e605d0bd8d07d331869933b379f2d5fdd5063dfeb9415ccbcad"
+    }
+  ]
+}

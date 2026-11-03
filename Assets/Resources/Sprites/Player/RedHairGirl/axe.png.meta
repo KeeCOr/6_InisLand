@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -69,7 +69,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -114,11 +114,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 940
-        width: 314
-        height: 314
+        y: 843
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.07324841}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -134,12 +134,12 @@ TextureImporter:
       name: redhair_axe_1
       rect:
         serializedVersion: 2
-        x: 314
-        y: 940
-        width: 313
-        height: 314
+        x: 307
+        y: 843
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.070063695}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -155,12 +155,12 @@ TextureImporter:
       name: redhair_axe_2
       rect:
         serializedVersion: 2
-        x: 627
-        y: 940
-        width: 313
-        height: 314
+        x: 614
+        y: 843
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.070063695}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -176,12 +176,12 @@ TextureImporter:
       name: redhair_axe_3
       rect:
         serializedVersion: 2
-        x: 940
-        y: 940
-        width: 314
-        height: 314
+        x: 921
+        y: 843
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.070063695}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -198,11 +198,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 627
-        width: 314
-        height: 313
+        y: 562
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.10223642}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -218,12 +218,12 @@ TextureImporter:
       name: redhair_axe_5
       rect:
         serializedVersion: 2
-        x: 314
-        y: 627
-        width: 313
-        height: 313
+        x: 307
+        y: 562
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.10223642}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -239,12 +239,12 @@ TextureImporter:
       name: redhair_axe_6
       rect:
         serializedVersion: 2
-        x: 627
-        y: 627
-        width: 313
-        height: 313
+        x: 614
+        y: 562
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.10223642}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -260,12 +260,12 @@ TextureImporter:
       name: redhair_axe_7
       rect:
         serializedVersion: 2
-        x: 940
-        y: 627
-        width: 314
-        height: 313
+        x: 921
+        y: 562
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.10223642}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -282,11 +282,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 314
-        width: 314
-        height: 313
+        y: 281
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.10543131}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -302,12 +302,12 @@ TextureImporter:
       name: redhair_axe_9
       rect:
         serializedVersion: 2
-        x: 314
-        y: 314
-        width: 313
-        height: 313
+        x: 307
+        y: 281
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.10543131}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -323,12 +323,12 @@ TextureImporter:
       name: redhair_axe_10
       rect:
         serializedVersion: 2
-        x: 627
-        y: 314
-        width: 313
-        height: 313
+        x: 614
+        y: 281
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.092651755}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -344,12 +344,12 @@ TextureImporter:
       name: redhair_axe_11
       rect:
         serializedVersion: 2
-        x: 940
-        y: 314
-        width: 314
-        height: 313
+        x: 921
+        y: 281
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.092651755}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -367,10 +367,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 314
-        height: 314
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.1656051}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -386,12 +386,12 @@ TextureImporter:
       name: redhair_axe_13
       rect:
         serializedVersion: 2
-        x: 314
+        x: 307
         y: 0
-        width: 313
-        height: 314
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.20063694}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -407,12 +407,12 @@ TextureImporter:
       name: redhair_axe_14
       rect:
         serializedVersion: 2
-        x: 627
+        x: 614
         y: 0
-        width: 313
-        height: 314
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.17515923}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -428,12 +428,12 @@ TextureImporter:
       name: redhair_axe_15
       rect:
         serializedVersion: 2
-        x: 940
+        x: 921
         y: 0
-        width: 314
-        height: 314
+        width: 307
+        height: 281
       alignment: 9
-      pivot: {x: 0.58, y: 0.17197452}
+      pivot: {x: 0.5, y: 0.02846975}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

@@ -57,12 +57,15 @@ namespace IL6.Tests
             Assert.That((bool)place.Invoke(hud,new object[]{position}),Is.True);
             Assert.That(resources.Get(ResourceKind.Wood),Is.EqualTo(wood-cost.Wood));
             Assert.That(resources.Get(ResourceKind.Stone),Is.EqualTo(stone-cost.Stone));
-            Assert.That(Time.timeScale,Is.EqualTo(1));
+            Assert.That(Time.timeScale,Is.EqualTo(0),"Successful placement keeps construction paused for the next building");
+            Assert.That((BuildingKind?)typeof(SimpleHud).GetField("_pendingBuildKind",flags).GetValue(hud),Is.EqualTo(BuildingKind.House));
             var site=Object.FindFirstObjectByType<ConstructionSite>();
             Assert.That(site,Is.Not.Null);
             Assert.That(site.transform.position,Is.EqualTo(new Vector3(1000,-1000,0)));
             Assert.That(site.transform.localScale,Is.EqualTo(ConstructionPlacement.Scale(BuildingKind.House)));
             Assert.That(site.GetComponent<SpriteRenderer>().sprite,Is.EqualTo(ConstructionPlacement.Sprite(BuildingKind.House)));
+            typeof(SimpleHud).GetMethod("CloseBuildCatalog",flags).Invoke(hud,null);
+            Assert.That(Time.timeScale,Is.EqualTo(1),"Only leaving construction restores gameplay");
             Time.timeScale=.5f;
             typeof(SimpleHud).GetMethod("SetHudMode",flags).Invoke(hud,new object[]{SimpleHud.HudMode.Build});
             Assert.That(Time.timeScale,Is.EqualTo(0));
@@ -82,6 +85,17 @@ namespace IL6.Tests
             Assert.That(hud.TryPlaceBuildingAt(position+Vector3.right*5),Is.True);
             Assert.That(resources.Get(ResourceKind.Wood),Is.EqualTo(beforeFence-1),"Fence placement must cost one wood despite existing village fences");
             Assert.That(resources.Get(ResourceKind.Stone),Is.EqualTo(stoneBeforeFence));
+            Assert.That(Time.timeScale,Is.EqualTo(0));
+            Assert.That(hud.TryPlaceBuildingAt(position+Vector3.right*6),Is.True,"Adjacent fence segments can be placed without reopening the catalog");
+            Assert.That(resources.Get(ResourceKind.Wood),Is.EqualTo(beforeFence-2));
+            Assert.That(resources.Get(ResourceKind.Stone),Is.EqualTo(stoneBeforeFence));
+            resources.Restore(new ResourceSnapshot());
+            Assert.That(hud.TryPlaceBuildingAt(position+Vector3.right*7),Is.False,"Repeated placement rechecks affordability");
+            Assert.That(resources.Get(ResourceKind.Wood),Is.Zero);
+            Assert.That(Time.timeScale,Is.EqualTo(0),"Resource shortage does not silently leave construction");
+            Assert.That((BuildingKind?)typeof(SimpleHud).GetField("_pendingBuildKind",flags).GetValue(hud),Is.EqualTo(BuildingKind.Fence));
+            typeof(SimpleHud).GetMethod("CloseBuildCatalog",flags).Invoke(hud,null);
+            Assert.That(Time.timeScale,Is.EqualTo(1));
             yield return SceneManager.LoadSceneAsync("BootScene");
         }
     }

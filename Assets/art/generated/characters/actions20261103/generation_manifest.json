@@ -1,0 +1,1412 @@
+{
+  "groups": [
+    {
+      "key": "hero_axe",
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/hero_axe.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-115146cc-9abb-47d7-b903-f2142877e4f2.png",
+      "ppu": 337.0055478753541,
+      "standing_height": 1.044493190747684,
+      "foot_y": 3.6986302957937774e-10,
+      "frames": [
+        {
+          "name": "attack_side_Start",
+          "rect": {
+            "x": 0,
+            "y": 836,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.03588516716591891
+          }
+        },
+        {
+          "name": "attack_side_Loop",
+          "rect": {
+            "x": 418,
+            "y": 836,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.03588516716591891
+          }
+        },
+        {
+          "name": "attack_side_End",
+          "rect": {
+            "x": 836,
+            "y": 836,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.03588516716591891
+          }
+        },
+        {
+          "name": "attack_front_Start",
+          "rect": {
+            "x": 0,
+            "y": 418,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.052631578649172506
+          }
+        },
+        {
+          "name": "attack_front_Loop",
+          "rect": {
+            "x": 418,
+            "y": 418,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.052631578649172506
+          }
+        },
+        {
+          "name": "attack_front_End",
+          "rect": {
+            "x": 836,
+            "y": 418,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.052631578649172506
+          }
+        },
+        {
+          "name": "attack_back_Start",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.09330143510850265
+          }
+        },
+        {
+          "name": "attack_back_Loop",
+          "rect": {
+            "x": 418,
+            "y": 0,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.09090909061089499
+          }
+        },
+        {
+          "name": "attack_back_End",
+          "rect": {
+            "x": 836,
+            "y": 0,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.09090909061089499
+          }
+        }
+      ],
+      "sha256": "69939949e653b9a6cec09fe391c46f2409a091e5d50608ab064a5ff74741de2a"
+    },
+    {
+      "key": "hero_bow",
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/hero_bow.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-ded2a1c9-0984-4947-9fa8-0f7515aded8b.png",
+      "ppu": 335.2061600566572,
+      "standing_height": 1.0560665112483798,
+      "foot_y": 1.7052632133683376e-10,
+      "frames": [
+        {
+          "name": "attack_side_Start",
+          "rect": {
+            "x": 0,
+            "y": 836,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.06937799029387208
+          }
+        },
+        {
+          "name": "attack_side_Loop",
+          "rect": {
+            "x": 418,
+            "y": 836,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.06937799029387208
+          }
+        },
+        {
+          "name": "attack_side_End",
+          "rect": {
+            "x": 836,
+            "y": 836,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.06937799029387208
+          }
+        },
+        {
+          "name": "attack_front_Start",
+          "rect": {
+            "x": 0,
+            "y": 418,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": -1.3674993627729103e-10
+          }
+        },
+        {
+          "name": "attack_front_Loop",
+          "rect": {
+            "x": 418,
+            "y": 418,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": -1.3674993627729103e-10
+          }
+        },
+        {
+          "name": "attack_front_End",
+          "rect": {
+            "x": 836,
+            "y": 418,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.08851674627473333
+          }
+        },
+        {
+          "name": "attack_back_Start",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.07416267928908739
+          }
+        },
+        {
+          "name": "attack_back_Loop",
+          "rect": {
+            "x": 418,
+            "y": 0,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.07416267928908739
+          }
+        },
+        {
+          "name": "attack_back_End",
+          "rect": {
+            "x": 836,
+            "y": 0,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.07416267928908739
+          }
+        }
+      ],
+      "sha256": "f0b86f049cedbefde11ef2a05e448c5e8fb6b2ad738ddbb577df72ead12fb3af"
+    },
+    {
+      "key": "hero_hammer",
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/hero_hammer.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-a35cc6f2-c03a-4b9d-bff3-983a2deb769f.png",
+      "ppu": 338.0500105982906,
+      "standing_height": 1.0471823366414947,
+      "foot_y": 1.3127072052488312e-09,
+      "frames": [
+        {
+          "name": "attack_side_Start",
+          "rect": {
+            "x": 0,
+            "y": 836,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.06220095587617062
+          }
+        },
+        {
+          "name": "attack_side_Loop",
+          "rect": {
+            "x": 418,
+            "y": 836,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.06220095587617062
+          }
+        },
+        {
+          "name": "attack_side_End",
+          "rect": {
+            "x": 836,
+            "y": 836,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.06220095587617062
+          }
+        },
+        {
+          "name": "attack_front_Start",
+          "rect": {
+            "x": 0,
+            "y": 418,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.08851674534985482
+          }
+        },
+        {
+          "name": "attack_front_Loop",
+          "rect": {
+            "x": 418,
+            "y": 418,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.08851674534985482
+          }
+        },
+        {
+          "name": "attack_front_End",
+          "rect": {
+            "x": 836,
+            "y": 418,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.08851674534985482
+          }
+        },
+        {
+          "name": "attack_back_Start",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.08851674534985482
+          }
+        },
+        {
+          "name": "attack_back_Loop",
+          "rect": {
+            "x": 418,
+            "y": 0,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.08851674534985482
+          }
+        },
+        {
+          "name": "attack_back_End",
+          "rect": {
+            "x": 836,
+            "y": 0,
+            "width": 418,
+            "height": 418
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.08851674534985482
+          }
+        }
+      ],
+      "sha256": "72fbe9ca9af4a985847f19c95ebac1c242560b9b9394f27a5b177acf2d0660c9"
+    },
+    {
+      "key": "hunter",
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/hunter.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-9485d0d2-39a8-492a-ba39-fd65e12ee04b.png",
+      "ppu": 242.53623023866348,
+      "standing_height": 1.488437416730541,
+      "foot_y": 6.039006220247756e-10,
+      "frames": [
+        {
+          "name": "attack_side_Start",
+          "rect": {
+            "x": 0,
+            "y": 885,
+            "width": 395,
+            "height": 442
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.0723981897138738
+          }
+        },
+        {
+          "name": "attack_side_Loop",
+          "rect": {
+            "x": 395,
+            "y": 885,
+            "width": 396,
+            "height": 442
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.0723981897138738
+          }
+        },
+        {
+          "name": "attack_side_End",
+          "rect": {
+            "x": 791,
+            "y": 885,
+            "width": 395,
+            "height": 442
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.0723981897138738
+          }
+        },
+        {
+          "name": "attack_front_Start",
+          "rect": {
+            "x": 0,
+            "y": 458,
+            "width": 395,
+            "height": 427
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.08899297389585999
+          }
+        },
+        {
+          "name": "attack_front_Loop",
+          "rect": {
+            "x": 395,
+            "y": 458,
+            "width": 396,
+            "height": 427
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.08899297389585999
+          }
+        },
+        {
+          "name": "attack_front_End",
+          "rect": {
+            "x": 791,
+            "y": 458,
+            "width": 395,
+            "height": 427
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.08899297389585999
+          }
+        },
+        {
+          "name": "attack_back_Start",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 395,
+            "height": 458
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.12445414815181706
+          }
+        },
+        {
+          "name": "attack_back_Loop",
+          "rect": {
+            "x": 395,
+            "y": 0,
+            "width": 396,
+            "height": 458
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.12445414815181706
+          }
+        },
+        {
+          "name": "attack_back_End",
+          "rect": {
+            "x": 791,
+            "y": 0,
+            "width": 395,
+            "height": 458
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.1266375542653542
+          }
+        }
+      ],
+      "sha256": "6c6b6b5fb88cd005272c7560e26944dfa132327da5d122f39589958ec6d15e86"
+    },
+    {
+      "key": "warrior",
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/warrior.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-06eff1a2-49f7-48c3-be96-da1d45cc1515.png",
+      "ppu": 284.0735268925234,
+      "standing_height": 1.489051108095821,
+      "foot_y": 2.7832730205281866e-11,
+      "frames": [
+        {
+          "name": "attack_side_Start",
+          "rect": {
+            "x": 0,
+            "y": 1035,
+            "width": 338,
+            "height": 517
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.0715667311259061
+          }
+        },
+        {
+          "name": "attack_side_Loop",
+          "rect": {
+            "x": 338,
+            "y": 1035,
+            "width": 337,
+            "height": 517
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.0715667311259061
+          }
+        },
+        {
+          "name": "attack_side_End",
+          "rect": {
+            "x": 675,
+            "y": 1035,
+            "width": 338,
+            "height": 517
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.0715667311259061
+          }
+        },
+        {
+          "name": "attack_front_Start",
+          "rect": {
+            "x": 0,
+            "y": 517,
+            "width": 338,
+            "height": 518
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.09845559844033486
+          }
+        },
+        {
+          "name": "attack_front_Loop",
+          "rect": {
+            "x": 338,
+            "y": 517,
+            "width": 337,
+            "height": 518
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.09652509650983293
+          }
+        },
+        {
+          "name": "attack_front_End",
+          "rect": {
+            "x": 675,
+            "y": 517,
+            "width": 338,
+            "height": 518
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.09845559844033486
+          }
+        },
+        {
+          "name": "attack_back_Start",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 338,
+            "height": 517
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.0967117988241653
+          }
+        },
+        {
+          "name": "attack_back_Loop",
+          "rect": {
+            "x": 338,
+            "y": 0,
+            "width": 337,
+            "height": 517
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.0967117988241653
+          }
+        },
+        {
+          "name": "attack_back_End",
+          "rect": {
+            "x": 675,
+            "y": 0,
+            "width": 338,
+            "height": 517
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.0967117988241653
+          }
+        }
+      ],
+      "sha256": "cbac445c61f5f1fd42b12ce1b01dbc402d035fa09437293c78edccaf14aa7c9c"
+    },
+    {
+      "key": "farmer",
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/farmer.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-a5c92920-9252-4c5d-8ec0-939d4b7386d9.png",
+      "ppu": 238.62377195402297,
+      "standing_height": 1.4918882435090859,
+      "foot_y": -1.303258693650928e-09,
+      "frames": [
+        {
+          "name": "attack_side_Start",
+          "rect": {
+            "x": 0,
+            "y": 869,
+            "width": 402,
+            "height": 434
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.12442396385020393
+          }
+        },
+        {
+          "name": "attack_side_Loop",
+          "rect": {
+            "x": 402,
+            "y": 869,
+            "width": 403,
+            "height": 434
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.11981566891932835
+          }
+        },
+        {
+          "name": "attack_side_End",
+          "rect": {
+            "x": 805,
+            "y": 869,
+            "width": 402,
+            "height": 434
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.11981566891932835
+          }
+        },
+        {
+          "name": "attack_front_Start",
+          "rect": {
+            "x": 0,
+            "y": 434,
+            "width": 402,
+            "height": 435
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.1310344834735368
+          }
+        },
+        {
+          "name": "attack_front_Loop",
+          "rect": {
+            "x": 402,
+            "y": 434,
+            "width": 403,
+            "height": 435
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.12873563289882414
+          }
+        },
+        {
+          "name": "attack_front_End",
+          "rect": {
+            "x": 805,
+            "y": 434,
+            "width": 402,
+            "height": 435
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.12873563289882414
+          }
+        },
+        {
+          "name": "attack_back_Start",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 402,
+            "height": 434
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.12442396385020393
+          }
+        },
+        {
+          "name": "attack_back_Loop",
+          "rect": {
+            "x": 402,
+            "y": 0,
+            "width": 403,
+            "height": 434
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.12442396385020393
+          }
+        },
+        {
+          "name": "attack_back_End",
+          "rect": {
+            "x": 805,
+            "y": 0,
+            "width": 402,
+            "height": 434
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.12442396385020393
+          }
+        }
+      ],
+      "sha256": "f58ee42b319e8929506f105e8eff22a935ad1f078fbb8c535e486a0e65571a51"
+    },
+    {
+      "key": "cook",
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/cook.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-69b80ff2-6715-4484-8051-44440bf3b7f4.png",
+      "ppu": 268.9682633860045,
+      "standing_height": 1.56895833987066,
+      "foot_y": -1.133333337459019e-09,
+      "frames": [
+        {
+          "name": "attack_side_Start",
+          "rect": {
+            "x": 0,
+            "y": 1067,
+            "width": 328,
+            "height": 533
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.08442776792651163
+          }
+        },
+        {
+          "name": "attack_side_Loop",
+          "rect": {
+            "x": 328,
+            "y": 1067,
+            "width": 327,
+            "height": 533
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.08442776792651163
+          }
+        },
+        {
+          "name": "attack_side_End",
+          "rect": {
+            "x": 655,
+            "y": 1067,
+            "width": 328,
+            "height": 533
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.08442776792651163
+          }
+        },
+        {
+          "name": "attack_front_Start",
+          "rect": {
+            "x": 0,
+            "y": 533,
+            "width": 328,
+            "height": 534
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.11610486948470168
+          }
+        },
+        {
+          "name": "attack_front_Loop",
+          "rect": {
+            "x": 328,
+            "y": 533,
+            "width": 327,
+            "height": 534
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.11797752866073165
+          }
+        },
+        {
+          "name": "attack_front_End",
+          "rect": {
+            "x": 655,
+            "y": 533,
+            "width": 328,
+            "height": 534
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.11610486948470168
+          }
+        },
+        {
+          "name": "attack_back_Start",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 328,
+            "height": 533
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.13508442833926962
+          }
+        },
+        {
+          "name": "attack_back_Loop",
+          "rect": {
+            "x": 328,
+            "y": 0,
+            "width": 327,
+            "height": 533
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.13696060094714954
+          }
+        },
+        {
+          "name": "attack_back_End",
+          "rect": {
+            "x": 655,
+            "y": 0,
+            "width": 328,
+            "height": 533
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.13508442833926962
+          }
+        }
+      ],
+      "sha256": "aa141883d90745486d94986317bfb70f05b4dc6b296c218aaa15c3189e5bb2ec"
+    },
+    {
+      "key": "healer",
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/healer.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-46049bbf-cf91-44d6-b880-6918a56ea94a.png",
+      "ppu": 309.2027806451613,
+      "standing_height": 1.4262484932374788,
+      "foot_y": -6.243945007718138e-10,
+      "frames": [
+        {
+          "name": "attack_side_Start",
+          "rect": {
+            "x": 0,
+            "y": 1072,
+            "width": 326,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.0708955227482547
+          }
+        },
+        {
+          "name": "attack_side_Loop",
+          "rect": {
+            "x": 326,
+            "y": 1072,
+            "width": 326,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.0708955227482547
+          }
+        },
+        {
+          "name": "attack_side_End",
+          "rect": {
+            "x": 652,
+            "y": 1072,
+            "width": 326,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.0708955227482547
+          }
+        },
+        {
+          "name": "attack_front_Start",
+          "rect": {
+            "x": 0,
+            "y": 536,
+            "width": 326,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.1044776123004935
+          }
+        },
+        {
+          "name": "attack_front_Loop",
+          "rect": {
+            "x": 326,
+            "y": 536,
+            "width": 326,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.1044776123004935
+          }
+        },
+        {
+          "name": "attack_front_End",
+          "rect": {
+            "x": 652,
+            "y": 536,
+            "width": 326,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.1044776123004935
+          }
+        },
+        {
+          "name": "attack_back_Start",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 326,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.12126865707661291
+          }
+        },
+        {
+          "name": "attack_back_Loop",
+          "rect": {
+            "x": 326,
+            "y": 0,
+            "width": 326,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.12313432871840396
+          }
+        },
+        {
+          "name": "attack_back_End",
+          "rect": {
+            "x": 652,
+            "y": 0,
+            "width": 326,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.12126865707661291
+          }
+        }
+      ],
+      "sha256": "5d56a12d2a74e1c72ba8e4a4de52cbc312d87faa8cddd77605967f163e38c706"
+    },
+    {
+      "key": "aunt",
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/aunt.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-37ccd3f9-d704-4556-bca4-a029bd6f2744.png",
+      "ppu": 304.7542859090909,
+      "standing_height": 1.3453461327933685,
+      "foot_y": 1.0059519965096507e-09,
+      "frames": [
+        {
+          "name": "attack_side_Start",
+          "rect": {
+            "x": 0,
+            "y": 1073,
+            "width": 326,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.11194029793550712
+          }
+        },
+        {
+          "name": "attack_side_Loop",
+          "rect": {
+            "x": 326,
+            "y": 1073,
+            "width": 325,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.11007462629371607
+          }
+        },
+        {
+          "name": "attack_side_End",
+          "rect": {
+            "x": 651,
+            "y": 1073,
+            "width": 326,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.11194029793550712
+          }
+        },
+        {
+          "name": "attack_front_Start",
+          "rect": {
+            "x": 0,
+            "y": 536,
+            "width": 326,
+            "height": 537
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.13221601432668867
+          }
+        },
+        {
+          "name": "attack_front_Loop",
+          "rect": {
+            "x": 326,
+            "y": 536,
+            "width": 325,
+            "height": 537
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.13221601432668867
+          }
+        },
+        {
+          "name": "attack_front_End",
+          "rect": {
+            "x": 651,
+            "y": 536,
+            "width": 326,
+            "height": 537
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.13221601432668867
+          }
+        },
+        {
+          "name": "attack_back_Start",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 326,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.11753731286088026
+          }
+        },
+        {
+          "name": "attack_back_Loop",
+          "rect": {
+            "x": 326,
+            "y": 0,
+            "width": 325,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.11380596957729816
+          }
+        },
+        {
+          "name": "attack_back_End",
+          "rect": {
+            "x": 651,
+            "y": 0,
+            "width": 326,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.11753731286088026
+          }
+        }
+      ],
+      "sha256": "f036bcba6dd5ce5563c4c44295fafc9d829b6d11dbbbdcdd5dcd474201a06e8f"
+    },
+    {
+      "key": "uncle",
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/uncle.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-4ca2bab2-4883-4833-92aa-3186faa9f1a2.png",
+      "ppu": 281.2500849164678,
+      "standing_height": 1.5751106355454878,
+      "foot_y": -4.5110566853636243e-10,
+      "frames": [
+        {
+          "name": "attack_side_Start",
+          "rect": {
+            "x": 0,
+            "y": 1049,
+            "width": 333,
+            "height": 524
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.059160305585636466
+          }
+        },
+        {
+          "name": "attack_side_Loop",
+          "rect": {
+            "x": 333,
+            "y": 1049,
+            "width": 334,
+            "height": 524
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.057251908639071585
+          }
+        },
+        {
+          "name": "attack_side_End",
+          "rect": {
+            "x": 667,
+            "y": 1049,
+            "width": 333,
+            "height": 524
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.057251908639071585
+          }
+        },
+        {
+          "name": "attack_front_Start",
+          "rect": {
+            "x": 0,
+            "y": 524,
+            "width": 333,
+            "height": 525
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.06095238119404478
+          }
+        },
+        {
+          "name": "attack_front_Loop",
+          "rect": {
+            "x": 333,
+            "y": 524,
+            "width": 334,
+            "height": 525
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.05904761928928287
+          }
+        },
+        {
+          "name": "attack_front_End",
+          "rect": {
+            "x": 667,
+            "y": 524,
+            "width": 333,
+            "height": 525
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.06095238119404478
+          }
+        },
+        {
+          "name": "attack_back_Start",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 333,
+            "height": 524
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.055343511692506696
+          }
+        },
+        {
+          "name": "attack_back_Loop",
+          "rect": {
+            "x": 333,
+            "y": 0,
+            "width": 334,
+            "height": 524
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.053435114745941814
+          }
+        },
+        {
+          "name": "attack_back_End",
+          "rect": {
+            "x": 667,
+            "y": 0,
+            "width": 333,
+            "height": 524
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.055343511692506696
+          }
+        }
+      ],
+      "sha256": "06d4ecf39f84c83fb23da457333f211be1a1312c43ed3e7da7830f348235634e"
+    },
+    {
+      "key": "child",
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/child.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-44e7a460-a24d-4ffb-9aaf-299f326f2d8b.png",
+      "ppu": 253.363783908046,
+      "standing_height": 1.5905982843477815,
+      "foot_y": 2.4864525013446845e-10,
+      "frames": [
+        {
+          "name": "attack_side_Start",
+          "rect": {
+            "x": 0,
+            "y": 1071,
+            "width": 326,
+            "height": 535
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.11588785034953701
+          }
+        },
+        {
+          "name": "attack_side_Loop",
+          "rect": {
+            "x": 326,
+            "y": 1071,
+            "width": 327,
+            "height": 535
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.11588785034953701
+          }
+        },
+        {
+          "name": "attack_side_End",
+          "rect": {
+            "x": 653,
+            "y": 1071,
+            "width": 326,
+            "height": 535
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.11588785034953701
+          }
+        },
+        {
+          "name": "attack_front_Start",
+          "rect": {
+            "x": 0,
+            "y": 535,
+            "width": 326,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.1548507461511237
+          }
+        },
+        {
+          "name": "attack_front_Loop",
+          "rect": {
+            "x": 326,
+            "y": 535,
+            "width": 327,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.1548507461511237
+          }
+        },
+        {
+          "name": "attack_front_End",
+          "rect": {
+            "x": 653,
+            "y": 535,
+            "width": 326,
+            "height": 536
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.1548507461511237
+          }
+        },
+        {
+          "name": "attack_back_Start",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 326,
+            "height": 535
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.1663551400691632
+          }
+        },
+        {
+          "name": "attack_back_Loop",
+          "rect": {
+            "x": 326,
+            "y": 0,
+            "width": 327,
+            "height": 535
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.1663551400691632
+          }
+        },
+        {
+          "name": "attack_back_End",
+          "rect": {
+            "x": 653,
+            "y": 0,
+            "width": 326,
+            "height": 535
+          },
+          "pivot": {
+            "x": 0.5,
+            "y": 0.1663551400691632
+          }
+        }
+      ],
+      "sha256": "c01cc11ce7c97c07bfc9347100565917ae038e92b97d391aff92912f46d685a2"
+    }
+  ]
+}

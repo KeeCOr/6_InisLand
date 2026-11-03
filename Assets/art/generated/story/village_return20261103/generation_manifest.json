@@ -1,0 +1,10 @@
+{
+  "mode": "built-in image_gen",
+  "source": "source.png",
+  "runtime_path": "Assets/Resources/UI/StoryIllustrations/village_return.png",
+  "size": [
+    1672,
+    941
+  ],
+  "sha256": "57960cf99349ee14c2f25ddf6bec4966b92bdcb1ba507a6b3ddfc84361e1b68b"
+}

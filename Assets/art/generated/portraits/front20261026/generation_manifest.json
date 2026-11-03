@@ -1,0 +1,164 @@
+[
+  {
+    "key": "hero",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-be5de673-49bb-42c7-a6a8-8b5fe55ba986.png",
+    "prompt": "Edit this exact character's dialogue portrait. Change ONLY orientation and the anatomy/pose needed for it: face AND torso squarely FRONT-FACING, both shoulders parallel to image plane, eyes looking directly at viewer, both eyes equally sized, nose centered. NO three-quarter view, NO sideways gaze, NO head tilt. Preserve this individual's identity, apparent age, gender, hair style and color, eye color, expression, every clothing color and material, fur trim, accessories, held tools and props. Preserve the existing detailed warm painterly anime storybook rendering. One waist-up character, centered, complete head/hat, shoulders and hands with a small clear margin around silhouette; props held naturally beside torso. Same scale/framing as input. Transparent background true alpha. No environment, text, UI, border, watermark, or new objects.",
+    "reference": "C:/Development/6_IL/Assets/art/generated/portraits/dialogue20261026/hero.png",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\hero.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      0,
+      0,
+      1202,
+      1296
+    ]
+  },
+  {
+    "key": "hunter",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-c443f54e-12c7-4a9b-8acb-2ad82d79458e.png",
+    "prompt": "Edit this exact character's dialogue portrait. Change ONLY orientation and the anatomy/pose needed for it: face AND torso squarely FRONT-FACING, both shoulders parallel to image plane, eyes looking directly at viewer, both eyes equally sized, nose centered. NO three-quarter view, NO sideways gaze, NO head tilt. Preserve this individual's identity, apparent age, gender, hair style and color, eye color, expression, every clothing color and material, fur trim, accessories, held tools and props. Preserve the existing detailed warm painterly anime storybook rendering. One waist-up character, centered, complete head/hat, shoulders and hands with a small clear margin around silhouette; props held naturally beside torso. Same scale/framing as input. Transparent background true alpha. No environment, text, UI, border, watermark, or new objects.",
+    "reference": "C:/Development/6_IL/Assets/art/generated/portraits/dialogue20261026/hunter.png",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\hunter.png",
+    "pixels": [
+      1212,
+      1297
+    ],
+    "alpha_bounds": [
+      0,
+      0,
+      1212,
+      1297
+    ]
+  },
+  {
+    "key": "warrior",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-78714f3a-15eb-4197-930b-15a8764be498.png",
+    "prompt": "Edit this exact character's dialogue portrait. Change ONLY orientation and the anatomy/pose needed for it: face AND torso squarely FRONT-FACING, both shoulders parallel to image plane, eyes looking directly at viewer, both eyes equally sized, nose centered. NO three-quarter view, NO sideways gaze, NO head tilt. Preserve this individual's identity, apparent age, gender, hair style and color, eye color, expression, every clothing color and material, fur trim, accessories, held tools and props. Preserve the existing detailed warm painterly anime storybook rendering. One waist-up character, centered, complete head/hat, shoulders and hands with a small clear margin around silhouette; props held naturally beside torso. Same scale/framing as input. Transparent background true alpha. No environment, text, UI, border, watermark, or new objects.",
+    "reference": "C:/Development/6_IL/Assets/art/generated/portraits/dialogue20261026/warrior.png",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\warrior.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      0,
+      0,
+      1213,
+      1296
+    ]
+  },
+  {
+    "key": "farmer",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-a0d4fd36-057b-466c-9b5b-6c25d4102571.png",
+    "prompt": "Edit this exact character's dialogue portrait. Change ONLY orientation and the anatomy/pose needed for it: face AND torso squarely FRONT-FACING, both shoulders parallel to image plane, eyes looking directly at viewer, both eyes equally sized, nose centered. NO three-quarter view, NO sideways gaze, NO head tilt. Preserve this individual's identity, apparent age, gender, hair style and color, eye color, expression, every clothing color and material, fur trim, accessories, held tools and props. Preserve the existing detailed warm painterly anime storybook rendering. One waist-up character, centered, complete head/hat, shoulders and hands with a small clear margin around silhouette; props held naturally beside torso. Same scale/framing as input. Transparent background true alpha. No environment, text, UI, border, watermark, or new objects.",
+    "reference": "C:/Development/6_IL/Assets/art/generated/portraits/dialogue20261026/farmer.png",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\farmer.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      11,
+      0,
+      1213,
+      1296
+    ]
+  },
+  {
+    "key": "cook",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-b7baac10-ad06-453c-9fef-e65d117f2c61.png",
+    "prompt": "Edit this exact character's dialogue portrait. Change ONLY orientation and the anatomy/pose needed for it: face AND torso squarely FRONT-FACING, both shoulders parallel to image plane, eyes looking directly at viewer, both eyes equally sized, nose centered. NO three-quarter view, NO sideways gaze, NO head tilt. Preserve this individual's identity, apparent age, gender, hair style and color, eye color, expression, every clothing color and material, fur trim, accessories, held tools and props. Preserve the existing detailed warm painterly anime storybook rendering. One waist-up character, centered, complete head/hat, shoulders and hands with a small clear margin around silhouette; props held naturally beside torso. Same scale/framing as input. Transparent background true alpha. No environment, text, UI, border, watermark, or new objects.",
+    "reference": "C:/Development/6_IL/Assets/art/generated/portraits/dialogue20261026/cook.png",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\cook.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      0,
+      0,
+      1213,
+      1296
+    ]
+  },
+  {
+    "key": "healer",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-db5f238a-091d-4bd2-a8d3-40c9cd06f84d.png",
+    "prompt": "Edit this exact character's dialogue portrait. Change ONLY orientation and the anatomy/pose needed for it: face AND torso squarely FRONT-FACING, both shoulders parallel to image plane, eyes looking directly at viewer, both eyes equally sized, nose centered. NO three-quarter view, NO sideways gaze, NO head tilt. Preserve this individual's identity, apparent age, gender, hair style and color, eye color, expression, every clothing color and material, fur trim, accessories, held tools and props. Preserve the existing detailed warm painterly anime storybook rendering. One waist-up character, centered, complete head/hat, shoulders and hands with a small clear margin around silhouette; props held naturally beside torso. Same scale/framing as input. Transparent background true alpha. No environment, text, UI, border, watermark, or new objects.",
+    "reference": "C:/Development/6_IL/Assets/art/generated/portraits/dialogue20261026/healer.png",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\healer.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      0,
+      0,
+      1193,
+      1296
+    ]
+  },
+  {
+    "key": "aunt",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-8f24e61d-77b5-4378-a270-5acc540896db.png",
+    "prompt": "Edit this exact character's dialogue portrait. Change ONLY orientation and the anatomy/pose needed for it: face AND torso squarely FRONT-FACING, both shoulders parallel to image plane, eyes looking directly at viewer, both eyes equally sized, nose centered. NO three-quarter view, NO sideways gaze, NO head tilt. Preserve this individual's identity, apparent age, gender, hair style and color, eye color, expression, every clothing color and material, fur trim, accessories, held tools and props. Preserve the existing detailed warm painterly anime storybook rendering. One waist-up character, centered, complete head/hat, shoulders and hands with a small clear margin around silhouette; props held naturally beside torso. Same scale/framing as input. Transparent background true alpha. No environment, text, UI, border, watermark, or new objects.",
+    "reference": "C:/Development/6_IL/Assets/art/generated/portraits/dialogue20261026/aunt.png",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\aunt.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      0,
+      0,
+      1185,
+      1296
+    ]
+  },
+  {
+    "key": "uncle",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-76f1700a-e762-4854-8d03-a9aa29f469a0.png",
+    "prompt": "Edit this exact character's dialogue portrait. Change ONLY orientation and the anatomy/pose needed for it: face AND torso squarely FRONT-FACING, both shoulders parallel to image plane, eyes looking directly at viewer, both eyes equally sized, nose centered. NO three-quarter view, NO sideways gaze, NO head tilt. Preserve this individual's identity, apparent age, gender, hair style and color, eye color, expression, every clothing color and material, fur trim, accessories, held tools and props. Preserve the existing detailed warm painterly anime storybook rendering. One waist-up character, centered, complete head/hat, shoulders and hands with a small clear margin around silhouette; props held naturally beside torso. Same scale/framing as input. Transparent background true alpha. No environment, text, UI, border, watermark, or new objects.",
+    "reference": "C:/Development/6_IL/Assets/art/generated/portraits/dialogue20261026/uncle.png",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\uncle.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      0,
+      0,
+      1213,
+      1296
+    ]
+  },
+  {
+    "key": "child",
+    "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-96bad74f-9156-497d-ae83-8b0d06d88d3f.png",
+    "prompt": "Edit this exact character's dialogue portrait. Change ONLY orientation and the anatomy/pose needed for it: face AND torso squarely FRONT-FACING, both shoulders parallel to image plane, eyes looking directly at viewer, both eyes equally sized, nose centered. NO three-quarter view, NO sideways gaze, NO head tilt. Preserve this individual's identity, apparent age, gender, hair style and color, eye color, expression, every clothing color and material, fur trim, accessories, held tools and props. Preserve the existing detailed warm painterly anime storybook rendering. One waist-up character, centered, complete head/hat, shoulders and hands with a small clear margin around silhouette; props held naturally beside torso. Same scale/framing as input. Transparent background true alpha. No environment, text, UI, border, watermark, or new objects.",
+    "reference": "C:/Development/6_IL/Assets/art/generated/portraits/dialogue20261026/child.png",
+    "tool": "image_gen.imagegen",
+    "runtime": "C:\\Development\\6_IL\\Assets\\Resources\\UI\\DialoguePortraits\\child.png",
+    "pixels": [
+      1213,
+      1296
+    ],
+    "alpha_bounds": [
+      0,
+      0,
+      1194,
+      1296
+    ]
+  }
+]

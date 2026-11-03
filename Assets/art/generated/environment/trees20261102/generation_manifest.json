@@ -1,0 +1,85 @@
+{
+  "date": "2026-11-02",
+  "references": [
+    "Assets/Resources/Sprites/Characters/HeroIdentity20261026/hero_axe/idle_side.png",
+    "docs/design-references/building-camera-gameplay-reference.png"
+  ],
+  "assets": [
+    {
+      "name": "spruce",
+      "tool": "built-in image_gen",
+      "prompt": "Create ONE isolated snow-covered Norway spruce tree game sprite for InisLand medieval Nordic snowy village. Input image 1 is STYLE reference: match the red-haired chibi character's smooth hand-painted anime game illustration, confident dark brown outlines, simplified chunky forms and soft warm highlights; do NOT draw character. Input image 2 is CAMERA reference only, elevated orthographic 2.5D view downward around 35-45 degrees, horizontal front axis, visible upper surfaces of snow-covered boughs, no horizon, no isometric diagonal. Dense tapered teal-green spruce, broad tiered boughs, ivory-blue rounded snow pillows, short visible warm brown trunk, approachable beautiful winter village aesthetic. Less microdetail than realistic concept art, readable at small game scale, no pixel art. Tree top to full trunk base fully visible with generous 8 percent transparent margin all sides. Trunk base centered horizontally. No ground plane, no background, no baked cast shadow, no people, no text, only one tree. True transparent RGBA.",
+      "runtime": "Assets\\Resources\\Sprites\\Props\\NordicTrees20261102\\spruce.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-28b6156c-43c9-458e-94e2-fba178c30c30.png",
+      "sha256": "0a4485f608780932252268404c43be528a27c6efc5a36deef842bc1f1906c4a2",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        255,
+        74,
+        995,
+        1167
+      ]
+    },
+    {
+      "name": "pine",
+      "tool": "built-in image_gen",
+      "prompt": "Use case: stylized-concept. ONE isolated snow-covered tall northern European Scots pine (Pinus sylvestris) forest game sprite, for InisLand medieval SCANDINAVIAN village. Reference image ONLY defines art style: smooth illustrated game painting, dark warm brown contours, soft highlights, teal foliage and blue ivory snow. Match this reference style precisely. Species silhouette DIFFERENT from spruce: ONE long perfectly upright vertical reddish-grey rough-bark trunk, slender oval irregular crown at upper half with short natural upward boughs around a single vertical leader; scattered visible branch gaps and dusty snow caps; rough wild Scandinavian boreal forest tree. Overall narrow and tall silhouette with visible straight lower trunk, no ornamental pruning. Top-down orthographic 35-45 degree game camera, visible upper surfaces, no horizon. Full tree top and trunk base completely visible, centered trunk foot, 10 percent transparent margins all sides. True transparent RGBA, no ground/shadow/background/people/text. ABSOLUTELY NO bonsai, niwaki, Japanese garden pine, Chinese landscape pine, horizontal tiered cloud pads, umbrella crown, twisted S-shaped trunk, sculpted branches, low spreading trunk, decorative garden tree. This is an upright wild European forest conifer. Only ONE tree.\n",
+      "runtime": "Assets\\Resources\\Sprites\\Props\\NordicTrees20261102\\pine.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-f57c82a8-bf49-47bb-8014-c492895b99dd.png",
+      "sha256": "8dbe01945477a469a4aee7981d18f871171ee1976ecccff8bccab80b7525e26f",
+      "size": [
+        1024,
+        1536
+      ],
+      "alpha_bounds": [
+        256,
+        28,
+        763,
+        1508
+      ],
+      "status": "upright northern European forest pine replaces ornamental silhouette"
+    },
+    {
+      "name": "birch",
+      "tool": "built-in image_gen",
+      "prompt": "ONE isolated winter silver birch TREE game sprite for medieval Nordic snowy village, real transparent background. Image1 approved spruce is STYLE reference, image2 chibi heroine matches character rendering. Same smooth painted anime game asset, confident warm dark brown contour, soft shading, simplified chunky shapes, warm upper-left light, cool ivory-blue snow, no pixel art. DISTINCT SILHOUETTE: slender white bark trunk with charcoal horizontal marks, delicate gently forking bare branches, sparse little auburn dry leaves, white snow caps on upper sides of thicker branches, airy open winter crown. One single trunk tree, rooted trunk foot centered. Slightly top-down orthographic game view around35-45 degrees, see tops of forked limbs, no horizon, no diagonal isometric rotation. Full tree and branch tips uncropped, generous 10percent transparent margin. No ground/background/shadow/people/labels/extra objects. Match illustration line weight and readable detail to reference. ONE birch only.",
+      "runtime": "Assets\\Resources\\Sprites\\Props\\NordicTrees20261102\\birch.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-8413ba7f-0ada-42bb-903d-44aadd78b626.png",
+      "sha256": "11e0dcf0549fc31acad7c51a2b60a8fd0c49bfaf67bf1f821bac20d9cf1773c5",
+      "size": [
+        1199,
+        1312
+      ],
+      "alpha_bounds": [
+        160,
+        46,
+        1031,
+        1251
+      ]
+    }
+  ],
+  "superseded": [
+    {
+      "name": "pine",
+      "tool": "built-in image_gen",
+      "prompt": "ONE isolated Scots pine game sprite, transparent background, for medieval Nordic snowy village. Reference1 approved spruce defines EXACT visual family: smooth hand-painted chibi anime game illustration, dark warm brown contour, chunky simplified forms, teal needles and ivory snow, soft warm upper-left highlights, no pixel art. Reference2 character defines compatible line thickness and soft materials. Different species silhouette: crooked warm reddish-brown trunk clearly visible, three airy broad rounded umbrella-like foliage clusters on asymmetrical branches, not a triangular Christmas tree. Some snow pillows on upper branch surfaces. Elevated orthographic downward 35-45 degree game camera, visible top surfaces, horizontal front axis, no horizon/no isometric diagonal. Whole tree including trunk foot, 8 percent transparent margin, trunk foot near horizontal center. No ground plane, no ground shadow, no props, no text, no characters, no white backdrop. ONE tree only. Real RGBA transparency.",
+      "runtime": "Assets\\Resources\\Sprites\\Props\\NordicTrees20261102\\pine.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-d8d31303-2412-4b78-95b6-98ded6c2897f.png",
+      "sha256": "fd359479d4c260c0e3cae4e74efb85c66e2990dd573f95030a41adc38fdb836f",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_bounds": [
+        106,
+        113,
+        1151,
+        1154
+      ],
+      "status": "excluded: ornamental cloud-crown and twisted trunk rejected by user"
+    }
+  ]
+}

@@ -47,6 +47,7 @@ namespace IL6
             sr.color = new Color(1f, 0.95f, 0.55f);
 
             var p = go.AddComponent<Projectile>();
+            p.UseArrowAppearance();
             p.Speed = 14f;
             p.Damage = Damage;
             p.HitRadius = 0.5f;

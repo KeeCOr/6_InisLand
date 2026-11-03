@@ -149,6 +149,7 @@ namespace IL6
 
         private void RefreshSprite()
         {
+            if (_sr == null) _sr = GetComponent<SpriteRenderer>();
             if (_sr == null) return;
 
             Sprite sprite = null;
@@ -170,6 +171,7 @@ namespace IL6
             {
                 _sr.sprite = sprite;
                 _sr.color = Color.white;
+                FenceVisual.ApplyGate(_sr);
             }
         }
 

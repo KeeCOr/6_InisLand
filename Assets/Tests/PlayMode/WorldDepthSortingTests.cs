@@ -18,6 +18,8 @@ namespace IL6.Tests
             var hud=Object.FindFirstObjectByType<SimpleHud>();
             typeof(SimpleHud).GetMethod("PrepareHudPreview",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(hud,null);
             var player=hud.Player;player.transform.position=new Vector3(3000,3000,0);
+            // This test teleports through a solid building to verify rendering order, not collision response.
+            player.enabled=false;player.GetComponent<Rigidbody2D>().simulated=false;
             Camera.main.transform.position=new Vector3(3000,3000,-10);
             var house=BuildingFactory.SpawnHouse(new Vector3(3000,3002,0));
             var npc=ProceduralSpawner.CreateNpcFromArchetype(ProceduralSpawner._npcArchetypes[0],"Depth candidate",new Vector3(3000,3004,0));

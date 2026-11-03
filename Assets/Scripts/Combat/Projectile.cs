@@ -16,99 +16,40 @@ namespace IL6
 
         private MonoBehaviour _target;
         private Vector2 _direction = Vector2.right;
+        private Vector2 _origin;
         private float _life;
-        private float _trailTimer;
-        private GameObject _glow;
+        private bool _arrowAppearance;
 
-        // 모든 투사체가 공유하는 흰 원 스프라이트 — 한 번만 생성, 색은 sr.color 로.
-        private static Sprite _sharedCircle;
-        private static Sprite _sharedRing;
-
-        private static Sprite GetCircleSprite()
+        public void UseArrowAppearance()
         {
-            if (_sharedCircle != null) return _sharedCircle;
-            const int N = 64;
-            var tex = new Texture2D(N, N, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear };
-            float r = N / 2f;
-            for (int y = 0; y < N; y++)
-                for (int x = 0; x < N; x++)
-                {
-                    float dx = x - r, dy = y - r;
-                    float d2 = dx * dx + dy * dy;
-                    bool inside = d2 < (r - 2) * (r - 2);
-                    bool ring = d2 < r * r && !inside;
-                    if (inside) tex.SetPixel(x, y, Color.white);
-                    else if (ring) tex.SetPixel(x, y, new Color(0f, 0f, 0f, 1f));
-                    else tex.SetPixel(x, y, new Color(0, 0, 0, 0));
-                }
-            tex.Apply();
-            _sharedCircle = Sprite.Create(tex, new Rect(0, 0, N, N), new Vector2(0.5f, 0.5f), N);
-            return _sharedCircle;
+            _arrowAppearance=ProjectileVisual.Apply(gameObject,true);
+            OrientArrow();
         }
-
-        private static Sprite GetGlowSprite()
+        private void OrientArrow()
         {
-            if (_sharedRing != null) return _sharedRing;
-            const int N = 64;
-            var tex = new Texture2D(N, N, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear };
-            float r = N / 2f;
-            for (int y = 0; y < N; y++)
-                for (int x = 0; x < N; x++)
-                {
-                    float dx = x - r, dy = y - r;
-                    float dist = Mathf.Sqrt(dx * dx + dy * dy);
-                    float t = Mathf.Clamp01(1f - dist / r);
-                    // 부드러운 가우시안풍 그라데이션
-                    float a = t * t * t;
-                    tex.SetPixel(x, y, new Color(1f, 1f, 1f, a));
-                }
-            tex.Apply();
-            _sharedRing = Sprite.Create(tex, new Rect(0, 0, N, N), new Vector2(0.5f, 0.5f), N);
-            return _sharedRing;
+            if(_arrowAppearance) ProjectileVisual.Orient(transform,_direction);
         }
-
         private void Awake()
         {
-            // 본체 스프라이트 즉시 생성 — ColorFallback 실행 순서에 의존 X
-            var sr = GetComponent<SpriteRenderer>();
-            if (sr != null && sr.sprite == null)
-            {
-                sr.sprite = GetCircleSprite();
-                if (sr.color.a < 0.05f) sr.color = new Color(1f, 0.95f, 0.4f, 1f);
-            }
-        }
-
-        private void Start()
-        {
-            // 큰 반투명 글로우 자식 — soft 그라데이션 스프라이트.
-            var sr = GetComponent<SpriteRenderer>();
-            if (sr == null) return;
-
-            _glow = new GameObject("__glow");
-            _glow.transform.SetParent(transform, false);
-            _glow.transform.localScale = Vector3.one * 2.4f;
-            var gs = _glow.AddComponent<SpriteRenderer>();
-            gs.sortingOrder = sr.sortingOrder - 1;
-            gs.sprite = GetGlowSprite();
-            Color c = sr.color;
-            if (c.a < 0.05f) c = new Color(1f, 0.95f, 0.4f, 1f);
-            c.a = 0.6f;
-            gs.color = c;
+            ProjectileVisual.Apply(gameObject,false);
         }
 
         public void Aim(MonoBehaviour target, Vector3 spawnPos)
         {
+            _origin=spawnPos;
             _target = target;
             if (target != null)
             {
                 Vector2 d = (Vector2)target.transform.position - (Vector2)spawnPos;
                 if (d.sqrMagnitude > 0.0001f) _direction = d.normalized;
             }
+            OrientArrow();
         }
 
         public void AimDirection(Vector2 dir)
         {
             if (dir.sqrMagnitude > 0.0001f) _direction = dir.normalized;
+            OrientArrow();
         }
 
         private void Update()
@@ -123,14 +64,7 @@ namespace IL6
                 if (toTarget.sqrMagnitude > 0.0001f) _direction = toTarget.normalized;
             }
             transform.position += (Vector3)(_direction * Speed * Time.deltaTime);
-
-            // 트레일: 0.025초 간격으로 fading 복제본 1개
-            _trailTimer -= Time.deltaTime;
-            if (_trailTimer <= 0f)
-            {
-                _trailTimer = 0.025f;
-                SpawnTrailGhost();
-            }
+            OrientArrow();
 
             if (targetAlive)
             {
@@ -183,23 +117,6 @@ namespace IL6
             return best;
         }
 
-        private void SpawnTrailGhost()
-        {
-            var sr = GetComponent<SpriteRenderer>();
-            if (sr == null) return;
-            var go = new GameObject("__pjtrail");
-            go.transform.position = transform.position;
-            go.transform.localScale = transform.lossyScale * 0.85f;
-            var ts = go.AddComponent<SpriteRenderer>();
-            ts.sortingOrder = sr.sortingOrder - 2;
-            ts.sprite = GetGlowSprite();
-            Color c = sr.color;
-            if (c.a < 0.05f) c = new Color(1f, 0.95f, 0.4f, 1f);
-            c.a = 0.6f;
-            ts.color = c;
-            Destroy(go, 0.35f);
-        }
-
         private static bool IsTargetAlive(MonoBehaviour target)
         {
             if (target == null) return false;
@@ -218,7 +135,7 @@ namespace IL6
             }
             if (target is AnimalAi animal)
             {
-                animal.TakeDamage(Damage);
+                animal.TakeDamage(Damage,_origin);
             }
         }
 

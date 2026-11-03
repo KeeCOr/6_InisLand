@@ -32,6 +32,7 @@ namespace IL6
 
             Vector3 villageCenter = new Vector3(GameConstants.VillageCenterX, GameConstants.VillageCenterY, 0);
             if (Player != null) Player.transform.position = villageCenter;
+            SnowFootprintField.Ensure();
             if (Gather != null)
             {
                 Gather.Player = Player;
@@ -50,6 +51,8 @@ namespace IL6
 
             // 마을 자리에 모닥불 + 울타리 링 자동 스폰 (이미 있으면 스킵)
             VillageStarter.SpawnStarterVillage(villageCenter);
+            VillageSquareLayout.MoveNaturalResourcesToOutskirts(villageCenter, VillageStarter.CurrentHalfSize);
+            if(_session.StoryVillageRuined) StoryVillageRuins.Apply();
             var ground=GameObject.Find("Ground");
             if(ground!=null && ground.GetComponent<SpriteRenderer>()!=null)
             {

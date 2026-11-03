@@ -5,6 +5,14 @@ namespace IL6
     {
         private int _runeDetailIndex=-1;
         private Texture2D _runeStatAtlas;
+        private readonly System.Collections.Generic.Dictionary<RuneWeaponScope,Texture2D> _runeScopeIcons=new();
+        private Texture2D RuneScopeIcon(RuneKind kind)
+        {
+            var scope=RuneChoicePresentation.Scope(kind);
+            if(!_runeScopeIcons.TryGetValue(scope,out var icon))
+            {icon=Resources.Load<Texture2D>(RuneChoicePresentation.ScopeIconPath(kind));_runeScopeIcons[scope]=icon;}
+            return icon;
+        }
         private Texture2D RuneChoiceIcon(RuneKind kind)
         {
             if(_runeIconCache.TryGetValue(kind,out var icon)) return icon;
@@ -52,10 +60,17 @@ namespace IL6
                 var kind=_runeOffer[i];var card=layout.Card(i);var info=RuneChoiceLayout.Info(card);
                 int current=Progression.GetStacks(kind),next=Mathf.Min(current+1,PlayerProgression.MaxStacks);
                 UiTheme.Panel(card);
-                UiTheme.Rect(new Rect(card.x+12,card.y+3,card.width-24,2),RuneElementColor(kind));
+                Color scopeColor=RuneChoicePresentation.ScopeColor(kind);
+                UiTheme.Rect(new Rect(card.x+12,card.y+3,card.width-24,3),scopeColor);
+                UiTheme.Rect(new Rect(card.x+4,card.y+12,3,card.height-24),scopeColor);
                 HudText.Label(RuneChoiceLayout.Title(card),RuneChoicePresentation.Name(kind),new GUIStyle(_weapon){fontSize=20,wordWrap=true,alignment=TextAnchor.MiddleCenter,padding=new RectOffset(0,0,0,0)});
                 var icon=RuneChoiceIcon(kind);if(icon!=null) GUI.DrawTexture(RuneChoiceLayout.Icon(card),icon,ScaleMode.ScaleToFit,true);
-                HudText.Label(RuneChoiceLayout.Trigger(card),RuneChoicePresentation.Trigger(kind,next),centered);
+                var scopeLine=RuneChoiceLayout.Trigger(card);
+                var scopeIcon=RuneScopeIcon(kind);
+                if(scopeIcon!=null)GUI.DrawTexture(new Rect(scopeLine.center.x-100,scopeLine.y,22,22),scopeIcon,ScaleMode.ScaleToFit,true);
+                HudText.Label(new Rect(scopeLine.center.x-72,scopeLine.y,172,22),
+                    RuneChoicePresentation.ScopeLabel(kind)+" · "+RuneChoicePresentation.Trigger(kind,next),
+                    new GUIStyle(centered){fontSize=13,fontStyle=FontStyle.Bold,normal={textColor=scopeColor}});
                 var progress=RuneChoiceLayout.Progress(card);
                 for(int dot=0;dot<PlayerProgression.MaxStacks;dot++)
                 {
@@ -84,7 +99,7 @@ namespace IL6
                 MobileButtonTheme.RoundRect(detail,8,UiTheme.PanelInnerBg);
                 HudText.Label(new Rect(detail.x+14,detail.y+10,176,28),RuneChoicePresentation.Name(kind),new GUIStyle(_section){fontSize=18});
                 HudText.Label(new Rect(detail.x+14,detail.y+44,176,30),$"{current} → {next} / {PlayerProgression.MaxStacks}",centered);
-                string description=PlayerProgression.DescribeAt(kind,next);
+                string description=RuneChoicePresentation.ScopeLabel(kind)+"\n"+PlayerProgression.DescribeAt(kind,next);
                 if(kind==RuneKind.PoisonBlade || kind==RuneKind.IceArrow || kind==RuneKind.LightningStrike) description+="\n원소 2종 완성: 공격력 +50%";
                 HudText.Label(new Rect(detail.x+202,detail.y+10,detail.width-216,detail.height-20),description,new GUIStyle(_label){fontSize=17,wordWrap=true,alignment=TextAnchor.MiddleLeft});
             }

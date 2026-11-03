@@ -30,7 +30,7 @@ namespace IL6
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 9;
             YSort.Ensure(go);
-            if (kind == Kind.Hawk) sr.sprite = SpriteBank.HawkPet();
+            sr.sprite = kind == Kind.Hawk ? SpriteBank.HawkPet() : SpriteBank.DogPet();
 
             var cf = go.AddComponent<ColorFallback>();
             cf.Shape = kind == Kind.Hawk ? FallbackShape.Triangle : FallbackShape.Rounded;
@@ -74,11 +74,13 @@ namespace IL6
             }
             cf.Tint = pet.Tint;
             sr.color = sr.sprite != null ? Color.white : pet.Tint;
+            AnimalMotionVisual.Attach(go,kind==Kind.Hawk?"hawk":"dog");
             return go;
         }
 
         private void Start()
         {
+            AnimalMotionVisual.Attach(gameObject,Type==Kind.Hawk?"hawk":"dog");
             _orbitPhase = Random.Range(0f, Mathf.PI * 2f);
             if (Player == null)
             {

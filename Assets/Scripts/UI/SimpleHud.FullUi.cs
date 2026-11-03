@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace IL6
 {
@@ -7,16 +7,12 @@ namespace IL6
         private bool _buildCatalogOpen;
         private bool _tutorialPaused;
         private float _tutorialPreviousScale=1;
-        private RecruitableNpc _ignoredRecruit;
 
         public bool TrySelectBuilding(BuildingKind kind)
         {
             if (!_buildCatalogOpen || !BuildUiAvailable) return false;
             var session=GameSession.Instance;
             if(session==null || !System.Enum.IsDefined(typeof(BuildingKind),kind)) return false;
-            if(kind==BuildingKind.Farm && FarmBuilding.CurrentFarmCount()>=FarmBuilding.MaxFarmsAllowed()) return false;
-            var cost=BuildingUpgradeRules.BuildCost(kind,CostMul(kind));
-            if(!cost.CanPay(session.Resources)) return false;
             _pendingBuildKind=kind;
             _buildCatalogOpen=false;
             Sfx.Click();
@@ -65,14 +61,14 @@ namespace IL6
                 var cost=BuildingUpgradeRules.BuildCost(kind,CostMul(kind));
                 bool farmAllowed=kind!=BuildingKind.Farm || FarmBuilding.CurrentFarmCount()<FarmBuilding.MaxFarmsAllowed();
                 bool available=farmAllowed && cost.CanPay(session.Resources);
-                if(UiTheme.Button(r,"",_btn,available)) TrySelectBuilding(kind);
+                if(UiTheme.Button(r,"",_btn)) TrySelectBuilding(kind);
                 var sprite=SpriteBank.BuildingByKind(kind);
                 var color=GUI.color;GUI.color=available?Color.white:new Color(.68f,.72f,.7f,.8f);
                 if(sprite!=null) DrawSpriteInRect(sprite,new Rect(r.x+7,r.y+14,44,44));
                 GUI.color=color;
                 HudText.Label(new Rect(r.x+57,r.y+5,80,23),BuildingName(kind),nameStyle);
-                HudText.Label(new Rect(r.x+57,r.y+27,80,20),$"목재 {cost.Wood}",costStyle);
-                HudText.Label(new Rect(r.x+57,r.y+47,80,20),farmAllowed ? $"석재 {cost.Stone}" : "씨앗창고 필요",costStyle);
+                HudText.Label(new Rect(r.x+57,r.y+27,80,20),$"목재 {session.Resources.Get(ResourceKind.Wood):N0}/{cost.Wood}",costStyle);
+                HudText.Label(new Rect(r.x+57,r.y+47,80,20),farmAllowed ? $"석재 {session.Resources.Get(ResourceKind.Stone):N0}/{cost.Stone}" : "씨앗창고 필요",costStyle);
                 if(!available) HudText.Label(new Rect(r.x+4,r.yMax-19,48,17),farmAllowed?"부족":"조건",new GUIStyle(costStyle){fontSize=11,fontStyle=FontStyle.Bold,normal={textColor=UiTheme.TextDanger}});
             }
             if(UiTheme.Button(HudLayout.CatalogCard(kinds.Length),"수리 모드\n이동 · Space 수리",new GUIStyle(_btn){fontSize=14,wordWrap=true})) EnterBuildRepairMode();
@@ -81,34 +77,11 @@ namespace IL6
             if(UiTheme.Button(new Rect(panel.xMax-180,panel.yMax-54,160,44),"닫기 · ESC",_btn)) CloseBuildCatalog();
         }
 
-        private void DrawRecruitDialog()
-        {
-            if(_hudMode==HudMode.Build) return;
-            if(ControlsBlocked || _pendingBuildKind!=null) return;
-            if(_resourceDetailsOpen) return;
-            var npc=NearestRecruitable();
-            if(npc==null) { _ignoredRecruit=null;return; }
-            if(npc==_ignoredRecruit) return;
-            var panel=HudLayout.RecruitDialog();UiTheme.Panel(panel);
-            var portrait=new Rect(panel.x+16,panel.y+16,108,146);
-            MobileButtonTheme.RoundRect(portrait,10,UiTheme.PanelInnerBg);
-            var sr=npc.GetComponent<SpriteRenderer>();
-            if(sr!=null && sr.sprite!=null) DrawSpriteInRect(sr.sprite,InnerRect(portrait,8));
-            float x=panel.x+142,w=panel.width-158;
-            HudText.Label(new Rect(x,panel.y+12,w,28),$"{npc.DisplayNamePublic} · {RoleName(npc.Role)}",new GUIStyle(_section){fontSize=18});
-            HudText.Label(new Rect(x,panel.y+46,w,38),npc.DialogText,new GUIStyle(_label){fontSize=15,wordWrap=true});
-            HudText.Label(new Rect(x,panel.y+84,w,22),$"전투 {Stars(npc.CombatRating)}   농사 {Stars(npc.FarmRating)}",_labelSubtle);
-            bool near=Player!=null && Vector2.Distance(Player.transform.position,npc.transform.position)<=npc.RecruitRange;
-            bool canRecruit=npc.CanRecruit() && near;
-            HudText.Label(new Rect(x,panel.y+106,w,22),$"동료 {RecruitableNpc.CurrentCompanionCount()}명 · 영입 제한 없음",_labelSubtle);
-            if(UiTheme.Button(new Rect(panel.x+200,panel.yMax-58,164,44),canRecruit?"영입 · 공격/Space":!near?"더 가까이 이동하세요":"영입 완료",_btn,canRecruit) && Attacker!=null) Attacker.TryManualAction();
-            if(UiTheme.Button(new Rect(panel.x+376,panel.yMax-58,164,44),"나중에",_btn)) _ignoredRecruit=npc;
-        }
-
         private void DrawWaveStanceBar()
         {
             DrawSettlementGoals();
             if (_resourceDetailsOpen) return;
+            if (!_showCompanions) return;
             var session=GameSession.Instance;if(session==null) return;
             var companions=Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
             int live=0, hidden=0;
@@ -118,7 +91,7 @@ namespace IL6
                 live++;
                 if(c.CurrentMode==Companion.Mode.Hiding) hidden++;
             }
-            var panel=MobileHudLayout.CompanionSummary(_showCompanions);UiTheme.Panel(panel);
+            var panel=MobileHudLayout.CompanionSummary(_showCompanions);if(live==0) panel.height=76;UiTheme.Panel(panel);
             var phase=Night!=null?Night.CurrentPhase:session.Cycle.Phase;
             var guidance=HudGuidanceText.Build(phase,Night!=null?Night.ActiveZombies:0,Night!=null?Night.WavePending:0,Night!=null && Night.IsBlizzard,session.LastFoodShortage);
             string objective=phase==Phase.Night ? (Night!=null && Night.IsBlizzard?"눈보라 밤 · 마을 방어":"밤 습격 · 마을 방어") : session.LastFoodShortage>0?"식량 확보":"탐험 · 자원 확보";
@@ -129,6 +102,11 @@ namespace IL6
             string stanceName=stance==Companion.Stance.Follow?"따라오기":stance==Companion.Stance.Hold?"사수":"공세";
             string companionLabel=$"동료 {live}명 · {stanceName}";
             if(hidden>0) companionLabel+=$"\n건물 대피 {hidden}명";
+            if(live==0)
+            {
+                HudText.Label(new Rect(panel.x+12,panel.y+48,panel.width-24,20),"마을 밖에서 동료를 만나보세요",new GUIStyle(_labelSubtle){fontSize=12});
+                return;
+            }
             if(UiTheme.Button(new Rect(panel.x+12,panel.y+46,panel.width-24,44),companionLabel,_smallBtn,live>0 && !ControlsBlocked))
             {
                 var next=stance==Companion.Stance.Follow?Companion.Stance.Hold:stance==Companion.Stance.Hold?Companion.Stance.Aggressive:Companion.Stance.Follow;

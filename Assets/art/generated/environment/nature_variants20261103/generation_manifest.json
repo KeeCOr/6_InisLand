@@ -1,0 +1,157 @@
+{
+  "assets": [
+    {
+      "group": "trees",
+      "key": "fir",
+      "path": "Assets/Resources/Sprites/Props/NordicTrees20261102/fir.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-068252c1-3688-4b86-a3e9-7a082af35bfa.png",
+      "source_rect": [
+        0,
+        0,
+        724,
+        724
+      ],
+      "ppu": 469.3333333333333,
+      "pivot_y": 0.18833333333333332,
+      "alpha_bounds": [
+        73,
+        32,
+        438,
+        736
+      ],
+      "sha256": "2d20d5bfd9182c94d822a3f48403707db63607942cf01ef8c83e1b23dd20ad63"
+    },
+    {
+      "group": "trees",
+      "key": "sparse_spruce",
+      "path": "Assets/Resources/Sprites/Props/NordicTrees20261102/sparse_spruce.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-068252c1-3688-4b86-a3e9-7a082af35bfa.png",
+      "source_rect": [
+        724,
+        0,
+        724,
+        724
+      ],
+      "ppu": 390.6666666666667,
+      "pivot_y": 0.24057291666666666,
+      "alpha_bounds": [
+        28,
+        91,
+        484,
+        677
+      ],
+      "sha256": "66a64b35df580a7fd139e1aca66d22f0e247a0a892499c016685bdcbda549b84"
+    },
+    {
+      "group": "trees",
+      "key": "birch_cluster",
+      "path": "Assets/Resources/Sprites/Props/NordicTrees20261102/birch_cluster.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-068252c1-3688-4b86-a3e9-7a082af35bfa.png",
+      "source_rect": [
+        1448,
+        0,
+        724,
+        724
+      ],
+      "ppu": 399.3333333333333,
+      "pivot_y": 0.23546874999999998,
+      "alpha_bounds": [
+        28,
+        84,
+        484,
+        683
+      ],
+      "sha256": "f4633da72289c8785fd8b65ae9e648ad9b1af9f44aeaf917145bf43d0e705ce5"
+    },
+    {
+      "group": "rocks",
+      "key": "rounded",
+      "path": "Assets/Resources/Sprites/Props/NordicRocks20261103/rounded.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-296ef5b0-0266-456f-85eb-d62f7127703d.png",
+      "source_rect": [
+        0,
+        0,
+        627,
+        627
+      ],
+      "ppu": 493.7556443384982,
+      "pivot_y": 0.4766113863230036,
+      "alpha_bounds": [
+        32,
+        54,
+        480,
+        457
+      ],
+      "sha256": "fafa3d6f0228e20edcc2d5a73618c4c92526e798141fba9e0530765aca3edf69"
+    },
+    {
+      "group": "rocks",
+      "key": "angular",
+      "path": "Assets/Resources/Sprites/Props/NordicRocks20261103/angular.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-296ef5b0-0266-456f-85eb-d62f7127703d.png",
+      "source_rect": [
+        627,
+        0,
+        627,
+        627
+      ],
+      "ppu": 493.7556443384982,
+      "pivot_y": 0.4922363863230036,
+      "alpha_bounds": [
+        32,
+        62,
+        480,
+        449
+      ],
+      "sha256": "233de920f5b5e3110c3edcbb4bcc63b0cd637e0e68a9f8b5d1a5b54b32014197"
+    },
+    {
+      "group": "rocks",
+      "key": "cluster",
+      "path": "Assets/Resources/Sprites/Props/NordicRocks20261103/cluster.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-296ef5b0-0266-456f-85eb-d62f7127703d.png",
+      "source_rect": [
+        0,
+        627,
+        627,
+        627
+      ],
+      "ppu": 493.7556443384982,
+      "pivot_y": 0.4785645113230036,
+      "alpha_bounds": [
+        32,
+        56,
+        480,
+        456
+      ],
+      "sha256": "c721fa1e35a15570509ece5fd06b7715e170b0fa2fc42ad0dd8f9e06ac4930e6"
+    },
+    {
+      "group": "rocks",
+      "key": "weathered",
+      "path": "Assets/Resources/Sprites/Props/NordicRocks20261103/weathered.png",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-296ef5b0-0266-456f-85eb-d62f7127703d.png",
+      "source_rect": [
+        627,
+        627,
+        627,
+        627
+      ],
+      "ppu": 493.7556443384982,
+      "pivot_y": 0.4375488863230036,
+      "alpha_bounds": [
+        32,
+        34,
+        480,
+        477
+      ],
+      "sha256": "bc36f584fb12a0fd5ded09b6836b590e705540df7c47a0e98fb3fcc6e09ba5af"
+    }
+  ],
+  "removed_from_selection": "slab",
+  "rock_opaque_width": 0.9073313999279975,
+  "rock_foot_baseline": -0.382831127025639,
+  "tree_source_height": 1.5,
+  "tree_foot_baseline": -0.24,
+  "storage": "Runtime PNGs in Resources; original generated masters retained under .codex."
+}

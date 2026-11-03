@@ -1,0 +1,54 @@
+{
+  "scope": "8 companion idle, direction and walk sets; head/hood reduced, 1.2 world-unit total height and root physics retained",
+  "characters": {
+    "hunter": {
+      "previous_sha256": "b4bbc1467b7f28edd7833e0ddbc37eaf7109e17fbc3eac1e471395f2618f34a3",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-f4e73c28-1fd5-4df7-9253-42c9b8c3559a.png",
+      "sha256": "d74a42091d41f741703bf7b5f8506b8cc6b9f21b7b3d845a4832f49d40ad895e",
+      "side_head_height_pixels": 166
+    },
+    "warrior": {
+      "previous_sha256": "eada953f8ea4a7862a4df27d2ac33528b367b9897854f85df20c4a172ebd382e",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-77d1c213-66c0-4e38-9c01-5512abae6ebc.png",
+      "sha256": "9e97b2bee0384becd54ed7a478a481e72d4c3a16712627e87f36612ba4a8969e",
+      "side_head_height_pixels": 120
+    },
+    "farmer": {
+      "previous_sha256": "1a3934ed592acbbe9fe5223d57a4d1285531eed2555385d56536049d7c26eed8",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-cd41775a-bcbe-43a9-bf37-a0f5c211865c.png",
+      "sha256": "153329a1713c3a600b1ee00c50bb200dba2fc24f599611c5113f34363b7efff2",
+      "side_head_height_pixels": 146
+    },
+    "cook": {
+      "previous_sha256": "52adc9db209f4af7111407199d05097d606a8d9cee5cae333377eb67afc97db2",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-9ff4685e-9ba2-401d-8eca-5a1031738726.png",
+      "sha256": "0176aeb3e01a8f55c9c50a5c4c0856d05eecf70c955d63a8df84d06a4a41962d",
+      "side_head_height_pixels": 130
+    },
+    "healer": {
+      "previous_sha256": "36a8290da21bb50f7b9512ce5151a7169123b2f4508999cdd698469e65078a2f",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-98f9c174-06e4-4731-b8e5-f923c0847330.png",
+      "sha256": "621dc9ad19571cee13b667f2b05aa89cadd0846a5042979950809325b9451a05",
+      "side_head_height_pixels": 144
+    },
+    "aunt": {
+      "previous_sha256": "af0f5a6ddb4b7316767c5de64010319f803de042d49526041336f7472ac023ac",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-a9a27acc-8558-4635-a7ba-680d6b879398.png",
+      "sha256": "1cffb70468447fa1d92fba260f6a7d961e5cc947e1ab4a967b753e209cf8a050",
+      "side_head_height_pixels": 146
+    },
+    "uncle": {
+      "previous_sha256": "7de660c0fcc9469df618dd8aa20f37a7ece9666cbeac97954e61c52f7a0d0b26",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-042a4855-7d4c-4770-be13-7e80db63ff75.png",
+      "sha256": "5b40c4283209fd940b8adf423545a4c1a240c05059c0f057fc76276712f10c50",
+      "side_head_height_pixels": 136
+    },
+    "child": {
+      "previous_sha256": "3e0cb18806a18c779140af641d44343c0762074bd59cf479bd228e7989c310f3",
+      "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-75c5f547-9063-4acb-9a9d-a3b2f3be9e07.png",
+      "sha256": "1cd13bec639cc59a4ac0487ef5c81260195d54fd232f72b4d3d23e7cb35b253d",
+      "side_head_height_pixels": 161
+    }
+  },
+  "head_measurement": "Reviewed side-idle top of cap/hood to covered neck; excludes loose braids. Pixel spans are approximate visual landmarks, world target 0.4 +/- 0.09 unchanged."
+}

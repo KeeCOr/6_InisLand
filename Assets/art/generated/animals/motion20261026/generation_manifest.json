@@ -1,0 +1,857 @@
+{
+  "sources": [
+    {
+      "key": "deer",
+      "name": "사슴",
+      "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-5a31e8b8-0dd5-403b-9529-220eeae1f0be.png",
+      "identity": "a slender brown deer with branching antlers, cream throat and belly, thin dark hooves; retain its recognizable antlers and proportions",
+      "motion": "natural deer trotting, diagonal legs alternating, not hopping",
+      "prompt": "Use case: stylized-concept. Asset type: transparent Unity 2D animal movement sprite atlas.\nUse the supplied image as identity and palette reference. Preserve species, body markings and distinctive silhouette. Render polished readable painted pixel-art with crisp contours matching the survival game, no photorealistic background.\nOutput exactly ONE SQUARE sheet with a 3-column by 3-row grid of NINE equally sized cells. Columns left to right: directly FRONT facing screen down; directly BACK facing screen up; true RIGHT SIDE PROFILE facing screen right. Rows top to bottom: neutral idle pose; movement pose A; opposite movement pose B. This is the SAME animal in all nine cells, identical anatomy, markings, body size and viewpoint across poses. Front and rear are genuine different drawings, not flipped copies. Slightly elevated orthographic game camera, no isometric diagonal turn, no horizon. Natural animal proportions, not human or bipedal chibi. All quadrupeds have exactly four legs, no extra paws.\nUse generous EMPTY TRANSPARENT GUTTERS and 12% clear margins INSIDE EVERY cell so antlers, tusks, ears, tail, feathers and ALL paws stay fully inside their own cell. No clipping or shared parts between cells. Keep scale and body center consistent so frame swaps do not wobble. Each cell is a separate complete animal.\nReal transparent alpha background, absolutely no floor, ground shadow, aura, labels, letters, grid lines, scenery, UI or watermark.\nIdentity: a slender brown deer with branching antlers, cream throat and belly, thin dark hooves; retain its recognizable antlers and proportions.\nMovement: natural deer trotting, diagonal legs alternating, not hopping.",
+      "path_ref": "Animals/deer"
+    },
+    {
+      "key": "rabbit",
+      "name": "토끼",
+      "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-8d992b55-1d10-4287-83c6-0586385f7827.png",
+      "identity": "a small warm-grey rabbit with cream belly, upright long pink inner ears, rounded tail and black eyes",
+      "motion": "rabbit hopping: row 2 crouched hind legs compressed with forepaws reaching forward, row 3 extended hind legs pushing off and forepaws tucked; keep the torso stable enough to animate cleanly",
+      "prompt": "Use case: stylized-concept. Asset type: transparent Unity 2D animal movement sprite atlas.\nUse the supplied image as identity and palette reference. Preserve species, body markings and distinctive silhouette. Render polished readable painted pixel-art with crisp contours matching the survival game, no photorealistic background.\nOutput exactly ONE SQUARE sheet with a 3-column by 3-row grid of NINE equally sized cells. Columns left to right: directly FRONT facing screen down; directly BACK facing screen up; true RIGHT SIDE PROFILE facing screen right. Rows top to bottom: neutral idle pose; movement pose A; opposite movement pose B. This is the SAME animal in all nine cells, identical anatomy, markings, body size and viewpoint across poses. Front and rear are genuine different drawings, not flipped copies. Slightly elevated orthographic game camera, no isometric diagonal turn, no horizon. Natural animal proportions, not human or bipedal chibi. All quadrupeds have exactly four legs, no extra paws.\nUse generous EMPTY TRANSPARENT GUTTERS and 12% clear margins INSIDE EVERY cell so antlers, tusks, ears, tail, feathers and ALL paws stay fully inside their own cell. No clipping or shared parts between cells. Keep scale and body center consistent so frame swaps do not wobble. Each cell is a separate complete animal.\nReal transparent alpha background, absolutely no floor, ground shadow, aura, labels, letters, grid lines, scenery, UI or watermark.\nIdentity: a small warm-grey rabbit with cream belly, upright long pink inner ears, rounded tail and black eyes.\nMovement: rabbit hopping: row 2 crouched hind legs compressed with forepaws reaching forward, row 3 extended hind legs pushing off and forepaws tucked; keep the torso stable enough to animate cleanly.",
+      "path_ref": "Animals/rabbit"
+    },
+    {
+      "key": "boar",
+      "name": "멧돼지",
+      "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-e2db4db8-547e-436f-9774-70df47a7bf33.png",
+      "identity": "a stocky dark-brown wild boar with bristly dark mane, small curved ivory tusks, short sturdy cloven hooves",
+      "motion": "sturdy boar trot, alternating diagonal leg pairs with subtle shoulder motion",
+      "prompt": "Use case: stylized-concept. Asset type: transparent Unity 2D animal movement sprite atlas.\nUse the supplied image as identity and palette reference. Preserve species, body markings and distinctive silhouette. Render polished readable painted pixel-art with crisp contours matching the survival game, no photorealistic background.\nOutput exactly ONE SQUARE sheet with a 3-column by 3-row grid of NINE equally sized cells. Columns left to right: directly FRONT facing screen down; directly BACK facing screen up; true RIGHT SIDE PROFILE facing screen right. Rows top to bottom: neutral idle pose; movement pose A; opposite movement pose B. This is the SAME animal in all nine cells, identical anatomy, markings, body size and viewpoint across poses. Front and rear are genuine different drawings, not flipped copies. Slightly elevated orthographic game camera, no isometric diagonal turn, no horizon. Natural animal proportions, not human or bipedal chibi. All quadrupeds have exactly four legs, no extra paws.\nUse generous EMPTY TRANSPARENT GUTTERS and 12% clear margins INSIDE EVERY cell so antlers, tusks, ears, tail, feathers and ALL paws stay fully inside their own cell. No clipping or shared parts between cells. Keep scale and body center consistent so frame swaps do not wobble. Each cell is a separate complete animal.\nReal transparent alpha background, absolutely no floor, ground shadow, aura, labels, letters, grid lines, scenery, UI or watermark.\nIdentity: a stocky dark-brown wild boar with bristly dark mane, small curved ivory tusks, short sturdy cloven hooves.\nMovement: sturdy boar trot, alternating diagonal leg pairs with subtle shoulder motion.",
+      "path_ref": "Animals/boar"
+    },
+    {
+      "key": "wolf",
+      "name": "늑대",
+      "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-b80086d0-5843-4f42-81de-ff0f9d06e059.png",
+      "identity": "a grey wolf with dark grey back, light muzzle and chest, pointed ears, long bushy tail",
+      "motion": "lean canine trot with clearly alternating diagonal leg pairs and low extended neck",
+      "prompt": "Use case: stylized-concept. Asset type: transparent Unity 2D animal movement sprite atlas.\nUse the supplied image as identity and palette reference. Preserve species, body markings and distinctive silhouette. Render polished readable painted pixel-art with crisp contours matching the survival game, no photorealistic background.\nOutput exactly ONE SQUARE sheet with a 3-column by 3-row grid of NINE equally sized cells. Columns left to right: directly FRONT facing screen down; directly BACK facing screen up; true RIGHT SIDE PROFILE facing screen right. Rows top to bottom: neutral idle pose; movement pose A; opposite movement pose B. This is the SAME animal in all nine cells, identical anatomy, markings, body size and viewpoint across poses. Front and rear are genuine different drawings, not flipped copies. Slightly elevated orthographic game camera, no isometric diagonal turn, no horizon. Natural animal proportions, not human or bipedal chibi. All quadrupeds have exactly four legs, no extra paws.\nUse generous EMPTY TRANSPARENT GUTTERS and 12% clear margins INSIDE EVERY cell so antlers, tusks, ears, tail, feathers and ALL paws stay fully inside their own cell. No clipping or shared parts between cells. Keep scale and body center consistent so frame swaps do not wobble. Each cell is a separate complete animal.\nReal transparent alpha background, absolutely no floor, ground shadow, aura, labels, letters, grid lines, scenery, UI or watermark.\nIdentity: a grey wolf with dark grey back, light muzzle and chest, pointed ears, long bushy tail.\nMovement: lean canine trot with clearly alternating diagonal leg pairs and low extended neck.",
+      "path_ref": "Animals/wolf"
+    },
+    {
+      "key": "bear",
+      "name": "곰",
+      "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-bd606a2e-000e-4ab4-98b8-5686a188c6e9.png",
+      "identity": "a large brown bear with broad muscular shoulders, round ears, light brown muzzle, short tail, heavy paws",
+      "motion": "heavy bear walking gait, alternating foreleg and opposite hind leg, subtle shoulder roll",
+      "prompt": "Use case: stylized-concept. Asset type: transparent Unity 2D animal movement sprite atlas.\nUse the supplied image as identity and palette reference. Preserve species, body markings and distinctive silhouette. Render polished readable painted pixel-art with crisp contours matching the survival game, no photorealistic background.\nOutput exactly ONE SQUARE sheet with a 3-column by 3-row grid of NINE equally sized cells. Columns left to right: directly FRONT facing screen down; directly BACK facing screen up; true RIGHT SIDE PROFILE facing screen right. Rows top to bottom: neutral idle pose; movement pose A; opposite movement pose B. This is the SAME animal in all nine cells, identical anatomy, markings, body size and viewpoint across poses. Front and rear are genuine different drawings, not flipped copies. Slightly elevated orthographic game camera, no isometric diagonal turn, no horizon. Natural animal proportions, not human or bipedal chibi. All quadrupeds have exactly four legs, no extra paws.\nUse generous EMPTY TRANSPARENT GUTTERS and 12% clear margins INSIDE EVERY cell so antlers, tusks, ears, tail, feathers and ALL paws stay fully inside their own cell. No clipping or shared parts between cells. Keep scale and body center consistent so frame swaps do not wobble. Each cell is a separate complete animal.\nReal transparent alpha background, absolutely no floor, ground shadow, aura, labels, letters, grid lines, scenery, UI or watermark.\nIdentity: a large brown bear with broad muscular shoulders, round ears, light brown muzzle, short tail, heavy paws.\nMovement: heavy bear walking gait, alternating foreleg and opposite hind leg, subtle shoulder roll.",
+      "path_ref": "Animals/bear"
+    },
+    {
+      "key": "mammoth",
+      "name": "매머드",
+      "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-a9787a73-fbac-4b1c-92a2-7401b7b6f758.png",
+      "identity": "a shaggy brown woolly mammoth with a domed head, long curved ivory tusks, downward curved trunk and stout column-like legs",
+      "motion": "heavy elephant walking gait, opposite legs alternate, trunk swings only slightly; tusks and head do not warp",
+      "prompt": "Use case: stylized-concept. Asset type: transparent Unity 2D animal movement sprite atlas.\nUse the supplied image as identity and palette reference. Preserve species, body markings and distinctive silhouette. Render polished readable painted pixel-art with crisp contours matching the survival game, no photorealistic background.\nOutput exactly ONE SQUARE sheet with a 3-column by 3-row grid of NINE equally sized cells. Columns left to right: directly FRONT facing screen down; directly BACK facing screen up; true RIGHT SIDE PROFILE facing screen right. Rows top to bottom: neutral idle pose; movement pose A; opposite movement pose B. This is the SAME animal in all nine cells, identical anatomy, markings, body size and viewpoint across poses. Front and rear are genuine different drawings, not flipped copies. Slightly elevated orthographic game camera, no isometric diagonal turn, no horizon. Natural animal proportions, not human or bipedal chibi. All quadrupeds have exactly four legs, no extra paws.\nUse generous EMPTY TRANSPARENT GUTTERS and 12% clear margins INSIDE EVERY cell so antlers, tusks, ears, tail, feathers and ALL paws stay fully inside their own cell. No clipping or shared parts between cells. Keep scale and body center consistent so frame swaps do not wobble. Each cell is a separate complete animal.\nReal transparent alpha background, absolutely no floor, ground shadow, aura, labels, letters, grid lines, scenery, UI or watermark.\nIdentity: a shaggy brown woolly mammoth with a domed head, long curved ivory tusks, downward curved trunk and stout column-like legs.\nMovement: heavy elephant walking gait, opposite legs alternate, trunk swings only slightly; tusks and head do not warp.",
+      "path_ref": "Animals/mammoth"
+    },
+    {
+      "key": "fox",
+      "name": "여우",
+      "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-4cabb6d1-dfcd-44e5-9387-323d220bd42b.png",
+      "identity": "an orange-red fox with white cheek ruff and belly, dark stockings and very full white-tipped tail",
+      "motion": "light fox trot, alternating diagonal leg pairs, tail follows in a small stable arc",
+      "prompt": "Use case: stylized-concept. Asset type: transparent Unity 2D animal movement sprite atlas.\nUse the supplied image as identity and palette reference. Preserve species, body markings and distinctive silhouette. Render polished readable painted pixel-art with crisp contours matching the survival game, no photorealistic background.\nOutput exactly ONE SQUARE sheet with a 3-column by 3-row grid of NINE equally sized cells. Columns left to right: directly FRONT facing screen down; directly BACK facing screen up; true RIGHT SIDE PROFILE facing screen right. Rows top to bottom: neutral idle pose; movement pose A; opposite movement pose B. This is the SAME animal in all nine cells, identical anatomy, markings, body size and viewpoint across poses. Front and rear are genuine different drawings, not flipped copies. Slightly elevated orthographic game camera, no isometric diagonal turn, no horizon. Natural animal proportions, not human or bipedal chibi. All quadrupeds have exactly four legs, no extra paws.\nUse generous EMPTY TRANSPARENT GUTTERS and 12% clear margins INSIDE EVERY cell so antlers, tusks, ears, tail, feathers and ALL paws stay fully inside their own cell. No clipping or shared parts between cells. Keep scale and body center consistent so frame swaps do not wobble. Each cell is a separate complete animal.\nReal transparent alpha background, absolutely no floor, ground shadow, aura, labels, letters, grid lines, scenery, UI or watermark.\nIdentity: an orange-red fox with white cheek ruff and belly, dark stockings and very full white-tipped tail.\nMovement: light fox trot, alternating diagonal leg pairs, tail follows in a small stable arc.",
+      "path_ref": "GeneratedStatic20261014/Animals/fox"
+    },
+    {
+      "key": "snow_hare",
+      "name": "흰토끼",
+      "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-1c138176-f1aa-4fba-9f4d-8249a9b47f13.png",
+      "identity": "a fluffy white snow hare with subtle grey ear tips, long ears, strong hind legs, a round tail and black eyes",
+      "motion": "hare hopping: row 2 compressed crouch and forward forepaws, row 3 hind legs pushing back with tucked forepaws, unmistakably two different hop poses",
+      "prompt": "Use case: stylized-concept. Asset type: transparent Unity 2D animal movement sprite atlas.\nUse the supplied image as identity and palette reference. Preserve species, body markings and distinctive silhouette. Render polished readable painted pixel-art with crisp contours matching the survival game, no photorealistic background.\nOutput exactly ONE SQUARE sheet with a 3-column by 3-row grid of NINE equally sized cells. Columns left to right: directly FRONT facing screen down; directly BACK facing screen up; true RIGHT SIDE PROFILE facing screen right. Rows top to bottom: neutral idle pose; movement pose A; opposite movement pose B. This is the SAME animal in all nine cells, identical anatomy, markings, body size and viewpoint across poses. Front and rear are genuine different drawings, not flipped copies. Slightly elevated orthographic game camera, no isometric diagonal turn, no horizon. Natural animal proportions, not human or bipedal chibi. All quadrupeds have exactly four legs, no extra paws.\nUse generous EMPTY TRANSPARENT GUTTERS and 12% clear margins INSIDE EVERY cell so antlers, tusks, ears, tail, feathers and ALL paws stay fully inside their own cell. No clipping or shared parts between cells. Keep scale and body center consistent so frame swaps do not wobble. Each cell is a separate complete animal.\nReal transparent alpha background, absolutely no floor, ground shadow, aura, labels, letters, grid lines, scenery, UI or watermark.\nIdentity: a fluffy white snow hare with subtle grey ear tips, long ears, strong hind legs, a round tail and black eyes.\nMovement: hare hopping: row 2 compressed crouch and forward forepaws, row 3 hind legs pushing back with tucked forepaws, unmistakably two different hop poses.",
+      "path_ref": "GeneratedStatic20261014/Animals/snow_hare"
+    },
+    {
+      "key": "dog",
+      "name": "소환수 개",
+      "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-5f30e1bf-8e1e-4963-94c9-3c04c0926032.png",
+      "identity": "the same friendly tan-and-dark-brown shepherd dog, cream muzzle and chest, pointed ears, bushy tail, no clothing or collar added",
+      "motion": "friendly canine trot, alternating diagonal leg pairs, no jumping",
+      "prompt": "Use case: stylized-concept. Asset type: transparent Unity 2D animal movement sprite atlas.\nUse the supplied image as identity and palette reference. Preserve species, body markings and distinctive silhouette. Render polished readable painted pixel-art with crisp contours matching the survival game, no photorealistic background.\nOutput exactly ONE SQUARE sheet with a 3-column by 3-row grid of NINE equally sized cells. Columns left to right: directly FRONT facing screen down; directly BACK facing screen up; true RIGHT SIDE PROFILE facing screen right. Rows top to bottom: neutral idle pose; movement pose A; opposite movement pose B. This is the SAME animal in all nine cells, identical anatomy, markings, body size and viewpoint across poses. Front and rear are genuine different drawings, not flipped copies. Slightly elevated orthographic game camera, no isometric diagonal turn, no horizon. Natural animal proportions, not human or bipedal chibi. All quadrupeds have exactly four legs, no extra paws.\nUse generous EMPTY TRANSPARENT GUTTERS and 12% clear margins INSIDE EVERY cell so antlers, tusks, ears, tail, feathers and ALL paws stay fully inside their own cell. No clipping or shared parts between cells. Keep scale and body center consistent so frame swaps do not wobble. Each cell is a separate complete animal.\nReal transparent alpha background, absolutely no floor, ground shadow, aura, labels, letters, grid lines, scenery, UI or watermark.\nIdentity: the same friendly tan-and-dark-brown shepherd dog, cream muzzle and chest, pointed ears, bushy tail, no clothing or collar added.\nMovement: friendly canine trot, alternating diagonal leg pairs, no jumping.",
+      "path_ref": "Pets/dog"
+    },
+    {
+      "key": "hawk",
+      "name": "소환수 매",
+      "path": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-2046a983-952f-44a0-a907-ce9481372fa8.png",
+      "identity": "the same brown hawk with cream speckled chest, barred brown wings and tail, golden eyes, hooked dark beak and yellow tucked talons",
+      "motion": "FLYING not walking: row 1 gliding wings horizontal, row 2 wings raised in upstroke, row 3 wings lowered in downstroke. A clear symmetrical wingbeat, no ground pose",
+      "prompt": "Use case: stylized-concept. Asset type: transparent Unity 2D animal movement sprite atlas.\nUse the supplied image as identity and palette reference. Preserve species, body markings and distinctive silhouette. Render polished readable painted pixel-art with crisp contours matching the survival game, no photorealistic background.\nOutput exactly ONE SQUARE sheet with a 3-column by 3-row grid of NINE equally sized cells. Columns left to right: directly FRONT facing screen down; directly BACK facing screen up; true RIGHT SIDE PROFILE facing screen right. Rows top to bottom: neutral idle pose; movement pose A; opposite movement pose B. This is the SAME animal in all nine cells, identical anatomy, markings, body size and viewpoint across poses. Front and rear are genuine different drawings, not flipped copies. Slightly elevated orthographic game camera, no isometric diagonal turn, no horizon. Natural animal proportions, not human or bipedal chibi. All quadrupeds have exactly four legs, no extra paws.\nUse generous EMPTY TRANSPARENT GUTTERS and 12% clear margins INSIDE EVERY cell so antlers, tusks, ears, tail, feathers and ALL paws stay fully inside their own cell. No clipping or shared parts between cells. Keep scale and body center consistent so frame swaps do not wobble. Each cell is a separate complete animal.\nReal transparent alpha background, absolutely no floor, ground shadow, aura, labels, letters, grid lines, scenery, UI or watermark.\nIdentity: the same brown hawk with cream speckled chest, barred brown wings and tail, golden eyes, hooked dark beak and yellow tucked talons.\nMovement: FLYING not walking: row 1 gliding wings horizontal, row 2 wings raised in upstroke, row 3 wings lowered in downstroke. A clear symmetrical wingbeat, no ground pose.",
+      "path_ref": "Pets/hawk",
+      "refinement_prompt": "Edit this hawk animation atlas. Keep exactly the same brown/cream hawk identity and 3-column/3-row arrangement: front, back, right profile; neutral glide, upstroke, downstroke. Fix the crowding and cropped wing tips. Redraw ALL nine complete birds SMALLER, at only 65 percent of the width and height of their individual equal square cells. This means a wide empty transparent margin on all four sides of EVERY bird, including top-left wings that currently touch the canvas edge. At least 15 percent of every cell is empty margin at left and right. Whole feather tips visible, no cropping, no part touches any cell boundary or the outer image edge. Keep the body chest center at the exact same relative location inside every cell across rows. Wings rise or fall around that fixed body; don't move the body up and down between rows. True FRONT and BACK in columns1 and2, RIGHT profile column3. Do not add more birds, labels, floor, outlines of panels, shadows or scenery. Transparent alpha background. Crisp painted pixel-art style of source. Output one square 3x3 sprite atlas with generous blank gutters."
+    }
+  ],
+  "slicing": "Alpha-gutter bounds inspected without painting changes. Unity slices and pads to a common canvas.",
+  "layouts": {
+    "deer": {
+      "canvasWidth": 461,
+      "canvasHeight": 418,
+      "slices": [
+        {
+          "x": 0,
+          "y": 836,
+          "width": 434,
+          "height": 418
+        },
+        {
+          "x": 434,
+          "y": 836,
+          "width": 359,
+          "height": 418
+        },
+        {
+          "x": 793,
+          "y": 836,
+          "width": 461,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 418,
+          "width": 434,
+          "height": 418
+        },
+        {
+          "x": 434,
+          "y": 418,
+          "width": 359,
+          "height": 418
+        },
+        {
+          "x": 793,
+          "y": 418,
+          "width": 461,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "width": 434,
+          "height": 418
+        },
+        {
+          "x": 434,
+          "y": 0,
+          "width": 359,
+          "height": 418
+        },
+        {
+          "x": 793,
+          "y": 0,
+          "width": 461,
+          "height": 418
+        }
+      ],
+      "alphaBands": [
+        [
+          148,
+          323
+        ],
+        [
+          545,
+          707
+        ],
+        [
+          879,
+          1209
+        ]
+      ]
+    },
+    "rabbit": {
+      "canvasWidth": 461,
+      "canvasHeight": 418,
+      "slices": [
+        {
+          "x": 0,
+          "y": 836,
+          "width": 419,
+          "height": 418
+        },
+        {
+          "x": 419,
+          "y": 836,
+          "width": 374,
+          "height": 418
+        },
+        {
+          "x": 793,
+          "y": 836,
+          "width": 461,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 418,
+          "width": 419,
+          "height": 418
+        },
+        {
+          "x": 419,
+          "y": 418,
+          "width": 374,
+          "height": 418
+        },
+        {
+          "x": 793,
+          "y": 418,
+          "width": 461,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "width": 419,
+          "height": 418
+        },
+        {
+          "x": 419,
+          "y": 0,
+          "width": 374,
+          "height": 418
+        },
+        {
+          "x": 793,
+          "y": 0,
+          "width": 461,
+          "height": 418
+        }
+      ],
+      "alphaBands": [
+        [
+          137,
+          309
+        ],
+        [
+          529,
+          725
+        ],
+        [
+          861,
+          1217
+        ]
+      ]
+    },
+    "boar": {
+      "canvasWidth": 491,
+      "canvasHeight": 418,
+      "slices": [
+        {
+          "x": 0,
+          "y": 836,
+          "width": 416,
+          "height": 418
+        },
+        {
+          "x": 416,
+          "y": 836,
+          "width": 347,
+          "height": 418
+        },
+        {
+          "x": 763,
+          "y": 836,
+          "width": 491,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 418,
+          "width": 416,
+          "height": 418
+        },
+        {
+          "x": 416,
+          "y": 418,
+          "width": 347,
+          "height": 418
+        },
+        {
+          "x": 763,
+          "y": 418,
+          "width": 491,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "width": 416,
+          "height": 418
+        },
+        {
+          "x": 416,
+          "y": 0,
+          "width": 347,
+          "height": 418
+        },
+        {
+          "x": 763,
+          "y": 0,
+          "width": 491,
+          "height": 418
+        }
+      ],
+      "alphaBands": [
+        [
+          128,
+          308
+        ],
+        [
+          524,
+          712
+        ],
+        [
+          814,
+          1226
+        ]
+      ]
+    },
+    "wolf": {
+      "canvasWidth": 609,
+      "canvasHeight": 418,
+      "slices": [
+        {
+          "x": 0,
+          "y": 836,
+          "width": 381,
+          "height": 418
+        },
+        {
+          "x": 381,
+          "y": 836,
+          "width": 264,
+          "height": 418
+        },
+        {
+          "x": 645,
+          "y": 836,
+          "width": 609,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 418,
+          "width": 381,
+          "height": 418
+        },
+        {
+          "x": 381,
+          "y": 418,
+          "width": 264,
+          "height": 418
+        },
+        {
+          "x": 645,
+          "y": 418,
+          "width": 609,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "width": 381,
+          "height": 418
+        },
+        {
+          "x": 381,
+          "y": 0,
+          "width": 264,
+          "height": 418
+        },
+        {
+          "x": 645,
+          "y": 0,
+          "width": 609,
+          "height": 418
+        }
+      ],
+      "alphaBands": [
+        [
+          147,
+          302
+        ],
+        [
+          461,
+          608
+        ],
+        [
+          682,
+          1189
+        ]
+      ]
+    },
+    "bear": {
+      "canvasWidth": 551,
+      "canvasHeight": 418,
+      "slices": [
+        {
+          "x": 0,
+          "y": 836,
+          "width": 375,
+          "height": 418
+        },
+        {
+          "x": 375,
+          "y": 836,
+          "width": 328,
+          "height": 418
+        },
+        {
+          "x": 703,
+          "y": 836,
+          "width": 551,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 418,
+          "width": 375,
+          "height": 418
+        },
+        {
+          "x": 375,
+          "y": 418,
+          "width": 328,
+          "height": 418
+        },
+        {
+          "x": 703,
+          "y": 418,
+          "width": 551,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "width": 375,
+          "height": 418
+        },
+        {
+          "x": 375,
+          "y": 0,
+          "width": 328,
+          "height": 418
+        },
+        {
+          "x": 703,
+          "y": 0,
+          "width": 551,
+          "height": 418
+        }
+      ],
+      "alphaBands": [
+        [
+          72,
+          312
+        ],
+        [
+          439,
+          672
+        ],
+        [
+          735,
+          1224
+        ]
+      ]
+    },
+    "mammoth": {
+      "canvasWidth": 515,
+      "canvasHeight": 418,
+      "slices": [
+        {
+          "x": 0,
+          "y": 836,
+          "width": 408,
+          "height": 418
+        },
+        {
+          "x": 408,
+          "y": 836,
+          "width": 331,
+          "height": 418
+        },
+        {
+          "x": 739,
+          "y": 836,
+          "width": 515,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 418,
+          "width": 408,
+          "height": 418
+        },
+        {
+          "x": 408,
+          "y": 418,
+          "width": 331,
+          "height": 418
+        },
+        {
+          "x": 739,
+          "y": 418,
+          "width": 515,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "width": 408,
+          "height": 418
+        },
+        {
+          "x": 408,
+          "y": 0,
+          "width": 331,
+          "height": 418
+        },
+        {
+          "x": 739,
+          "y": 0,
+          "width": 515,
+          "height": 418
+        }
+      ],
+      "alphaBands": [
+        [
+          89,
+          330
+        ],
+        [
+          486,
+          696
+        ],
+        [
+          782,
+          1210
+        ]
+      ]
+    },
+    "fox": {
+      "canvasWidth": 628,
+      "canvasHeight": 418,
+      "slices": [
+        {
+          "x": 0,
+          "y": 836,
+          "width": 341,
+          "height": 418
+        },
+        {
+          "x": 341,
+          "y": 836,
+          "width": 285,
+          "height": 418
+        },
+        {
+          "x": 626,
+          "y": 836,
+          "width": 628,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 418,
+          "width": 341,
+          "height": 418
+        },
+        {
+          "x": 341,
+          "y": 418,
+          "width": 285,
+          "height": 418
+        },
+        {
+          "x": 626,
+          "y": 418,
+          "width": 628,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "width": 341,
+          "height": 418
+        },
+        {
+          "x": 341,
+          "y": 0,
+          "width": 285,
+          "height": 418
+        },
+        {
+          "x": 626,
+          "y": 0,
+          "width": 628,
+          "height": 418
+        }
+      ],
+      "alphaBands": [
+        [
+          107,
+          283
+        ],
+        [
+          399,
+          610
+        ],
+        [
+          642,
+          1240
+        ]
+      ]
+    },
+    "snow_hare": {
+      "canvasWidth": 481,
+      "canvasHeight": 418,
+      "slices": [
+        {
+          "x": 0,
+          "y": 836,
+          "width": 433,
+          "height": 418
+        },
+        {
+          "x": 433,
+          "y": 836,
+          "width": 340,
+          "height": 418
+        },
+        {
+          "x": 773,
+          "y": 836,
+          "width": 481,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 418,
+          "width": 433,
+          "height": 418
+        },
+        {
+          "x": 433,
+          "y": 418,
+          "width": 340,
+          "height": 418
+        },
+        {
+          "x": 773,
+          "y": 418,
+          "width": 481,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "width": 433,
+          "height": 418
+        },
+        {
+          "x": 433,
+          "y": 0,
+          "width": 340,
+          "height": 418
+        },
+        {
+          "x": 773,
+          "y": 0,
+          "width": 481,
+          "height": 418
+        }
+      ],
+      "alphaBands": [
+        [
+          120,
+          345
+        ],
+        [
+          521,
+          731
+        ],
+        [
+          816,
+          1215
+        ]
+      ]
+    },
+    "dog": {
+      "canvasWidth": 588,
+      "canvasHeight": 418,
+      "slices": [
+        {
+          "x": 0,
+          "y": 836,
+          "width": 367,
+          "height": 418
+        },
+        {
+          "x": 367,
+          "y": 836,
+          "width": 299,
+          "height": 418
+        },
+        {
+          "x": 666,
+          "y": 836,
+          "width": 588,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 418,
+          "width": 367,
+          "height": 418
+        },
+        {
+          "x": 367,
+          "y": 418,
+          "width": 299,
+          "height": 418
+        },
+        {
+          "x": 666,
+          "y": 418,
+          "width": 588,
+          "height": 418
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "width": 367,
+          "height": 418
+        },
+        {
+          "x": 367,
+          "y": 0,
+          "width": 299,
+          "height": 418
+        },
+        {
+          "x": 666,
+          "y": 0,
+          "width": 588,
+          "height": 418
+        }
+      ],
+      "alphaBands": [
+        [
+          94,
+          266
+        ],
+        [
+          469,
+          620
+        ],
+        [
+          712,
+          1217
+        ]
+      ]
+    },
+    "hawk": {
+      "canvasWidth": 422,
+      "canvasHeight": 418,
+      "slices": [
+        {
+          "x": 0,
+          "y": 836,
+          "width": 422,
+          "height": 418,
+          "pivotX": 0.4976303317535545,
+          "pivotY": 0.35406698564593303
+        },
+        {
+          "x": 422,
+          "y": 836,
+          "width": 418,
+          "height": 418,
+          "pivotX": 0.4976303317535545,
+          "pivotY": 0.35406698564593303
+        },
+        {
+          "x": 840,
+          "y": 836,
+          "width": 414,
+          "height": 418,
+          "pivotX": 0.4834123222748815,
+          "pivotY": 0.33014354066985646
+        },
+        {
+          "x": 0,
+          "y": 418,
+          "width": 422,
+          "height": 418,
+          "pivotX": 0.4976303317535545,
+          "pivotY": 0.3492822966507177
+        },
+        {
+          "x": 422,
+          "y": 418,
+          "width": 418,
+          "height": 418,
+          "pivotX": 0.4976303317535545,
+          "pivotY": 0.3492822966507177
+        },
+        {
+          "x": 840,
+          "y": 418,
+          "width": 414,
+          "height": 418,
+          "pivotX": 0.4834123222748815,
+          "pivotY": 0.3014354066985646
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "width": 422,
+          "height": 418,
+          "pivotX": 0.4976303317535545,
+          "pivotY": 0.583732057416268
+        },
+        {
+          "x": 422,
+          "y": 0,
+          "width": 418,
+          "height": 418,
+          "pivotX": 0.4976303317535545,
+          "pivotY": 0.583732057416268
+        },
+        {
+          "x": 840,
+          "y": 0,
+          "width": 414,
+          "height": 418,
+          "pivotX": 0.4834123222748815,
+          "pivotY": 0.5717703349282297
+        }
+      ],
+      "alphaBands": [
+        [
+          43,
+          374
+        ],
+        [
+          470,
+          789
+        ],
+        [
+          892,
+          1197
+        ]
+      ],
+      "anchor_note": "Per-pose breast anchors measured by visual inspection; wings do not define flight pivot."
+    }
+  }
+}

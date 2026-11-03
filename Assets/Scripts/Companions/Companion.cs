@@ -21,7 +21,7 @@ namespace IL6
         public float FollowStopDistance = 0.25f;
         public float MoveSpeed = 4.5f;
         public float GatherReach = 0.7f;
-        public float SeparationRadius = 0.9f;
+        public float SeparationRadius = 1.1f;
 
         [Header("Combat")]
         public bool IsCombat = true;
@@ -54,7 +54,7 @@ namespace IL6
 
         private float EffectiveMoveSpeed()
         {
-            return MoveSpeed * BuildingUpgradeRules.HighMoraleEfficiencyMultiplier(Morale);
+            return MoveSpeed * 1.1f * BuildingUpgradeRules.HighMoraleEfficiencyMultiplier(Morale);
         }
 
         /// <summary>레벨 + 장비 보정된 MaxHp.</summary>
@@ -226,6 +226,12 @@ namespace IL6
 
         private void Start()
         {
+            if(GetComponent<DirectionalCharacterVisual>()==null && _sr!=null)
+            {
+                foreach(string role in new[]{"Hunter","Warrior","Farmer","Cook","Healer","Aunt","Uncle","Child"})
+                    if(_sr.sprite==SpriteBank.CompanionSpriteForRole(role))
+                    { gameObject.AddComponent<DirectionalCharacterVisual>().Configure(role);break; }
+            }
             if (Player == null)
             {
                 var p = GameObject.FindWithTag("Player");
@@ -523,6 +529,11 @@ namespace IL6
                     }
                     return Vector2.zero;
                 }
+                if(Target.IsRock)
+                {
+                    if(session!=null)Target.EnsureRockHealth().Mine(Time.fixedDeltaTime*.4f,session.Resources);
+                    return Vector2.zero;
+                }
                 if (session != null) Target.OnGathered(session.Resources);
                 Target = null;
                 CurrentMode = Mode.Follow;
@@ -577,8 +588,7 @@ namespace IL6
             int row = myIdx / 2;          // 0,0,1,1,2,2,...
             int side = myIdx % 2;          // 0=좌(또는 단독), 1=우
             float behindDist = (row + 1) * FormationRadius * 0.9f;
-            float sideOffset = 0f;
-            if (myIdx > 0) sideOffset = (side == 0 ? -0.45f : 0.45f);
+            float sideOffset = side == 0 ? -0.7f : 0.7f;
             return (Vector2)Player.position + behind * behindDist + perp * sideOffset;
         }
 
@@ -674,6 +684,7 @@ namespace IL6
 
         private void SpawnProjectile(MonoBehaviour target)
         {
+            GetComponent<CharacterActionVisual>()?.PlayAttack(target.transform.position-transform.position);
             var go = new GameObject("CompProjectile");
             go.transform.position = transform.position;
             go.transform.localScale = Vector3.one * 0.6f;
@@ -681,6 +692,7 @@ namespace IL6
             sr.sortingOrder = 50;
             sr.color = new Color(0.55f, 1f, 0.7f);
             var proj = go.AddComponent<Projectile>();
+            if(GetComponent<DirectionalCharacterVisual>()?.CharacterKey=="hunter") proj.UseArrowAppearance();
             proj.Speed = ProjectileSpeed;
             float allyMul = 1f;
             var p = GameObject.FindWithTag("Player");

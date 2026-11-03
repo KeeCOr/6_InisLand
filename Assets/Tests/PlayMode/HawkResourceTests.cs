@@ -27,7 +27,9 @@ namespace IL6.Tests
                 if(pet.Type!=Pet.Kind.Hawk || pet.Player!=player.transform) continue;
                 count++;
                 var sprite=pet.GetComponent<SpriteRenderer>();
-                Assert.That(sprite.sprite,Is.SameAs(expected),"ColorFallback must not replace the hawk with a triangle");
+                var motion=pet.GetComponent<AnimalMotionVisual>();Assert.That(motion,Is.Not.Null);
+                Assert.That(motion.SpeciesKey,Is.EqualTo("hawk"));
+                Assert.That(sprite.sprite,Is.SameAs(AnimalMotionVisual.SpriteFor("hawk",motion.Facing,motion.MovementPhase!=ActionPhase.End,motion.MovementFrame)),"ColorFallback must not replace the animated hawk with a triangle");
                 Assert.That(sprite.color,Is.EqualTo(Color.white),"Preserve the painted feather colors");
                 Assert.That(sprite.bounds.size.x,Is.InRange(1f,1.6f));
                 typeof(Pet).GetMethod("Move",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).Invoke(pet,new object[]{Vector2.left});

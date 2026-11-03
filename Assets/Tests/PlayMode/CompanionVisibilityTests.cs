@@ -22,7 +22,7 @@ namespace IL6.Tests
         }
         private void EndCutscene()
         {
-            var hud=UnityEngine.Object.FindFirstObjectByType<SimpleHud>();typeof(SimpleHud).GetMethod("EndRecruitCutscene",Flags).Invoke(hud,null);
+            var hud=UnityEngine.Object.FindFirstObjectByType<SimpleHud>();hud.DeclineRecruitConversation();
             Time.timeScale=1;InputReader.HudBlocked=false;
         }
         private RecruitableNpc Npc(string role,Vector3 position)

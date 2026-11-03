@@ -8,6 +8,7 @@ namespace IL6
         private enum Phase { Ground, Flying, Delivered }
         private static readonly List<WoodPickup> All=new();
         public static float LastPickupTime { get; private set; }=-10f;
+        public static int TotalWoodDelivered { get; private set; }
         public static int LastPickupAmount { get; private set; }
         public int Amount { get; private set; }
         public ResourceKind Kind { get; private set; }=ResourceKind.Wood;
@@ -17,7 +18,7 @@ namespace IL6
         private Phase _phase;
         private ResourceStore _store;
         private PlayerController _player;
-        private SpriteRenderer _visual;
+        private SpriteRenderer _visual,_shadow;
         private float _age,_flightTime;
         private Vector2 _screenStart;
 
@@ -29,6 +30,15 @@ namespace IL6
             var art=new GameObject("WoodArt");art.transform.SetParent(go.transform,false);
             pickup._visual=art.AddComponent<SpriteRenderer>();pickup._visual.sortingOrder=9;
             pickup._visual.sprite=ResourceIconSkin.WorldSprite(kind);
+            YSort.Ensure(art);
+            var shadowSprite=Resources.Load<Sprite>("Sprites/Environment/Snowfield/actor_shadow");
+            if(shadowSprite!=null)
+            {
+                var shadow=new GameObject("PickupShadow");shadow.transform.SetParent(go.transform,false);
+                shadow.transform.localScale=new Vector3(.5f,.24f,1);
+                pickup._shadow=shadow.AddComponent<SpriteRenderer>();pickup._shadow.sprite=shadowSprite;
+                pickup._shadow.sortingOrder=-9350;pickup._shadow.color=new Color(.35f,.45f,.55f,.18f);
+            }
             if(pickup._visual.sprite==null)
             {
                 var fallback=art.AddComponent<ColorFallback>();fallback.Tint=new Color(.65f,.4f,.16f);fallback.PixelSize=32;
@@ -52,8 +62,8 @@ namespace IL6
             _age+=Time.deltaTime;
             if(_visual!=null)
             {
-                float bounce=_age<LandingSeconds ? Mathf.Sin(_age/LandingSeconds*Mathf.PI)*.38f : .035f*Mathf.Sin(_age*3f);
-                _visual.transform.localPosition=Vector3.up*(.12f+bounce);
+                float bounce=_age<LandingSeconds ? Mathf.Sin(_age/LandingSeconds*Mathf.PI)*.38f : 0;
+                _visual.transform.localPosition=Vector3.up*(.04f+bounce);
             }
             if(_player==null) _player=Object.FindFirstObjectByType<PlayerController>();
             TryCollect(_player);
@@ -70,6 +80,7 @@ namespace IL6
             _screenStart=new Vector2(screen.x/Mathf.Max(1,Screen.width),1f-screen.y/Mathf.Max(1,Screen.height));
             _phase=Phase.Flying;_flightTime=0;
             if(_visual!=null) _visual.enabled=false;
+            if(_shadow!=null) _shadow.enabled=false;
             return true;
         }
         private void FinishFlight(bool tearingDown)
@@ -82,12 +93,17 @@ namespace IL6
             if(credit>0)
             {
                 _store.Add(Kind,credit);
+                if(Kind==ResourceKind.Wood) TotalWoodDelivered+=credit;
                 LastPickupTime=Time.time;LastPickupAmount=credit;LastPickupKind=Kind;
                 if(!tearingDown) Sfx.Pickup();
             }
             if(tearingDown) return;
             if(Amount==0) Destroy(gameObject);
-            else if(_visual!=null) _visual.enabled=true;
+            else
+            {
+                if(_visual!=null)_visual.enabled=true;
+                if(_shadow!=null)_shadow.enabled=true;
+            }
         }
         private void OnDestroy()
         {

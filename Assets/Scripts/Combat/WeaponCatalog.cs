@@ -41,7 +41,7 @@ namespace IL6
                 // 근접: 느리지만 강타 (cd 0.7→1.0, dmg 16→28). 사거리 짧음.
                 Make("longsword", "Longsword", dmg: 28, range: 1.8f, cd: 1.0f, projSpd: 0f, crit: 0.10f),
                 // 원거리: 빠르지만 약함 (cd 1.1→0.55, dmg 10→6). 사거리 길고 투사체.
-                Make("bow", "Bow", dmg: 6, range: 7.0f, cd: 0.55f, projSpd: 12f, crit: 0.12f),
+                Make("bow", "Bow", dmg: 6, range: 10.0f, cd: 0.55f, projSpd: 12f, crit: 0.12f),
                 Make("construction_hammer", "건설 망치", dmg: 0, range: 0f, cd: 0f, projSpd: 0f, crit: 0f),
             };
         }

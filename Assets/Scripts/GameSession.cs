@@ -13,6 +13,11 @@ namespace IL6
         public static GameSession Instance { get; private set; }
 
         public ResourceStore Resources { get; private set; }
+        public bool StoryTutorialEnabled { get; set; } = true;
+        public bool StoryTutorialComplete { get; set; }
+        public int StoryTutorialStage { get; set; }
+        public bool StoryVillageRuined { get; set; }
+
         public VillageResearch Research { get; } = new VillageResearch();
         public DayNightController Cycle { get; private set; }
 
@@ -46,6 +51,10 @@ namespace IL6
             var save = SaveLoad.Load();
             if (save != null)
             {
+                StoryTutorialEnabled=save.storyTutorialEnabled;
+                StoryTutorialComplete=save.storyTutorialComplete;
+                StoryTutorialStage=save.storyTutorialStage;
+                StoryVillageRuined=save.storyVillageRuined;
                 Research.Restore(save.researchLevels);
                 Resources.Restore(save.resources);
                 Cycle.Restore(new DayNightSnapshot { day = save.currentDay, phase = Phase.Day, elapsedInPhase = 0 });
@@ -410,6 +419,10 @@ namespace IL6
             SaveLoad.Save(new SaveFileV1
             {
                 version = 1,
+                storyTutorialEnabled=StoryTutorialEnabled,
+                storyTutorialComplete=StoryTutorialComplete,
+                storyTutorialStage=StoryTutorialStage,
+                storyVillageRuined=StoryVillageRuined,
                 currentDay = Cycle.Day,
                 resources = Resources.Snapshot(),
                 researchLevels = Research.Snapshot(),
@@ -426,7 +439,7 @@ namespace IL6
             SaveLoad.Clear();
             Instance = null;
             Destroy(gameObject);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SceneManager.LoadScene("BootScene");
         }
     }
 }

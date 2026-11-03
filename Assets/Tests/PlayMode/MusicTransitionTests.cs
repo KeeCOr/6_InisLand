@@ -12,10 +12,12 @@ namespace IL6.Tests
             Music.Stop();Music.PlayForPhase(Phase.Day);yield return null;
             var runner=GameObject.Find("__MusicRunner");var sources=runner.GetComponents<AudioSource>();
             Assert.That(sources.Length,Is.EqualTo(2),"Phase changes need overlapping audio sources");
+            Assert.That(sources[0].clip, Is.SameAs(Resources.Load<AudioClip>("Music/day")));
             Music.PlayForPhase(Phase.Night);
             yield return new WaitForSecondsRealtime(.2f);
             Assert.That(sources[0].volume,Is.GreaterThan(0));Assert.That(sources[1].volume,Is.GreaterThan(0));
             var outgoing=sources[0].clip;var incoming=sources[1].clip;
+            Assert.That(incoming, Is.SameAs(Resources.Load<AudioClip>("Music/night")));
             Music.PlayForPhase(Phase.Night);
             Assert.That(sources[0].clip,Is.SameAs(outgoing));Assert.That(sources[1].clip,Is.SameAs(incoming));
             yield return new WaitForSecondsRealtime(1f);

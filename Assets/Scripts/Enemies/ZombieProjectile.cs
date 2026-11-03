@@ -4,7 +4,7 @@ namespace IL6
 {
     /// <summary>
     /// 원거리 좀비(Archer)의 투사체. PlayerController/Companion/Building 명중 시 데미지.
-    /// Projectile.Awake 가 sprite 자동 생성.
+    /// 기존 중세 화살 이미지를 진행 방향으로 회전해 표시.
     /// </summary>
     public sealed class ZombieProjectile : MonoBehaviour
     {
@@ -21,31 +21,12 @@ namespace IL6
             if (target == null) return;
             Vector2 d = (Vector2)target.position - (Vector2)transform.position;
             if (d.sqrMagnitude > 0.0001f) _direction = d.normalized;
+            ProjectileVisual.Orient(transform,_direction);
         }
 
-        // Projectile 의 sprite 자동 생성 로직 차용
         private void Awake()
         {
-            var sr = GetComponent<SpriteRenderer>();
-            if (sr != null && sr.sprite == null)
-            {
-                int N = 32;
-                var tex = new Texture2D(N, N, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear };
-                float r = N / 2f;
-                for (int y = 0; y < N; y++)
-                    for (int x = 0; x < N; x++)
-                    {
-                        float dx = x - r, dy = y - r;
-                        float d2 = dx * dx + dy * dy;
-                        bool inside = d2 < (r - 1) * (r - 1);
-                        bool ring = d2 < r * r && !inside;
-                        if (inside) tex.SetPixel(x, y, Color.white);
-                        else if (ring) tex.SetPixel(x, y, new Color(0f, 0f, 0f, 1f));
-                        else tex.SetPixel(x, y, new Color(0, 0, 0, 0));
-                    }
-                tex.Apply();
-                sr.sprite = Sprite.Create(tex, new Rect(0, 0, N, N), new Vector2(0.5f, 0.5f), N);
-            }
+            ProjectileVisual.Apply(gameObject,true,true);
         }
 
         private void Update()

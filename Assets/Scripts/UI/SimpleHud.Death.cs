@@ -22,7 +22,7 @@ namespace IL6
                 Gather?.Cancel();
                 _researchOpen=false; _buildCatalogOpen=false; _buildPaused=false;
                 _pendingBuildKind=null; _paused=false; _tutorialPaused=false;
-                _recruitCutPaused=false; _recruitCutLeft=0;
+                _recruitCutPaused=false; _recruitCandidate=null;
                 _resourceDetailsOpen=false; _showCompanions=false;
                 _runeOffer=null; _damageFlashAmount=0;
                 var session=GameSession.Instance;

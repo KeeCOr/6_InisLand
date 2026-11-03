@@ -18,6 +18,8 @@ namespace IL6.Tests
             var hud=Object.FindFirstObjectByType<SimpleHud>();
             typeof(SimpleHud).GetMethod("PrepareHudPreview",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(hud,null);
             var player=hud.Player;
+            // This work-state probe explicitly invokes attacks; automatic combat has its own test.
+            hud.Attacker.enabled=false;
             player.transform.position=new Vector3(1000,1000,0);
             foreach(var spawner in Object.FindObjectsByType<ProceduralSpawner>(FindObjectsSortMode.None)) spawner.enabled=false;
             var tree=new GameObject("State logging test");tree.transform.position=player.transform.position+Vector3.left;

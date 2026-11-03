@@ -1,0 +1,13 @@
+{
+  "prompt": "Production 2D game ground-contact SHADOW sprite for a hand-painted snowy Nordic village. ONE extremely flat horizontal oval of muted blue-grey shadow pigment, softly feathered broken brush edges, darker very soft middle, quietly transparent outer edge. About 4 times wider than tall. This is a flat shadow decal under character boots or animal paws, NOT a snow mound, NOT an object, NOT an ice slab, NOT a ring. No white rim, no bright highlights, no rock, no footprints, no character, no outline, no glow, no haze above it, no floor tile. Centered small ellipse with generous empty margin on actual transparent RGBA. Restrained matte watercolor brush texture, low contrast. No scenery or text.",
+  "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-b019da43-bd40-43dc-b819-2a85cbcf7289.png",
+  "runtime": "Assets/Resources/Sprites/Environment/Snowfield/actor_shadow.png",
+  "ppu": 906,
+  "opaque_bounds": [
+    629,
+    317,
+    1535,
+    444
+  ],
+  "sha256": "debf8a7fe6f21cccf8f5b0bc534e70a727332bdd8e0125cac6f5f5f1e3258ff1"
+}
