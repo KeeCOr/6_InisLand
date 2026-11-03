@@ -27,6 +27,7 @@ namespace IL6
         ResourceGift, // 신규: 즉시 자원 획득 (스택 안 됨, 매번 효과 발동)
         MeleeDamageUp,
         RangedDamageUp,
+        MeleeCleave,
     }
 
     /// <summary>
@@ -78,6 +79,7 @@ namespace IL6
         public float PoisonDurationCalc => GetStacks(RuneKind.PoisonBlade) switch { 0 => 0f, 1 => 3f, 2 => 4f, 3 => 6f, _ => 0f };
         public float IceSlowDurationCalc => GetStacks(RuneKind.IceArrow) switch { 0 => 0f, 1 => 2f, 2 => 3f, 3 => 5f, _ => 0f };
         public float IceSlowFactorCalc => GetStacks(RuneKind.IceArrow) >= 3 ? 0.2f : 0.5f; // 마스터 = 80% 슬로우
+        public int MeleeExtraTargets => GetStacks(RuneKind.MeleeCleave) switch { 0 => 0, 1 => 1, 2 => 2, 3 => 4, _ => 0 };
         public int MultiShotExtra => GetStacks(RuneKind.MultiShot) switch { 0 => 0, 1 => 1, 2 => 2, 3 => 4, _ => 0 };
         public int DetonateDmg => Scaled(RuneKind.Detonator, 8, 12, 25);
         public float DetonateRadius => GetStacks(RuneKind.Detonator) switch { 0 => 0f, 1 => 1.6f, 2 => 1.8f, 3 => 2.5f, _ => 0f };
@@ -174,56 +176,14 @@ namespace IL6
             RangedDamageMultiplier = GetStacks(RuneKind.RangedDamageUp) switch { 0 => 1f, 1 => 1.25f, 2 => 1.5f, 3 => 2.2f, _ => 1f };
         }
 
-        public List<RuneKind> PickThreeOffer(uint seed)
-        {
-            var rng = new SeededRng(seed ^ (uint)Level);
-            // Common stats and weapon-specific upgrades share the existing weighted offer pool.
-            var pool = new List<RuneKind>();
-            void AddIfRoom(RuneKind k, int weight)
-            {
-                if (GetStacks(k) < MaxStacks)
-                    for (int i = 0; i < weight; i++) pool.Add(k);
-            }
-            AddIfRoom(RuneKind.PoisonBlade, 2);
-            AddIfRoom(RuneKind.IceArrow, 2);
-            AddIfRoom(RuneKind.LightningStrike, 2);
-            AddIfRoom(RuneKind.MultiShot, 2);
-            AddIfRoom(RuneKind.Detonator, 2);
-            AddIfRoom(RuneKind.SummonDog, 2);
-            AddIfRoom(RuneKind.SummonHawk, 2);
-            AddIfRoom(RuneKind.Vampirism, 2);
-            AddIfRoom(RuneKind.Thorns, 2);
-            AddIfRoom(RuneKind.Pierce, 2);
-            AddIfRoom(RuneKind.AllyBoost, 2);
-            AddIfRoom(RuneKind.ResourceGift, 2);
-            AddIfRoom(RuneKind.DamageUp, 2);
-            AddIfRoom(RuneKind.FireRateUp, 2);
-            AddIfRoom(RuneKind.HpUp, 2);
-            AddIfRoom(RuneKind.RangeUp, 2);
-            AddIfRoom(RuneKind.MoveSpeedUp, 2);
-            AddIfRoom(RuneKind.MeleeDamageUp, 2);
-            AddIfRoom(RuneKind.RangedDamageUp, 2);
-
-            var pick = new List<RuneKind>();
-            var used = new HashSet<RuneKind>();
-            int tries = 0;
-            while (pick.Count < 3 && pool.Count > 0 && tries < 80)
-            {
-                tries++;
-                int idx = rng.IntRange(0, pool.Count - 1);
-                var k = pool[idx];
-                pool.RemoveAt(idx);
-                if (used.Add(k)) pick.Add(k);
-            }
-            return pick;
-        }
+        public List<RuneKind> PickThreeOffer(uint seed)=>RuneUpgradeRules.Pick(this,seed);
 
         public static string Title(RuneKind k) => k switch
         {
-            RuneKind.PoisonBlade => "☠ 독 무기",
-            RuneKind.IceArrow => "❄ 냉기 무기",
+            RuneKind.PoisonBlade => "☠ 독 도끼",
+            RuneKind.IceArrow => "❄ 냉기 화살",
             RuneKind.LightningStrike => "⚡ 번개 강타",
-            RuneKind.MultiShot => "✦ 추가 공격",
+            RuneKind.MultiShot => "✦ 다중 화살",
             RuneKind.Detonator => "💥 폭발 처치",
             RuneKind.SummonDog => "🐕 사냥개 소환",
             RuneKind.SummonHawk => "🦅 매 소환",
@@ -233,6 +193,7 @@ namespace IL6
             RuneKind.AllyBoost => "🤝 동료 강화",
             RuneKind.ResourceGift => "📦 보급 상자",
             RuneKind.DamageUp => "⚔ 공격력",
+            RuneKind.MeleeCleave => "⚔ 휩쓸기",
             RuneKind.MeleeDamageUp => "⚔ 근접 공격력",
             RuneKind.RangedDamageUp => "🏹 원거리 공격력",
             RuneKind.FireRateUp => "⚡ 공격속도",
@@ -293,8 +254,10 @@ namespace IL6
                         3 => "100% 확률 3회 체인 (20 dmg)",
                         _ => ""
                     };
+                case RuneKind.MeleeCleave:
+                    return level switch { 1 => "근접 추가 대상 +1", 2 => "근접 추가 대상 +2", 3 => "근접 추가 대상 +4", _ => "" };
                 case RuneKind.MultiShot:
-                    return level switch { 1 => "근접 추가 대상 +1 / 원거리 추가 화살 +1", 2 => "근접 추가 대상 +2 / 원거리 추가 화살 +2", 3 => "근접 추가 대상 +4 / 원거리 추가 화살 +4 부채꼴", _ => "" };
+                    return level switch { 1 => "원거리 추가 화살 +1", 2 => "원거리 추가 화살 +2", 3 => "원거리 추가 화살 +4 부채꼴", _ => "" };
                 case RuneKind.Detonator:
                     return level switch
                     {

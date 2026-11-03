@@ -10,7 +10,7 @@ namespace IL6.Tests
 {
     public class WorldDepthSortingTests
     {
-        [UnityTest] public IEnumerator PeopleAndBuildingsChangeFrontOrderWhenCrossingAndKeepMarkersGrouped()
+        [UnityTest] public IEnumerator PeopleAndBuildingsChangeFrontOrderWithoutOverlayingRoleIcons()
         {
             Time.timeScale=1;InputReader.HudBlocked=false;
             yield return SceneManager.LoadSceneAsync("BootScene");yield return null;
@@ -32,9 +32,7 @@ namespace IL6.Tests
             Assert.That(h.sortingOrder,Is.GreaterThan(n.sortingOrder));
             Assert.That(n.sortingOrder,Is.GreaterThan(t.sortingOrder));
             Assert.That(h.sortingOrder,Is.GreaterThan(-9500),"World geometry must remain above snow overlays and the ground far from origin");
-            var marker=house.transform.Find("RoleMarker").GetComponent<SpriteRenderer>();
-            Assert.That(marker.GetComponentInParent<SortingGroup>(),Is.SameAs(h));
-            Assert.That(marker.sortingOrder,Is.GreaterThan(house.GetComponent<SpriteRenderer>().sortingOrder));
+            Assert.That(house.transform.Find("RoleMarker"),Is.Null,"HUD role icons must not appear as miniature buildings over the house");
             player.transform.position=new Vector3(3000,3003,0);
             yield return null;yield return null;
             Assert.That(p.sortingOrder,Is.LessThan(h.sortingOrder),"Moving above a building must put the player behind it");

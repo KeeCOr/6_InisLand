@@ -1,0 +1,10 @@
+{
+  "generator": "built-in image_gen",
+  "runtime_path": "Assets/Resources/UI/rune_choices/rune-choice-melee-cleave.png",
+  "source": "source.png",
+  "size": [
+    256,
+    256
+  ],
+  "sha256": "dd55955f876ae1030d020dcb576f63c8f488475aca6b1e1ed40e02ba83c40e37"
+}

@@ -140,7 +140,7 @@ namespace IL6
             else
             {
                 DealImmediate(nearest, dmg);
-                int extraHits = Progression != null ? Progression.MultiShotExtra : 0;
+                int extraHits = Progression != null ? Progression.MeleeExtraTargets : 0;
                 if (extraHits > 0) HitExtraNearby(nearest, dmg, extraHits, effectiveRange);
             }
             float cdMul = Progression != null ? Progression.CooldownMultiplier : 1f;
@@ -232,14 +232,11 @@ namespace IL6
                 if (Progression != null)
                 {
                     if (Progression.GetStacks(RuneKind.PoisonBlade) > 0) z.ApplyPoison(Progression.PoisonDurationCalc, Progression.PoisonDpsCalc);
-                    if (Progression.GetStacks(RuneKind.IceArrow) > 0) z.ApplySlow(Progression.IceSlowDurationCalc);
                     if (Progression.GetStacks(RuneKind.LightningStrike) > 0)
                     {
                         if (Random.value < Progression.LightningChance)
                             Projectile.ChainLightning(z.transform.position, z, Progression.LightningJumps, Progression.LightningDmg);
                     }
-                    if (z.IsDead && Progression.GetStacks(RuneKind.Detonator) > 0)
-                        Projectile.Detonate(z.transform.position, Progression.DetonateDmg, Progression.DetonateRadius);
                     // 흡혈 (근접 처치 포함)
                     if (z.IsDead && Progression.VampirismHeal > 0)
                     {

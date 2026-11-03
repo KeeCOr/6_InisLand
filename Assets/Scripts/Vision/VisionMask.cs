@@ -57,11 +57,15 @@ namespace IL6
         private void OnDestroy()
         {
             _unsubE?.Invoke(); _unsubN?.Invoke(); _unsubD?.Invoke(); _unsubA?.Invoke();
+            ReleaseMaskTexture();
         }
+
+        private bool NightVisible=>GameSession.Instance!=null && GameSession.Instance.Cycle!=null
+            ?GameSession.Instance.Cycle.Phase==Phase.Night:_isNight;
 
         private void OnGUI()
         {
-            if (!_isNight) return;
+            if (!NightVisible) return;
             if (Cam == null || Target == null) return;
             if (Event.current.type != EventType.Repaint) return;
 
@@ -77,13 +81,28 @@ namespace IL6
         // ── 핵심: 시야 안은 투명, 시야 밖은 검정인 알파 마스크를 직접 생성 ──
         private void DrawDarknessWithHoles()
         {
+            UpdateMask();
+            var oldColor=GUI.color;var oldMatrix=GUI.matrix;int oldDepth=GUI.depth;
+            try
+            {
+                // World darkness precedes every HUD/dialogue and uses physical screen pixels.
+                GUI.matrix=Matrix4x4.identity;GUI.depth=1000;GUI.color=Color.white;
+                GUI.DrawTexture(new Rect(0,0,Screen.width,Screen.height),_maskTex,ScaleMode.StretchToFill);
+            }
+            finally {GUI.color=oldColor;GUI.matrix=oldMatrix;GUI.depth=oldDepth;}
+        }
+
+        private void UpdateMask()
+        {
             _holes.Clear();
             AddVisionHole(Target.position, RadiusUnits);
 
             var auras = Object.FindObjectsByType<CampfireAura>(FindObjectsSortMode.None);
             foreach (var a in auras)
             {
-                if (a == null || !a.IsActive) continue;
+                if (a == null || !a.isActiveAndEnabled || !a.IsActive) continue;
+                var source=a.GetComponent<Building>();
+                if(source!=null && source.CurrentHp<=0)continue;
                 AddVisionHole(a.transform.position, a.VisionRadius);
             }
 
@@ -93,14 +112,12 @@ namespace IL6
                 var buildings = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
                 foreach (var b in buildings)
                 {
-                    if (b == null || b.CurrentHp <= 0 || b.Kind != BuildingKind.LookoutPost) continue;
+                    if (b == null || !b.isActiveAndEnabled || b.CurrentHp <= 0 || b.Kind != BuildingKind.LookoutPost) continue;
                     AddVisionHole(b.transform.position, lookoutRadius);
                 }
             }
 
             RebuildMaskTexture();
-            GUI.color = Color.white;
-            GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), _maskTex, ScaleMode.StretchToFill);
         }
 
         private void AddVisionHole(Vector3 worldPos, float innerRadius)
@@ -115,7 +132,7 @@ namespace IL6
             {
                 ScreenCenter = new Vector2(sp.x, Screen.height - sp.y),
                 InnerRadius = pixelRadius,
-                OuterRadius = pixelRadius * GradientEdgeMul,
+                OuterRadius = pixelRadius * Mathf.Max(1.01f,GradientEdgeMul),
             });
         }
 
@@ -126,6 +143,7 @@ namespace IL6
 
             if (_maskTex == null || _maskW != targetW || _maskH != targetH)
             {
+                ReleaseMaskTexture();
                 _maskW = targetW;
                 _maskH = targetH;
                 _maskTex = new Texture2D(_maskW, _maskH, TextureFormat.RGBA32, false)
@@ -140,7 +158,8 @@ namespace IL6
             float sy = Screen.height / (float)_maskH;
             for (int y = 0; y < _maskH; y++)
             {
-                float screenY = (y + 0.5f) * sy;
+                // Texture rows start at the bottom; GUI coordinates start at the top.
+                float screenY = Screen.height - (y + 0.5f) * sy;
                 for (int x = 0; x < _maskW; x++)
                 {
                     float screenX = (x + 0.5f) * sx;
@@ -151,6 +170,15 @@ namespace IL6
 
             _maskTex.SetPixels(_maskPixels);
             _maskTex.Apply(false);
+        }
+
+        private void ReleaseMaskTexture()
+        {
+            if(_maskTex!=null)
+            {
+                if(Application.isPlaying)Destroy(_maskTex);else DestroyImmediate(_maskTex);
+            }
+            _maskTex=null;_maskPixels=null;
         }
 
         private float AlphaAtScreenPoint(float x, float y)

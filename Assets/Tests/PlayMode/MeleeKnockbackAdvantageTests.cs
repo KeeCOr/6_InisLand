@@ -45,7 +45,7 @@ namespace IL6.Tests
         {
             Time.timeScale=1;InputReader.HudBlocked=false;
             var actor=new GameObject("Multi melee test");actor.transform.position=new Vector3(3500,3500);
-            var p=actor.AddComponent<PlayerProgression>();p.ApplyRune(RuneKind.MultiShot);
+            var p=actor.AddComponent<PlayerProgression>();p.ApplyRune(RuneKind.MeleeCleave);
             var attack=actor.AddComponent<PlayerAttackController>();attack.enabled=false;
             var first=Target((Vector2)actor.transform.position+Vector2.right);
             var second=Target((Vector2)actor.transform.position+new Vector2(1.2f,.4f));

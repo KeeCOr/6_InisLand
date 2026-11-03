@@ -1,0 +1,204 @@
+{
+  "generator": "built-in image_gen",
+  "frames": [
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/quadruped_robot_front.png",
+      "ppu": 566.4696392857143,
+      "pivotX": 0.500651026200707,
+      "pivotY": 0.03125068198158484,
+      "key": "quadruped_robot",
+      "direction": "front",
+      "sha256": "4bb72f3e4b35c20c580d23e9ac2c573a013d468b3c355d50d95647b2e72e3e49",
+      "sourceRow": 0,
+      "source": "source_atlas.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/quadruped_robot_back.png",
+      "ppu": 574.6963767857143,
+      "pivotX": 0.4993489426427642,
+      "pivotY": 0.03125069188588171,
+      "key": "quadruped_robot",
+      "direction": "back",
+      "sha256": "f3abb07837dead27055d15f635cacfe98e9d5b1972c73e5eed94f8321ccc4c8c",
+      "sourceRow": 0,
+      "source": "source_atlas.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/quadruped_robot_side.png",
+      "ppu": 539.4389303571429,
+      "pivotX": 0.4999999852720425,
+      "pivotY": 0.031250649438895106,
+      "key": "quadruped_robot",
+      "direction": "side",
+      "sha256": "b34ed71cf119666c3aaafc6cfc6410c165cc38343266d4edb74cd78fa5440caf",
+      "sourceRow": 0,
+      "source": "source_atlas.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/zombie_front.png",
+      "ppu": 847.6253913043478,
+      "pivotX": 0.5004528876630435,
+      "pivotY": 0.47871378894927535,
+      "key": "zombie",
+      "direction": "front",
+      "sha256": "d0c6a0de4de7e8d1e70e5ff54557e477733ee95aaf932034c251d8fb05db9184",
+      "sourceRow": 1,
+      "source": "source_atlas.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/zombie_back.png",
+      "ppu": 847.6253913043478,
+      "pivotX": 0.49980184599637684,
+      "pivotY": 0.47871378894927535,
+      "key": "zombie",
+      "direction": "back",
+      "sha256": "41603b66b3b8e2583ab3ada49fe16c9742fcc56a3294fe460feaf6767abe0f22",
+      "sourceRow": 1,
+      "source": "source_atlas.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/zombie_side.png",
+      "ppu": 846.3933776541961,
+      "pivotX": 0.4998011877294248,
+      "pivotY": 0.4793654888684382,
+      "key": "zombie",
+      "direction": "side",
+      "sha256": "da942e11cdeb0b77c9ce45e4af7d50012bda4f1b0dbd0e36754b6e17692211ce",
+      "sourceRow": 1,
+      "source": "source_atlas.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/boss_frost_zombie_front.png",
+      "ppu": 782.8571231079718,
+      "pivotX": 0.5004500136646485,
+      "pivotY": 0.49314078382079335,
+      "key": "boss_frost_zombie",
+      "direction": "front",
+      "sha256": "9315b5d6b1407c086e7fbff24b1bbaf7532dc4a08d7830c2c4be16635617433f",
+      "sourceRow": 0,
+      "source": "source_frost.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/boss_frost_zombie_back.png",
+      "ppu": 780.5714088799193,
+      "pivotX": 0.5004486997561386,
+      "pivotY": 0.4917921975906597,
+      "key": "boss_frost_zombie",
+      "direction": "back",
+      "sha256": "2d519d445649db975d67c3b94b363bf50f86e9c87718121afe361ff573dc411d",
+      "sourceRow": 0,
+      "source": "source_frost.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/boss_frost_zombie_side.png",
+      "ppu": 786.2856944500505,
+      "pivotX": 0.49980094286074667,
+      "pivotY": 0.495163663165994,
+      "key": "boss_frost_zombie",
+      "direction": "side",
+      "sha256": "321fb1a2179354ad7647ea9821d4f9a601c701cd5bd4b45b764e794b8b7c6336",
+      "sourceRow": 0,
+      "source": "source_frost.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/boss_winter_knight_front.png",
+      "ppu": 863.372574750227,
+      "pivotX": 0.49959319038298516,
+      "pivotY": 0.5055147269224947,
+      "key": "boss_winter_knight",
+      "direction": "front",
+      "sha256": "76287b576b987890ab9e06653e5f39efc77c68bd1faa43ac5e251c911de56657",
+      "sourceRow": 3,
+      "source": "source_atlas.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/boss_winter_knight_back.png",
+      "ppu": 862.1176727520435,
+      "pivotX": 0.4995937816760332,
+      "pivotY": 0.5061274719899523,
+      "key": "boss_winter_knight",
+      "direction": "back",
+      "sha256": "24393272ca9403c6629798e8b986be41d14f02824d8f1f92b3c38f945ce8d22e",
+      "sourceRow": 3,
+      "source": "source_atlas.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/boss_winter_knight_side.png",
+      "ppu": 863.372574750227,
+      "pivotX": 0.49959319038298516,
+      "pivotY": 0.5055147269224947,
+      "key": "boss_winter_knight",
+      "direction": "side",
+      "sha256": "34eb3cbe92d17cbaac61ed9f813f9877c0229443f79da8d19198d29b50d645df",
+      "sourceRow": 3,
+      "source": "source_atlas.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/boss_iron_giant_front.png",
+      "ppu": 843.0769180871212,
+      "pivotX": 0.4999999937328608,
+      "pivotY": 0.49436597852622916,
+      "key": "boss_iron_giant",
+      "direction": "front",
+      "sha256": "5d3fba3ebf2b0df8f742f85a0805b6cfd2b64824e87ddea538bf561489c87e71",
+      "sourceRow": 4,
+      "source": "source_atlas.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/boss_iron_giant_back.png",
+      "ppu": 840.6153796401514,
+      "pivotX": 0.49999999375115906,
+      "pivotY": 0.4930138150852767,
+      "key": "boss_iron_giant",
+      "direction": "back",
+      "sha256": "73a86fdc802ddcd4b01d6443a268be014a31cd5774cdd86322d5ee94e50ccee8",
+      "sourceRow": 4,
+      "source": "source_atlas.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/boss_iron_giant_side.png",
+      "ppu": 846.7692257575757,
+      "pivotX": 0.49999999370541354,
+      "pivotY": 0.4963942236876579,
+      "key": "boss_iron_giant",
+      "direction": "side",
+      "sha256": "62d4eeb8f774ff21bc0a2e2ce8c5b6bd024ee7bf25305da3491695001d334b21",
+      "sourceRow": 4,
+      "source": "source_atlas.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/boss_frost_lich_front.png",
+      "ppu": 815.4074168362627,
+      "pivotX": 0.49999999600562756,
+      "pivotY": 0.47916668824622266,
+      "key": "boss_frost_lich",
+      "direction": "front",
+      "sha256": "5a5b58ad259347caaeebaa8ba61b732ed35ea3676e5e6f2e7243dec84399c97f",
+      "sourceRow": 5,
+      "source": "source_atlas.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/boss_frost_lich_back.png",
+      "ppu": 815.4074168362627,
+      "pivotX": 0.49999999600562756,
+      "pivotY": 0.47916668824622266,
+      "key": "boss_frost_lich",
+      "direction": "back",
+      "sha256": "90c3d52a33c23d921fc5b6e829a14f21997e1e85dda0d999ce3081a57743d254",
+      "sourceRow": 5,
+      "source": "source_atlas.png"
+    },
+    {
+      "path": "Assets/Resources/Sprites/Enemies/Directions20261103/boss_frost_lich_side.png",
+      "ppu": 815.4074168362627,
+      "pivotX": 0.49999999600562756,
+      "pivotY": 0.47916668824622266,
+      "key": "boss_frost_lich",
+      "direction": "side",
+      "sha256": "955bdec96f92660cf60f911e452543092294f1ec8aae0d0b04d64244e70d2b85",
+      "sourceRow": 5,
+      "source": "source_atlas.png"
+    }
+  ],
+  "note": "Atlas row2 frost golem design was rejected and replaced by dedicated source_frost.png; original PNGs/GUIDs retained."
+}

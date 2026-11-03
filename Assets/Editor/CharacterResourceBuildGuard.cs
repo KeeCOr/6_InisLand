@@ -38,6 +38,9 @@ namespace IL6.EditorBuild
                 if(Resources.Load<Sprite>("Sprites/Props/FenceWreckage20261103/"+key)==null)missing.Add("Fence wreckage "+key);
             foreach(string key in new[]{"quadruped_robot","zombie","boss_frost_zombie","boss_winter_knight","boss_iron_giant","boss_frost_lich"})
                 if(Resources.Load<Sprite>("Sprites/Enemies/"+key)==null)missing.Add("Sprites/Enemies/"+key);
+            foreach(string key in EnemyFacingVisual.Keys)
+                foreach(var facing in new[]{CharacterFacing.Front,CharacterFacing.Back,CharacterFacing.Right})
+                    if(EnemyFacingVisual.Frame(key,facing)==null)missing.Add("Enemy direction "+key+" "+facing);
             if(Resources.Load<Material>("Materials/SnowActor")==null)missing.Add("Materials/SnowActor");
             if(Resources.Load<Sprite>("Sprites/Environment/Snowfield/actor_shadow")==null)missing.Add("Sprites/Environment/Snowfield/actor_shadow");
             foreach(string key in new[]{"deer","rabbit","boar","wolf","bear","mammoth","fox","snow_hare","dog","hawk"})

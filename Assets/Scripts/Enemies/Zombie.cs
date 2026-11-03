@@ -26,6 +26,7 @@ namespace IL6
         private float _attackCooldown;
         private float _poisonTick;
         private Transform _player;
+        private CharacterFacing _facing=CharacterFacing.Right;
 
         private void Awake()
         {
@@ -120,6 +121,7 @@ namespace IL6
 
             // 경로 차단 체크 — 좀비와 타겟 사이에 Building 이 있으면 그 건물을 우선 부숨
             Transform pathTarget = ResolveBlockedTarget(target);
+            _facing=EnemyFacingVisual.Apply(_sr,pathTarget.position-transform.position,_facing);
 
             float slowMul = SlowRemainingSec > 0f ? 0.5f : 1f;
             float dist = Vector2.Distance(transform.position, pathTarget.position);

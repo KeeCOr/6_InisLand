@@ -142,15 +142,8 @@ namespace IL6
         public void ApplyEffectsTo(Zombie z)
         {
             if (OwnerProgression == null || z == null) return;
-            if (OwnerProgression.GetStacks(RuneKind.PoisonBlade) > 0)
-                z.ApplyPoison(OwnerProgression.PoisonDurationCalc, OwnerProgression.PoisonDpsCalc);
             if (OwnerProgression.GetStacks(RuneKind.IceArrow) > 0)
                 z.ApplySlow(OwnerProgression.IceSlowDurationCalc);
-            if (OwnerProgression.GetStacks(RuneKind.LightningStrike) > 0)
-            {
-                if (Random.value < OwnerProgression.LightningChance)
-                    ChainLightning(z.transform.position, z, OwnerProgression.LightningJumps, OwnerProgression.LightningDmg);
-            }
             if (z.IsDead && OwnerProgression.GetStacks(RuneKind.Detonator) > 0)
             {
                 Detonate(z.transform.position, OwnerProgression.DetonateDmg, OwnerProgression.DetonateRadius);

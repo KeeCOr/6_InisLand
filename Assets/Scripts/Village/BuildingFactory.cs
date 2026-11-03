@@ -13,26 +13,6 @@ namespace IL6
             if (spr != null) sr.sprite = spr;
         }
 
-        private static void AddMarker(GameObject parent, Sprite sprite, Color tint, Vector2 offset, float scale = 0.34f)
-        {
-            if (parent == null || sprite == null) return;
-
-            var marker = new GameObject("RoleMarker");
-            marker.transform.SetParent(parent.transform, false);
-            marker.transform.localPosition = new Vector3(offset.x, offset.y, -0.01f);
-            marker.transform.localScale = Vector3.one * scale;
-
-            var sr = marker.AddComponent<SpriteRenderer>();
-            sr.sprite = sprite;
-            sr.color = tint;
-            sr.sortingOrder = 8;
-        }
-
-        private static void AddMarker(GameObject parent, Sprite sprite)
-        {
-            AddMarker(parent, sprite, Color.white, new Vector2(0.28f, 0.32f));
-        }
-
         public static GameObject SpawnBarricade(Vector3 pos)
         {
             var go = new GameObject("Barricade");
@@ -64,7 +44,6 @@ namespace IL6
             cf.Tint = new Color(0.85f, 0.6f, 0.4f);
             cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.4f, 0.2f, 0.1f, 1f);
-            AddMarker(go, SpriteBank.HomeIcon());
             go.AddComponent<Building>().Initialize(BuildingKind.House);
             return go;
         }
@@ -82,7 +61,6 @@ namespace IL6
             cf.Tint = new Color(0.55f, 0.45f, 0.3f);
             cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.25f, 0.18f, 0.1f, 1f);
-            AddMarker(go, SpriteBank.WoodIcon());
             go.AddComponent<Building>().Initialize(BuildingKind.Storage);
             return go;
         }
@@ -99,7 +77,6 @@ namespace IL6
             cf.Tint = new Color(0.35f, 0.55f, 0.25f);
             cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.18f, 0.3f, 0.12f, 1f);
-            AddMarker(go, SpriteBank.CropPotatoIcon(), new Color(1f, 1f, 1f, 0.92f), new Vector2(0.18f, 0.26f), 0.28f);
             go.AddComponent<FarmBuilding>();
             go.AddComponent<Building>().Initialize(BuildingKind.Farm);
             return go;
@@ -118,7 +95,6 @@ namespace IL6
             cf.Tint = new Color(0.5f, 0.4f, 0.28f);
             cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 32;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.2f, 0.15f, 0.08f, 1f);
-            AddMarker(go, SpriteBank.ThreatIcon());
             go.AddComponent<Building>().Initialize(BuildingKind.Watchtower);
             go.AddComponent<Watchtower>();
             return go;
@@ -137,7 +113,6 @@ namespace IL6
             cf.Tint = new Color(0.95f, 0.97f, 0.95f);
             cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.5f, 0.7f, 0.5f, 1f);
-            AddMarker(go, SpriteBank.HpIcon());
             go.AddComponent<Building>().Initialize(BuildingKind.Infirmary);
             go.AddComponent<HealingShrine>();
             return go;
@@ -156,7 +131,6 @@ namespace IL6
             cf.Tint = new Color(0.55f, 0.4f, 0.25f);
             cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.25f, 0.15f, 0.05f, 1f);
-            AddMarker(go, SpriteBank.MeatIcon());
             go.AddComponent<Building>().Initialize(BuildingKind.HuntersHut);
             return go;
         }
@@ -174,7 +148,6 @@ namespace IL6
             cf.Tint = new Color(0.62f, 0.52f, 0.28f);
             cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 48;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.25f, 0.18f, 0.08f, 1f);
-            AddMarker(go, SpriteBank.CropTurnipIcon(), new Color(1f, 1f, 1f, 0.92f), new Vector2(0.28f, 0.28f), 0.28f);
             go.AddComponent<Building>().Initialize(BuildingKind.SeedStorage);
             return go;
         }
@@ -192,7 +165,6 @@ namespace IL6
             cf.Tint = new Color(0.58f, 0.38f, 0.18f);
             cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 48;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.22f, 0.12f, 0.05f, 1f);
-            AddMarker(go, SpriteBank.WoodIcon());
             go.AddComponent<Building>().Initialize(BuildingKind.Carpenter);
             return go;
         }
@@ -211,7 +183,6 @@ namespace IL6
             cf.Tint = new Color(1f, 0.62f, 0.16f);
             cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.35f, 0.16f, 0.04f, 1f);
-            AddMarker(go, SpriteBank.TempIcon());
             var aura = go.AddComponent<CampfireAura>();
             aura.ApplyBuildingLevel(BuildingKind.Brazier, 1);
             go.AddComponent<Building>().Initialize(BuildingKind.Brazier);
@@ -231,7 +202,6 @@ namespace IL6
             cf.Tint = new Color(0.42f, 0.34f, 0.32f);
             cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.7f, 0.22f, 0.08f, 1f);
-            AddMarker(go, SpriteBank.UpgradeIcon());
             var aura = go.AddComponent<CampfireAura>();
             aura.ApplyBuildingLevel(BuildingKind.Blacksmith, 1);
             go.AddComponent<Building>().Initialize(BuildingKind.Blacksmith);
@@ -251,7 +221,6 @@ namespace IL6
             cf.Tint = new Color(0.62f, 0.28f, 0.18f);
             cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 48;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.25f, 0.08f, 0.04f, 1f);
-            AddMarker(go, SpriteBank.ThreatIcon());
             go.AddComponent<Building>().Initialize(BuildingKind.TrainingCamp);
             return go;
         }
@@ -269,7 +238,6 @@ namespace IL6
             cf.Tint = new Color(0.82f, 0.62f, 0.28f);
             cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 48;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.32f, 0.2f, 0.08f, 1f);
-            AddMarker(go, SpriteBank.FoodIcon());
             go.AddComponent<Building>().Initialize(BuildingKind.FoodStorage);
             return go;
         }
@@ -287,7 +255,6 @@ namespace IL6
             cf.Tint = new Color(0.42f, 0.52f, 0.58f);
             cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 48;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.12f, 0.18f, 0.22f, 1f);
-            AddMarker(go, SpriteBank.ThreatIcon());
             go.AddComponent<Building>().Initialize(BuildingKind.LookoutPost);
             return go;
         }
@@ -305,7 +272,6 @@ namespace IL6
             cf.Tint = new Color(0.5f, 0.32f, 0.16f);
             cf.Shape = FallbackShape.Square; cf.Circle = false; cf.PixelSize = 48;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.2f, 0.1f, 0.04f, 1f);
-            AddMarker(go, SpriteBank.WoodIcon());
             go.AddComponent<Building>().Initialize(BuildingKind.Sawmill);
             return go;
         }
@@ -323,7 +289,6 @@ namespace IL6
             cf.Tint = new Color(0.78f, 0.78f, 0.95f);
             cf.Shape = FallbackShape.Rounded; cf.Circle = false; cf.PixelSize = 64;
             cf.OutlineWidth = 2; cf.OutlineColor = new Color(0.42f, 0.36f, 0.72f, 1f);
-            AddMarker(go, SpriteBank.HomeIcon());
             go.AddComponent<Building>().Initialize(BuildingKind.Church);
             return go;
         }

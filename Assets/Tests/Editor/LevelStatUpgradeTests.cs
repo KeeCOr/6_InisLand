@@ -6,7 +6,7 @@ namespace IL6.Tests
     public sealed class LevelStatUpgradeTests
     {
         [Test]
-        public void OffersReachAll19ChoicesWithoutDuplicatesAndExcludeMasteredStats()
+        public void OffersReachAll20ChoicesWithoutDuplicatesAndExcludeMasteredStats()
         {
             var go=new GameObject("Offer pool test");var p=go.AddComponent<PlayerProgression>();
             try
@@ -19,7 +19,7 @@ namespace IL6.Tests
                     CollectionAssert.AreEqual(offered,p.PickThreeOffer(seed));
                     foreach(var kind in offered)seen.Add(kind);
                 }
-                Assert.That(seen.Count,Is.EqualTo(19));
+                Assert.That(seen.Count,Is.EqualTo(20));
                 var mastered=new[]{RuneKind.DamageUp,RuneKind.FireRateUp,RuneKind.HpUp,RuneKind.RangeUp,RuneKind.MoveSpeedUp,RuneKind.MeleeDamageUp,RuneKind.RangedDamageUp};
                 foreach(var kind in mastered)for(int i=0;i<3;i++)p.ApplyRune(kind);
                 for(uint seed=1;seed<=100;seed++)foreach(var kind in p.PickThreeOffer(seed))CollectionAssert.DoesNotContain(mastered,kind);
@@ -53,8 +53,8 @@ namespace IL6.Tests
         public void ClassificationMatchesActualWeaponEffectsAndHasDistinctArt()
         {
             Assert.That(RuneChoicePresentation.Scope(RuneKind.MeleeDamageUp),Is.EqualTo(RuneWeaponScope.Melee));
-            foreach(var kind in new[]{RuneKind.RangedDamageUp,RuneKind.Pierce})Assert.That(RuneChoicePresentation.Scope(kind),Is.EqualTo(RuneWeaponScope.Ranged));
-            foreach(var kind in new[]{RuneKind.PoisonBlade,RuneKind.IceArrow,RuneKind.MultiShot,RuneKind.DamageUp,RuneKind.HpUp})
+            foreach(var kind in new[]{RuneKind.RangedDamageUp,RuneKind.Pierce,RuneKind.IceArrow,RuneKind.MultiShot,RuneKind.Detonator})Assert.That(RuneChoicePresentation.Scope(kind),Is.EqualTo(RuneWeaponScope.Ranged));
+            foreach(var kind in new[]{RuneKind.DamageUp,RuneKind.HpUp})
                 Assert.That(RuneChoicePresentation.Scope(kind),Is.EqualTo(RuneWeaponScope.Common));
             var paths=new HashSet<string>();var colors=new HashSet<Color>();
             foreach(var kind in new[]{RuneKind.MeleeDamageUp,RuneKind.RangedDamageUp,RuneKind.HpUp})

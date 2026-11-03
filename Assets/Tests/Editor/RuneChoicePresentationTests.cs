@@ -17,7 +17,7 @@ namespace IL6.Tests
                 string path=RuneChoicePresentation.IconPath(kind);
                 if(path!=null) {artCount++;Assert.That(Resources.Load<Texture2D>(path),Is.Not.Null,path);}
             }
-            Assert.That(artCount,Is.EqualTo(19));
+            Assert.That(artCount,Is.EqualTo(20));
         }
         [Test] public void CompactValuesMatchRuntimePoisonLightningAndHealingAtEachStage()
         {
