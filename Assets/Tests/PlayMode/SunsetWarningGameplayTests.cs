@@ -21,6 +21,9 @@ namespace IL6.Tests
             var state=(SunsetWarningState)typeof(SimpleHud).GetField("_sunsetWarning",flags).GetValue(hud);
             try
             {
+                // Establish Day before reading its duration; prior tests may restore another phase.
+                cycle.Restore(new DayNightSnapshot{day=50,phase=Phase.Day});
+                typeof(SimpleHud).GetMethod("UpdateVillageReturn",flags).Invoke(hud,null);
                 cycle.Restore(new DayNightSnapshot{day=50,phase=Phase.Day,elapsedInPhase=cycle.PhaseDurationSec-15});
                 Time.timeScale=0;update.Invoke(hud,null);Assert.That(state.AlertCount,Is.Zero);
                 Time.timeScale=1;update.Invoke(hud,null);Assert.That(state.AlertCount,Is.EqualTo(1));

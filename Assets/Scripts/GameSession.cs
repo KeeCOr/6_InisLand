@@ -434,12 +434,19 @@ namespace IL6
             });
         }
 
+        private bool _restartRequested;
         public void HardReset()
         {
+            if(_restartRequested)return;
+            _restartRequested=true;
+            Time.timeScale=1f;
+            InputReader.HudBlocked=false;
             SaveLoad.Clear();
             Instance = null;
+            gameObject.SetActive(false);
             Destroy(gameObject);
-            SceneManager.LoadScene("BootScene");
+            // Async activation lets the old persistent session/managers finish destruction first.
+            SceneManager.LoadSceneAsync("BootScene");
         }
     }
 }

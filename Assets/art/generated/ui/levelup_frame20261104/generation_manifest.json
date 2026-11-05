@@ -1,0 +1,35 @@
+{
+  "generator": "built-in image_gen",
+  "assets": [
+    {
+      "path": "Assets/Resources/UI/LevelUp20261104/frame.png",
+      "source": "frame_source.png",
+      "source_crop": [
+        26,
+        25,
+        1600,
+        937
+      ],
+      "size": [
+        1536,
+        915
+      ],
+      "sha256": "702783e5138d1fc6bf144a9b7753a2de32b18e1833e053fcd18c605abc7c13cb"
+    },
+    {
+      "path": "Assets/Resources/UI/LevelUp20261104/card.png",
+      "source": "card_source.png",
+      "source_crop": [
+        24,
+        25,
+        1074,
+        1404
+      ],
+      "size": [
+        560,
+        732
+      ],
+      "sha256": "1df13c3d7de73aed1b1880284d53f8ad8225d7fd9263c125e0659b451b9f4b88"
+    }
+  ]
+}

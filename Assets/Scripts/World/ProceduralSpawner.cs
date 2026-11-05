@@ -18,14 +18,14 @@ namespace IL6
         public int UnloadRadius = 4;
 
         [Header("Spawn probability (per slot)")]
-        [Range(0, 1)] public float TreeChance = 0.45f;
+        [Range(0, 1)] public float TreeChance = 0.52f;
         [Range(0, 1)] public float RockChance = 0.08f;  // 0.15→0.08
-        [Range(0, 1)] public float DeerChance = 0.025f;
-        [Range(0, 1)] public float NpcChance = 0.02f;
+        [Range(0, 1)] public float DeerChance = 0.035f;
+        [Range(0, 1)] public float NpcChance = 0.05f;
         [Range(0, 1)] public float DiscoveryChance = 0.10f;
         public int SlotsPerChunk = 6;
         public int StarterGroveTrees = 20;
-        public int MaxProceduralAnimals = 12;
+        public int MaxProceduralAnimals = 16;
         private bool _starterGroveSeeded;
         private float _wildlifeCleanupTimer;
 
@@ -105,13 +105,13 @@ namespace IL6
         }
 
         private float _dailyNpcTimer;
-        public float DailyNpcIntervalSec = 50f;
-        public int MaxAliveNpcs = 2;             // 후보 생성 상한이며 영입 인원 제한은 아님
+        public float DailyNpcIntervalSec = 30f;
+        public int MaxAliveNpcs = 5;             // 후보 생성 상한이며 영입 인원 제한은 아님
         public int ScarceCompanionCount = 3;
         public int LowCompanionCount = 6;
-        public float ScarceNpcIntervalSec = 20f;
-        public float LowNpcIntervalSec = 35f;
-        public int ScarceMaxAliveNpcs = 2;
+        public float ScarceNpcIntervalSec = 12f;
+        public float LowNpcIntervalSec = 20f;
+        public int ScarceMaxAliveNpcs = 5;
         private const int WolfSafeCompanionThreshold = 3;
         private const string WolfAnimalName = "Wolf_proc";
 
@@ -482,7 +482,7 @@ namespace IL6
         // 가중치 기반 동물 풀.
         public static readonly AnimalArchetype[] _animals =
         {
-            // 토끼 — HP 가 낮아서 출현 빈도도 낮춤
+            // 주 사냥감 비중: 토끼 > 사슴 > 멧돼지. 전체 가중치 합은 유지한다.
             new AnimalArchetype {
                 Name = "Rabbit_proc", MeatMin = 1, MeatMax = 1, MeatDropChance = 1f,
                 DurationSec = 1.5f, Hp = 12,
@@ -491,7 +491,7 @@ namespace IL6
                 Tint = new Color(0.92f, 0.88f, 0.82f),
                 Shape = FallbackShape.Circle,
                 Outline = new Color(0.4f, 0.3f, 0.2f, 1f),
-                Weight = 0.16f, PackMin = 1, PackMax = 1,
+                Weight = 0.32f, PackMin = 1, PackMax = 1,
             },
             // 여우 — 중간 HP, 빈도도 중간
             new AnimalArchetype {
@@ -504,7 +504,7 @@ namespace IL6
                 Outline = new Color(0.4f, 0.18f, 0.05f, 1f),
                 Weight = 0.13f, PackMin = 1, PackMax = 1,
             },
-            // 멧돼지 — HP 높아서 빈도 ↑
+            // 멧돼지 — 주 사냥감 중 가장 적게 출현.
             new AnimalArchetype {
                 Name = "Boar_proc", MeatMin = 3, MeatMax = 5, MeatDropChance = 1f,
                 DurationSec = 4.5f, Hp = 480,
@@ -513,7 +513,7 @@ namespace IL6
                 Tint = new Color(0.35f, 0.25f, 0.18f),
                 Shape = FallbackShape.Rounded,
                 Outline = new Color(0.1f, 0.05f, 0.02f, 1f),
-                Weight = 0.22f, PackMin = 1, PackMax = 1,
+                Weight = 0.16f, PackMin = 1, PackMax = 1,
             },
             // 늑대 (포식자, 무리, 25%만 고기) — HP 3배, 무리 4-7
             new AnimalArchetype {
@@ -528,7 +528,7 @@ namespace IL6
                 PackMin = 2, PackMax = 3,
                 MinDay = 3,
             },
-            // 사슴 — HP 높음, 빈도 ↑
+            // 사슴 — 토끼 다음으로 출현.
             new AnimalArchetype {
                 Name = "Deer_proc", MeatMin = 2, MeatMax = 2, MeatDropChance = 1f,
                 DurationSec = 3f, Hp = 320,
@@ -537,7 +537,7 @@ namespace IL6
                 Tint = new Color(0.55f, 0.4f, 0.25f),
                 Shape = FallbackShape.Circle,
                 Outline = new Color(0.2f, 0.12f, 0.05f, 1f),
-                Weight = 0.30f, PackMin = 1, PackMax = 1,
+                Weight = 0.20f, PackMin = 1, PackMax = 1,
             },
             // 흰토끼 (희귀, Frostbloom 보너스) — HP 낮아서 빈도 더 ↓
             new AnimalArchetype {

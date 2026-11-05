@@ -114,9 +114,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 0
-        height: 0
+        y: 836
+        width: 418
+        height: 418
       alignment: 9
       pivot: {x: 0.5, y: 0.035885166}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -134,10 +134,10 @@ TextureImporter:
       name: attack_side_Loop
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 0
-        height: 0
+        x: 418
+        y: 836
+        width: 418
+        height: 418
       alignment: 9
       pivot: {x: 0.5, y: 0.035885166}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -155,10 +155,10 @@ TextureImporter:
       name: attack_side_End
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 0
-        height: 0
+        x: 836
+        y: 836
+        width: 418
+        height: 418
       alignment: 9
       pivot: {x: 0.5, y: 0.035885166}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -177,9 +177,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 0
-        height: 0
+        y: 418
+        width: 418
+        height: 418
       alignment: 9
       pivot: {x: 0.5, y: 0.05263158}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -197,10 +197,10 @@ TextureImporter:
       name: attack_front_Loop
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 0
-        height: 0
+        x: 418
+        y: 418
+        width: 418
+        height: 418
       alignment: 9
       pivot: {x: 0.5, y: 0.05263158}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -218,10 +218,10 @@ TextureImporter:
       name: attack_front_End
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 0
-        height: 0
+        x: 836
+        y: 418
+        width: 418
+        height: 418
       alignment: 9
       pivot: {x: 0.5, y: 0.05263158}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -241,8 +241,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 0
-        height: 0
+        width: 418
+        height: 418
       alignment: 9
       pivot: {x: 0.5, y: 0.09330144}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -260,10 +260,10 @@ TextureImporter:
       name: attack_back_Loop
       rect:
         serializedVersion: 2
-        x: 0
+        x: 418
         y: 0
-        width: 0
-        height: 0
+        width: 418
+        height: 418
       alignment: 9
       pivot: {x: 0.5, y: 0.09090909}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -281,10 +281,10 @@ TextureImporter:
       name: attack_back_End
       rect:
         serializedVersion: 2
-        x: 0
+        x: 836
         y: 0
-        width: 0
-        height: 0
+        width: 418
+        height: 418
       alignment: 9
       pivot: {x: 0.5, y: 0.09090909}
       border: {x: 0, y: 0, z: 0, w: 0}

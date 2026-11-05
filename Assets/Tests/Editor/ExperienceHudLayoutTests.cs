@@ -12,7 +12,8 @@ namespace IL6.Tests
             Assert.That(xp.x,Is.EqualTo(MobileHudLayout.Resources.x));Assert.That(xp.width,Is.EqualTo(MobileHudLayout.Resources.width));
             Assert.That(xp.height,Is.InRange(18,24));
             Assert.That(xp.Overlaps(MobileHudLayout.ResourceTouchBounds),Is.False);
-            Assert.That(xp.yMax,Is.LessThan(MobileHudLayout.CompanionSummary(false).yMin));
+            Assert.That(xp.Overlaps(MobileHudLayout.Clock),Is.False);
+            Assert.That(xp.Overlaps(MobileHudLayout.CompanionSummary(false)),Is.False);
         }
     }
 }

@@ -14,7 +14,9 @@ namespace IL6.EditorBuild
             var baselineSettings=new TextureImporterSettings();baseline.ReadTextureSettings(baselineSettings);
             baselineSettings.spriteMeshType=SpriteMeshType.Tight;baseline.SetTextureSettings(baselineSettings);baseline.SaveAndReimport();
             var manifest=JsonUtility.FromJson<Manifest>(File.ReadAllText("Assets/art/generated/environment/rocks20261103/generation_manifest.json"));
-            foreach(var asset in manifest.assets)
+            var additional=JsonUtility.FromJson<Manifest>(File.ReadAllText("Assets/art/generated/environment/rocks20261105/generation_manifest.json"));
+            var assets=new System.Collections.Generic.List<Record>(manifest.assets);assets.AddRange(additional.assets);
+            foreach(var asset in assets)
             {
                 var imp=(TextureImporter)AssetImporter.GetAtPath(asset.runtime);
                 imp.textureType=TextureImporterType.Sprite;imp.spriteImportMode=SpriteImportMode.Single;imp.spritePixelsPerUnit=asset.ppu;

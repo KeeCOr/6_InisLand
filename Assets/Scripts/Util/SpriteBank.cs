@@ -75,6 +75,12 @@ namespace IL6
 
         private static Sprite FrontStatic(string path) => Load("GeneratedStatic20261014/" + path);
 
+        public static float CompanionVisualHeightForRole(string role)
+        {
+            string key=DirectionalCharacterVisual.KeyForRole(role);
+            return key=="child"?.94f:key=="warrior"?1.12f:1.08f;
+        }
+
         public static Vector3 CompanionScaleForRole(string role)
         {
             // Keep actor/collider scale stable; the 2026-10-26 art importer normalizes visual height.

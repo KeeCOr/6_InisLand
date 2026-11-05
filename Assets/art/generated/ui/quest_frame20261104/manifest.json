@@ -1,0 +1,17 @@
+{
+  "generator": "built-in image_gen",
+  "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-637ce4ce-eee3-417c-991d-b4b3d2eb22a2.png",
+  "alpha_crop": [
+    21,
+    65,
+    1598,
+    904
+  ],
+  "size": [
+    1577,
+    839
+  ],
+  "resource": "UI/Quest20261104/frame",
+  "sha256": "5a85136339540a7c3fbe8f28007236ceaf6712dfd407d138c7ef16b704160f92",
+  "preparation": "Alpha bounds crop only; original artwork and transparency preserved."
+}

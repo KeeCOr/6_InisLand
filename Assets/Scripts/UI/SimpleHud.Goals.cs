@@ -1,115 +1,79 @@
 using UnityEngine;
-
 namespace IL6
 {
     public sealed partial class SimpleHud
     {
-        private bool _goalsCollapsed = true;
-        private Texture2D _questTrackerPanel;
-
+        private bool _goalsCollapsed=true;
         private Rect GoalTrackerBounds
         {
             get
             {
-                var panel = MobileHudLayout.Goals;
-                if (!_tutorialDismissed && _storyTutorial!=null && !_storyTutorial.IsDialogue && !_storyTutorial.IsComplete)
-                { panel.height=172;return panel; }
-                if (_goalsCollapsed) panel.height = 118;
-                else
-                {
-                    var manager = SettlementGoalManager.Instance;
-                    if (manager == null || manager.Goals == null || manager.Goals.Count == 0) return Rect.zero;
-                    bool complete = true;
-                    foreach (var goal in manager.Goals) if (!goal.Completed) { complete = false; break; }
-                    if (complete) panel.height = 100;
-                }
-                return panel;
+                if(!_tutorialDismissed && _storyTutorial!=null && !_storyTutorial.IsDialogue && !_storyTutorial.IsComplete)
+                {var tutorial=MobileHudLayout.Goals;tutorial.height=160;return tutorial;}
+                var manager=SettlementGoalManager.Instance;
+                if(manager==null || manager.Goals==null || manager.Goals.Count==0)return Rect.zero;
+                int remaining=0;
+                foreach(var goal in manager.Goals)if(!goal.Completed)remaining++;
+                return QuestTrackerLayout.Panel(MobileHudLayout.Width,_goalsCollapsed,remaining==0,Mathf.Max(0,remaining-1));
             }
         }
-
         private void DrawSettlementGoals()
         {
-            if(DrawStoryObjective()) return;
-            var manager = SettlementGoalManager.Instance;
-            if (manager == null || manager.Goals == null || manager.Goals.Count == 0) return;
-            var goals = manager.Goals;
-            int completed = 0, active = -1;
-            for (int i = 0; i < goals.Count; i++)
+            if(DrawStoryObjective())return;
+            var manager=SettlementGoalManager.Instance;
+            if(manager==null || manager.Goals==null || manager.Goals.Count==0)return;
+            var goals=manager.Goals;int completed=0,active=-1;
+            for(int i=0;i<goals.Count;i++)if(goals[i].Completed)completed++;else if(active<0)active=i;
+            var panel=GoalTrackerBounds;DrawQuestTrackerBacking(panel);
+            var heading=new GUIStyle(_label){fontSize=16,fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleLeft,normal={textColor=new Color(1f,.94f,.70f)}};
+            QuestLabel(QuestTrackerLayout.Header(panel),active>=0?goals[active].Title:"마을 복구 완료",heading);
+            QuestLabel(QuestTrackerLayout.Count(panel),$"{completed}/{goals.Count}",new GUIStyle(heading){fontSize=12,alignment=TextAnchor.MiddleRight});
+            if(active>=0)
             {
-                if (goals[i].Completed) completed++;
-                else if (active < 0) active = i;
+                var toggle=QuestTrackerLayout.Toggle(panel);
+                QuestLabel(toggle,_goalsCollapsed?"+":"−",new GUIStyle(heading){fontSize=22,alignment=TextAnchor.MiddleCenter});
+                if(GUI.Button(toggle,new GUIContent("",_goalsCollapsed?"퀘스트 상세 펼치기":"퀘스트 상세 접기"),GUIStyle.none))_goalsCollapsed=!_goalsCollapsed;
             }
-
-            var panel = GoalTrackerBounds;
-            DrawQuestTrackerBacking(panel);
-
-            var gold = new Color(1f, .82f, .43f);
-            var subtle = new Color(.76f, .81f, .79f);
-            var heading = new GUIStyle(_label) { fontSize = 12, fontStyle = FontStyle.Bold,
-                alignment = TextAnchor.MiddleLeft, normal = { textColor = gold } };
-            HudText.Label(new Rect(panel.x+16,panel.y+3,112,32),"마을 복구",heading);
-            HudText.Label(new Rect(panel.xMax-104,panel.y+3,48,32),$"{completed}/{goals.Count}",
-                new GUIStyle(heading) { alignment = TextAnchor.MiddleRight });
-            var toggle = new Rect(panel.xMax-42,panel.y+7,28,26);
-            if(MobileButtonTheme.Pill(toggle,_goalsCollapsed?"+":"−",new GUIStyle(_label){fontSize=18},true)) _goalsCollapsed=!_goalsCollapsed;
-
-            if (active < 0)
+            // Keep this event's geometry stable until the next repaint after toggling.
+            bool collapsed=panel.height<200;
+            if(active<0)
             {
-                HudText.Label(new Rect(panel.x+16,panel.y+44,panel.width-32,24),"모든 초기 목표 달성",new GUIStyle(_section) { fontSize = 16 });
-                HudText.Label(new Rect(panel.x+16,panel.y+70,panel.width-32,20),"섬을 탐험하며 마을을 키워보세요",new GUIStyle(_labelSubtle) { fontSize = 12 });
-                return;
+                QuestLabel(QuestTrackerLayout.Title(panel),"모든 초기 목표 달성",new GUIStyle(_section){fontSize=18});
+                QuestLabel(new Rect(panel.x+16,panel.y+80,panel.width-32,22),"섬을 탐험하며 마을을 키워보세요",new GUIStyle(_labelSubtle){fontSize=13});return;
             }
-
-            var current = goals[active];
-            HudText.Label(new Rect(panel.x+24,panel.y+39,panel.width-40,28),current.Title,
-                new GUIStyle(_section) { fontSize = 17, normal = { textColor = Color.white } });
-            var conditions = current.Progress.Split(new[] { "  " },System.StringSplitOptions.RemoveEmptyEntries);
-            var conditionStyle = new GUIStyle(_labelSubtle) { fontSize = 13, normal = { textColor = subtle } };
-            if (_goalsCollapsed)
+            var current=goals[active];
+            var category=QuestTrackerLayout.Title(panel);category.width-=72;
+            QuestLabel(category,"마을 복구",new GUIStyle(_labelSubtle){fontSize=12,normal={textColor=Color.white}});
+            if(!collapsed)QuestLabel(QuestTrackerLayout.Detail(panel),current.Detail,new GUIStyle(_labelSubtle){fontSize=13,wordWrap=true,alignment=TextAnchor.UpperLeft,normal={textColor=Color.white}});
+            var rows=QuestTrackerLayout.Rows(current.Progress);
+            for(int i=0;i<rows.Length && i<3;i++)
             {
-                string progress = string.Join(" · ", conditions);
-                HudText.Label(new Rect(panel.x+24,panel.y+69,panel.width-40,42),progress,
-                    new GUIStyle(conditionStyle) { fontSize=13, wordWrap=true });
-                return;
+                var row=QuestTrackerLayout.Condition(panel,collapsed,i);
+                var color=rows[i].Complete?new Color(.62f,.87f,.74f):Color.white;
+                var style=new GUIStyle(_label){fontSize=14,alignment=TextAnchor.MiddleLeft,normal={textColor=color}};
+                QuestLabel(new Rect(row.x,row.y,row.width-88,row.height),rows[i].Label,style);
+                QuestLabel(new Rect(row.xMax-80,row.y,80,row.height),rows[i].Value,new GUIStyle(style){alignment=TextAnchor.MiddleRight,fontStyle=FontStyle.Bold});
             }
-            for (int i = 0; i < conditions.Length && i < 3; i++)
+            if(collapsed)return;
+            bool hasNext=false;
+            for(int i=active+1;i<goals.Count;i++)if(!goals[i].Completed){hasNext=true;break;}
+            if(!hasNext)return;
+            UiTheme.Rect(new Rect(panel.x+16,panel.y+210,panel.width-32,1),new Color(.72f,.79f,.82f,.22f));
+            QuestLabel(new Rect(panel.x+16,panel.y+218,panel.width-32,18),"다음 목표",new GUIStyle(_labelSubtle){fontSize=11});
+            int shown=0;
+            for(int i=active+1;i<goals.Count && shown<2;i++)
             {
-                string condition = conditions[i].Trim();
-                int lastSpace = condition.LastIndexOf(' ');
-                string label = lastSpace > 0 ? condition.Substring(0,lastSpace) : condition;
-                string value = lastSpace > 0 ? condition.Substring(lastSpace+1) : "";
-                float y = panel.y+69+i*21;
-                HudText.Label(new Rect(panel.x+24,y,panel.width-112,20),label,conditionStyle);
-                HudText.Label(new Rect(panel.xMax-90,y,72,20),value,
-                    new GUIStyle(conditionStyle) { alignment = TextAnchor.MiddleRight, normal = { textColor = Color.white } });
-            }
-
-            if (_goalsCollapsed) return;
-            UiTheme.Rect(new Rect(panel.x+16,panel.y+138,panel.width-32,1),new Color(.8f,.72f,.49f,.25f));
-            int shown = 0;
-            for (int i = active+1; i < goals.Count && shown < 2; i++)
-            {
-                if (goals[i].Completed) continue;
-                float y = panel.y+146+shown*27;
-                HudText.Label(new Rect(panel.x+17,y,32,22),"다음",new GUIStyle(conditionStyle) { fontSize = 11 });
-                HudText.Label(new Rect(panel.x+54,y,panel.width-70,22),goals[i].Title,
-                    new GUIStyle(_label) { fontSize = 13, normal = { textColor = subtle } });
-                shown++;
+                if(goals[i].Completed)continue;
+                QuestLabel(QuestTrackerLayout.Next(panel,shown++),goals[i].Title,new GUIStyle(_labelSubtle){fontSize=13});
             }
         }
-
-        private void DrawQuestTrackerBacking(Rect panel)
+        private void DrawQuestTrackerBacking(Rect panel)=>QuestTrackerFrameSkin.Draw(panel);
+        private static void QuestLabel(Rect rect,string text,GUIStyle style)
         {
-            if (_questTrackerPanel == null) _questTrackerPanel = Resources.Load<Texture2D>("UI/Generated20261018/quest_tracker");
-            if (_questTrackerPanel != null)
-            {
-                var old = GUI.color;
-                GUI.color = new Color(1f,1f,1f,.86f);
-                // Use only the generated panel region; leave its surrounding presentation backdrop out of the HUD.
-                GUI.DrawTextureWithTexCoords(panel,_questTrackerPanel,new Rect(30f/1536f,226f/1024f,1477f/1536f,596f/1024f),true);
-                GUI.color = old;
-            }
-            else GeneratedUiSkin.Panel(panel,new Color(.4f,.48f,.47f,.86f));
+            var shadow=new GUIStyle(style){normal={textColor=new Color(.025f,.035f,.04f,.95f)}};
+            HudText.Label(new Rect(rect.x-1,rect.y-1,rect.width,rect.height),text,shadow);
+            HudText.Label(new Rect(rect.x+1,rect.y+1,rect.width,rect.height),text,shadow);
+            HudText.Label(rect,text,style);
         }
     }
 }

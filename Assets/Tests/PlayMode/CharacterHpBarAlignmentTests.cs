@@ -10,7 +10,7 @@ namespace IL6.Tests
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(3)]
-        public void EveryActorUsesSameHeadGapAndWorldSize(int kind)
+        public void EveryActorUsesSameHeadGapWithNarrowerNonPlayerBars(int kind)
         {
             var parent=new GameObject("Scaled parent");
             parent.transform.localScale=new Vector3(.9f,1.2f,1);
@@ -32,8 +32,8 @@ namespace IL6.Tests
             var root=go.transform.Find("HpBar");
             Assert.That(root.position.x,Is.EqualTo(go.transform.position.x).Within(.001f));
             Assert.That(root.position.y-renderer.bounds.max.y,Is.EqualTo(.18f).Within(.001f));
-            Assert.That(Mathf.Abs(root.lossyScale.x),Is.EqualTo(bar.Size.x).Within(.001f));
-            Assert.That(Mathf.Abs(root.lossyScale.y),Is.EqualTo(bar.Size.y).Within(.001f));
+            Assert.That(Mathf.Abs(root.lossyScale.x),Is.EqualTo(bar.Size.x*(kind==0?1f:.7f)).Within(.001f));
+            Assert.That(Mathf.Abs(root.lossyScale.y),Is.EqualTo(Mathf.Min(bar.Size.y,kind==0?.12f:.10f)).Within(.001f));
             Object.DestroyImmediate(parent);Object.DestroyImmediate(sprite);Object.DestroyImmediate(texture);
         }
     }

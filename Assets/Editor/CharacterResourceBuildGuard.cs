@@ -16,6 +16,12 @@ namespace IL6.EditorBuild
         public static List<string> Missing()
         {
             var missing=new List<string>();
+            if(Resources.Load<Sprite>(CampfireSnowMelt.SpritePath)==null)missing.Add(CampfireSnowMelt.SpritePath);
+            if(Resources.Load<Texture2D>(QuestTrackerFrameSkin.FramePath)==null)missing.Add(QuestTrackerFrameSkin.FramePath);
+            if(Resources.Load<Texture2D>(QuestTrackerFrameSkin.RibbonPath)==null)missing.Add(QuestTrackerFrameSkin.RibbonPath);
+            if(Resources.Load<Texture2D>(HomeNavigation.IconPath)==null)missing.Add(HomeNavigation.IconPath);
+            foreach(string path in new[]{RuneChoiceFrameSkin.FramePath,RuneChoiceFrameSkin.CardPath})
+                if(Resources.Load<Texture2D>(path)==null)missing.Add(path);
             if(Resources.Load<Texture2D>("UI/Generated20261103/sunset_warning")==null)missing.Add("Sunset warning icon");
             foreach(RuneKind kind in System.Enum.GetValues(typeof(RuneKind)))
             {

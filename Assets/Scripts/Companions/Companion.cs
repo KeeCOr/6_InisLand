@@ -21,6 +21,7 @@ namespace IL6
         public float FollowStopDistance = 0.25f;
         public float MoveSpeed = 4.5f;
         public float GatherReach = 0.7f;
+        public float GatherLeashDistance = 6f;
         public float SeparationRadius = 1.1f;
 
         [Header("Combat")]
@@ -151,6 +152,7 @@ namespace IL6
         {
             if (CurrentMode == Mode.Farming || CurrentMode == Mode.Hiding) return;
             Target = target;
+            _treeWorkTimer = 0;
             CurrentMode = target != null ? Mode.Working : Mode.Follow;
         }
 
@@ -193,6 +195,7 @@ namespace IL6
 
         private void Awake()
         {
+            ActorBodyCollision.Configure(gameObject,false);
             YSort.Ensure(gameObject);
             _rb = GetComponent<Rigidbody2D>();
             if (_rb == null) _rb = gameObject.AddComponent<Rigidbody2D>();
@@ -222,6 +225,7 @@ namespace IL6
                 hp.BgColor = new Color(0.05f, 0.05f, 0.08f, 0.9f);
                 hp.FillColor = new Color(0.45f, 0.85f, 0.55f);
             }
+            if (GetComponent<CompanionNightVisibility>() == null) gameObject.AddComponent<CompanionNightVisibility>();
         }
 
         private void Start()
@@ -512,6 +516,11 @@ namespace IL6
         private float _treeWorkTimer;
         private Vector2 ComputeWorkingVelocity()
         {
+            if(Player!=null && Vector2.Distance(transform.position,Player.position)>GatherLeashDistance)
+            {
+                AssignGather(null);
+                return ComputeFollowVelocity();
+            }
             // 채집 중엔 전투 무시 — 적 가까이 와도 채집 계속 (피격 시에만 TakeDamage 가 모드 전환).
             if (Target == null) { CurrentMode = Mode.Follow; return Vector2.zero; }
             Vector2 toTarget = (Vector2)Target.transform.position - (Vector2)transform.position;
@@ -686,7 +695,8 @@ namespace IL6
         {
             GetComponent<CharacterActionVisual>()?.PlayAttack(target.transform.position-transform.position);
             var go = new GameObject("CompProjectile");
-            go.transform.position = transform.position;
+            go.transform.position = CharacterProjectileOrigin.Resolve(transform, target.transform.position,
+                GetComponent<DirectionalCharacterVisual>()?.CharacterKey);
             go.transform.localScale = Vector3.one * 0.6f;
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = 50;
@@ -703,7 +713,7 @@ namespace IL6
             }
             proj.Damage = Mathf.RoundToInt(EffectiveDamage() * GetWatchtowerBoost() * allyMul);
             proj.HitRadius = 0.45f;
-            proj.Aim(target, transform.position);
+            proj.Aim(target, go.transform.position);
         }
     }
 }

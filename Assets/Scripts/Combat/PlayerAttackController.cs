@@ -21,12 +21,20 @@ namespace IL6
         public void SwitchToWeapon(int idx)
         {
             var actions = GetComponent<PlayerActionState>();
-            if (actions != null && actions.IsBusy) return;
+            if (actions != null && actions.State==PlayerAction.Dead) return;
+            idx=((idx%WeaponCatalog.All.Count)+WeaponCatalog.All.Count)%WeaponCatalog.All.Count;
+            if(WeaponIndex==idx && Weapon!=null)return;
+            GetComponent<GatherController>()?.Cancel();
+            GetComponent<CharacterActionVisual>()?.Cancel();
+            actions?.ResetToIdle();
             WeaponIndex = idx;
             Weapon = WeaponCatalog.Get(idx);
             CurrentProjectileColor = WeaponCatalog.ProjectileColor(WeaponIndex);
             var player = GetComponent<PlayerController>();
             if (player != null) player.SetWeaponVisual(WeaponIndex);
+            var directions=GetComponent<DirectionalCharacterVisual>();
+            if(directions!=null)directions.ShowDirection(directions.Facing==CharacterFacing.Front?Vector2.down:
+                directions.Facing==CharacterFacing.Back?Vector2.up:directions.Facing==CharacterFacing.Left?Vector2.left:Vector2.right);
         }
 
         public void CycleWeapon(int delta)
@@ -151,12 +159,12 @@ namespace IL6
 
         private void SpawnProjectileSpread(MonoBehaviour target, int dmg, int count)
         {
-            Vector2 baseDir = ((Vector2)target.transform.position - (Vector2)_self.position).normalized;
             for (int i = 0; i < count; i++)
             {
+                var proj = SpawnProjectile(target, dmg);
+                Vector2 baseDir = ((Vector2)target.transform.position - (Vector2)proj.transform.position).normalized;
                 float angleOffset = count > 1 ? (i - (count - 1) * 0.5f) * 14f : 0f;
                 Vector2 dir = Quaternion.Euler(0, 0, angleOffset) * baseDir;
-                var proj = SpawnProjectile(target, dmg);
                 if (i > 0) proj.AimDirection(dir);
             }
         }
@@ -203,7 +211,8 @@ namespace IL6
         private Projectile SpawnProjectile(MonoBehaviour target, int dmg)
         {
             var go = new GameObject("Projectile");
-            go.transform.position = _self.position;
+            go.transform.position = CharacterProjectileOrigin.Resolve(_self, target.transform.position,
+                Weapon.Id == "bow" ? "hero_bow" : "hero_axe");
             go.transform.localScale = Vector3.one * 0.9f;
 
             var sr = go.AddComponent<SpriteRenderer>();
@@ -218,7 +227,7 @@ namespace IL6
             proj.Damage = dmg;
             proj.HitRadius = 0.5f;
             proj.OwnerProgression = Progression;
-            proj.Aim(target, _self.position);
+            proj.Aim(target, go.transform.position);
             return proj;
         }
 
@@ -226,7 +235,6 @@ namespace IL6
         {
             if (target is Zombie z && !z.IsDead)
             {
-                GameFeel.Slash(_self.position, target.transform.position, new Color(1f, 0.95f, 0.7f));
                 z.TakeDamage(dmg);
                 if (!z.IsDead) MeleeKnockback.Apply(z, _self.position);
                 if (Progression != null)
@@ -247,7 +255,6 @@ namespace IL6
             }
             else if (target is AnimalAi animal)
             {
-                GameFeel.Slash(_self.position, target.transform.position, new Color(1f, 0.95f, 0.7f));
                 animal.TakeDamage(dmg,_self.position);
                 if (!animal.IsDead) MeleeKnockback.Apply(animal, _self.position);
             }

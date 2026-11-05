@@ -20,6 +20,9 @@ namespace IL6.Tests
             yield return new WaitForSeconds(2);
             var hud = Object.FindFirstObjectByType<SimpleHud>();
             typeof(SimpleHud).GetMethod("PrepareHudPreview", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(hud, null);
+            // Test world actions independently of the desktop pointer hovering over HUD controls.
+            hud.enabled = false;
+            InputReader.HudBlocked = false;
             var attack = hud.Attacker;
 
             attack.SwitchToWeapon(0);
@@ -51,7 +54,8 @@ namespace IL6.Tests
             wood.YieldKind = ResourceKind.Stone;
             Physics2D.SyncTransforms();
             yield return new WaitForSeconds(.6f);
-            Assert.That(attack.ManualActionLabel,Is.EqualTo("채굴"));
+            Assert.That(attack.ManualActionLabel,Is.EqualTo("채굴"),
+                $"state={hud.Player.Actions.State}/{hud.Player.Actions.Phase}, blocked={InputReader.HudBlocked}, scale={Time.timeScale}, distance={Vector2.Distance(tree.transform.position,hud.Player.transform.position)}, combat={attack.FindManualCombatTarget()}");
             Assert.That(method.Invoke(attack, null), Is.EqualTo(true),"Space must also start nearby mining");
             Assert.That(hud.Gather.ActiveTarget,Is.SameAs(wood));
             yield return new WaitForSeconds(.2f);

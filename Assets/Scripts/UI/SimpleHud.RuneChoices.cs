@@ -51,18 +51,16 @@ namespace IL6
         {
             var layout=new RuneChoiceLayout(MobileHudLayout.Width,MobileHudLayout.Height);
             UiTheme.Rect(new Rect(0,0,MobileHudLayout.Width,MobileHudLayout.Height),new Color(.015f,.035f,.045f,.86f));
-            UiTheme.Panel(layout.Panel);
-            UiTheme.TitleBar(layout.Panel,$"특성 선택 · Lv. {Progression.Level}",_title);
+            RuneChoiceFrameSkin.DrawRoot(layout.Panel,$"특성 선택 · Lv. {Progression.Level}",_title);
             var centered=new GUIStyle(_labelSubtle){fontSize=14,alignment=TextAnchor.MiddleCenter};
             var number=new GUIStyle(_section){fontSize=22,alignment=TextAnchor.MiddleLeft};
             for(int i=0;i<_runeOffer.Count;i++)
             {
                 var kind=_runeOffer[i];var card=layout.Card(i);var info=RuneChoiceLayout.Info(card);
                 int current=Progression.GetStacks(kind),next=Mathf.Min(current+1,PlayerProgression.MaxStacks);
-                UiTheme.Panel(card);
+                RuneChoiceFrameSkin.DrawCard(card);
                 Color scopeColor=RuneChoicePresentation.CategoryColor(kind);
-                UiTheme.Rect(new Rect(card.x+12,card.y+3,card.width-24,3),scopeColor);
-                UiTheme.Rect(new Rect(card.x+4,card.y+12,3,card.height-24),scopeColor);
+                UiTheme.Rect(new Rect(card.x+18,card.y+8,card.width-36,2),scopeColor);
                 HudText.Label(RuneChoiceLayout.Title(card),RuneChoicePresentation.Name(kind),new GUIStyle(_weapon){fontSize=20,wordWrap=true,alignment=TextAnchor.MiddleCenter,padding=new RectOffset(0,0,0,0)});
                 var icon=RuneChoiceIcon(kind);if(icon!=null) GUI.DrawTexture(RuneChoiceLayout.Icon(card),icon,ScaleMode.ScaleToFit,true);
                 var scopeLine=RuneChoiceLayout.Trigger(card);
@@ -96,7 +94,7 @@ namespace IL6
             if(_runeDetailIndex>=0 && _runeDetailIndex<_runeOffer.Count)
             {
                 var kind=_runeOffer[_runeDetailIndex];int current=Progression.GetStacks(kind),next=Mathf.Min(current+1,PlayerProgression.MaxStacks);
-                MobileButtonTheme.RoundRect(detail,8,UiTheme.PanelInnerBg);
+                RuneChoiceFrameSkin.DrawDetails(detail);
                 HudText.Label(new Rect(detail.x+14,detail.y+10,176,28),RuneChoicePresentation.Name(kind),new GUIStyle(_section){fontSize=18});
                 HudText.Label(new Rect(detail.x+14,detail.y+44,176,30),$"{current} → {next} / {PlayerProgression.MaxStacks}",centered);
                 string description=RuneChoicePresentation.CategoryLabel(kind)+"\n"+PlayerProgression.DescribeAt(kind,next);

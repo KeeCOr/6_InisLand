@@ -31,7 +31,7 @@ namespace IL6
             }
 
             Vector3 villageCenter = new Vector3(GameConstants.VillageCenterX, GameConstants.VillageCenterY, 0);
-            if (Player != null) Player.transform.position = villageCenter;
+            if (Player != null) Player.transform.position = villageCenter + new Vector3(0f,-2.5f,0f);
             SnowFootprintField.Ensure();
             if (Gather != null)
             {
@@ -99,7 +99,7 @@ namespace IL6
         {
             if (_session == null || GameSession.Instance != _session) _session = GameSession.Instance;
             if (_session == null || _session.Cycle == null) return;
-            _session.Cycle.Update(Time.deltaTime);
+            _session.Cycle.Update(DayActionTime.Delta(_session.Cycle.Phase,Player,Time.deltaTime));
 
             if (Player != null && Player.IsDead && !_diedEmitted)
             {

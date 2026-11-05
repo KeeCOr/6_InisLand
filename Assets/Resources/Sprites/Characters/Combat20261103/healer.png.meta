@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 309.2028
+  spritePixelsToUnits: 343.5587
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -114,9 +114,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 0
-        height: 0
+        y: 1072
+        width: 326
+        height: 536
       alignment: 9
       pivot: {x: 0.5, y: 0.07089552}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -134,10 +134,10 @@ TextureImporter:
       name: attack_side_Loop
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 0
-        height: 0
+        x: 326
+        y: 1072
+        width: 326
+        height: 536
       alignment: 9
       pivot: {x: 0.5, y: 0.07089552}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -155,10 +155,10 @@ TextureImporter:
       name: attack_side_End
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 0
-        height: 0
+        x: 652
+        y: 1072
+        width: 326
+        height: 536
       alignment: 9
       pivot: {x: 0.5, y: 0.07089552}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -177,9 +177,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 0
-        height: 0
+        y: 536
+        width: 326
+        height: 536
       alignment: 9
       pivot: {x: 0.5, y: 0.104477614}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -197,10 +197,10 @@ TextureImporter:
       name: attack_front_Loop
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 0
-        height: 0
+        x: 326
+        y: 536
+        width: 326
+        height: 536
       alignment: 9
       pivot: {x: 0.5, y: 0.104477614}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -218,10 +218,10 @@ TextureImporter:
       name: attack_front_End
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 0
-        height: 0
+        x: 652
+        y: 536
+        width: 326
+        height: 536
       alignment: 9
       pivot: {x: 0.5, y: 0.104477614}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -241,8 +241,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 0
-        height: 0
+        width: 326
+        height: 536
       alignment: 9
       pivot: {x: 0.5, y: 0.12126866}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -260,10 +260,10 @@ TextureImporter:
       name: attack_back_Loop
       rect:
         serializedVersion: 2
-        x: 0
+        x: 326
         y: 0
-        width: 0
-        height: 0
+        width: 326
+        height: 536
       alignment: 9
       pivot: {x: 0.5, y: 0.12313433}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -281,10 +281,10 @@ TextureImporter:
       name: attack_back_End
       rect:
         serializedVersion: 2
-        x: 0
+        x: 652
         y: 0
-        width: 0
-        height: 0
+        width: 326
+        height: 536
       alignment: 9
       pivot: {x: 0.5, y: 0.12126866}
       border: {x: 0, y: 0, z: 0, w: 0}

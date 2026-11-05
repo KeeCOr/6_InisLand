@@ -25,7 +25,7 @@ namespace IL6
             {
                 var sprite=Resources.Load<Sprite>("Sprites/Environment/Snowfield/actor_shadow");if(sprite==null)return;
                 var go=new GameObject("ActorShadow_"+GetInstanceID());_shadow=go.AddComponent<SpriteRenderer>();
-                _shadow.sprite=sprite;_shadow.sortingLayerID=_body.sortingLayerID;_shadow.sortingOrder=-9750;
+                _shadow.sprite=sprite;_shadow.sortingLayerID=_body.sortingLayerID;_shadow.sortingOrder=-9475;
             }
             _shadow.enabled=_body.enabled;
             float width=string.IsNullOrEmpty(_species)?.7f:Mathf.Clamp(AnimalSizeProfile.For(_species).FootprintRadius*3f,.25f,2.8f);

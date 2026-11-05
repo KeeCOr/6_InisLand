@@ -246,19 +246,22 @@ namespace IL6
         {
             // A missing campfire or broken fence is gameplay state, not a request to initialize again.
             if (_outerFenceRoot != null) return;
-            // 이미 모닥불이 가까이 있으면 (씬 재진입 등) 추가 스폰 안 함
+            // At first initialization, reuse authored essentials and fill only missing ones.
+            bool hasFire=false,hasHome=false;
             var existing = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
             foreach (var b in existing)
             {
                 if (b == null) continue;
-                if (b.Kind != BuildingKind.Campfire) continue;
-                if (Vector2.Distance(center, b.transform.position) < 6f) return;
+                if (Vector2.Distance(center, b.transform.position) >= 6f) continue;
+                if (b.Kind == BuildingKind.Campfire) hasFire=true;
+                if (b.Kind == BuildingKind.House) hasHome=true;
             }
 
             CurrentHalfSize = halfSize;
-            SpawnCampfire(center + Vector3.right);
+            if(!hasFire) SpawnCampfire(center + new Vector3(1f,-3f,0f));
             // One finished home supplies starting housing; only initialize with the village.
-            BuildingFactory.SpawnHouse(ConstructionPlacement.Snap(center + new Vector3(-2f, -2f, 0f)));
+            // Cabin art is anchored near its door: at the center its roof fills the north side.
+            if(!hasHome) BuildingFactory.SpawnHouse(ConstructionPlacement.Snap(center));
 
             BuildOuterRing(center, halfSize, spacing);
         }

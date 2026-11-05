@@ -17,7 +17,7 @@ namespace IL6.EditorBuild
                 var frames=WardrobeAtlasFrames.Load(atlas,Archive+"/"+key+".png");
                 var bounds=new RectInt[9];int tallest=0;
                 for(int i=0;i<frames.Length;i++) { bounds[i]=OpaqueBounds(frames[i]);tallest=Math.Max(tallest,bounds[i].height); }
-                float ppu=tallest*SpriteBank.CompanionScaleForRole(key).y/1.2f;
+                float ppu=tallest*SpriteBank.CompanionScaleForRole(key).y/SpriteBank.CompanionVisualHeightForRole(key);
                 string basePath=key=="aunt"||key=="uncle"||key=="child"?"Assets/Resources/Sprites/Companions/"+key+".png":"Assets/Resources/Sprites/GeneratedStatic20261014/Companions/"+key+".png";
                 SaveSingle(basePath,frames[2],bounds[2],ppu);
                 // Preserve the existing front/back resource path and sprite names used at runtime.

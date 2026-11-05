@@ -24,7 +24,7 @@ namespace IL6.Tests
             var v=field.GetComponentInChildren<MeshFilter>().sharedMesh.vertices;int i=index*4;
             return (v[i]+v[i+1]+v[i+2]+v[i+3])/4;
         }
-        [UnityTest] public IEnumerator MovementLeavesAlternatingWorldMarksThatPersistUntilNight()
+        [UnityTest] public IEnumerator MovementLeavesAlternatingWorldMarksThatClearBeforeNight()
         {
             Assert.That(FieldType,Is.Not.Null,"Daytime footprint field is missing");
             Time.timeScale=1;InputReader.HudBlocked=false;
@@ -44,6 +44,9 @@ namespace IL6.Tests
             sr.enabled=false;actor.transform.position+=Vector3.right;yield return null;Assert.That(Count(field),Is.EqualTo(count));
             sr.enabled=true;actor.transform.position+=Vector3.right*20;yield return null;Assert.That(Count(field),Is.EqualTo(count),"Teleport must not draw a trail");
             EventBus.Instance.Emit(new DayStartedPayload(1));Assert.That(Count(field),Is.EqualTo(count),"Duplicate daytime event preserves footprints");
+            EventBus.Instance.Emit(new EveningStartedPayload(1));Assert.That(Count(field),Is.Zero);Assert.That(Stamp(field,Vector2.zero),Is.False);
+            foreach(var mesh in field.GetComponentsInChildren<MeshFilter>())Assert.That(mesh.sharedMesh.vertexCount,Is.Zero);
+            foreach(var renderer in field.GetComponentsInChildren<MeshRenderer>())Assert.That(renderer.enabled,Is.False);
             EventBus.Instance.Emit(new NightStartedPayload(1));Assert.That(Count(field),Is.Zero);Assert.That(Stamp(field,Vector2.zero),Is.False);
             EventBus.Instance.Emit(new DayStartedPayload(2));Assert.That(Stamp(field,Vector2.zero),Is.True);yield return null;
             EventBus.Instance.Emit(new DayStartedPayload(3));Assert.That(Count(field),Is.Zero,"A new day starts clean");

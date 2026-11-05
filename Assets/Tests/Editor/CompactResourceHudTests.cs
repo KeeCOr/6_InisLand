@@ -12,19 +12,23 @@ namespace IL6.Tests
             Assert.That(ResourceIconSkin.IconCount,Is.EqualTo(5));
         }
         [Test]
-        public void ResourcesUseTwoCompactRowsWithoutLargeInventoryCard()
+        public void AllSixResourcesUseTwoColumnsWithoutOverlappingExperienceOrQuests()
         {
-            Assert.That(MobileHudLayout.Resources.height,Is.LessThanOrEqualTo(64));
+            Assert.That(MobileHudLayout.Resources.height,Is.LessThanOrEqualTo(96));
             var method=typeof(MobileHudLayout).GetMethod("ResourceChip");
             Assert.That(method,Is.Not.Null);
-            for(int i=0;i<5;i++)
+            for(int i=0;i<6;i++)
             {
                 var r=(Rect)method.Invoke(null,new object[]{i});
                 Assert.That(r.yMin,Is.GreaterThanOrEqualTo(MobileHudLayout.Resources.y));
                 Assert.That(r.yMax,Is.LessThanOrEqualTo(MobileHudLayout.Resources.yMax));
                 Assert.That(r.xMax,Is.LessThanOrEqualTo(MobileHudLayout.Resources.xMax));
-                for(int j=i+1;j<5;j++) Assert.That(r.Overlaps((Rect)method.Invoke(null,new object[]{j})),Is.False);
+                for(int j=i+1;j<6;j++) Assert.That(r.Overlaps((Rect)method.Invoke(null,new object[]{j})),Is.False);
+                Assert.That(r.y,Is.EqualTo(MobileHudLayout.Resources.y+30*(i/2)));
+                Assert.That(r.x,Is.EqualTo(MobileHudLayout.ResourceChip(i%2).x));
             }
+            Assert.That(MobileHudLayout.ResourceTouchBounds.Overlaps(MobileHudLayout.Experience),Is.False);
+            Assert.That(MobileHudLayout.Experience.yMax,Is.LessThan(MobileHudLayout.Goals.yMin));
         }
         [TestCase(999,"999")]
         [TestCase(1200,"1.2K")]

@@ -21,6 +21,8 @@ namespace IL6.Tests
                 if(b.Kind==BuildingKind.Campfire)fire=b;
             }
             Assert.That(count,Is.EqualTo(1));Assert.That(home.CurrentHp,Is.EqualTo(home.MaxHp));
+            Assert.That(home.transform.position,Is.EqualTo(ConstructionPlacement.Snap(center)),"The door-anchored home must visually fill the north side");
+            Assert.That(home.GetComponent<SpriteRenderer>().bounds.center.y,Is.GreaterThan(center.y+1f));
             Assert.That(home.transform.position,Is.EqualTo(ConstructionPlacement.Snap(home.transform.position)));
             Assert.That(RecruitableNpc.VillageCapacity(),Is.EqualTo(RecruitableNpc.FreeCapacity+RecruitableNpc.CapacityPerHouse));
             var bounds=home.GetComponent<SpriteRenderer>().bounds;float half=VillageStarter.CurrentHalfSize;
@@ -28,6 +30,8 @@ namespace IL6.Tests
             Assert.That(bounds.min.y,Is.GreaterThan(center.y-half));Assert.That(bounds.max.y,Is.LessThan(center.y+half));
             Physics2D.SyncTransforms();
             Assert.That(home.GetComponent<Collider2D>().Distance(fire.GetComponent<Collider2D>()).isOverlapped,Is.False);
+            var player=Object.FindFirstObjectByType<PlayerController>();
+            Assert.That(player.GetComponent<Collider2D>().Distance(home.GetComponent<Collider2D>()).isOverlapped,Is.False);
             VillageStarter.SpawnStarterVillage(center);
             int repeated=0;foreach(var b in Object.FindObjectsByType<Building>(FindObjectsSortMode.None))if(b.Kind==BuildingKind.House)repeated++;
             Assert.That(repeated,Is.EqualTo(1));

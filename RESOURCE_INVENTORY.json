@@ -1,0 +1,36 @@
+{
+  "project": "6_IL",
+  "specDocs": [],
+  "bgmIdentity20261104": {
+    "manifest": "docs/audio/BGM_IDENTITY_20261104.json",
+    "date": "2026-11-04",
+    "assets": [
+      {
+        "path": "Assets/Resources/Music/dawn.ogg",
+        "bytes": 1549652,
+        "sha256": "bfa2ea5b081be1932b541a4ff90c5c7e7b1d58848475728baf6c451b64a04649",
+        "title": "눈보라 속 등불 · dawn"
+      },
+      {
+        "path": "Assets/Resources/Music/day.ogg",
+        "bytes": 1723449,
+        "sha256": "e8aff80116610af3d7d4cc87338820aadfd81c890fd2905d13dda904b6f717aa",
+        "title": "눈보라 속 등불 · day"
+      },
+      {
+        "path": "Assets/Resources/Music/evening.ogg",
+        "bytes": 1705525,
+        "sha256": "7b8f6a430471f3661d55efb146775b6ae3fce1f6614e8b81b83011362b5dfd93",
+        "title": "눈보라 속 등불 · evening"
+      },
+      {
+        "path": "Assets/Resources/Music/night.ogg",
+        "bytes": 1495332,
+        "sha256": "322e5086233d5a9229ead9fbf2dbe811bd7e73dd1c858cba04177f38b0b5e41f",
+        "title": "눈보라 속 등불 · night"
+      }
+    ],
+    "actualPlayback": "existing player; exact file path retained",
+    "executableUpdated": false
+  }
+}

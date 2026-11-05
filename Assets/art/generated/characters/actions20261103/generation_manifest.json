@@ -510,7 +510,8 @@
           }
         }
       ],
-      "sha256": "6c6b6b5fb88cd005272c7560e26944dfa132327da5d122f39589958ec6d15e86"
+      "sha256": "6c6b6b5fb88cd005272c7560e26944dfa132327da5d122f39589958ec6d15e86",
+      "referenceHeight": 1.2
     },
     {
       "key": "warrior",
@@ -638,7 +639,8 @@
           }
         }
       ],
-      "sha256": "cbac445c61f5f1fd42b12ce1b01dbc402d035fa09437293c78edccaf14aa7c9c"
+      "sha256": "cbac445c61f5f1fd42b12ce1b01dbc402d035fa09437293c78edccaf14aa7c9c",
+      "referenceHeight": 1.2
     },
     {
       "key": "farmer",
@@ -766,7 +768,8 @@
           }
         }
       ],
-      "sha256": "f58ee42b319e8929506f105e8eff22a935ad1f078fbb8c535e486a0e65571a51"
+      "sha256": "f58ee42b319e8929506f105e8eff22a935ad1f078fbb8c535e486a0e65571a51",
+      "referenceHeight": 1.2
     },
     {
       "key": "cook",
@@ -894,7 +897,8 @@
           }
         }
       ],
-      "sha256": "aa141883d90745486d94986317bfb70f05b4dc6b296c218aaa15c3189e5bb2ec"
+      "sha256": "aa141883d90745486d94986317bfb70f05b4dc6b296c218aaa15c3189e5bb2ec",
+      "referenceHeight": 1.2
     },
     {
       "key": "healer",
@@ -1022,7 +1026,8 @@
           }
         }
       ],
-      "sha256": "5d56a12d2a74e1c72ba8e4a4de52cbc312d87faa8cddd77605967f163e38c706"
+      "sha256": "5d56a12d2a74e1c72ba8e4a4de52cbc312d87faa8cddd77605967f163e38c706",
+      "referenceHeight": 1.2
     },
     {
       "key": "aunt",
@@ -1150,7 +1155,8 @@
           }
         }
       ],
-      "sha256": "f036bcba6dd5ce5563c4c44295fafc9d829b6d11dbbbdcdd5dcd474201a06e8f"
+      "sha256": "f036bcba6dd5ce5563c4c44295fafc9d829b6d11dbbbdcdd5dcd474201a06e8f",
+      "referenceHeight": 1.2
     },
     {
       "key": "uncle",
@@ -1278,7 +1284,8 @@
           }
         }
       ],
-      "sha256": "06d4ecf39f84c83fb23da457333f211be1a1312c43ed3e7da7830f348235634e"
+      "sha256": "06d4ecf39f84c83fb23da457333f211be1a1312c43ed3e7da7830f348235634e",
+      "referenceHeight": 1.2
     },
     {
       "key": "child",
@@ -1406,7 +1413,8 @@
           }
         }
       ],
-      "sha256": "c01cc11ce7c97c07bfc9347100565917ae038e92b97d391aff92912f46d685a2"
+      "sha256": "c01cc11ce7c97c07bfc9347100565917ae038e92b97d391aff92912f46d685a2",
+      "referenceHeight": 1.2
     }
   ]
 }

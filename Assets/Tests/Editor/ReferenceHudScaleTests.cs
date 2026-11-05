@@ -8,7 +8,8 @@ namespace IL6.Tests
         public void SecondaryHudLeavesTheWorldVisibleWhilePrimaryAttackStaysLarge()
         {
             Assert.That(MobileHudLayout.Status.width,Is.LessThanOrEqualTo(280));
-            Assert.That(MobileHudLayout.Status.width,Is.EqualTo(MobileHudLayout.Resources.width));
+            Assert.That(MobileHudLayout.Resources.xMin,Is.GreaterThan(MobileHudLayout.Width/2f));
+            Assert.That(MobileHudLayout.Resources.xMax,Is.LessThanOrEqualTo(MobileHudLayout.Menu.xMin-16));
             Assert.That(MobileHudLayout.Status.width,Is.EqualTo(MobileHudLayout.CompanionSummary(false).width));
             Assert.That(MobileHudLayout.Status.height,Is.LessThanOrEqualTo(78));
             Assert.That(MobileHudLayout.Resources.width,Is.LessThanOrEqualTo(480));

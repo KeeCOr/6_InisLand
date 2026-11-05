@@ -31,6 +31,7 @@ namespace IL6
 
         private void Awake()
         {
+            ActorBodyCollision.Configure(gameObject,false);
             YSort.Ensure(gameObject);
             // Door.TryHookPlayer() 이 FindWithTag("Player") 를 사용하므로 반드시 설정
             if (!gameObject.CompareTag("Player"))

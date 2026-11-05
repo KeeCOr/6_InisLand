@@ -21,8 +21,8 @@ namespace IL6.Tests
         {
             var credits = Resources.Load<TextAsset>("Music/CREDITS");
             Assert.That(credits, Is.Not.Null);
-            StringAssert.Contains("Scott Buckley", credits.text);
-            StringAssert.Contains("https://creativecommons.org/licenses/by/4.0/", credits.text);
+            StringAssert.Contains("Original InisLand", credits.text);
+            StringAssert.Contains("GeneralUser GS", credits.text);
             StringAssert.Contains("edited", credits.text);
         }
     }

@@ -30,6 +30,7 @@ namespace IL6
 
         private void Awake()
         {
+            ActorBodyCollision.Configure(gameObject,true);
             YSort.Ensure(gameObject);
             _rb = GetComponent<Rigidbody2D>();
             _rb.gravityScale = 0f;

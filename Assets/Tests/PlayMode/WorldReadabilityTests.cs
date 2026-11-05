@@ -22,10 +22,14 @@ namespace IL6.Tests
             yield return Ready();
             GameSession.Instance.Cycle.Restore(new DayNightSnapshot{day=1,phase=Phase.Day,elapsedInPhase=0});
             var spawner=Object.FindFirstObjectByType<ProceduralSpawner>();spawner.enabled=false;
-            Assert.That(spawner.TreeChance,Is.EqualTo(.45f).Within(.001f));
-            Assert.That(spawner.DeerChance,Is.EqualTo(.025f).Within(.001f));
-            Assert.That(spawner.NpcChance,Is.EqualTo(.02f).Within(.001f));
-            Assert.That(spawner.ScarceNpcIntervalSec,Is.EqualTo(20f));
+            Assert.That(spawner.TreeChance,Is.EqualTo(.52f).Within(.001f));
+            Assert.That(spawner.DeerChance,Is.EqualTo(.035f).Within(.001f));
+            Assert.That(spawner.MaxProceduralAnimals,Is.EqualTo(16));
+            Assert.That(spawner.NpcChance,Is.EqualTo(.05f).Within(.001f));
+            Assert.That(spawner.ScarceNpcIntervalSec,Is.EqualTo(12f));
+            Assert.That(spawner.LowNpcIntervalSec,Is.EqualTo(20f));
+            Assert.That(spawner.DailyNpcIntervalSec,Is.EqualTo(30f));
+            Assert.That(spawner.MaxAliveNpcs,Is.EqualTo(5));
             foreach(var companion in Object.FindObjectsByType<Companion>(FindObjectsSortMode.None))
                 Assert.That(companion.SeparationRadius,Is.GreaterThanOrEqualTo(1.1f),"Authored followers must match the new spacing");
             Vector2 center=new Vector2(GameConstants.VillageCenterX,GameConstants.VillageCenterY);
@@ -46,7 +50,9 @@ namespace IL6.Tests
             count=0;
             foreach(var npc in Object.FindObjectsByType<RecruitableNpc>(FindObjectsSortMode.None))
                 if(npc.enabled && npc.CanRecruit() && Vector2.Distance(npc.transform.position,center)<=12f)count++;
-            Assert.That(count,Is.EqualTo(2),"Repeated arrivals must stop at two nearby candidates without limiting recruitment");
+            Assert.That(count,Is.EqualTo(5),"Repeated arrivals must stop at five nearby candidates without limiting recruitment");
+            foreach(var npc in Object.FindObjectsByType<RecruitableNpc>(FindObjectsSortMode.None))
+                Assert.That(ProceduralSpawner.IsOutsideVillageForNpc(npc.transform.position),Is.True,"Candidates must remain outside the village");
             yield return SceneManager.LoadSceneAsync("BootScene");
         }
         [UnityTest] public IEnumerator CanopyFadesForCandidatesAndRecruitedCompanionsThenRestores()

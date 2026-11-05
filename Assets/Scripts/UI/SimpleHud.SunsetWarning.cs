@@ -7,7 +7,7 @@ namespace IL6
         private Texture2D _sunsetIcon;
         private bool SunsetWarningVisible=>_sunsetWarning.Visible && !ControlsBlocked && Player!=null
             && GameSession.Instance!=null && GameSession.Instance.Cycle.Phase==Phase.Day;
-        private Rect SunsetWarningRect=>new Rect((MobileHudLayout.Width-400)/2f,72,400,70);
+        private Rect SunsetWarningRect=>new Rect((MobileHudLayout.Width-400)/2f,MobileHudLayout.Clock.yMax+16,400,70);
         private void UpdateSunsetWarning()
         {
             var cycle=GameSession.Instance!=null?GameSession.Instance.Cycle:null;

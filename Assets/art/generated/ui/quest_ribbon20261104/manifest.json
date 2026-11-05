@@ -1,0 +1,14 @@
+{
+  "generator": "built-in image_gen",
+  "source": "exec-aef1816c-67df-4b69-907d-8581ce67c67c.png",
+  "original_sha256": "848ccee9b4c92f4ac026de019986fe620d2df56bf888affe695c8b83ecf95a9a",
+  "alpha_crop_threshold": 32,
+  "crop": [
+    102,
+    289,
+    2038,
+    434
+  ],
+  "runtime": "Assets\\Resources\\UI\\Quest20261104\\title_ribbon.png",
+  "sha256": "bb44a350faa774ae91d590eac134308fbe7f95639cc11c51090011bfef9ec552"
+}

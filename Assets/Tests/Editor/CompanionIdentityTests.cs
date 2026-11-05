@@ -21,7 +21,8 @@ namespace IL6.Tests
                 {
                     var walking=DirectionalCharacterVisual.WalkSprite(key,facing,frame);
                     Assert.That(walking.pixelsPerUnit,Is.EqualTo(idle.pixelsPerUnit).Within(.001f));
-                    Assert.That(walking.bounds.size.y*scale.y,Is.InRange(1.1f,1.55f));
+                    float target=SpriteBank.CompanionVisualHeightForRole(role);
+                    Assert.That(walking.bounds.size.y*scale.y,Is.InRange(target*.85f,target*1.3f));
                 }
             }
             Assert.That(DialoguePortraits.ForRole(role),Is.Not.Null);

@@ -1,0 +1,59 @@
+{
+  "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-27323912-6ef5-4269-9f20-6f6233917b04.png",
+  "prompt": "Four distinct snowy Nordic granite mining rocks in 2x2 isolated transparent atlas: triangular glacial erratic, rounded diagonal seam dome, jagged three-tooth outcrop, oval boulder with satellite stone. Match existing split.png muted blue-grey matte painted planes, ivory snow, gently top-down orthographic camera. No slabs/runes/ore/grass/crystals/ground/haze/outside cast shadow. Reference Assets/Resources/Sprites/Props/NordicRocks20261103/split.png.",
+  "assets": [
+    {
+      "key": "erratic",
+      "runtime": "Assets/Resources/Sprites/Props/NordicRocks20261105/erratic.png",
+      "ppu": 439.17241379310343,
+      "pivot_y": 0.41178042368950046,
+      "crop": [
+        99,
+        95,
+        529,
+        541
+      ],
+      "sha256": "441071e22f950710436c5b2498d17009e427cf0f441945701bbe4dc1260eb86d"
+    },
+    {
+      "key": "seamed",
+      "runtime": "Assets/Resources/Sprites/Props/NordicRocks20261105/seamed.png",
+      "ppu": 510.8965517241379,
+      "pivot_y": 0.4528642888856001,
+      "crop": [
+        57,
+        92,
+        552,
+        558
+      ],
+      "sha256": "4668aff9b6d44f066a81060972f4eea839bcc7010d5ed397909e340a470ff4ef"
+    },
+    {
+      "key": "teeth",
+      "runtime": "Assets/Resources/Sprites/Props/NordicRocks20261105/teeth.png",
+      "ppu": 500.9655172413793,
+      "pivot_y": 0.4372227557107522,
+      "crop": [
+        69,
+        71,
+        555,
+        545
+      ],
+      "sha256": "2e64d8bb4e4f479f63f4cb63d3627bdc88a0bb8b4d23355c5d39f30c508a364b"
+    },
+    {
+      "key": "satellite",
+      "runtime": "Assets/Resources/Sprites/Props/NordicRocks20261105/satellite.png",
+      "ppu": 464.55172413793105,
+      "pivot_y": 0.39946822456540326,
+      "crop": [
+        74,
+        65,
+        527,
+        549
+      ],
+      "sha256": "8d9aa3cfe056d54f6a58c8bba7e94b89c5d5b3b2c9540c9df26784b4c01deb3b"
+    }
+  ],
+  "baseline": "Visible width .90625 world units before size variation; foot baseline -.38175. Generated alpha preserved; transparent quadrant margins cropped."
+}

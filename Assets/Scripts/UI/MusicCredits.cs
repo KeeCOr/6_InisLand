@@ -2,31 +2,18 @@ using UnityEngine;
 
 namespace IL6
 {
-    /// <summary>Music volume and permanent attribution are available whenever the game is paused.</summary>
+    /// <summary>The adventure menu owns the credits area, avoiding overlays on other paused screens.</summary>
     public sealed class MusicCredits : MonoBehaviour
     {
-        private void OnGUI()
+        public const string Attribution="Music: 눈보라 속 등불 — Dawn / Day / Evening / Night\n" +
+                "Original InisLand soundtrack\n" +
+                "Instrument sounds: GeneralUser GS by S. Christian Collins\n" +
+                "www.schristiancollins.com/generaluser.php";
+        public static void Draw(Rect panel,GUIStyle source)
         {
-            if (Time.timeScale > 0f) return;
-            var previousMatrix = GUI.matrix;
-            var previousColor = GUI.color;
-            GUI.matrix = Matrix4x4.identity;
-            GUI.color = Color.white;
-            float width = Mathf.Min(550f, Screen.width - 24f);
-            var panel = new Rect(12f, Screen.height - 150f, width, 138f);
-            GUI.Box(panel, "");
-            GUI.Label(new Rect(panel.x + 12, panel.y + 6, 180, 22), "BGM");
-            float volume = GUI.HorizontalSlider(new Rect(panel.x + 60, panel.y + 14, width - 130, 18), Music.Volume, 0, 1);
-            if (Mathf.Abs(volume - Music.Volume) > .005f) Music.Volume = volume;
-            GUI.Label(new Rect(panel.xMax - 58, panel.y + 6, 52, 22), $"{Music.Volume * 100:F0}%");
-            var style = new GUIStyle(GUI.skin.label) { fontSize = 12, wordWrap = true };
-            GUI.Label(new Rect(panel.x + 12, panel.y + 32, width - 24, 98),
-                "Music: Childhood, Horizons, Reverie, Moonlight\n" +
-                "by Scott Buckley | www.scottbuckley.com.au\n" +
-                "CC BY 4.0 | https://creativecommons.org/licenses/by/4.0/\n" +
-                "Edited: excerpts, loudness normalization, loop crossfades.", style);
-            GUI.matrix = previousMatrix;
-            GUI.color = previousColor;
+            UiTheme.Rect(panel,new Color(0,0,0,.16f));
+            var style=new GUIStyle(source){fontSize=12,wordWrap=true,alignment=TextAnchor.UpperLeft};
+            HudText.Label(new Rect(panel.x+10,panel.y+10,panel.width-20,panel.height-20),Attribution,style);
         }
     }
 }

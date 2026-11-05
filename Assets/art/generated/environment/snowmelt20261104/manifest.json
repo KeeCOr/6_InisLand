@@ -1,0 +1,17 @@
+{
+  "tool": "built-in image_gen",
+  "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-33aced45-2655-4695-8084-2f06308dea5b.png",
+  "alpha_crop": [
+    15,
+    76,
+    1521,
+    968
+  ],
+  "size": [
+    1506,
+    892
+  ],
+  "resource": "Sprites/Environment/Campfire20261104/melted_ground",
+  "sha256": "73f035367e8e4e4920e6c51dcccc9e66da164ec65b1743a7c385e5d5a3a578cd",
+  "preparation": "Alpha-margin crop only; original paint and alpha retained."
+}

@@ -79,8 +79,8 @@ namespace IL6
 
         private void DrawWaveStanceBar()
         {
-            DrawSettlementGoals();
             if (_resourceDetailsOpen) return;
+            DrawSettlementGoals();
             if (!_showCompanions) return;
             var session=GameSession.Instance;if(session==null) return;
             var companions=Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);

@@ -135,8 +135,8 @@ namespace IL6
             if (_buildPaused) return BuildPlacementControlsRect.Contains(point) || BuildPlacementFeedbackRect.Contains(point);
             if (_resourceDetailsOpen && ResourceDetailsRect.Contains(point)) return true;
             if (MobileHudLayout.Status.Contains(point) || MobileHudLayout.Resources.Contains(point) || MobileHudLayout.Experience.Contains(point)
-                || GoalTrackerBounds.Contains(point) || MobileHudLayout.Actions.Contains(point)
-                || MobileHudLayout.Movement.Contains(point) || MobileHudLayout.Menu.Contains(point)) return true;
+                || (!_resourceDetailsOpen && GoalTrackerBounds.Contains(point)) || MobileHudLayout.Actions.Contains(point)
+                || MobileHudLayout.Movement.Contains(point) || MobileHudLayout.Menu.Contains(point) || MobileHudLayout.Clock.Contains(point)) return true;
             if (MobileHudLayout.CompanionButton.Contains(point)) return true;
             if(SunsetWarningVisible && SunsetWarningRect.Contains(point))return true;
             if (!_resourceDetailsOpen && _showCompanions && MobileHudLayout.CompanionSummary(true).Contains(point)) return true;
@@ -174,13 +174,14 @@ namespace IL6
                 bool active=i==0 && _hudMode==HudMode.Melee || i==1 && _hudMode==HudMode.Ranged || i==2 && _hudMode==HudMode.Build;
                 bool enabled=i==3 ? Attacker!=null && (_hudMode!=HudMode.Build || _buildRepairMode) : true;
                 if (_buildPaused) enabled = BuildUiAvailable && (i == 0 || i == 1 || i == 2 || i == 4);
-                Color tint=i==3 || i==4 ? MobileButtonTheme.Jade : i==2 ? MobileButtonTheme.Gold : new Color(.22f,.38f,.38f);
+                Color tint=i==3 || i==4 ? MobileButtonTheme.Jade : i==2 ? MobileButtonTheme.Gold
+                    : i==1 ? new Color(.18f,.40f,.29f) : new Color(.31f,.36f,.44f);
                 if(MobileButtonTheme.Button(MobileHudLayout.ActionButton(i),labels[i],keys[i],icons[i],tint,enabled,active)) InvokeHudAction(i);
             }
             Vector2 axis=Vector2.zero;
             if(Player!=null) { var input=Player.GetComponent<InputReader>();if(input!=null) axis=input.MoveAxis; }
             MobileButtonTheme.Pad(MobileHudLayout.Movement,axis);
-            HudText.Label(new Rect(MobileHudLayout.Movement.x,MobileHudLayout.Movement.yMax-20,MobileHudLayout.Movement.width,20),"이동 · WASD",new GUIStyle(_label){fontSize=12,alignment=TextAnchor.MiddleCenter});
+            HudText.Label(new Rect(MobileHudLayout.Movement.x,MobileHudLayout.Movement.yMax-20,MobileHudLayout.Movement.width,20),Application.isMobilePlatform?"이동":"이동 · WASD",new GUIStyle(_label){fontSize=12,alignment=TextAnchor.MiddleCenter});
             var companion=MobileHudLayout.CompanionButton;
             if(MobileButtonTheme.Button(companion,RecruitableNpc.CurrentCompanionCount().ToString(),Application.isMobilePlatform?"":"G",HudGlyph.People,MobileButtonTheme.Gold,true,_showCompanions)) _showCompanions=!_showCompanions;
             GUI.enabled=oldEnabled;

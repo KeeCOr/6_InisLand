@@ -46,6 +46,9 @@ namespace IL6
         private void Start()
         {
             BuildGlow();
+            var building=GetComponent<Building>();
+            if(building!=null && building.Kind==BuildingKind.Campfire && GetComponent<CampfireSnowMelt>()==null)
+                gameObject.AddComponent<CampfireSnowMelt>();
         }
 
         /// <summary>황금빛 반투명 원형 글로우 생성. 스프라이트 없으면 ColorFallback 으로 폴백.</summary>

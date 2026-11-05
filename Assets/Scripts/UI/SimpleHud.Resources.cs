@@ -7,7 +7,7 @@ namespace IL6
         private int _hoveredResource = -1;
         private static readonly ResourceKind[] ResourceKinds={ResourceKind.Wood,ResourceKind.Stone,ResourceKind.Ore,ResourceKind.Meat,ResourceKind.Food,ResourceKind.Frostbloom};
         private static readonly string[] ResourceNames={"목재","석재","광석","고기","식량","서리꽃"};
-        private Rect ResourceDetailsRect => new Rect(MobileHudLayout.Resources.x+12,MobileHudLayout.Experience.yMax+8,344,270);
+        private Rect ResourceDetailsRect => new Rect(MobileHudLayout.Width-360,MobileHudLayout.Experience.yMax+8,344,270);
         private void DrawResourceBar()
         {
             var session=GameSession.Instance;if(session==null) return;
@@ -20,8 +20,8 @@ namespace IL6
                 var r=MobileHudLayout.ResourceChip(i);
                 if(!Application.isMobilePlatform && r.Contains(Event.current.mousePosition)) _hoveredResource=i;
                 var backing=new Rect(r.x,r.y+1,r.width-2,30);
-                if(!GeneratedUiSkin.Pill(backing,new Color(.4f,.5f,.48f,.68f)))
-                    MobileButtonTheme.RoundRect(backing,7,new Color(.025f,.06f,.07f,.68f));
+                if(!GeneratedUiSkin.Pill(backing,new Color(.32f,.42f,.45f,.55f)))
+                    MobileButtonTheme.RoundRect(backing,7,new Color(.025f,.06f,.07f,.55f));
                 float pulse=ResourceKinds[i]==WoodPickup.LastPickupKind ? Mathf.Clamp01(1f-(Time.time-WoodPickup.LastPickupTime)/.6f) : 0;
                 var icon=MobileHudLayout.ResourceIcon(i);
                 float grow=Mathf.Sin(pulse*Mathf.PI)*3;

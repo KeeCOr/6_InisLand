@@ -1,0 +1,12 @@
+{
+  "generator": "built-in image_gen",
+  "source": "source.png",
+  "source_crop": [
+    472,
+    401,
+    763,
+    852
+  ],
+  "runtime_path": "Assets/Resources/UI/Navigation20261104/home_direction.png",
+  "sha256": "30ac8b1954c905b5f5cb0aaadbeeeeac3466252a032b63f95a8624c524a8c1eb"
+}

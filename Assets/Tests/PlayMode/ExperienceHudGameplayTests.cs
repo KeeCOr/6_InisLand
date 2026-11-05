@@ -22,6 +22,7 @@ namespace IL6.Tests
             var property=typeof(MobileHudLayout).GetProperty("Experience");var xp=(Rect)property.GetValue(null);
             Assert.That((bool)typeof(SimpleHud).GetMethod("IsHudPoint",flags).Invoke(hud,new object[]{xp.center}),Is.True);
             var details=(Rect)typeof(SimpleHud).GetProperty("ResourceDetailsRect",flags).GetValue(hud);Assert.That(details.yMin,Is.GreaterThan(xp.yMax));
+            Assert.That(details.xMin,Is.GreaterThanOrEqualTo(0));Assert.That(details.xMax,Is.LessThanOrEqualTo(MobileHudLayout.Width-16));
             progression.GrantXp(8);Assert.That(progression.Level,Is.EqualTo(2));Assert.That((float)ratio.GetValue(hud),Is.EqualTo(2f/16).Within(.001f));Assert.That((string)label.GetValue(hud),Is.EqualTo("EXP 2 / 16"));
             Time.timeScale=1;InputReader.HudBlocked=false;yield return SceneManager.LoadSceneAsync("BootScene");
         }

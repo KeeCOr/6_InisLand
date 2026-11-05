@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using IL6.Events;
 
 namespace IL6
@@ -58,7 +58,7 @@ namespace IL6
 
         private void SetHudMode(HudMode m)
         {
-            if (Player != null && Player.Actions != null && Player.Actions.IsBusy) return;
+            if (Player != null && Player.IsDead) return;
             if (m == HudMode.Build && _hudMode != HudMode.Build && Attacker != null && !Attacker.IsConstructionHammer)
                 _previousCombatWeaponIndex = Attacker.WeaponIndex == 1 ? 1 : 0;
             _buildRepairMode = false;
@@ -93,18 +93,18 @@ namespace IL6
             if(_morningFenceOpen) {DrawMorningFenceRepair();return;}
             if (_researchOpen) { DrawResearchCatalog(); return; }
             if (_workMenuOpen) { DrawNearbyWorkMenu(); return; }
-            if (_paused) { DrawPauseMenu(); if (_paused) DrawSfxCorner(); return; }
+            if (_paused) { DrawPauseMenu(); return; }
             if (_buildPaused && Event.current.type==EventType.KeyDown && Event.current.keyCode==KeyCode.Escape)
             { CloseBuildCatalog(); Event.current.Use(); }
             if (BuildUiAvailable && Event.current.type==EventType.KeyDown
-                && (Event.current.keyCode==KeyCode.Alpha1 || Event.current.keyCode==KeyCode.Alpha2))
-            { SetHudMode(Event.current.keyCode==KeyCode.Alpha1 ? HudMode.Melee : HudMode.Ranged); Event.current.Use(); }
+                && (Event.current.keyCode==KeyCode.Alpha1 || Event.current.keyCode==KeyCode.Alpha2 || Event.current.keyCode==KeyCode.Keypad1 || Event.current.keyCode==KeyCode.Keypad2))
+            { SetHudMode(Event.current.keyCode==KeyCode.Alpha1 || Event.current.keyCode==KeyCode.Keypad1 ? HudMode.Melee : HudMode.Ranged); Event.current.Use(); }
             if (_buildPaused)
             {
                 DrawBuildHotbar();DrawPlacementPreview();DrawBuildPlacementControls();HandlePlacementInput();return;
             }
             DrawStatCard();        // 좌측 상단: 레벨/HP
-            DrawResourceBar();     // 좌측 상단: 자원 2줄
+            DrawResourceBar();     // 우측 상단: 자원 2열
             DrawExperienceBar();   // 자원 바로 아래: 경험치
             DrawWaveStanceBar();   // 하단 좌측: 동료 스탠스 + 웨이브 정보
             DrawMobileControls();       // 하단 우측: 볼륨 슬라이더 (항상)
@@ -123,7 +123,6 @@ namespace IL6
             DrawTutorialOverlay();
             HandlePlacementInput();
             DrawPauseMenu();
-            if (_paused) DrawSfxCorner();
             DrawDamageFlash();
             DrawNightIntroFade();
             DrawDawnFlare();
@@ -581,7 +580,7 @@ namespace IL6
                 Phase.Dawn    => new Color(0.95f, 0.78f, 0.55f, 0.95f),
                 _ => new Color(0.1f, 0.1f, 0.15f, 0.95f),
             };
-            UiTheme.Panel(r);
+            GeneratedUiSkin.Pill(r,new Color(.3f,.4f,.44f,.62f));
             // 진행 바 (하단)
             float progress = dur > 0 ? Mathf.Clamp01(1f - rem / dur) : 0f;
             UiTheme.Rect(new Rect(r.x, r.yMax - 3, r.width * progress, 3), new Color(tint.r, tint.g, tint.b, 0.72f));
@@ -593,8 +592,17 @@ namespace IL6
             Color tempColor = temp < -25f ? new Color(0.55f, 0.85f, 1f) : UiTheme.TextSubtle;
             var oldTempC = GUI.contentColor;
             GUI.contentColor = tempColor;
-            DrawHudIcon(new Rect(r.center.x-35,r.y+24,14,14),"temp");
-            HudText.Label(new Rect(r.center.x-16,r.y+21,62,20),$"{temp:F0}°C",_clockSmall);
+            if(s.Cycle.Phase==Phase.Day)
+            {
+                DrawHudIcon(new Rect(r.x+10,r.y+24,14,14),"temp");
+                HudText.Label(new Rect(r.x+28,r.y+21,46,20),$"{temp:F0}°C",_clockSmall);
+                HudText.Label(new Rect(r.x+80,r.y+21,r.width-88,20),"행동 시 감소",new GUIStyle(_clockSmall){fontSize=11});
+            }
+            else
+            {
+                DrawHudIcon(new Rect(r.center.x-35,r.y+24,14,14),"temp");
+                HudText.Label(new Rect(r.center.x-16,r.y+21,62,20),$"{temp:F0}°C",_clockSmall);
+            }
             GUI.contentColor = oldTempC;
         }
 
@@ -666,54 +674,6 @@ namespace IL6
             }
         }
         private GUIStyle _threatLabel;
-
-        private void DrawHomeCompass()
-        {
-            if (Player == null) return;
-            // 가장 가까운 모닥불·창고·바리게이트 방향 표시. 없으면 (0,0).
-            Vector2 home = Vector2.zero;
-            float bestDist = float.MaxValue;
-            var buildings = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
-            foreach (var b in buildings)
-            {
-                if (b == null) continue;
-                float d = Vector2.Distance(Player.transform.position, b.transform.position);
-                if (d < bestDist) { bestDist = d; home = b.transform.position; }
-            }
-            float dist = bestDist == float.MaxValue
-                ? Vector2.Distance(Player.transform.position, Vector2.zero)
-                : bestDist;
-            if (dist < 12f) return; // 가까우면 안 그림
-
-            Vector2 dir = (home - (Vector2)Player.transform.position).normalized;
-            float angDeg = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-
-            int W = 130, H = 40;
-            // 상단 중앙 ResourceBar 왼쪽으로 — PhaseClock 우측 빈 공간
-            var r = new Rect(MobileHudLayout.Width / 2 + 160, 16, W, H);
-            UiTheme.Rect(r, new Color(0.07f, 0.09f, 0.14f, 0.85f));
-            UiTheme.Rect(new Rect(r.x, r.y, r.width, 1), new Color(0.78f, 0.62f, 0.30f, 0.7f));
-            UiTheme.Rect(new Rect(r.x, r.yMax - 1, r.width, 1), new Color(0.78f, 0.62f, 0.30f, 0.7f));
-
-            // 화살표는 IMGUI 회전으로
-            var arrowCenter = new Vector2(r.x + 18, r.y + H * 0.5f);
-            var pivot = arrowCenter;
-            var matrix = GUI.matrix;
-            // 화면좌표는 y가 아래로 + 인 점을 보정 (월드 angDeg 의 -y 반전)
-            GUIUtility.RotateAroundPivot(-angDeg, pivot);
-            UiTheme.Rect(new Rect(arrowCenter.x - 12, arrowCenter.y - 2, 18, 4), UiTheme.TextGold);
-            UiTheme.Rect(new Rect(arrowCenter.x + 4, arrowCenter.y - 6, 4, 12), UiTheme.TextGold);
-            UiTheme.Rect(new Rect(arrowCenter.x + 6, arrowCenter.y - 4, 4, 8), UiTheme.TextGold);
-            UiTheme.Rect(new Rect(arrowCenter.x + 8, arrowCenter.y - 2, 4, 4), UiTheme.TextGold);
-            GUI.matrix = matrix;
-
-            if (_compassDist == null)
-            {
-                _compassDist = new GUIStyle(GUI.skin.label) { fontSize = 13, fontStyle = FontStyle.Bold,
-                    alignment = TextAnchor.MiddleCenter, normal = { textColor = UiTheme.TextCream } };
-            }
-            HudText.Label(new Rect(r.x + 36, r.y, r.width - 36, H), $"{dist:F0}u to home", _compassDist);
-        }
 
         private void DrawControlsHint()
         {
@@ -791,9 +751,9 @@ namespace IL6
             }
 
             // 모드 단축키 1/2/3
-            if (!ControlsBlocked && Input.GetKeyDown(KeyCode.Alpha1)) SetHudMode(HudMode.Melee);
-            else if (!ControlsBlocked && Input.GetKeyDown(KeyCode.Alpha2)) SetHudMode(HudMode.Ranged);
-            else if (!ControlsBlocked && Input.GetKeyDown(KeyCode.Alpha3)) SetHudMode(HudMode.Build);
+            if (!ControlsBlocked && (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))) SetHudMode(HudMode.Melee);
+            else if (!ControlsBlocked && (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))) SetHudMode(HudMode.Ranged);
+            else if (!ControlsBlocked && (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))) SetHudMode(HudMode.Build);
 
             if (_synergyToastTimer > 0f) _synergyToastTimer -= Time.unscaledDeltaTime;
             if (_nightSummaryTimer > 0f) _nightSummaryTimer -= Time.unscaledDeltaTime;
@@ -824,7 +784,7 @@ namespace IL6
         private void DrawStatCard()
         {
             var r = MobileHudLayout.Status;
-            UiTheme.Panel(r);
+            GeneratedUiSkin.Pill(r,new Color(.3f,.4f,.44f,.62f));
             var label = new GUIStyle(_label) { fontSize = 14, fontStyle = FontStyle.Bold };
             HudText.Label(new Rect(r.x+14,r.y+8,r.width-28,22),Progression!=null?$"겨울의 생존자 · Lv. {Progression.Level}":"겨울의 생존자",label);
             if (Player != null)
@@ -890,16 +850,6 @@ namespace IL6
         // ====================================================================
         // SFX 코너 (항상 표시) + 디버그 버튼 (에디터/개발 빌드만)
         // ====================================================================
-        private void DrawSfxCorner()
-        {
-            var modal=HudLayout.CenterModal(480,360);
-            var r=new Rect(modal.x+24,modal.yMax-52,modal.width-48,36);
-            HudText.Label(new Rect(r.x,r.y+5,68,24),"효과음",_label);
-            float volume=GUI.HorizontalSlider(new Rect(r.x+78,r.y+12,r.width-140,16),Sfx.Volume,0,1);
-            if(Mathf.Abs(volume-Sfx.Volume)>.005f) Sfx.Volume=volume;
-            HudText.Label(new Rect(r.xMax-54,r.y+5,54,24),$"{volume*100:F0}%",_labelSubtle);
-        }
-
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         private void DrawDebugButtons()
         {
@@ -953,7 +903,7 @@ namespace IL6
         private void DrawContextActions(System.Collections.Generic.List<ContextAction> actions)
         {
             if (actions == null || actions.Count == 0) return;
-            if (UiTheme.Button(HudLayout.WorkLauncher(),$"주변 작업 · {actions.Count}",_smallBtn)) OpenNearbyWorkMenu();
+            if (MobileButtonTheme.Pill(HudLayout.WorkLauncher(),$"주변 작업 · {actions.Count}",_smallBtn,true)) OpenNearbyWorkMenu();
         }
 
         private void AddRepairAction(System.Collections.Generic.List<ContextAction> actions, GameSession session)
@@ -1810,7 +1760,6 @@ namespace IL6
 
         private bool _paused;
         private float _preTimeScale = 1f;
-        private GUIStyle _pauseTitle;
 
         private void DrawPauseMenu()
         {
@@ -1840,51 +1789,46 @@ namespace IL6
 
             UiTheme.Rect(new Rect(0, 0, MobileHudLayout.Width, MobileHudLayout.Height), new Color(0, 0, 0, 0.7f));
 
-            var modal = HudLayout.CenterModal(480f, 560f);
-            int W = (int)modal.width;
+            var modal = AdventureMenuLayout.Panel();
             UiTheme.Panel(modal);
-            UiTheme.TitleBar(modal, "모험 메뉴", _title);
-
-            if (_pauseTitle == null)
+            HudText.Label(AdventureMenuLayout.Title(modal),"모험 메뉴",new GUIStyle(_title){fontSize=22});
+            UiTheme.Separator(new Rect(modal.x+24,modal.y+54,modal.width-48,1));
+            var button=new GUIStyle(_label){fontSize=16,fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleCenter};
+            if (UiTheme.Button(AdventureMenuLayout.Continue(modal), "계속하기", button))
             {
-                _pauseTitle = new GUIStyle(GUI.skin.label) {
-                    fontSize = 22, fontStyle = FontStyle.Bold,
-                    alignment = TextAnchor.MiddleCenter,
-                    normal = { textColor = UiTheme.TextGold } };
+                ToggleMenu();Sfx.Click();return;
             }
-
-            int bx = (int)modal.x + 44;
-            int by = (int)modal.y + 76;
-            int bw = W - 88;
-
-            if (UiTheme.Button(new Rect(bx, by, bw, 48), "계속하기", _btn))
-            {
-                _paused = false;
-                Time.timeScale = _preTimeScale > 0f ? _preTimeScale : 1f;
-                Sfx.Click();
-            }
-            by += 60;
-            if (UiTheme.Button(new Rect(bx, by, bw, 48), "지금 저장", _btn))
+            if (UiTheme.Button(AdventureMenuLayout.Save(modal), "지금 저장", button, role: UiButtonRole.Secondary))
             {
                 if (GameSession.Instance != null) GameSession.Instance.SaveNow();
                 Sfx.Click();
             }
-            by += 60;
-            if (UiTheme.Button(new Rect(bx, by, bw, 48), "연구 목록 · 건물별 업그레이드", _btn)) OpenResearchCatalog();
-            by += 60;
-            HudText.Label(new Rect(bx,by,bw,24),$"화면 UI 크기 {HudViewSettings.UiScale:P0}",_label);
-            HudViewSettings.UiScale=GUI.HorizontalSlider(new Rect(bx,by+30,bw,20),HudViewSettings.UiScale,.8f,1f);
-            by += 60;
-            HudText.Label(new Rect(bx,by,bw,24),$"월드 확대 {HudViewSettings.WorldZoom:P0}",_label);
-            HudViewSettings.WorldZoom=GUI.HorizontalSlider(new Rect(bx,by+30,bw,20),HudViewSettings.WorldZoom,.75f,1.4f);
-            by += 60;
-            if (UiTheme.Button(new Rect(bx, by, bw, 48), "새로 시작", _btn))
+            if (UiTheme.Button(AdventureMenuLayout.Research(modal), "연구 목록 · 건물별 업그레이드", button, role: UiButtonRole.Secondary))
+            {OpenResearchCatalog();return;}
+            HudText.Label(AdventureMenuLayout.SettingsTitle(modal),"화면 · 소리",new GUIStyle(_section){fontSize=14,normal={textColor=UiTheme.TextGold}});
+            HudViewSettings.UiScale=DrawAdventureSetting(modal,0,"화면 UI 크기",HudViewSettings.UiScale,.8f,1f);
+            HudViewSettings.WorldZoom=DrawAdventureSetting(modal,1,"월드 확대",HudViewSettings.WorldZoom,.75f,1.4f);
+            float music=DrawAdventureSetting(modal,2,"배경음",Music.Volume,0,1);
+            if(Mathf.Abs(music-Music.Volume)>.005f)Music.Volume=music;
+            float effects=DrawAdventureSetting(modal,3,"효과음",Sfx.Volume,0,1);
+            if(Mathf.Abs(effects-Sfx.Volume)>.005f)Sfx.Volume=effects;
+            MusicCredits.Draw(AdventureMenuLayout.Credits(modal),_labelSubtle);
+            if (UiTheme.Button(AdventureMenuLayout.Restart(modal), "새로 시작", button, role: UiButtonRole.Destructive))
             {
                 Sfx.Click();
                 _paused = false;
                 Time.timeScale = 1f;
                 if (GameSession.Instance != null) GameSession.Instance.HardReset();
             }
+        }
+
+        private float DrawAdventureSetting(Rect panel,int index,string label,float value,float min,float max)
+        {
+            var row=AdventureMenuLayout.Setting(panel,index);
+            HudText.Label(AdventureMenuLayout.SettingLabel(row),label,new GUIStyle(_label){fontSize=14,alignment=TextAnchor.MiddleLeft});
+            float result=GUI.HorizontalSlider(AdventureMenuLayout.SettingTrack(row),value,min,max);
+            HudText.Label(AdventureMenuLayout.SettingValue(row),$"{result:P0}",new GUIStyle(_label){fontSize=14,alignment=TextAnchor.MiddleRight});
+            return result;
         }
 
         // ====================================================================

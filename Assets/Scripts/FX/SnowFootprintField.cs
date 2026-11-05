@@ -17,7 +17,7 @@ namespace IL6
         private Material _material;
         private bool _daylight;
         private int _day;
-        private Action _unsubDay,_unsubNight;
+        private Action _unsubDay,_unsubEvening,_unsubNight;
 
         public static void Ensure()
         {
@@ -28,7 +28,7 @@ namespace IL6
             Instance=this;
             var cycle=GameSession.Instance!=null?GameSession.Instance.Cycle:null;
             _day=cycle!=null?cycle.Day:0;
-            _daylight=cycle==null || cycle.Phase==Phase.Day || cycle.Phase==Phase.Evening;
+            _daylight=cycle==null || cycle.Phase==Phase.Day;
             _material=new Material(Shader.Find("Sprites/Default"))
             {mainTexture=Resources.Load<Texture2D>("Sprites/FX/Snowfall20261103/bootprint")};
         }
@@ -36,9 +36,10 @@ namespace IL6
         {
             _unsubDay=EventBus.Instance.Subscribe<DayStartedPayload>(p=>
             {if(p.Day!=_day)Clear();_day=p.Day;_daylight=true;});
+            _unsubEvening=EventBus.Instance.Subscribe<EveningStartedPayload>(_=>{_daylight=false;Clear();});
             _unsubNight=EventBus.Instance.Subscribe<NightStartedPayload>(_=>{_daylight=false;Clear();});
         }
-        private void OnDisable(){_unsubDay?.Invoke();_unsubNight?.Invoke();}
+        private void OnDisable(){_unsubDay?.Invoke();_unsubEvening?.Invoke();_unsubNight?.Invoke();}
         public bool Stamp(Vector2 position,Vector2 direction,bool left)
         {
             // Preserve old daytime marks at the cap; do not recycle them under the player.

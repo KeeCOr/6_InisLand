@@ -135,11 +135,10 @@ namespace IL6
         private bool DrawStoryObjective()
         {
             if(_tutorialDismissed || _storyTutorial==null || _storyTutorial.IsDialogue || _storyTutorial.IsComplete) return false;
-            var panel=MobileHudLayout.Goals;panel.height=172;DrawQuestTrackerBacking(panel);
-            HudText.Label(new Rect(panel.x+16,panel.y+8,panel.width-32,24),"아버지가 돌아올 마을",_section);
-            HudText.Label(new Rect(panel.x+16,panel.y+40,panel.width-32,30),_storyTutorial.Objective,new GUIStyle(_label){fontSize=17});
-            HudText.Label(new Rect(panel.x+16,panel.y+76,panel.width-32,48),_storyTutorial.Hint,new GUIStyle(_labelSubtle){fontSize=13,wordWrap=true});
-            if(UiTheme.Button(new Rect(panel.x+16,panel.y+128,panel.width-32,32),"안내 그만 보기",_smallBtn)) DismissTutorial();
+            var panel=GoalTrackerBounds;DrawQuestTrackerBacking(panel);
+            QuestLabel(QuestTrackerLayout.Header(panel),_storyTutorial.Objective,new GUIStyle(_label){fontSize=16,fontStyle=FontStyle.Bold,normal={textColor=new Color(1,.94f,.70f)}});
+            QuestLabel(QuestTrackerLayout.Title(panel),"아버지가 돌아올 마을",new GUIStyle(_label){fontSize=13});
+            QuestLabel(new Rect(panel.x+16,panel.y+88,panel.width-32,60),_storyTutorial.Hint,new GUIStyle(_labelSubtle){fontSize=14,wordWrap=true,alignment=TextAnchor.UpperLeft,normal={textColor=Color.white}});
             return true;
         }
     }

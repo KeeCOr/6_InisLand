@@ -1,0 +1,486 @@
+{
+  "reason": "Match existing companion artwork to the heroine actual opaque height while preserving physics roots and frame identity. No artwork regenerated.",
+  "target_world_heights": {
+    "hunter": 1.08,
+    "warrior": 1.12,
+    "farmer": 1.08,
+    "cook": 1.08,
+    "healer": 1.08,
+    "aunt": 1.08,
+    "uncle": 1.08,
+    "child": 0.94
+  },
+  "files": [
+    {
+      "path": "Assets/Resources/Sprites/GeneratedStatic20261014/Companions/hunter.png",
+      "previous_ppu": 281.50327,
+      "ppu": 312.7814238388888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Directions20261026/hunter.png",
+      "previous_ppu": 281.50327,
+      "ppu": 312.7814238388888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/hunter/walk_back_0.png",
+      "previous_ppu": 281.50327,
+      "ppu": 312.7814238388888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/hunter/walk_back_1.png",
+      "previous_ppu": 281.50327,
+      "ppu": 312.7814238388888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/hunter/walk_front_0.png",
+      "previous_ppu": 281.50327,
+      "ppu": 312.7814238388888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/hunter/walk_front_1.png",
+      "previous_ppu": 281.50327,
+      "ppu": 312.7814238388888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/hunter/walk_side_0.png",
+      "previous_ppu": 281.50327,
+      "ppu": 312.7814238388888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/hunter/walk_side_1.png",
+      "previous_ppu": 281.50327,
+      "ppu": 312.7814238388888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/hunter.png",
+      "previous_ppu": 242.53622,
+      "ppu": 269.48469985482586
+    },
+    {
+      "path": "Assets/Resources/Sprites/GeneratedStatic20261014/Companions/warrior.png",
+      "previous_ppu": 287.43137,
+      "ppu": 307.9622028571428
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Directions20261026/warrior.png",
+      "previous_ppu": 287.43137,
+      "ppu": 307.9622028571428
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/warrior/walk_back_0.png",
+      "previous_ppu": 287.43137,
+      "ppu": 307.9622028571428
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/warrior/walk_back_1.png",
+      "previous_ppu": 287.43137,
+      "ppu": 307.9622028571428
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/warrior/walk_front_0.png",
+      "previous_ppu": 287.43137,
+      "ppu": 307.9622028571428
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/warrior/walk_front_1.png",
+      "previous_ppu": 287.43137,
+      "ppu": 307.9622028571428
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/warrior/walk_side_0.png",
+      "previous_ppu": 287.43137,
+      "ppu": 307.9622028571428
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/warrior/walk_side_1.png",
+      "previous_ppu": 287.43137,
+      "ppu": 307.9622028571428
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/warrior.png",
+      "previous_ppu": 284.07352,
+      "ppu": 304.36450618658154
+    },
+    {
+      "path": "Assets/Resources/Sprites/GeneratedStatic20261014/Companions/farmer.png",
+      "previous_ppu": 291.5768,
+      "ppu": 323.9742317592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Directions20261026/farmer.png",
+      "previous_ppu": 291.5768,
+      "ppu": 323.9742317592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/farmer/walk_back_0.png",
+      "previous_ppu": 291.5768,
+      "ppu": 323.9742317592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/farmer/walk_back_1.png",
+      "previous_ppu": 291.5768,
+      "ppu": 323.9742317592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/farmer/walk_front_0.png",
+      "previous_ppu": 291.5768,
+      "ppu": 323.9742317592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/farmer/walk_front_1.png",
+      "previous_ppu": 291.5768,
+      "ppu": 323.9742317592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/farmer/walk_side_0.png",
+      "previous_ppu": 291.5768,
+      "ppu": 323.9742317592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/farmer/walk_side_1.png",
+      "previous_ppu": 291.5768,
+      "ppu": 323.9742317592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/farmer.png",
+      "previous_ppu": 238.62378,
+      "ppu": 265.137541138357
+    },
+    {
+      "path": "Assets/Resources/Sprites/GeneratedStatic20261014/Companions/cook.png",
+      "previous_ppu": 282.35294,
+      "ppu": 313.7255030518518
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Directions20261026/cook.png",
+      "previous_ppu": 282.35294,
+      "ppu": 313.7255030518518
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/cook/walk_back_0.png",
+      "previous_ppu": 282.35294,
+      "ppu": 313.7255030518518
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/cook/walk_back_1.png",
+      "previous_ppu": 282.35294,
+      "ppu": 313.7255030518518
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/cook/walk_front_0.png",
+      "previous_ppu": 282.35294,
+      "ppu": 313.7255030518518
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/cook/walk_front_1.png",
+      "previous_ppu": 282.35294,
+      "ppu": 313.7255030518518
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/cook/walk_side_0.png",
+      "previous_ppu": 282.35294,
+      "ppu": 313.7255030518518
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/cook/walk_side_1.png",
+      "previous_ppu": 282.35294,
+      "ppu": 313.7255030518518
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/cook.png",
+      "previous_ppu": 268.96826,
+      "ppu": 298.853635713803
+    },
+    {
+      "path": "Assets/Resources/Sprites/GeneratedStatic20261014/Companions/healer.png",
+      "previous_ppu": 304.2948,
+      "ppu": 338.1053486592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Directions20261026/healer.png",
+      "previous_ppu": 304.2948,
+      "ppu": 338.1053486592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/healer/walk_back_0.png",
+      "previous_ppu": 304.2948,
+      "ppu": 338.1053486592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/healer/walk_back_1.png",
+      "previous_ppu": 304.2948,
+      "ppu": 338.1053486592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/healer/walk_front_0.png",
+      "previous_ppu": 304.2948,
+      "ppu": 338.1053486592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/healer/walk_front_1.png",
+      "previous_ppu": 304.2948,
+      "ppu": 338.1053486592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/healer/walk_side_0.png",
+      "previous_ppu": 304.2948,
+      "ppu": 338.1053486592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/healer/walk_side_1.png",
+      "previous_ppu": 304.2948,
+      "ppu": 338.1053486592592
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/healer.png",
+      "previous_ppu": 309.2028,
+      "ppu": 343.5586822397859
+    },
+    {
+      "path": "Assets/Resources/Sprites/Companions/aunt.png",
+      "previous_ppu": 327.05338,
+      "ppu": 363.3926510638888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Directions20261026/aunt.png",
+      "previous_ppu": 327.05338,
+      "ppu": 363.3926510638888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/aunt/walk_back_0.png",
+      "previous_ppu": 327.05338,
+      "ppu": 363.3926510638888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/aunt/walk_back_1.png",
+      "previous_ppu": 327.05338,
+      "ppu": 363.3926510638888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/aunt/walk_front_0.png",
+      "previous_ppu": 327.05338,
+      "ppu": 363.3926510638888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/aunt/walk_front_1.png",
+      "previous_ppu": 327.05338,
+      "ppu": 363.3926510638888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/aunt/walk_side_0.png",
+      "previous_ppu": 327.05338,
+      "ppu": 363.3926510638888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/aunt/walk_side_1.png",
+      "previous_ppu": 327.05338,
+      "ppu": 363.3926510638888
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/aunt.png",
+      "previous_ppu": 304.75427,
+      "ppu": 338.61586172367385
+    },
+    {
+      "path": "Assets/Resources/Sprites/Companions/uncle.png",
+      "previous_ppu": 266.01306,
+      "ppu": 295.570089
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Directions20261026/uncle.png",
+      "previous_ppu": 266.01306,
+      "ppu": 295.570089
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/uncle/walk_back_0.png",
+      "previous_ppu": 266.01306,
+      "ppu": 295.570089
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/uncle/walk_back_1.png",
+      "previous_ppu": 266.01306,
+      "ppu": 295.570089
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/uncle/walk_front_0.png",
+      "previous_ppu": 266.01306,
+      "ppu": 295.570089
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/uncle/walk_front_1.png",
+      "previous_ppu": 266.01306,
+      "ppu": 295.570089
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/uncle/walk_side_0.png",
+      "previous_ppu": 266.01306,
+      "ppu": 295.570089
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/uncle/walk_side_1.png",
+      "previous_ppu": 266.01306,
+      "ppu": 295.570089
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/uncle.png",
+      "previous_ppu": 281.2501,
+      "ppu": 312.500134723682
+    },
+    {
+      "path": "Assets/Resources/Sprites/Companions/child.png",
+      "previous_ppu": 273.482,
+      "ppu": 349.12599446808514
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Directions20261026/child.png",
+      "previous_ppu": 273.482,
+      "ppu": 349.12599446808514
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/child/walk_back_0.png",
+      "previous_ppu": 273.482,
+      "ppu": 349.12599446808514
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/child/walk_back_1.png",
+      "previous_ppu": 273.482,
+      "ppu": 349.12599446808514
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/child/walk_front_0.png",
+      "previous_ppu": 273.482,
+      "ppu": 349.12599446808514
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/child/walk_front_1.png",
+      "previous_ppu": 273.482,
+      "ppu": 349.12599446808514
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/child/walk_side_0.png",
+      "previous_ppu": 273.482,
+      "ppu": 349.12599446808514
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Walk20261026/child/walk_side_1.png",
+      "previous_ppu": 273.482,
+      "ppu": 349.12599446808514
+    },
+    {
+      "path": "Assets/Resources/Sprites/Characters/Combat20261103/child.png",
+      "previous_ppu": 253.36378,
+      "ppu": 323.4431577021271
+    }
+  ],
+  "preserved_png_sha256": {
+    "Assets/Resources/Sprites/Characters/HeroIdentity20261026/hero_axe/idle_side.png": "bee2ef09668784dd939a4c1736889744135aa1406e1f6b3953dfafefc29372cd",
+    "Assets/Resources/Sprites/Characters/Directions20261026/hero_axe.png": "a6b3ead3b5113fb5c9199ec2ec1f8e47ad754a8fdf9fc21b533a4e112c282c6f",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_axe/walk_back_0.png": "6bd67663d28ad720be0d74e256fa031f7e1b1806585558dca0369453f450859d",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_axe/walk_back_1.png": "351f95c79089b8d4ae2518e7650f05bcbeae62bf83392c17083006dc66bb8e0a",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_axe/walk_front_0.png": "9cc6c93b6582b43640a860b8476456d93482e55e5af70cfe7b3188c6c675207b",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_axe/walk_front_1.png": "a526700817b8780ffe9b14a58f15719eb78c6fd1c13785ed256195f434c054f0",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_axe/walk_side_0.png": "1bb6da2cea632e48a08eb373554df0bf6077cff067d16e87649ca21b6d98120a",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_axe/walk_side_1.png": "8133f8027eac8e2bb313d497d03151e9e14c607b593e647216d76760f11e7ab3",
+    "Assets/Resources/Sprites/Characters/Combat20261103/hero_axe.png": "69939949e653b9a6cec09fe391c46f2409a091e5d50608ab064a5ff74741de2a",
+    "Assets/Resources/Sprites/Characters/HeroIdentity20261026/hero_bow/idle_side.png": "b655f9a2067a1f58c83a18ed7088cfcb18e25fefc2e192dce147ab5355684ad9",
+    "Assets/Resources/Sprites/Characters/Directions20261026/hero_bow.png": "c1fef7ad38137107c01627de9585689ef1e4cb6fe306aacd63d3b82609b05a23",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_bow/walk_back_0.png": "23b3df2b985b9b66ee9f95f1c014480bddc3e2ea18fe10ac80990992441207a9",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_bow/walk_back_1.png": "876520bbf2e65a681430503bebf51503f822885108ea7a986c2319c939368cac",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_bow/walk_front_0.png": "bd84b14ddcae53979b71a0ced45d6f1ed3e5806f08b036bea3a671daa9265e8a",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_bow/walk_front_1.png": "d8ae937e03602481a71ad78a18a27ed6af0151a030d4a011f7d41ea4e37f10c5",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_bow/walk_side_0.png": "e1a659d27cc49434d2753a3d86ed9ba4b676ceb21495757ff79a92e35967cfcf",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_bow/walk_side_1.png": "4ed6e90b9476eeb6739b9680be4acc25944e4296eada706d8d820c2bfe2a3ba2",
+    "Assets/Resources/Sprites/Characters/Combat20261103/hero_bow.png": "f0b86f049cedbefde11ef2a05e448c5e8fb6b2ad738ddbb577df72ead12fb3af",
+    "Assets/Resources/Sprites/Characters/HeroIdentity20261026/hero_hammer/idle_side.png": "69d44b8847cdb86c696b03e31e54973a6ba1eec84d7fccf79e4c45d2ce356972",
+    "Assets/Resources/Sprites/Characters/Directions20261026/hero_hammer.png": "2037deb6aae07bcbe7d7dd4f37d11b63779f544f4758745350e57a02f9511f28",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_hammer/walk_back_0.png": "0d0b4b3be2c2ce4d4afe259be06b9db7b66b731d08a8ce738eb1e2f472eb0438",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_hammer/walk_back_1.png": "5b4fd052ff635706898aa8091c0967bd079d55ab4c53076b820fc0495ee1dada",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_hammer/walk_front_0.png": "807804a98e88bc94928b8aff9505246b4a40acace298e52b9314ffefe9cfafcc",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_hammer/walk_front_1.png": "4fc92823bd4779b564e6d7886ec21ebc7ab682ee0222721ef067b4d6b7f4ccf4",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_hammer/walk_side_0.png": "d6031896dc5026417876983b44f134b2f30f90e66c27fd432e54c78a15a1ec35",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hero_hammer/walk_side_1.png": "9ae9009da6856e3f6878613562c369867f1c1dc768d3bec2597b0369a0823fa8",
+    "Assets/Resources/Sprites/Characters/Combat20261103/hero_hammer.png": "72fbe9ca9af4a985847f19c95ebac1c242560b9b9394f27a5b177acf2d0660c9",
+    "Assets/Resources/Sprites/GeneratedStatic20261014/Companions/hunter.png": "7d71862084f536e7a18d9b82aab2437e3858e1cffd7edaabdeae1d458fa4d480",
+    "Assets/Resources/Sprites/Characters/Directions20261026/hunter.png": "65a5140505c43f951129591881719f32a740652005f5a7c29a02a9759b348a89",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hunter/walk_back_0.png": "9fb43cba6c553e0803e3cfe468173b222a275e85788d44b1a3e608bed311d7ee",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hunter/walk_back_1.png": "42e400a9d5b7997b504e485ec4c654f264b7e2d260a4f3f710ce80469564dcee",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hunter/walk_front_0.png": "c223ad3c5870337fdab7983c9307f8cf50d0b50a3b721afbd1693a63e376c09d",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hunter/walk_front_1.png": "269d93827aca14f2288fa61b1ff3a51a59ab1a9b85714ae86bf1c0dc6d1c99fc",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hunter/walk_side_0.png": "11046e79291ffa2882100bbd01f9d1cca4c01cb392f51b682ba855e318da6124",
+    "Assets/Resources/Sprites/Characters/Walk20261026/hunter/walk_side_1.png": "569b655bf604d2a989165dd52181b0b971c5c28bd43215f7b57495483bb240d0",
+    "Assets/Resources/Sprites/Characters/Combat20261103/hunter.png": "6c6b6b5fb88cd005272c7560e26944dfa132327da5d122f39589958ec6d15e86",
+    "Assets/Resources/Sprites/GeneratedStatic20261014/Companions/warrior.png": "8f7df13651c81687209f2b6159a84a4d3ea221561276795a8c9893ac322245c4",
+    "Assets/Resources/Sprites/Characters/Directions20261026/warrior.png": "6bb47aaac5c589ecf8f87f0963f64a5320b79f00c12cab78ca55a729ee36aa2b",
+    "Assets/Resources/Sprites/Characters/Walk20261026/warrior/walk_back_0.png": "29a435b273d4970811b931defc10346d37c7e57208830b12af766010263a2636",
+    "Assets/Resources/Sprites/Characters/Walk20261026/warrior/walk_back_1.png": "dad2e4dfa4f1bf2084575cc2b83da0e2cca447977c8b8a334e5803f6026a0db6",
+    "Assets/Resources/Sprites/Characters/Walk20261026/warrior/walk_front_0.png": "e648338a5629b21c24bdcf7b55dfa5d23dc07dc11a93aa66fe03bbc7d5794a3c",
+    "Assets/Resources/Sprites/Characters/Walk20261026/warrior/walk_front_1.png": "07c2edf4b63de0c37371ab0129c659ed94332320378c4947d1651fe63928f29f",
+    "Assets/Resources/Sprites/Characters/Walk20261026/warrior/walk_side_0.png": "cdf245133e19e3f8be7d3122bf2acd8575797b64c305d6ae97fe08b98936f004",
+    "Assets/Resources/Sprites/Characters/Walk20261026/warrior/walk_side_1.png": "5cb0e8e6a67b60648753ad507085a616cd8a3bfca924e544c9f47a8206812037",
+    "Assets/Resources/Sprites/Characters/Combat20261103/warrior.png": "cbac445c61f5f1fd42b12ce1b01dbc402d035fa09437293c78edccaf14aa7c9c",
+    "Assets/Resources/Sprites/GeneratedStatic20261014/Companions/farmer.png": "e898980e1b6ebf1443570f2eff48dcb114b59dbe1013b8d9a78aa2c209c56698",
+    "Assets/Resources/Sprites/Characters/Directions20261026/farmer.png": "67e1e369200a2c29e847cde277567c3de8dd894a03d761b17e00ee5bed30e44e",
+    "Assets/Resources/Sprites/Characters/Walk20261026/farmer/walk_back_0.png": "f3544a6aa533e2cc75d767ec4347903c5cbeea9a98c4e80a65ca057fec7a3dc6",
+    "Assets/Resources/Sprites/Characters/Walk20261026/farmer/walk_back_1.png": "8e45fc8733c84a385544f65c0281cd79e4b142e368c956faa61e40c565eb7d6f",
+    "Assets/Resources/Sprites/Characters/Walk20261026/farmer/walk_front_0.png": "585bf2bd0482a3d8e81740c1c1e0f153ae5c7f39c6ccb4f12076ac8077289377",
+    "Assets/Resources/Sprites/Characters/Walk20261026/farmer/walk_front_1.png": "c346189b7b1e9615301667279aca38612db32ce87c60d7e407bc08bbe0d773b1",
+    "Assets/Resources/Sprites/Characters/Walk20261026/farmer/walk_side_0.png": "6d95caa4026b8e4f8060578a299211a209cb0e1f5a631918ed75965d7c0a43b9",
+    "Assets/Resources/Sprites/Characters/Walk20261026/farmer/walk_side_1.png": "661659d79579a0d43bf042e7634978aa2f27aeb8b732b60c17e84586d5cc1825",
+    "Assets/Resources/Sprites/Characters/Combat20261103/farmer.png": "f58ee42b319e8929506f105e8eff22a935ad1f078fbb8c535e486a0e65571a51",
+    "Assets/Resources/Sprites/GeneratedStatic20261014/Companions/cook.png": "bc0b5d363ef6c43819cd76014d696da9da6f93308b841373a97b9c6bb5c2e091",
+    "Assets/Resources/Sprites/Characters/Directions20261026/cook.png": "3317dade1da5c2a709340a083d9a9a6b7ee81d30ef8564fced10ad2a9108ca0a",
+    "Assets/Resources/Sprites/Characters/Walk20261026/cook/walk_back_0.png": "dd1c792b5c6f11e4376ba9a8616174ce4f558150b7b534bf286380af92a9bd3a",
+    "Assets/Resources/Sprites/Characters/Walk20261026/cook/walk_back_1.png": "af1bdb6bdbf19a82a5f5a6ae47765af2daae8a3e51c2c5232d6869a41ef4900a",
+    "Assets/Resources/Sprites/Characters/Walk20261026/cook/walk_front_0.png": "140941e75de09bf9c866cf88f1d8f6cf4aa3fc07a2f77ac4e6585350f6b13d25",
+    "Assets/Resources/Sprites/Characters/Walk20261026/cook/walk_front_1.png": "bacac77ee18b28b3360c585fec6fcfe1f7136ed266f5985001cbdd5af8e82c38",
+    "Assets/Resources/Sprites/Characters/Walk20261026/cook/walk_side_0.png": "3b7e612ce173363257c079c542bf8f61a463881758335d3aa4a76f7db6fe3f83",
+    "Assets/Resources/Sprites/Characters/Walk20261026/cook/walk_side_1.png": "7a5d7d854578aea9763c99765031dbe6746ad1a39ae0c334c73ebdeb732f0773",
+    "Assets/Resources/Sprites/Characters/Combat20261103/cook.png": "aa141883d90745486d94986317bfb70f05b4dc6b296c218aaa15c3189e5bb2ec",
+    "Assets/Resources/Sprites/GeneratedStatic20261014/Companions/healer.png": "894854972b745220d785faed7d843f0b6cf304094053e503f1354353986fe389",
+    "Assets/Resources/Sprites/Characters/Directions20261026/healer.png": "59b8e220ace44f899fe775826c448b4cc24ab1624b762a083f8acc4d7d3fffb6",
+    "Assets/Resources/Sprites/Characters/Walk20261026/healer/walk_back_0.png": "15d33c40d9f5eee8e22d0556973d0a55a9706fb29dd75dff9b51cb12049f9219",
+    "Assets/Resources/Sprites/Characters/Walk20261026/healer/walk_back_1.png": "bb7d71e0fc328f84b86eca5324ab10b3fd4ba6380597aaae93ff04eec81232a1",
+    "Assets/Resources/Sprites/Characters/Walk20261026/healer/walk_front_0.png": "48a0805626fd01de01e6f78ac2fc17a8b5818f15a7e0a9f2e59c1037080b340f",
+    "Assets/Resources/Sprites/Characters/Walk20261026/healer/walk_front_1.png": "dcfaaa9f2b77705a41c9a3d77b9cb5df14925d951605972a50506bb18bddc5b6",
+    "Assets/Resources/Sprites/Characters/Walk20261026/healer/walk_side_0.png": "8dd4ba6763c4d3ecf20810905c2e466d79f4b5676b7c2bc5e7eaa5bcccc010ce",
+    "Assets/Resources/Sprites/Characters/Walk20261026/healer/walk_side_1.png": "eee5596c5ddd716413f22a85172fc746c49e28e7ff4274841e61268dc9771069",
+    "Assets/Resources/Sprites/Characters/Combat20261103/healer.png": "5d56a12d2a74e1c72ba8e4a4de52cbc312d87faa8cddd77605967f163e38c706",
+    "Assets/Resources/Sprites/Companions/aunt.png": "bd2ee065104afaa1a443a8a01973303592bf8233cfb2123c4852ef86320b8997",
+    "Assets/Resources/Sprites/Characters/Directions20261026/aunt.png": "19ddb7d8c9ea53230c84024281c7abbf50c7c4465ffc834602e01fe4c2a11b13",
+    "Assets/Resources/Sprites/Characters/Walk20261026/aunt/walk_back_0.png": "afea94c3b894c94bc34e283b10028cd6a4fc704ef2e46c465ba03e0920cdfc9e",
+    "Assets/Resources/Sprites/Characters/Walk20261026/aunt/walk_back_1.png": "534731ed1c3eb75add9167b9f00e53f8e267231b3e0958f54d6d31ded0411c29",
+    "Assets/Resources/Sprites/Characters/Walk20261026/aunt/walk_front_0.png": "15f5f24cf631fa9f848b20a45e537b507b3d34b462a6edf9d5ea952c878b7836",
+    "Assets/Resources/Sprites/Characters/Walk20261026/aunt/walk_front_1.png": "dd7ac382fcc468d9497c1bbb3fe529399a62700e3601aa2cc87762d9009cd9fd",
+    "Assets/Resources/Sprites/Characters/Walk20261026/aunt/walk_side_0.png": "f9025453144dd60fe791a84c0dba8cec1949bf6b10b149a0f31521c499b1b00e",
+    "Assets/Resources/Sprites/Characters/Walk20261026/aunt/walk_side_1.png": "3c8d2e8c186ab0decaa3374f93bbd1d4fae8022ba9606cb857fb3a6aebadd234",
+    "Assets/Resources/Sprites/Characters/Combat20261103/aunt.png": "f036bcba6dd5ce5563c4c44295fafc9d829b6d11dbbbdcdd5dcd474201a06e8f",
+    "Assets/Resources/Sprites/Companions/uncle.png": "b6b05f0ecda90a518726511211e1522f47ab52fbc3579d2a712c4fd2e4109a47",
+    "Assets/Resources/Sprites/Characters/Directions20261026/uncle.png": "526d34f65465d9bd70c617e6155460a943e1bc1ad47af985d28044c08a4b2d8f",
+    "Assets/Resources/Sprites/Characters/Walk20261026/uncle/walk_back_0.png": "c92b99b4c63dac88e5b8bf35a8606053ba19a596c2671d99129fc214cb23c558",
+    "Assets/Resources/Sprites/Characters/Walk20261026/uncle/walk_back_1.png": "70e5dcfde1f24bfde6667e0291fea213c90d5251042c3781ea4900e86ffdcdaa",
+    "Assets/Resources/Sprites/Characters/Walk20261026/uncle/walk_front_0.png": "c962b4b14195adbb015b178435bde8c095580e2dab2846de3312cf519a5ae28a",
+    "Assets/Resources/Sprites/Characters/Walk20261026/uncle/walk_front_1.png": "79b67f067dee8883877861df505ac1d1bdacfedbe311858b50922778d49c20f1",
+    "Assets/Resources/Sprites/Characters/Walk20261026/uncle/walk_side_0.png": "de5985d6cfebf4a697eca7f42d3bd167fd791f53cb920f0cc23ab8f85ad07a5e",
+    "Assets/Resources/Sprites/Characters/Walk20261026/uncle/walk_side_1.png": "7befa47ccbae68236af2cd4eaf05456f7273ee94eb25a1cde79f538435716011",
+    "Assets/Resources/Sprites/Characters/Combat20261103/uncle.png": "06d4ecf39f84c83fb23da457333f211be1a1312c43ed3e7da7830f348235634e",
+    "Assets/Resources/Sprites/Companions/child.png": "14bf02d3763bc1bb9ab5a6acff3654e34dd48099f8bf204ed928d863c1649337",
+    "Assets/Resources/Sprites/Characters/Directions20261026/child.png": "afcbf4a63e051b92c9108c3505cf5d1013effa9d797fa550e44c3c35ce8162b4",
+    "Assets/Resources/Sprites/Characters/Walk20261026/child/walk_back_0.png": "e254d25a980ac0880126fb6513dbc59124d410a397b2be7a8e8f937b513e0cb3",
+    "Assets/Resources/Sprites/Characters/Walk20261026/child/walk_back_1.png": "f612caa6df1bb9cb11e87c7cafd8393cd2cb5c51a643688c51b4eb8daf8a9543",
+    "Assets/Resources/Sprites/Characters/Walk20261026/child/walk_front_0.png": "4a279794988e7e6e72753254b90f24bb3aae160bf5eabd16ae2f8261b419484a",
+    "Assets/Resources/Sprites/Characters/Walk20261026/child/walk_front_1.png": "3f88881e4ce47a55b3edc9bd4f40374083ad494f6f892933094754bab060c742",
+    "Assets/Resources/Sprites/Characters/Walk20261026/child/walk_side_0.png": "0ab30a92480672183b7075176adf48563dbf05e3f277d9e6e8d0c941dfe5ca53",
+    "Assets/Resources/Sprites/Characters/Walk20261026/child/walk_side_1.png": "82e2f1c06b4e55cd4b4d77229fd650de6b76d097987a8ae36df4d2b58f3ed300",
+    "Assets/Resources/Sprites/Characters/Combat20261103/child.png": "c01cc11ce7c97c07bfc9347100565917ae038e92b97d391aff92912f46d685a2",
+    "Assets/Resources/UI/DialoguePortraits/aunt.png": "62bfefca2fa2d555d4aeba69849cfbecd6f2b04e689cb18bec44a46c594a0496",
+    "Assets/Resources/UI/DialoguePortraits/child.png": "c7c403e254aaee39872f615fb7760155d058697f1a3158bdfce140c92f278694",
+    "Assets/Resources/UI/DialoguePortraits/cook.png": "c2895b57c24617df7109b53f4b6ced99fb02593a372bebef0efecf5e04d60e14",
+    "Assets/Resources/UI/DialoguePortraits/farmer.png": "3eb198e2fff185e09001fda317658e1069a60332732940a11474b4f858595412",
+    "Assets/Resources/UI/DialoguePortraits/father.png": "d95e7af72230969b98ec0b0b1897630c7b86a98a0a9422cb70ecbc03945355eb",
+    "Assets/Resources/UI/DialoguePortraits/healer.png": "1e36ae524ff62191777d4642edd49dca4f3909afde0f41adb6ed5631214e5c0f",
+    "Assets/Resources/UI/DialoguePortraits/hero.png": "b6e879e4ccc0c1a8324742620aca9c6c3d708cde74cea83430823acc05b0451f",
+    "Assets/Resources/UI/DialoguePortraits/hunter.png": "0ed373af043705c86ec0eb4c318bdf9f9cead8aeaf215b4caad5b0c9b002b9f9",
+    "Assets/Resources/UI/DialoguePortraits/uncle.png": "212769f5672823728db727d086678bfc9d48ffd681e6bc7bc22f60ea07330bae",
+    "Assets/Resources/UI/DialoguePortraits/warrior.png": "26b8a45660b91a0dd07245b6935967de4b70af3c2334d65a0d07f6f9339de42a"
+  }
+}

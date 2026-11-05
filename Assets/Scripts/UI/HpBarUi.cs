@@ -69,8 +69,6 @@ namespace IL6
                 {
                     _root.transform.position=new Vector3(transform.position.x,body.bounds.max.y+0.18f,transform.position.z);
                 }
-                var scale=transform.lossyScale;
-                _root.transform.localScale=new Vector3(Size.x/Mathf.Max(.001f,Mathf.Abs(scale.x)),Size.y/Mathf.Max(.001f,Mathf.Abs(scale.y)),1f);
                 _fill.GetComponent<SpriteRenderer>().color=Player != null
                     ? new Color(0.3f,0.82f,0.48f,1f) : FillColor;
             }
@@ -78,8 +76,6 @@ namespace IL6
             {
                 var body=Rock.GetComponent<SpriteRenderer>();
                 if(body!=null && body.sprite!=null)_root.transform.position=RockVisualStyle.TopPoint(body)+Vector3.up*.12f;
-                var scale=Rock.transform.lossyScale;
-                _root.transform.localScale=new Vector3(Size.x/Mathf.Max(.001f,Mathf.Abs(scale.x)),Size.y/Mathf.Max(.001f,Mathf.Abs(scale.y)),1f);
                 _fill.GetComponent<SpriteRenderer>().color=FillColor;
             }
             float ratio = GetHpRatio();
@@ -88,7 +84,6 @@ namespace IL6
             {
                 // The spawning code assigns these settings after AddComponent has called Awake.
                 _root.transform.localPosition = (Vector3)Offset;
-                _root.transform.localScale = new Vector3(Size.x,Size.y,1f);
                 _root.GetComponent<SpriteRenderer>().color = BgColor;
                 _fill.GetComponent<SpriteRenderer>().color = ratio <= .3f
                     ? new Color(.95f,.22f,.16f,1f) : FillColor;
@@ -98,6 +93,7 @@ namespace IL6
                 _root.transform.localPosition = (Vector3)Offset;
                 _fill.GetComponent<SpriteRenderer>().color = FillColor;
             }
+            ApplyWorldSize();
             bool show = ratio > 0f && ratio < 1f;
             if (_root.activeSelf != show) _root.SetActive(show);
             if (show && _fill != null)
@@ -105,6 +101,16 @@ namespace IL6
                 _fill.localScale = new Vector3(ratio, 1f, 1f);
                 _fill.localPosition = new Vector3(-(1f - ratio) * 0.5f, 0f, 0f);
             }
+        }
+
+        private void ApplyWorldSize()
+        {
+            // Authored object and parent scales must never inflate the world-space gauge.
+            var scale=transform.lossyScale;
+            bool otherActor=Player==null && (CompanionRef!=null || Zombie!=null || AnimalRef!=null);
+            float width=Mathf.Clamp(Size.x*(otherActor?.7f:1f),.05f,1.1f);
+            float height=Mathf.Clamp(Size.y,.01f,Player!=null?.12f:.10f);
+            _root.transform.localScale=new Vector3(width/Mathf.Max(.001f,Mathf.Abs(scale.x)),height/Mathf.Max(.001f,Mathf.Abs(scale.y)),1f);
         }
 
         private float GetHpRatio()

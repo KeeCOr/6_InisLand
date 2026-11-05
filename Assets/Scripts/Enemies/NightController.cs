@@ -60,7 +60,7 @@ namespace IL6
             if (_boundCycle != null && _boundCycle.NightEndBlocked == _nightEndGuard) _boundCycle.NightEndBlocked = null;
             _boundCycle = cycle;
             if (_boundCycle == null) return;
-            _nightEndGuard = () => this != null && BossEncounterActive;
+            _nightEndGuard = () => this != null && (BossEncounterActive || ScreenEnemyPresence.Any(Camera.main));
             _boundCycle.NightEndBlocked = _nightEndGuard;
         }
 
@@ -239,6 +239,9 @@ namespace IL6
 
             if (CurrentPhase != Phase.Night) return;
             if (Player == null) return;
+            // Once the timer expires, finish visible combat without feeding new waves.
+            if (_boundCycle != null && _boundCycle.Phase == Phase.Night
+                && _boundCycle.ElapsedInPhase >= _boundCycle.PhaseDurationSec) return;
 
             // 무한 웨이브 — 활성 좀비 0 이고 대기열도 0 이면 새 웨이브 보충 (점점 커짐)
             if (_activeZombies == 0 && _pendingSpawns <= 0)

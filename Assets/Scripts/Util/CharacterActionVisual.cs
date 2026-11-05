@@ -33,8 +33,13 @@ namespace IL6
             {sprites=Resources.LoadAll<Sprite>("Sprites/Characters/Combat20261103/"+key);Sheets[key]=sprites;}
             string direction=facing==CharacterFacing.Front?"front":facing==CharacterFacing.Back?"back":"side";
             string name="attack_"+direction+"_"+phase;
-            foreach(var sprite in sprites)if(sprite.name==name)return sprite;
+            foreach(var sprite in sprites)
+                if(sprite!=null && sprite.name==name && sprite.rect.width>1 && sprite.rect.height>1 && sprite.bounds.size.sqrMagnitude>.01f)return sprite;
             return null;
+        }
+        public void Cancel()
+        {
+            _playing=false;_working=false;_useActionState=false;_age=0;
         }
         public void PlayAttack(Vector2 direction)
         {

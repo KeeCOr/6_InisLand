@@ -6,6 +6,8 @@ namespace IL6
     /// IMGUI HUD 공용 색상 + 헬퍼. 모든 패널/바/아이콘 그릴 때 이 함수만 호출하면
     /// 일관된 중세 양피지/네이비 톤이 유지됨.
     /// </summary>
+    public enum UiButtonRole { Primary, Secondary, Destructive }
+
     public static class UiTheme
     {
         private static Font _hudFont;
@@ -101,9 +103,21 @@ namespace IL6
             }
         }
 
-        public static bool Button(Rect r, string label, GUIStyle style, bool enabled = true)
+        public static bool Button(Rect r, string label, GUIStyle style, bool enabled = true, UiButtonRole role = UiButtonRole.Primary)
         {
-            return MobileButtonTheme.Pill(r,label,style,enabled);
+            if (role == UiButtonRole.Primary) return MobileButtonTheme.Pill(r,label,style,enabled);
+            bool usable = GUI.enabled && enabled;
+            bool hover = r.Contains(MobileHudLayout.GuiPoint(Input.mousePosition));
+            Color edge = role == UiButtonRole.Destructive ? TextDanger : PanelBorder;
+            MobileButtonTheme.RoundRect(r, 7, usable ? edge : PanelBorderDim);
+            MobileButtonTheme.RoundRect(new Rect(r.x+1,r.y+1,r.width-2,r.height-2), 6,
+                hover && usable ? PanelInnerBg : PanelBg);
+            var text = new GUIStyle(style) { alignment = TextAnchor.MiddleCenter };
+            text.normal.textColor = usable ? (role == UiButtonRole.Destructive ? TextDanger : TextCream) : TextSubtle;
+            HudText.Label(r,label,text);
+            bool previous = GUI.enabled; GUI.enabled = usable;
+            bool clicked = GUI.Button(r, "", GUIStyle.none); GUI.enabled = previous;
+            return clicked && MobileButtonTheme.Contains(r,Event.current.mousePosition);
         }
     }
 }

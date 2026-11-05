@@ -99,6 +99,10 @@ namespace IL6.Tests
             yield return null;
             Assert.That(preview.DisplayedTarget.Target, Is.EqualTo(target));
             Assert.That(preview.Visible, Is.True);
+            var marker=(LineRenderer)typeof(PlayerInteractionPreview).GetField("_targetRing",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(preview);
+            Assert.That(marker.loop,Is.False,"Selection must not wrap the object in a circle");
+            Assert.That(marker.startColor.b,Is.GreaterThan(marker.startColor.r),"Selection uses cool snow tones instead of yellow");
+            Assert.That(marker.sortingOrder,Is.LessThan(-9000),"Selection belongs on the ground below actors");
             Assert.That(hud.Attacker.TryManualAction(), Is.True);
             Assert.That(hud.Gather.ActiveTarget, Is.EqualTo(target));
             var foe = new GameObject("Preview combat during gathering");

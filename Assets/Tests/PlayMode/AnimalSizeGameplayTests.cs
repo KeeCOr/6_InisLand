@@ -25,7 +25,8 @@ namespace IL6.Tests
                 {
                     var sprite=animal.GetComponent<SpriteRenderer>();
                     Assert.That(bar.position.y,Is.EqualTo(sprite.bounds.max.y+.18f).Within(.001f));
-                    Assert.That(bar.lossyScale.x,Is.EqualTo(.9f).Within(.001f));
+                    // Non-player character gauges retain the approved 70% width.
+                    Assert.That(bar.lossyScale.x,Is.EqualTo(.63f).Within(.001f));
                 }
                 Object.Destroy(animal);yield return null;
             }
