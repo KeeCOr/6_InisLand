@@ -29,6 +29,8 @@ namespace IL6
                 Debug.LogError("[Snowfield] GameSession not found. Add it to BootScene.");
                 return;
             }
+            _session.enabled=true;
+            InputReader.HudBlocked=false;
 
             Vector3 villageCenter = new Vector3(GameConstants.VillageCenterX, GameConstants.VillageCenterY, 0);
             if (Player != null) Player.transform.position = villageCenter + new Vector3(0f,-2.5f,0f);

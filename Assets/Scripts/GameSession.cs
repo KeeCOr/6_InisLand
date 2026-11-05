@@ -48,9 +48,11 @@ namespace IL6
             Resources.Add(ResourceKind.Frostbloom, b.StartingFrostbloom);
 
             // 세이브 있으면 덮어씌움
-            var save = SaveLoad.Load();
+            var save = IgnoreSaveOnce?null:SaveLoad.Load();
+            IgnoreSaveOnce=false;
             if (save != null)
             {
+                NpcTutorialEnabled=save.npcTutorialEnabled;StoryIntroSeen=save.storyIntroSeen;
                 StoryTutorialEnabled=save.storyTutorialEnabled;
                 StoryTutorialComplete=save.storyTutorialComplete;
                 StoryTutorialStage=save.storyTutorialStage;
@@ -413,12 +415,15 @@ namespace IL6
         }
 
         public float LastAutoSaveAt { get; private set; } = -10f;
+        public bool NpcTutorialEnabled {get;set;}
+        public bool StoryIntroSeen {get;set;}
 
         public void SaveNow()
         {
             SaveLoad.Save(new SaveFileV1
             {
                 version = 1,
+                npcTutorialEnabled=NpcTutorialEnabled,storyIntroSeen=StoryIntroSeen,
                 storyTutorialEnabled=StoryTutorialEnabled,
                 storyTutorialComplete=StoryTutorialComplete,
                 storyTutorialStage=StoryTutorialStage,
@@ -435,6 +440,7 @@ namespace IL6
         }
 
         private bool _restartRequested;
+        public static bool IgnoreSaveOnce;
         public void HardReset()
         {
             if(_restartRequested)return;
@@ -442,10 +448,20 @@ namespace IL6
             Time.timeScale=1f;
             InputReader.HudBlocked=false;
             SaveLoad.Clear();
+            BootController.SkipLobbyOnce=true;
+            BootController.FreshNpcTutorialOnce=NpcTutorialEnabled;
             Instance = null;
             gameObject.SetActive(false);
             Destroy(gameObject);
             // Async activation lets the old persistent session/managers finish destruction first.
+            SceneManager.LoadSceneAsync("BootScene");
+        }
+        public void ReturnToLobby()
+        {
+            if(_restartRequested)return;
+            _restartRequested=true;
+            SaveNow();Time.timeScale=1;InputReader.HudBlocked=false;
+            Instance=null;gameObject.SetActive(false);Destroy(gameObject);
             SceneManager.LoadSceneAsync("BootScene");
         }
     }

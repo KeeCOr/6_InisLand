@@ -10,12 +10,25 @@ namespace IL6.Tests
     {
         private static readonly BindingFlags Flags=BindingFlags.Instance|BindingFlags.NonPublic;
         private static int Count(BuildingKind kind){int count=0;foreach(var b in Object.FindObjectsByType<Building>(FindObjectsSortMode.None))if(b.Kind==kind && b.CurrentHp>0)count++;return count;}
+        private static IEnumerator WaitForPlayableStory(SimpleHud previous=null)
+        {
+            float deadline=Time.realtimeSinceStartup+8;
+            while(Time.realtimeSinceStartup<deadline)
+            {
+                var hud=Object.FindFirstObjectByType<SimpleHud>();
+                if(hud!=null && hud!=previous && hud.CurrentStoryTutorial!=null && GameSession.Instance!=null
+                    && GameSession.Instance.enabled && SceneManager.GetActiveScene().name=="SnowfieldScene")yield break;
+                yield return null;
+            }
+            Assert.Fail("Story did not become ready in scene "+SceneManager.GetActiveScene().name);
+        }
         [UnityEngine.TestTools.UnityTest] public IEnumerator DeathNewAdventureMatchesFreshStartAndRetainsStarterKitAfterStory()
         {
             if(string.IsNullOrEmpty(System.Environment.GetEnvironmentVariable("IL6_TEST_SAVE_DIRECTORY")))Assert.Ignore("Requires isolated save");
             Time.timeScale=1;InputReader.HudBlocked=false;
             yield return SceneManager.LoadSceneAsync("BootScene");yield return new WaitForSecondsRealtime(.5f);
-            GameSession.Instance.HardReset();yield return new WaitForSecondsRealtime(1);
+            GameSession.Instance.NpcTutorialEnabled=false; // Legacy save's restart path remains compatible.
+            GameSession.Instance.HardReset();yield return WaitForPlayableStory();
             int initialFences=0;int[] startingResources=null;
             for(int attempt=0;attempt<2;attempt++)
             {
@@ -45,7 +58,7 @@ namespace IL6.Tests
                     typeof(SimpleHud).GetMethod("UpdateDeathScreenState",Flags).Invoke(hud,null);
                     typeof(SimpleHud).GetField("_deathButtonReadyAt",Flags).SetValue(hud,0f);
                     Assert.That((bool)typeof(SimpleHud).GetMethod("RestartAfterDeath",Flags).Invoke(hud,null),Is.True);
-                    yield return new WaitForSecondsRealtime(1);
+                    yield return WaitForPlayableStory(hud);
                     Assert.That(GameSession.Instance,Is.Not.SameAs(session));
                 }
             }

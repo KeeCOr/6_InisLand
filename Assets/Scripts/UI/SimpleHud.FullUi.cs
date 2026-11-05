@@ -81,7 +81,7 @@ namespace IL6
         {
             if (_resourceDetailsOpen) return;
             DrawSettlementGoals();
-            if (!_showCompanions) return;
+            if (!_showCompanions || _resourceDetailsOpen) return;
             var session=GameSession.Instance;if(session==null) return;
             var companions=Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
             int live=0, hidden=0;

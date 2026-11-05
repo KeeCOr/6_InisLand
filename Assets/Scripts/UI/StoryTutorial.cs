@@ -27,6 +27,22 @@ namespace IL6
             new Line("Hero","겨우 한 칸이지만… 이제 시작이야.","돌아올 곳"),
             new Line("Hero","밤에는 숲에서 로봇들이 몰려와. 불씨와 새로 지은 마을을 지켜야 해.","첫날 밤을 향해"),
             new Line("Hero","길에서 만난 사람들과 힘을 모으면 할 수 있을 거야. 아버지, 기다리고 있을게.","돌아올 곳")};
+        private static readonly Line[] GuideIntro={
+            new Line("Hero","폭풍은 지나갔어. 이제 남아 있는 것부터 살펴보자.","혼자 남은 마을"),
+            new Line("Hero","아버지가 돌아오실 곳이야. 망가졌어도… 이 마을을 다시 만들고 싶어.","혼자 남은 마을"),
+            new Line("Hero","문 가까이 가면 열리겠지. 주변을 천천히 둘러보자.","마을 둘러보기")};
+        private static readonly Line[] GuideWood={
+            new Line("Hero","불씨와 울타리는 남아 있어. 하지만 고칠 목재가 필요하겠네.","첫 목재"),
+            new Line("Hero","나무 가까이에서 도끼를 써 보자. 벤 뒤에는 떨어진 목재도 주워야 해.","첫 목재"),
+            new Line("Hero","아버지도 늘 쓸 만한 나무부터 모으셨지. 나도 그렇게 시작하자.","첫 목재")};
+        private static readonly Line[] GuideBuild={
+            new Line("Hero","이만큼이면 울타리 한 칸은 세울 수 있겠어. 이제 건설 망치를 꺼내자.","첫 울타리"),
+            new Line("Hero","나무 울타리를 고르고, 설치할 곳을 정하면 되는 거지? 한 칸부터 다시 세워 볼게.","첫 울타리")};
+        private static readonly Line[] GuideEnding={
+            new Line("Hero","겨우 한 칸이지만… 이제 시작이야. 밤에 로봇들이 몰려오면 불씨와 마을을 지켜야 해.","첫날 밤을 향해"),
+            new Line("Hero","한 칸씩 고치면 아버지도 알아보실 거야. 조금씩, 다시 세우자.","돌아올 마을"),
+            new Line("Hero","언젠가 길에서 누군가를 만나면 말을 걸어 봐야겠어. 함께라면 더 많은 것을 할 수 있을 테니까.","돌아올 마을")};
+        public bool NpcGuided {get;}
         public StoryTutorialStage Stage { get; private set; }
         public int LineIndex { get; private set; }
         public bool IsComplete => Stage==StoryTutorialStage.Complete;
@@ -39,10 +55,10 @@ namespace IL6
             ? (LineIndex<3?"waiting":LineIndex==3?"storm":LineIndex<6?"ruins":"promise")
             : Stage==StoryTutorialStage.WoodMemory?"ruins":"promise";
         public string IllustrationPath => "UI/StoryIllustrations/"+IllustrationKey;
-        private Line[] Lines => Stage==StoryTutorialStage.WoodMemory?Wood:Stage==StoryTutorialStage.BuildMemory?Build:Stage==StoryTutorialStage.Resolve?Ending:Prologue;
+        private Line[] Lines => NpcGuided?(Stage==StoryTutorialStage.WoodMemory?GuideWood:Stage==StoryTutorialStage.BuildMemory?GuideBuild:Stage==StoryTutorialStage.Resolve?GuideEnding:GuideIntro):Stage==StoryTutorialStage.WoodMemory?Wood:Stage==StoryTutorialStage.BuildMemory?Build:Stage==StoryTutorialStage.Resolve?Ending:Prologue;
         public string Objective => Stage==StoryTutorialStage.Explore?"마을의 흔적 둘러보기":Stage==StoryTutorialStage.GatherWood?"첫 목재 줍기":"울타리 한 칸 세우기";
         public string Hint => Stage==StoryTutorialStage.Explore?"이동하며 주변을 살펴보세요 · WASD / 이동 패드":Stage==StoryTutorialStage.GatherWood?"나무 근처에서 Space / 행동 → 떨어진 목재에 다가가기":"3 / 건설 망치 → 나무 울타리 → 위치 선택·설치";
-        public StoryTutorial(int stage=0) {Stage=(StoryTutorialStage)Mathf.Clamp(stage,0,(int)StoryTutorialStage.Complete);}
+        public StoryTutorial(int stage=0,bool npcGuided=false) {Stage=(StoryTutorialStage)Mathf.Clamp(stage,0,(int)StoryTutorialStage.Complete);NpcGuided=npcGuided;}
         public bool AdvanceDialogue()
         {
             if(!IsDialogue) return false;

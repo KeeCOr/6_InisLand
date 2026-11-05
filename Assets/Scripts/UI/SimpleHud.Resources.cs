@@ -7,7 +7,7 @@ namespace IL6
         private int _hoveredResource = -1;
         private static readonly ResourceKind[] ResourceKinds={ResourceKind.Wood,ResourceKind.Stone,ResourceKind.Ore,ResourceKind.Meat,ResourceKind.Food,ResourceKind.Frostbloom};
         private static readonly string[] ResourceNames={"목재","석재","광석","고기","식량","서리꽃"};
-        private Rect ResourceDetailsRect => new Rect(MobileHudLayout.Width-360,MobileHudLayout.Experience.yMax+8,344,270);
+        private Rect ResourceDetailsRect => new Rect(16,MobileHudLayout.Experience.yMax+8,344,270);
         private void DrawResourceBar()
         {
             var session=GameSession.Instance;if(session==null) return;
@@ -52,7 +52,9 @@ namespace IL6
             }
             if(!_resourceDetailsOpen) return;
             var session=GameSession.Instance;if(session==null) return;
-            var panel=ResourceDetailsRect;UiTheme.Panel(panel);UiTheme.TitleBar(panel,"자원 · 보유량 / 보관 한도",_section);
+            var panel=ResourceDetailsRect;UiTheme.Panel(panel);
+            HudText.Label(new Rect(panel.x+14,panel.y+8,panel.width-28,26),"자원 · 보유량 / 보관 한도",new GUIStyle(_section){fontSize=16});
+            UiTheme.Separator(new Rect(panel.x+14,panel.y+36,panel.width-28,1));
             for(int i=0;i<ResourceKinds.Length;i++)
             {
                 float y=panel.y+43+i*34;

@@ -8,6 +8,9 @@ namespace IL6
     public class SaveFileV1
     {
         public int version = 1;
+        public string savedAtUtc;
+        public bool npcTutorialEnabled;
+        public bool storyIntroSeen;
         public bool storyTutorialEnabled;
         public bool storyTutorialComplete;
         public int storyTutorialStage;
@@ -25,9 +28,23 @@ namespace IL6
     public static class SaveLoad
     {
         public const string FileName = "save_v1.json";
+        public const int SlotCount=3;
+        public static int ActiveSlot {get;private set;}=1;
+        public static void SelectSlot(int slot)
+        {
+            if(slot<1 || slot>SlotCount)throw new ArgumentOutOfRangeException(nameof(slot));
+            ActiveSlot=slot;
+        }
         public static string StoragePath => FilePath;
+        public static string SlotPath(int slot)
+        {
+            if(slot<1 || slot>SlotCount)throw new ArgumentOutOfRangeException(nameof(slot));
+            return Path.Combine(StorageDirectory,slot==1?FileName:$"save_slot_{slot}_v1.json");
+        }
+        public static bool HasSlotFile(int slot)=>File.Exists(SlotPath(slot));
+        private static string FilePath=>SlotPath(ActiveSlot);
 
-        private static string FilePath
+        private static string StorageDirectory
         {
             get
             {
@@ -35,38 +52,47 @@ namespace IL6
                 // Batch validation must never overwrite the player's actual save.
                 string testDirectory=Environment.GetEnvironmentVariable("IL6_TEST_SAVE_DIRECTORY");
                 if(!string.IsNullOrEmpty(testDirectory) && Path.IsPathRooted(testDirectory))
-                {Directory.CreateDirectory(testDirectory);return Path.Combine(testDirectory,FileName);}
+                {Directory.CreateDirectory(testDirectory);return testDirectory;}
 #endif
-                return Path.Combine(Application.persistentDataPath,FileName);
+                return Application.persistentDataPath;
             }
         }
 
-        public static void Save(SaveFileV1 data)
+        public static bool Save(SaveFileV1 data)
         {
             try
             {
+                data.savedAtUtc=DateTime.UtcNow.ToString("O");
                 string json = JsonUtility.ToJson(data, prettyPrint: false);
-                File.WriteAllText(FilePath, json);
+                Directory.CreateDirectory(StorageDirectory);
+                string temp=FilePath+".tmp";
+                File.WriteAllText(temp,json);
+                if(File.Exists(FilePath))File.Replace(temp,FilePath,null);
+                else File.Move(temp,FilePath);
+                return true;
             }
             catch (Exception ex)
             {
                 Debug.LogError($"[SaveLoad] save failed: {ex}");
+                return false;
             }
         }
 
-        public static SaveFileV1 Load()
+        public static SaveFileV1 Load()=>LoadSlot(ActiveSlot);
+        public static SaveFileV1 LoadSlot(int slot)
         {
             try
             {
-                if (!File.Exists(FilePath)) return null;
-                string json = File.ReadAllText(FilePath);
+                string path=SlotPath(slot);
+                if (!File.Exists(path)) return null;
+                string json = File.ReadAllText(path);
                 var parsed = JsonUtility.FromJson<SaveFileV1>(json);
-                if (parsed == null || parsed.version != 1) return null;
+                if (parsed == null || parsed.version != 1 || parsed.currentDay<1) return null;
                 return parsed;
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[SaveLoad] load failed: {ex}");
+                Debug.LogWarning($"[SaveLoad] slot {slot} could not be read: {ex.Message}");
                 return null;
             }
         }

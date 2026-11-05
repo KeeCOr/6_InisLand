@@ -15,14 +15,14 @@ namespace IL6
         private Vector2 _storyTextScroll;
         private readonly Dictionary<string,Texture2D> _storyIllustrations=new Dictionary<string,Texture2D>();
         public StoryTutorial CurrentStoryTutorial => _storyTutorial;
-        private bool TutorialDialogueBlocking => !_tutorialDismissed && !_storyWaitingForGui && (_storyTutorial==null || _storyTutorial.IsDialogue);
+        private bool TutorialDialogueBlocking => !_tutorialDismissed && !_storyWaitingForGui && (_storyTutorial==null || _storyTutorial.IsDialogue) && (_storyTutorial==null || !_storyTutorial.NpcGuided || _guideConversationOpen);
 
         public void BeginStoryTutorial(bool replay=false)
         {
             _storyReplay=replay;_tutorialDismissed=false;_storyWaitingForGui=false;
-            _storyTutorial=new StoryTutorial(replay?0:GameSession.Instance!=null?GameSession.Instance.StoryTutorialStage:0);
+            _storyTutorial=new StoryTutorial(replay?0:GameSession.Instance!=null?GameSession.Instance.StoryTutorialStage:0,!replay && GameSession.Instance!=null && GameSession.Instance.NpcTutorialEnabled);
             CaptureStoryBaseline(true);
-            if(_storyTutorial.IsDialogue) PauseForStory();
+            EnsureStoryGuide();if(_storyTutorial.IsDialogue && !_storyTutorial.NpcGuided) PauseForStory();
         }
         private void CaptureStoryBaseline(bool initial=false)
         {
@@ -58,14 +58,15 @@ namespace IL6
         public void AdvanceStoryDialogue()
         {
             if(_storyTutorial==null || !_storyTutorial.IsDialogue) return;
+            if(_storyTutorial.NpcGuided && !_guideConversationOpen)return;
             bool stageChanged=_storyTutorial.AdvanceDialogue();_storyTextScroll=Vector2.zero;
             if(!_storyReplay && _storyTutorial.StormRevealed && GameSession.Instance!=null && !GameSession.Instance.StoryVillageRuined)
             { GameSession.Instance.StoryVillageRuined=true;StoryVillageRuins.Apply(); }
             if(stageChanged)
             {
                 CaptureStoryBaseline();PersistStory();
-                if(!_storyTutorial.IsDialogue) ReleaseStoryPause();
-                if(_storyTutorial.IsComplete) _tutorialDismissed=true;
+                if(!_storyTutorial.IsDialogue){_guideConversationOpen=false;ReleaseStoryPause();}
+                if(_storyTutorial.IsComplete){_tutorialDismissed=true;EnsureStoryGuide();}
             }
         }
         private void DismissTutorial()
@@ -82,12 +83,13 @@ namespace IL6
             {
                 var s=GameSession.Instance;if(s==null) return;
                 if(!s.StoryTutorialEnabled || s.StoryTutorialComplete) {_tutorialDismissed=true;return;}
-                _storyTutorial=new StoryTutorial(s.StoryTutorialStage);CaptureStoryBaseline(true);
-                _storyWaitingForGui=_storyTutorial.IsDialogue;
+                _storyTutorial=new StoryTutorial(s.StoryTutorialStage,s.NpcTutorialEnabled);CaptureStoryBaseline(true);
+                _storyWaitingForGui=_storyTutorial.IsDialogue && !_storyTutorial.NpcGuided;
             }
+            EnsureStoryGuide();
             if(_storyWaitingForGui) return;
             if(_paused || _buildPaused || _recruitCutPaused || _researchOpen || _workMenuOpen || (Progression!=null && Progression.LevelUpPending)) return;
-            if(_storyTutorial.IsDialogue) {PauseForStory();return;}
+            if(_storyTutorial.IsDialogue) {if(!_storyTutorial.NpcGuided || _guideConversationOpen)PauseForStory();return;}
             if(Time.timeScale<=0 || (Player.Actions!=null && Player.Actions.IsBusy)) return;
             Vector2 position=Player.transform.position;float distance=Vector2.Distance(position,_storyLastPosition);_storyLastPosition=position;
             int wood=Mathf.Max(0,WoodPickup.TotalWoodDelivered-_storyLastWood);
@@ -96,11 +98,12 @@ namespace IL6
             if(_storyTutorial.Stage==StoryTutorialStage.BuildFence)
                 foreach(var b in Object.FindObjectsByType<Building>(FindObjectsSortMode.None))
                     if(b.Kind==BuildingKind.Fence && b.CurrentHp>0 && !_storyStartingFences.Contains(b.GetInstanceID())) {fence=true;break;}
-            if(_storyTutorial.Observe(distance,wood,fence)) {CaptureStoryBaseline();PersistStory();PauseForStory();}
+            if(_storyTutorial.Observe(distance,wood,fence)) {CaptureStoryBaseline();PersistStory();if(_storyTutorial.NpcGuided)EnsureStoryGuide();else PauseForStory();}
         }
         private void DrawTutorialOverlay()
         {
             if(_tutorialDismissed || _storyTutorial==null || !_storyTutorial.IsDialogue) return;
+            if(_storyTutorial.NpcGuided){if(_guideConversationOpen)DrawGuideConversation();return;}
             _storyWaitingForGui=false;PauseForStory();
             var line=_storyTutorial.CurrentLine;float w=MobileHudLayout.Width,h=MobileHudLayout.Height;
             if(!_storyIllustrations.TryGetValue(_storyTutorial.IllustrationPath,out var illustration))
@@ -134,11 +137,10 @@ namespace IL6
         }
         private bool DrawStoryObjective()
         {
-            if(_tutorialDismissed || _storyTutorial==null || _storyTutorial.IsDialogue || _storyTutorial.IsComplete) return false;
+            if(_tutorialDismissed || _storyTutorial==null || (_storyTutorial.IsDialogue && !_storyTutorial.NpcGuided) || _storyTutorial.IsComplete) return false;
             var panel=GoalTrackerBounds;DrawQuestTrackerBacking(panel);
             QuestLabel(QuestTrackerLayout.Header(panel),_storyTutorial.Objective,new GUIStyle(_label){fontSize=16,fontStyle=FontStyle.Bold,normal={textColor=new Color(1,.94f,.70f)}});
-            QuestLabel(QuestTrackerLayout.Title(panel),"아버지가 돌아올 마을",new GUIStyle(_label){fontSize=13});
-            QuestLabel(new Rect(panel.x+16,panel.y+88,panel.width-32,60),_storyTutorial.Hint,new GUIStyle(_labelSubtle){fontSize=14,wordWrap=true,alignment=TextAnchor.UpperLeft,normal={textColor=Color.white}});
+            QuestLabel(new Rect(panel.x+16,panel.y+54,panel.width-32,82),_storyTutorial.Hint,new GUIStyle(_labelSubtle){fontSize=14,wordWrap=true,alignment=TextAnchor.UpperLeft,normal={textColor=Color.white}});
             return true;
         }
     }

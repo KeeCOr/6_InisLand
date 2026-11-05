@@ -6,6 +6,12 @@ namespace IL6
     public sealed class OnboardingController : MonoBehaviour
     {
         public string SnowfieldSceneName="SnowfieldScene";
-        private void Start() { SceneManager.LoadScene(SnowfieldSceneName); }
+        private System.Collections.IEnumerator Start()
+        {
+            var session=GameSession.Instance;
+            if(session!=null && session.NpcTutorialEnabled && !session.StoryIntroSeen)
+                yield return gameObject.AddComponent<NewAdventureLoading>().LoadScene(SnowfieldSceneName);
+            else SceneManager.LoadScene(SnowfieldSceneName);
+        }
     }
 }

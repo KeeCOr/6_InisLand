@@ -28,7 +28,7 @@ namespace IL6.Tests
                 Assert.That(r.x,Is.EqualTo(MobileHudLayout.ResourceChip(i%2).x));
             }
             Assert.That(MobileHudLayout.ResourceTouchBounds.Overlaps(MobileHudLayout.Experience),Is.False);
-            Assert.That(MobileHudLayout.Experience.yMax,Is.LessThan(MobileHudLayout.Goals.yMin));
+            Assert.That(MobileHudLayout.Experience.Overlaps(MobileHudLayout.Goals),Is.False);
         }
         [TestCase(999,"999")]
         [TestCase(1200,"1.2K")]

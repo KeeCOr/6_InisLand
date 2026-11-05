@@ -11,6 +11,8 @@ namespace IL6
     public sealed class BootController : MonoBehaviour
     {
         public string OnboardingSceneName = "OnboardingScene";
+        public static bool SkipLobbyOnce;
+        public static bool FreshNpcTutorialOnce;
 
         private void Start()
         {
@@ -19,7 +21,17 @@ namespace IL6
                 var go = new GameObject("GameSession");
                 go.AddComponent<GameSession>();
             }
-            SceneManager.LoadScene(OnboardingSceneName);
+            if(SkipLobbyOnce)
+            {
+                SkipLobbyOnce=false;
+                GameSession.Instance.NpcTutorialEnabled=FreshNpcTutorialOnce;FreshNpcTutorialOnce=false;
+                SceneManager.LoadScene(OnboardingSceneName);
+                return;
+            }
+            GameSession.Instance.enabled=false;
+            Time.timeScale=1;InputReader.HudBlocked=true;
+            var lobby=gameObject.GetComponent<LobbyController>()??gameObject.AddComponent<LobbyController>();
+            lobby.GameSceneName=OnboardingSceneName;
         }
     }
 }

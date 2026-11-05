@@ -9,7 +9,7 @@
 | 01-2 모험 메뉴 | 일시정지·설정·게임 메뉴 | SimpleHud.DrawPauseMenu |
 | 01-3 특성 선택 | 레벨 상승 특성 선택 | SimpleHud.DrawRuneModal |
 | 01-4 동료 영입 | 일러스트 대화와 영입 결정 | SimpleHud.RecruitConversation |
-| 01-5 이야기·튜토리얼 | 시작 이야기와 플레이 안내 | SimpleHud.DrawTutorialOverlay |
+| 01-5 이야기·튜토리얼 | 주인공 초상/독백과 실제 행동 안내 | SimpleHud.DrawTutorialOverlay / GuideTutorial |
 | 01-6 연구 | 건물별 연구 목록과 실행 | SimpleHud.DrawResearchCatalog |
 | 01-7 주변 작업 | 근처 시설 작업 선택 | SimpleHud.DrawNearbyWorkMenu |
 | 01-8 자원 상세 | 보유 자원 상세 | SimpleHud.DrawResourceDetails |
@@ -20,4 +20,15 @@
 
 | 01-13 마을 귀환 전환 | 해가 졌습니다 알림 다음 귀환 일러스트, 밤으로 전환 | SimpleHud.VillageReturn / VillageReturnPresentation |
 
-BootScene은 GameSession을 준비하고 OnboardingScene으로 전환한다. 현재 OnboardingController.Start는 SnowfieldScene으로 즉시 이동하므로 별도의 플레이어 선택 화면으로 번호를 부여하지 않았다. 위 목록은 코드 기준 화면 식별이며 모든 화면의 네이티브 검수를 의미하지 않는다. 이후 번호를 재배치하지 않고 새로운 화면은 새 번호로 추가한다.
+2026-11-06 BootScene은 아래 시작 로비로 변경했다. OnboardingScene은 선택 후 SnowfieldScene으로 전환하는 내부 경로다. 기존 번호는 유지한다.
+
+| 번호·이름 | 용도 | 실제 씬 / 구현 |
+| --- | --- | --- |
+| 02 시작 로비 | 새로 하기·이어서 하기와 저장3슬롯 선택 | BootScene / LobbyController |
+| 02-1 새 모험 확인 | 선택 슬롯 덮어쓰기 확인/취소 | LobbyController.PendingOverwriteSlot |
+| 02-2 새 모험 이야기 로딩 | 실제 씬 로딩과4장 시작 이야기, 준비 후 입장 | OnboardingScene / NewAdventureLoading |
+
+
+| 번호·이름 | 용도 | 실제 씬 / 구현 |
+| --- | --- | --- |
+| 01-14 방향·피해 안내 | 집/마을 방향과 화면 밖 시설·동료 피해 요약 | SimpleHud.HomeNavigation / DrawThreatCompass / ThreatNavigation |

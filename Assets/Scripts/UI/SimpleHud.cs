@@ -596,7 +596,7 @@ namespace IL6
             {
                 DrawHudIcon(new Rect(r.x+10,r.y+24,14,14),"temp");
                 HudText.Label(new Rect(r.x+28,r.y+21,46,20),$"{temp:F0}°C",_clockSmall);
-                HudText.Label(new Rect(r.x+80,r.y+21,r.width-88,20),"행동 시 감소",new GUIStyle(_clockSmall){fontSize=11});
+                HudText.Label(new Rect(r.x+80,r.y+21,r.width-88,20),s.NpcTutorialEnabled && !s.StoryTutorialComplete?"마을 적응 중":"행동 시 감소",new GUIStyle(_clockSmall){fontSize=11});
             }
             else
             {
@@ -608,72 +608,25 @@ namespace IL6
 
         private GUIStyle _compassDist;
 
-        /// <summary>최근 공격받은 건물/동료가 화면 밖에 있으면 화면 가장자리에 빨간 방향 화살표.</summary>
         private void DrawThreatCompass()
         {
-            var cam = Camera.main;
-            if (cam == null) return;
-            const float RecentSec = 4f;
-            const int ArrowSize = 22;
-            int margin = 40;
-
-            void DrawArrow(Vector3 worldPos, Color color, string label)
+            if(Player==null || Player.IsDead || ControlsBlocked)return;
+            var camera=Camera.main;if(camera==null)return;
+            var buildings=Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
+            var companions=Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
+            var style=new GUIStyle(_label){fontSize=12,fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleLeft,normal={textColor=UiTheme.TextCream}};
+            int row=0;
+            foreach(bool ally in new[]{false,true})
             {
-                Vector3 sp = cam.WorldToScreenPoint(worldPos);
-            sp.x /= MobileHudLayout.Scale; sp.y /= MobileHudLayout.Scale;
-                bool onScreen = sp.z > 0 && sp.x > 0 && sp.x < MobileHudLayout.Width && sp.y > 0 && sp.y < MobileHudLayout.Height;
-                if (onScreen) return; // 화면 안이면 HpBar 가 충분히 표시
-
-                Vector2 center = new Vector2(MobileHudLayout.Width * 0.5f, MobileHudLayout.Height * 0.5f);
-                Vector2 target = new Vector2(sp.x, MobileHudLayout.Height - sp.y);
-                if (sp.z < 0) target = center * 2f - target; // 카메라 뒤
-                Vector2 dir = (target - center).normalized;
-
-                // 화면 가장자리에서 안쪽으로 margin 만큼 위치
-                float halfW = MobileHudLayout.Width * 0.5f - margin;
-                float halfH = MobileHudLayout.Height * 0.5f - margin;
-                float t = Mathf.Min(halfW / Mathf.Abs(dir.x + 0.0001f), halfH / Mathf.Abs(dir.y + 0.0001f));
-                Vector2 edgePos = center + dir * t;
-
-                float angDeg = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                var matrix = GUI.matrix;
-                GUIUtility.RotateAroundPivot(angDeg, edgePos);
-                // 삼각형 화살표
-                UiTheme.Rect(new Rect(edgePos.x - ArrowSize, edgePos.y - 4, ArrowSize, 8), color);
-                UiTheme.Rect(new Rect(edgePos.x, edgePos.y - 8, 6, 16), color);
-                UiTheme.Rect(new Rect(edgePos.x + 4, edgePos.y - 6, 4, 12), color);
-                UiTheme.Rect(new Rect(edgePos.x + 6, edgePos.y - 4, 4, 8), color);
-                UiTheme.Rect(new Rect(edgePos.x + 8, edgePos.y - 2, 4, 4), color);
-                GUI.matrix = matrix;
-
-                if (_threatLabel == null)
-                {
-                    _threatLabel = new GUIStyle(GUI.skin.label) {
-                        fontSize = 12, fontStyle = FontStyle.Bold,
-                        alignment = TextAnchor.MiddleCenter,
-                        normal = { textColor = color }
-                    };
-                }
-                HudText.Label(new Rect(edgePos.x - 40, edgePos.y + 14, 80, 16), label, _threatLabel);
-            }
-
-            float now = Time.time;
-            var bs = Object.FindObjectsByType<Building>(FindObjectsSortMode.None);
-            foreach (var b in bs)
-            {
-                if (b == null || b.CurrentHp <= 0) continue;
-                if (now - b.LastDamagedAt > RecentSec) continue;
-                DrawArrow(b.transform.position, new Color(0.95f, 0.4f, 0.4f), "⚠ 건물 피격");
-            }
-            var cs = Object.FindObjectsByType<Companion>(FindObjectsSortMode.None);
-            foreach (var c in cs)
-            {
-                if (c == null || c.IsDead) continue;
-                if (now - c.LastDamagedAt > RecentSec) continue;
-                DrawArrow(c.transform.position, new Color(0.95f, 0.6f, 0.4f), "⚠ 동료 피격");
+                var notice=ThreatNavigation.Collect(camera,Player.transform.position,buildings,companions,Time.time,ally);
+                if(!notice.Visible)continue;
+                var rect=ThreatNavigation.Bounds(MobileHudLayout.Width,row++);
+                NavigationIconSkin.DrawBacking(rect,new Color(.38f,.24f,.23f,.95f));
+                if(NavigationIconSkin.Damage!=null)GUI.DrawTexture(new Rect(rect.x+8,rect.y+6,24,24),NavigationIconSkin.Damage,ScaleMode.ScaleToFit,true);
+                HudText.Label(new Rect(rect.x+38,rect.y+4,rect.width-68,28),notice.Label,style);
+                NavigationIconSkin.DrawDirection(new Rect(rect.xMax-25,rect.y+9,18,18),(Vector2)(notice.Position-Player.transform.position),new Color(.98f,.84f,.70f));
             }
         }
-        private GUIStyle _threatLabel;
 
         private void DrawControlsHint()
         {
@@ -1813,12 +1766,12 @@ namespace IL6
             float effects=DrawAdventureSetting(modal,3,"효과음",Sfx.Volume,0,1);
             if(Mathf.Abs(effects-Sfx.Volume)>.005f)Sfx.Volume=effects;
             MusicCredits.Draw(AdventureMenuLayout.Credits(modal),_labelSubtle);
-            if (UiTheme.Button(AdventureMenuLayout.Restart(modal), "새로 시작", button, role: UiButtonRole.Destructive))
+            if (UiTheme.Button(AdventureMenuLayout.Restart(modal), "저장하고 로비로", button, role: UiButtonRole.Secondary))
             {
                 Sfx.Click();
                 _paused = false;
                 Time.timeScale = 1f;
-                if (GameSession.Instance != null) GameSession.Instance.HardReset();
+                if (GameSession.Instance != null) GameSession.Instance.ReturnToLobby();
             }
         }
 

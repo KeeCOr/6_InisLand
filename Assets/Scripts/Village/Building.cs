@@ -111,6 +111,7 @@ namespace IL6
         }
 
         public float LastDamagedAt { get; private set; } = -100f;
+        public float LastAttackedAt {get;private set;}=-100f;
 
         public void TakeDamage(int amount)
         {
@@ -127,6 +128,7 @@ namespace IL6
             if(amount<=0 || CurrentHp<=0)return;
             CurrentHp = Mathf.Max(0, CurrentHp - amount);
             LastDamagedAt = Time.time;
+            if(showHit)LastAttackedAt=Time.time;
             if(showHit)GameFeel.HitFlash(this, GetComponent<SpriteRenderer>());
             if (CurrentHp <= 0)
             {

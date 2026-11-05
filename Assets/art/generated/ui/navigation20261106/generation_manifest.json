@@ -1,0 +1,40 @@
+{
+  "prompt": "Create ONE UI sprite atlas for a medieval Nordic snow survival game. EXACTLY THREE separate small game HUD icons in one evenly spaced horizontal row, on fully transparent background, no text or numbers. Left icon: a simple solid ivory compass pointer pointing RIGHT, broad tapered triangular arrowhead with a short tail and a restrained aged brass rim, readable at 18 pixels. Middle icon: a small Nordic timber house silhouette with snowy roof, ivory and muted aged brass, readable at 24 pixels. Right icon: a compact battered round shield badge with a single deep vermilion impact crack, ivory/brass metal rim and muted oxblood-red interior, reads as damage warning, no exclamation mark. Style: refined illustrated game inventory UI, broad clean opaque shapes, restrained bevels, dark desaturated teal recesses, thin warm antique brass edges, softly painted highlights. Coherent matched icon family. Avoid shiny plastic, neon, heavy glows, emoji look, flat SVG look, ornate tiny filigree, gradients outside shapes, backgrounds, labels, circles around the arrow, scene scenery. Each icon centered in its own equal cell with wide transparent gutters, every shape complete and separate. Output transparent RGBA.",
+  "source": "C:\\Users\\bada\\.codex\\generated_images\\01a136b0-f26c-7091-92fa-16cd5a4ecbb7\\exec-e59391a2-61ea-40b5-bf18-282a48f01af4.png",
+  "assets": [
+    {
+      "key": "arrow",
+      "runtime": "Assets/Resources/UI/Navigation20261106/arrow.png",
+      "sha256": "77c12ac0df45356b994e938729469f520aab2c4c07225e352d02c26a9ed7c99a",
+      "alpha_crop": [
+        147,
+        196,
+        608,
+        551
+      ]
+    },
+    {
+      "key": "home",
+      "runtime": "Assets/Resources/UI/Navigation20261106/home.png",
+      "sha256": "a27a6e75c42704347937092cda44257a43a18c9703a4ade571216b343c819263",
+      "alpha_crop": [
+        68,
+        102,
+        631,
+        617
+      ]
+    },
+    {
+      "key": "damage",
+      "runtime": "Assets/Resources/UI/Navigation20261106/damage.png",
+      "sha256": "99919c6b5ce0a5dba80078bc38e6d2f3ef413b0e841ad744862881d0c11b820b",
+      "alpha_crop": [
+        92,
+        103,
+        606,
+        619
+      ]
+    }
+  ],
+  "processing": "Only transparent per-cell margins cropped; generated pixels/alpha preserved."
+}

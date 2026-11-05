@@ -15,6 +15,7 @@ namespace IL6.Tests
             Time.timeScale=1;InputReader.HudBlocked=false;
             yield return SceneManager.LoadSceneAsync("BootScene");yield return new WaitForSecondsRealtime(1);
             var previous=GameSession.Instance;Assert.That(previous,Is.Not.Null);
+            previous.NpcTutorialEnabled=false; // Exercise legacy-save compatibility in this fixture.
             previous.HardReset();yield return new WaitForSecondsRealtime(1);
             Assert.That(GameSession.Instance,Is.Not.Null);Assert.That(GameSession.Instance,Is.Not.SameAs(previous));
             Assert.That(SceneManager.GetActiveScene().name,Is.EqualTo("SnowfieldScene"));

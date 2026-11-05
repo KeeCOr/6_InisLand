@@ -46,6 +46,7 @@ namespace IL6.Tests
             cycle.Restore(new DayNightSnapshot{day=1,phase=Phase.Day,elapsedInPhase=0});
             cycle.Restore(new DayNightSnapshot{day=1,phase=Phase.Day,elapsedInPhase=cycle.PhaseDurationSec-.05f});player.Actions.SetMoving(true);
             yield return new WaitForSeconds(.2f);Assert.That(cycle.Phase,Is.EqualTo(Phase.Evening));
+            cycle.Restore(new DayNightSnapshot{day=1,phase=Phase.Day,elapsedInPhase=0});
             Time.timeScale=1;InputReader.HudBlocked=false;yield return SceneManager.LoadSceneAsync("BootScene");
         }
     }

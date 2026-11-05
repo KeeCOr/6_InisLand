@@ -42,6 +42,8 @@ namespace IL6.EditorBuild
                 }
             foreach(string key in new[]{"horizontal","vertical"})
                 if(Resources.Load<Sprite>("Sprites/Props/FenceWreckage20261103/"+key)==null)missing.Add("Fence wreckage "+key);
+            foreach(string key in new[]{"arrow","home","damage"})
+                if(Resources.Load<Texture2D>(NavigationIconSkin.Folder+key)==null)missing.Add(NavigationIconSkin.Folder+key);
             foreach(string key in new[]{"quadruped_robot","zombie","boss_frost_zombie","boss_winter_knight","boss_iron_giant","boss_frost_lich"})
                 if(Resources.Load<Sprite>("Sprites/Enemies/"+key)==null)missing.Add("Sprites/Enemies/"+key);
             foreach(string key in EnemyFacingVisual.Keys)

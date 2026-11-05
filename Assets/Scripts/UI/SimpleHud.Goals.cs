@@ -8,7 +8,7 @@ namespace IL6
         {
             get
             {
-                if(!_tutorialDismissed && _storyTutorial!=null && !_storyTutorial.IsDialogue && !_storyTutorial.IsComplete)
+                if(!_tutorialDismissed && _storyTutorial!=null && (!_storyTutorial.IsDialogue || _storyTutorial.NpcGuided) && !_storyTutorial.IsComplete)
                 {var tutorial=MobileHudLayout.Goals;tutorial.height=160;return tutorial;}
                 var manager=SettlementGoalManager.Instance;
                 if(manager==null || manager.Goals==null || manager.Goals.Count==0)return Rect.zero;
@@ -38,12 +38,9 @@ namespace IL6
             bool collapsed=panel.height<200;
             if(active<0)
             {
-                QuestLabel(QuestTrackerLayout.Title(panel),"모든 초기 목표 달성",new GUIStyle(_section){fontSize=18});
                 QuestLabel(new Rect(panel.x+16,panel.y+80,panel.width-32,22),"섬을 탐험하며 마을을 키워보세요",new GUIStyle(_labelSubtle){fontSize=13});return;
             }
             var current=goals[active];
-            var category=QuestTrackerLayout.Title(panel);category.width-=72;
-            QuestLabel(category,"마을 복구",new GUIStyle(_labelSubtle){fontSize=12,normal={textColor=Color.white}});
             if(!collapsed)QuestLabel(QuestTrackerLayout.Detail(panel),current.Detail,new GUIStyle(_labelSubtle){fontSize=13,wordWrap=true,alignment=TextAnchor.UpperLeft,normal={textColor=Color.white}});
             var rows=QuestTrackerLayout.Rows(current.Progress);
             for(int i=0;i<rows.Length && i<3;i++)

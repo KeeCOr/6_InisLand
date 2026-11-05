@@ -7,6 +7,8 @@ namespace IL6
         {
             if(elapsed<=0)return 0;
             if(phase!=Phase.Day)return elapsed;
+            var session=GameSession.Instance;
+            if(session!=null && session.NpcTutorialEnabled && !session.StoryTutorialComplete)return 0;
             if(player==null || player.IsDead || InputReader.HudBlocked)return 0;
             var action=player.Actions;
             bool active=action!=null && (action.State==PlayerAction.Move || action.State==PlayerAction.Attack || action.State==PlayerAction.Logging || action.State==PlayerAction.Gather);
