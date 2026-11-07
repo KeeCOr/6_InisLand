@@ -17,6 +17,11 @@ namespace IL6
         public int CurrentHp { get; private set; }
         public int MaxHp { get; private set; }
         public bool IsDead => CurrentHp <= 0;
+        public void RestoreSave(int hp)
+        {
+            MaxHp=_balance.PlayerMaxHp+(_progression!=null?_progression.BonusMaxHp:0);CurrentHp=Mathf.Clamp(hp,0,MaxHp);
+            if(CurrentHp==0)Actions?.Die();
+        }
 
         private Rigidbody2D _rb;
         private InputReader _input;

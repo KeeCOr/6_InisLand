@@ -11,6 +11,14 @@ namespace IL6
         private Quaternion _rotation;
         private Vector3 _scale=Vector3.one;
         public bool CanRestore=>!_cleared && isActiveAndEnabled;
+        public SavedBuilding CaptureSave()=>new SavedBuilding{kind=BuildingKind.Fence,position=transform.position,scale=_scale,rotation=_rotation.eulerAngles.z,sprite=_sourceSprite,gate=_gate,vertical=_vertical};
+        public static void RestoreSave(SavedBuilding save)
+        {
+            var sprite=Resources.Load<Sprite>("Sprites/Props/FenceWreckage20261103/"+(save.vertical?"vertical":"horizontal"));
+            var go=new GameObject("__FenceWreckage");go.transform.position=save.position;
+            var rubble=go.AddComponent<FenceWreckage>();rubble._sourceSprite=save.sprite;rubble._gate=save.gate;rubble._vertical=save.vertical;rubble._scale=save.scale;rubble._rotation=Quaternion.Euler(0,0,save.rotation);
+            var sr=go.AddComponent<SpriteRenderer>();sr.sprite=sprite;sr.sortingOrder=-9700;
+        }
         public static void Spawn(Building source)
         {
             var body=source.GetComponent<SpriteRenderer>();

@@ -12,6 +12,19 @@ namespace IL6
         public BuildingKind Kind;
         public float TotalTime = 8f;       // 단독 작업 시 완료까지 걸리는 초
         public float Progress { get; private set; }
+        public static void RestoreSave(SavedConstruction saved)
+        {
+            var go=new GameObject("ConstructionSite");go.transform.position=saved.position;go.transform.localScale=ConstructionPlacement.Scale(saved.kind);
+            var sr=go.AddComponent<SpriteRenderer>();sr.sprite=ConstructionPlacement.Sprite(saved.kind);sr.color=new Color(1,1,1,.5f);
+            var site=go.AddComponent<ConstructionSite>();site.Kind=saved.kind;site.TotalTime=saved.total;site.Progress=saved.progress;
+            site.OnComplete=(kind,pos)=>
+            {
+                WorldPersistence.SpawnCompleted(kind,pos);
+                var store=GameSession.Instance?.Resources;
+                if(kind==BuildingKind.Storage)store?.IncreaseCap(50);
+                if(kind==BuildingKind.FoodStorage)store?.IncreaseCap(ResourceKind.Food,BuildingUpgradeRules.FoodStorageCapPerLevel);
+            };
+        }
         public float WorkerRadius = 2.5f;
         public float WorkerSpeedFactor = 1.0f; // 동료 1명당 속도 +1.0배 (즉 100% 가산)
         /// <summary>완료 시 호출 — SimpleHud 가 실제 건물 스폰 콜백 등록.</summary>

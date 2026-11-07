@@ -34,6 +34,9 @@ namespace IL6
 
         [Header("Per-companion progression")]
         public int Xp;
+        public string SaveId;
+        public void EnsureSaveId(){if(string.IsNullOrEmpty(SaveId))SaveId=System.Guid.NewGuid().ToString("N");}
+        public void RestoreHealth(int maxHp,int hp){MaxHp=Mathf.Max(1,maxHp);CurrentHp=Mathf.Clamp(hp,1,EffectiveMaxHp());}
         public int Level = 1;
         // 레벨업 임계 — 적 처치 1당 +1 XP. 5/12/22/35/...
         public int XpToNext => 4 + Level * 3;

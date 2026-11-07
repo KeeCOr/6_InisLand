@@ -49,6 +49,11 @@ namespace IL6
 
         private Action _unsub;
         private float _coldYieldMultiplier = 1f;
+        public float ColdYieldMultiplier=>_coldYieldMultiplier;
+        public void RestoreSave(SavedBuilding save)
+        {
+            CurrentCrop=(CropKind)save.crop;NightsPassed=save.nightsPassed;HarvestReady=save.harvestReady;IsWithered=save.withered;_coldYieldMultiplier=save.coldYield;
+        }
         private int FarmLevel
         {
             get

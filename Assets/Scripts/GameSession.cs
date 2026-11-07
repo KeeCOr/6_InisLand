@@ -20,6 +20,19 @@ namespace IL6
 
         public VillageResearch Research { get; } = new VillageResearch();
         public DayNightController Cycle { get; private set; }
+        private WorldSave _loadedWorld;
+        private bool _worldReady;
+        public bool HasSavedWorld=>_loadedWorld!=null;
+        public void RestoreWorld(PlayerController player)
+        {
+            if(_loadedWorld!=null)
+            {
+                WorldPersistence.Restore(_loadedWorld,this,player);
+                TotalKills=_loadedWorld.kills;CompanionsLost=_loadedWorld.companionsLost;MaxCompanionsAtOnce=_loadedWorld.maxCompanions;
+                PlayerDeathDay=_loadedWorld.deathDay;ConsecutiveFedDays=_loadedWorld.fedDays;
+            }
+            _worldReady=true;
+        }
 
         private void Awake()
         {
@@ -52,6 +65,7 @@ namespace IL6
             IgnoreSaveOnce=false;
             if (save != null)
             {
+                _loadedWorld=save.world;
                 NpcTutorialEnabled=save.npcTutorialEnabled;StoryIntroSeen=save.storyIntroSeen;
                 StoryTutorialEnabled=save.storyTutorialEnabled;
                 StoryTutorialComplete=save.storyTutorialComplete;
@@ -418,9 +432,16 @@ namespace IL6
         public bool NpcTutorialEnabled {get;set;}
         public bool StoryIntroSeen {get;set;}
 
-        public void SaveNow()
+        public bool SaveNow()
         {
-            SaveLoad.Save(new SaveFileV1
+            var player=GameObject.FindWithTag("Player")?.GetComponent<PlayerController>();
+            if(_worldReady && player!=null && SceneManager.GetActiveScene().name=="SnowfieldScene")
+            {
+                _loadedWorld=WorldPersistence.Capture(this,player);
+                _loadedWorld.kills=TotalKills;_loadedWorld.companionsLost=CompanionsLost;_loadedWorld.maxCompanions=MaxCompanionsAtOnce;
+                _loadedWorld.deathDay=PlayerDeathDay;_loadedWorld.fedDays=ConsecutiveFedDays;
+            }
+            return SaveLoad.Save(new SaveFileV1
             {
                 version = 1,
                 npcTutorialEnabled=NpcTutorialEnabled,storyIntroSeen=StoryIntroSeen,
@@ -436,6 +457,7 @@ namespace IL6
                 pregnancyStartDay = PregnancyStartDay,
                 pregnancyDueDay = PregnancyDueDay,
                 pregnancyParents = LastPregnancyParents,
+                world = _loadedWorld,
             });
         }
 
@@ -459,8 +481,9 @@ namespace IL6
         public void ReturnToLobby()
         {
             if(_restartRequested)return;
+            if(!SaveNow()){Debug.LogWarning("[SaveLoad] Could not save; keeping the current adventure open.");return;}
             _restartRequested=true;
-            SaveNow();Time.timeScale=1;InputReader.HudBlocked=false;
+            Time.timeScale=1;InputReader.HudBlocked=false;
             Instance=null;gameObject.SetActive(false);Destroy(gameObject);
             SceneManager.LoadSceneAsync("BootScene");
         }

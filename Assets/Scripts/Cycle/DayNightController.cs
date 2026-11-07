@@ -12,6 +12,7 @@ namespace IL6
         public int day = 1;
         public Phase phase = Phase.Day;
         public float elapsedInPhase;
+        public float duration, levelMultiplier;
     }
 
     /// <summary>
@@ -63,6 +64,7 @@ namespace IL6
             day = Day,
             phase = Phase,
             elapsedInPhase = ElapsedInPhase,
+            duration = PhaseDurationSec,levelMultiplier = LevelDurationMul,
         };
 
         public void Restore(DayNightSnapshot snap)
@@ -71,7 +73,8 @@ namespace IL6
             Day = snap.day;
             Phase = snap.phase;
             ElapsedInPhase = snap.elapsedInPhase;
-            _phaseLockedDuration = ComputeDuration(Phase);
+            if(snap.levelMultiplier>0)LevelDurationMul=snap.levelMultiplier;
+            _phaseLockedDuration = snap.duration>0?snap.duration:ComputeDuration(Phase);
         }
 
         private float ComputeDuration(Phase p)

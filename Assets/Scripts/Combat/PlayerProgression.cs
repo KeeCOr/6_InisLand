@@ -107,6 +107,22 @@ namespace IL6
         public readonly List<RuneKind> Applied = new();
         public event Action<RuneKind> OnRuneApplied;
         public event Action OnElementalSynergyAchieved;
+        public SavedPlayer CaptureSave(PlayerController player) => new SavedPlayer
+        {
+            position=transform.position,level=Level,xp=Xp,pending=LevelUpPending,hp=player.CurrentHp,
+            weapon=Mathf.Max(0,GetComponent<PlayerAttackController>()?.WeaponIndex??0),runes=Applied.ToArray()
+        };
+        public void RestoreSave(SavedPlayer save)
+        {
+            Level=Mathf.Max(1,save.level);Xp=Mathf.Max(0,save.xp);XpToNext=8+Level*4;LevelUpPending=save.pending;
+            Applied.Clear();_stacks.Clear();
+            foreach(var rune in save.runes)
+                if(GetStacks(rune)<MaxStacks){Applied.Add(rune);_stacks[rune]=GetStacks(rune)+1;}
+            // Recompute only. ApplyRune would pay resource gifts and replay level-up effects.
+            Recompute();
+            if(GetStacks(RuneKind.SummonDog)>0)Pet.Spawn(Pet.Kind.Dog,transform,GetStacks(RuneKind.SummonDog));
+            if(GetStacks(RuneKind.SummonHawk)>0)Pet.Spawn(Pet.Kind.Hawk,transform,GetStacks(RuneKind.SummonHawk));
+        }
 
         public void GrantXp(int amount)
         {

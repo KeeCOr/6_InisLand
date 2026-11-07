@@ -93,6 +93,37 @@ namespace IL6
         public int KillsThisNight { get; private set; }
         public int BossKillThreshold = 25;
         private bool _bossSpawnedThisNight;
+        public SavedNight CaptureSave()
+        {
+            var enemies=new List<SavedEnemy>();
+            foreach(var z in Object.FindObjectsByType<Zombie>(FindObjectsSortMode.None))if(!z.IsDead)enemies.Add(z.CaptureSave(z==_activeBoss));
+            return new SavedNight{phase=CurrentPhase,pending=_pendingSpawns,kills=KillsThisNight,spawnTimer=_spawnTimer,blizzard=IsBlizzard,bossNight=IsBossNight,
+                bossSpawned=_bossSpawnedThisNight,warningPending=_bossWarningPending,warningRemaining=BossWarningRemaining,blizzardAccum=_blizzardDmgAccum,rng=_rng.State,enemies=enemies.ToArray()};
+        }
+        public void RestoreSave(SavedNight save,Phase phase)
+        {
+            if(_bossWarningRoutine!=null)StopCoroutine(_bossWarningRoutine);
+            _bossWarningRoutine=null;_bossWarningPending=false;_activeBoss=null;_tracked.Clear();
+            foreach(var old in Object.FindObjectsByType<Zombie>(FindObjectsSortMode.None))
+            {old.gameObject.SetActive(false);Destroy(old.gameObject);}
+            BindCycle();CurrentPhase=phase;
+            if(save==null)return;
+            _pendingSpawns=save.pending;KillsThisNight=save.kills;_spawnTimer=save.spawnTimer;IsBlizzard=save.blizzard;IsBossNight=save.bossNight;
+            _bossSpawnedThisNight=save.bossSpawned;_rng.State=save.rng;_blizzardDmgAccum=save.blizzardAccum;
+            if(phase!=Phase.Night)return;
+            var sprites=new[]{SpriteBank.QuadrupedRobot(),SpriteBank.Zombie(),SpriteBank.BossFrostZombie(),SpriteBank.BossWinterKnight(),SpriteBank.BossIronGiant(),SpriteBank.BossFrostLich()};
+            foreach(var item in save.enemies??System.Array.Empty<SavedEnemy>())
+            {
+                var go=new GameObject(item.name);go.transform.position=item.position;go.transform.localScale=item.scale;
+                var sr=go.AddComponent<SpriteRenderer>();sr.color=item.color;sr.sortingOrder=8;
+                foreach(var sprite in sprites)if(sprite!=null && sprite.name==item.sprite){sr.sprite=sprite;break;}
+                var rb=go.AddComponent<Rigidbody2D>();rb.gravityScale=0;rb.freezeRotation=true;go.AddComponent<CircleCollider2D>().radius=item.boss?.45f:.4f;
+                var z=go.AddComponent<Zombie>();z.RestoreSave(item);_tracked.Add(z);if(item.boss)_activeBoss=z;
+                go.AddComponent<HpBarUi>().Zombie=z;
+            }
+            _activeZombies=_tracked.Count;
+            if(save.warningPending)_bossWarningRoutine=StartCoroutine(BossWarningThenSpawn(GameSession.Instance.Cycle.Day,save.warningRemaining));
+        }
 
         public void StartNight(int day)
         {
@@ -124,10 +155,10 @@ namespace IL6
             }
         }
 
-        private System.Collections.IEnumerator BossWarningThenSpawn(int day)
+        private System.Collections.IEnumerator BossWarningThenSpawn(int day,float remaining=3f)
         {
             _bossWarningPending = true;
-            BossWarningRemaining = 3f;
+            BossWarningRemaining = remaining;
             while (BossWarningRemaining > 0f)
             {
                 BossWarningRemaining -= Time.deltaTime;

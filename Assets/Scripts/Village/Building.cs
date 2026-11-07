@@ -29,6 +29,12 @@ namespace IL6
     public sealed class Building : MonoBehaviour
     {
         public BuildingKind Kind;
+        public string SaveId;
+        public void EnsureSaveId(){if(string.IsNullOrEmpty(SaveId))SaveId=System.Guid.NewGuid().ToString("N");}
+        public void RestoreSave(int level,int hp,int maxHp)
+        {
+            Level=Mathf.Max(1,level);MaxHp=Mathf.Max(1,maxHp);CurrentHp=Mathf.Clamp(hp,1,MaxHp);ApplyLevelEffects();
+        }
         public int Level { get; private set; } = 1;
         public int CurrentHp { get; private set; }
         public int MaxHp { get; private set; }

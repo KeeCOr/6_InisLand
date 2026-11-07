@@ -52,7 +52,7 @@ namespace IL6
             }
 
             // 마을 자리에 모닥불 + 울타리 링 자동 스폰 (이미 있으면 스킵)
-            VillageStarter.SpawnStarterVillage(villageCenter);
+            if(!_session.HasSavedWorld)VillageStarter.SpawnStarterVillage(villageCenter);
             VillageSquareLayout.MoveNaturalResourcesToOutskirts(villageCenter, VillageStarter.CurrentHalfSize);
             if(_session.StoryVillageRuined) StoryVillageRuins.Apply();
             var ground=GameObject.Find("Ground");
@@ -86,6 +86,13 @@ namespace IL6
             foreach (var a in preAnimals)
                 if (a != null && Vector2.Distance(a.transform.position, villageCenter) < ClearRadius)
                     Destroy(a.gameObject);
+            // Restore after authored companions are removed; no recruitment/day events on load.
+            if(_session.HasSavedWorld)
+            {
+                foreach(var b in Object.FindObjectsByType<Building>(FindObjectsSortMode.None))
+                {b.gameObject.SetActive(false);Destroy(b.gameObject);}
+            }
+            _session.RestoreWorld(Player);
             // PlayerDied 이벤트는 SimpleHud 의 Death overlay 가 처리.
         }
 

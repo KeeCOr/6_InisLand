@@ -23,6 +23,8 @@ namespace IL6
         public int pregnancyStartDay;
         public int pregnancyDueDay;
         public string pregnancyParents;
+        public WorldSave world;
+        public bool hasWorld;
     }
 
     public static class SaveLoad
@@ -62,6 +64,8 @@ namespace IL6
         {
             try
             {
+                if(data==null || !WorldPersistence.IsValid(data.world))return false;
+                data.hasWorld=data.world!=null;
                 data.savedAtUtc=DateTime.UtcNow.ToString("O");
                 string json = JsonUtility.ToJson(data, prettyPrint: false);
                 Directory.CreateDirectory(StorageDirectory);
@@ -88,6 +92,8 @@ namespace IL6
                 string json = File.ReadAllText(path);
                 var parsed = JsonUtility.FromJson<SaveFileV1>(json);
                 if (parsed == null || parsed.version != 1 || parsed.currentDay<1) return null;
+                if(!parsed.hasWorld)parsed.world=null;
+                else if(parsed.world==null || !WorldPersistence.IsValid(parsed.world))return null;
                 return parsed;
             }
             catch (Exception ex)

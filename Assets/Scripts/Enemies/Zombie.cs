@@ -57,6 +57,18 @@ namespace IL6
         public int RangedDamage = 6;
         public float RangedCooldown = 1.5f;
         private float _rangedCd;
+        public SavedEnemy CaptureSave(bool boss)
+        {
+            return new SavedEnemy{name=name,position=transform.position,scale=transform.localScale,sprite=_sr!=null && _sr.sprite!=null?_sr.sprite.name:"",color=_sr!=null?_baseColor:Color.white,
+                boss=boss,ranged=IsRanged,hp=CurrentHp,maxHp=MaxHp,damage=VariantDamageBonus,rangedDamage=RangedDamage,speed=MoveSpeedMul,sight=SightRange,
+                range=RangedRange,cooldown=RangedCooldown,attackTimer=_attackCooldown,rangedTimer=_rangedCd,poison=PoisonRemainingSec,poisonDps=PoisonDps,poisonTick=_poisonTick,slow=SlowRemainingSec};
+        }
+        public void RestoreSave(SavedEnemy save)
+        {
+            MaxHp=Mathf.Max(1,save.maxHp);CurrentHp=Mathf.Clamp(save.hp,1,MaxHp);VariantDamageBonus=save.damage;RangedDamage=save.rangedDamage;MoveSpeedMul=save.speed;SightRange=save.sight;
+            IsRanged=save.ranged;RangedRange=save.range;RangedCooldown=save.cooldown;_attackCooldown=save.attackTimer;_rangedCd=save.rangedTimer;
+            PoisonRemainingSec=save.poison;PoisonDps=save.poisonDps;_poisonTick=save.poisonTick;SlowRemainingSec=save.slow;
+        }
 
         public void ApplyPoison(float duration, int dps)
         {

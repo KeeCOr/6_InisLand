@@ -42,6 +42,12 @@ namespace IL6
 
         public static float CurrentHalfSize { get; private set; } = 5f;
         public const float MinHalfSize = 5f;
+        public static void RestoreBounds(float halfSize)
+        {
+            CurrentHalfSize=Mathf.Max(MinHalfSize,halfSize);
+            if(_outerFenceRoot==null)_outerFenceRoot=new GameObject("VillageOuterFence");
+        }
+        public static void RestoreRingMember(Transform piece){if(_outerFenceRoot!=null)piece.SetParent(_outerFenceRoot.transform,true);}
 
         private static void BuildOuterRing(Vector3 center, float halfSize, float spacing = 1.0f)
         {

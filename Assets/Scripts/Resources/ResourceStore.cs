@@ -58,6 +58,12 @@ namespace IL6
             { ResourceKind.Ore, 100 },
         };
         public event Action<ResourceKind, int, int> OnChanged; // kind, delta, total
+        public void RestoreCaps(int[] caps)
+        {
+            if(caps==null)return;
+            foreach(ResourceKind k in Enum.GetValues(typeof(ResourceKind)))
+                if((int)k<caps.Length)_caps[k]=Mathf.Max(0,caps[(int)k]-(k==ResourceKind.Food?40*VillageResearch.ActiveLevel(ResearchId.FoodCapacity):0));
+        }
 
         public int Get(ResourceKind k) => _totals.Get(k);
         public int GetCap(ResourceKind k) => (_caps.TryGetValue(k, out var v) ? v : 100)

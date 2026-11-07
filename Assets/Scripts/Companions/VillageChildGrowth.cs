@@ -7,6 +7,7 @@ namespace IL6
     {
         public int BirthDay;
         public int AgeDays;
+        public int RestoreHealthAfterStart = -1;
 
         public bool IsAdult => AgeDays >= 11;
 
@@ -34,6 +35,7 @@ namespace IL6
         private void Start()
         {
             ApplyStageStats(true);
+            if(RestoreHealthAfterStart>=0)_companion.RestoreHealth(_companion.MaxHp,RestoreHealthAfterStart);
             _unsubDay = EventBus.Instance.Subscribe<DayStartedPayload>(p => OnDayStarted(p.Day));
         }
 

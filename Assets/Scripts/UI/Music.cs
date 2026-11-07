@@ -7,6 +7,11 @@ namespace IL6
     /// </summary>
     public static class Music
     {
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void SilenceBatchTests()
+        {
+            if (Application.isBatchMode) AudioListener.volume = 0f;
+        }
         private static MusicPlayback _playback;
         private static AudioClip _day, _night, _evening, _dawn;
 
